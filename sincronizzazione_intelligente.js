@@ -15,8 +15,8 @@ const renderData = path.join(suiteDir, 'AGGIORNAMENTO_RENDER', 'data');
 const careassistUsbPath = path.join(suiteDir, 'public', 'careassist', 'careassist_database.json');
 const careassistRenderPath = path.join(suiteDir, 'AGGIORNAMENTO_RENDER', 'public', 'careassist', 'careassist_database.json');
 
-const CLOUD_URL_GET = 'https://milella-suite-41ff.onrender.com/api/suite/backup-completo';
-const CLOUD_URL_POST = 'https://milella-suite-41ff.onrender.com/api/suite/ripristina-backup';
+const CLOUD_URL_GET = 'https://careassist-r6lq.onrender.com/api/suite/backup-completo';
+const CLOUD_URL_POST = 'https://careassist-r6lq.onrender.com/api/suite/ripristina-backup';
 
 console.log('================================================================================');
 console.log('   🔄 SINCRONIZZAZIONE INTELLIGENTE BIDIREZIONALE: USB <--> WEB CLOUD');

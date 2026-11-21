@@ -135,6 +135,20 @@
       ],
       "registrazioni": [
         {
+          "id": "esc_1795290793525",
+          "timestamp": "2026-11-21T19:53:13.471Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 20:53 il farmaco \"VIMPAT 100 mg (3ª dose serale)\" delle ore 20:30 risulta non ancora spuntato (+23 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
+          "id": "esc_1795290793473",
+          "timestamp": "2026-11-21T19:53:13.471Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 20:53 il farmaco \"SILODYX 8 mg (Silodosina)\" delle ore 20:00 risulta non ancora spuntato (+53 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
           "id": "esc_1795247407164",
           "timestamp": "2026-11-21T07:50:06.784Z",
           "tipo": "nota_turno",
@@ -10155,5 +10169,5 @@
       "esito": "Ripristinato forzatamente al 75%-100%"
     }
   ],
-  "ultimoAggiornamento": "2026-11-21T18:40:21.402Z"
+  "ultimoAggiornamento": "2026-11-21T19:55:32.541Z"
 }
