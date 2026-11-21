@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>CareAssist Pro - Griglia Settimanale Spunta Farmaci: Rosa Annunziata Cavalcante</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 8mm 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 14px 10px;
+      font-size: 8pt;
+      line-height: 1.25;
+    }
+
+    .no-print-toolbar {
+      max-width: 1040px;
+      margin: 0 auto 12px auto;
+      background: #ffffff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+    }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid #cbd5e1;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sheet-page {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #059669;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .brand-title {
+      font-size: 15pt;
+      font-weight: 900;
+      color: #047857;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .doc-badge {
+      background: #ecfdf5;
+      color: #047857;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 8.5pt;
+      border: 1px solid #a7f3d0;
+    }
+
+    .grid-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+    }
+    .grid-table th {
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 6px 4px;
+      border: 1px solid #cbd5e1;
+      text-align: center;
+    }
+    .grid-table td {
+      padding: 4px 5px;
+      border: 1px solid #e2e8f0;
+      vertical-align: middle;
+      font-size: 7.5pt;
+    }
+    .grid-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .chk-box {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #64748b;
+      border-radius: 4px;
+      margin: 0 auto;
+      background: #ffffff;
+    }
+
+    .footer-note {
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 7pt;
+      color: #64748b;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOOLBAR A SCHERMO -->
+  <div class="no-print-toolbar">
+    <div>
+      <div style="font-weight: 800; font-size: 14px; color: #047857;">📅 Registro Settimanale Spunta Cartacea: Rosa Annunziata Cavalcante</div>
+      <div style="font-size: 11px; color: #64748b;">Da stampare in A4 Orizzontale • Ideale per i giorni in cui il PC non viene acceso</div>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button type="button" class="btn-action" onclick="window.print()">🖨️ Stampa Griglia Settimanale A4</button>
+      <a href="PROSPETTO_FARMACI_ROSA.html" class="btn-outline">💊 Scheda Terapie</a>
+      <a href="DIARIO_GLICEMICO_ROSA.html" class="btn-outline">🩸 Diario Glicemico</a>
+    </div>
+  </div>
+
+  <div class="sheet-page">
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">🩺 CareAssist Pro • Registro Terapeutico Settimanale</div>
+        <div style="font-size: 8pt; color: #64748b;">Settimana dal ___/___/2026 al ___/___/2026 • Assistita: <b>Rosa Annunziata Cavalcante (88 anni)</b></div>
+      </div>
+      <div class="doc-badge">
+        SPUNTA CARTACEA SETTIMANALE (LUN - DOM)
+      </div>
+    </div>
+
+    <table class="grid-table">
+      <thead>
+        <tr>
+          <th style="width: 60px;">Orario</th>
+          <th style="width: 170px; text-align: left; padding-left: 8px;">Farmaco &amp; Dosaggio</th>
+          <th style="text-align: left; padding-left: 8px;">Modalità / Indicazione</th>
+          <th style="width: 48px;">LUN</th>
+          <th style="width: 48px;">MAR</th>
+          <th style="width: 48px;">MER</th>
+          <th style="width: 48px;">GIO</th>
+          <th style="width: 48px;">VEN</th>
+          <th style="width: 48px;">SAB</th>
+          <th style="width: 48px;">DOM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">07:30</td>
+          <td><b>SINEMET 100+25 mg</b> (1ª dose)</td>
+          <td><span style="color:#b45309; font-weight:700;">30m prima colazione</span> (Parkinson)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">08:00</td>
+          <td><b>XULTOPHY penna</b> (sottocute)</td>
+          <td>Iniezione 1 volta/die stessa ora (Diabete)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">08:00</td>
+          <td><b>DIAMICRON 60 mg RM</b></td>
+          <td>A colazione senza masticare (Diabete)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">08:00</td>
+          <td><b>FORXIGA 10 mg</b> (1 cpr)</td>
+          <td>Al mattino con acqua (Diabete / cuore)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">08:00</td>
+          <td><b>CONGESCOR 2,5 mg</b> (1 cpr)</td>
+          <td>A colazione (Beta-bloccante / battito)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">08:00</td>
+          <td><b>TRIATEC 5 mg</b> (1 cpr)</td>
+          <td>A colazione con acqua (Pressione arteriosa)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">08:30</td>
+          <td><b>LASIX 25 mg</b> (1 cpr)</td>
+          <td>Al mattino (Diuretico / edemi)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">12:30</td>
+          <td><b>SINEMET 100+25 mg</b> (2ª dose)</td>
+          <td><span style="color:#b45309; font-weight:700;">30m prima di pranzo</span> (Parkinson)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr style="background:#ecfdf5;">
+          <td style="text-align: center; font-weight: 800; color: #047857;">13:00</td>
+          <td><b>AVERELIX 75 mg</b> (1 cpr film)</td>
+          <td><span style="color:#047857; font-weight:700;">A pranzo</span> (Antiaggregante piastrinico)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">13:30</td>
+          <td><b>ADENURIC 80 mg</b> (Alterni)</td>
+          <td>Dopo pranzo a giorni alterni con Sivastin</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">13:30</td>
+          <td><b>ARCOXIA 90 mg</b> (1 cpr)</td>
+          <td>A stomaco pieno dopo pranzo (Dolore artrosi)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">19:30</td>
+          <td><b>SINEMET 100+25 mg</b> (3ª dose)</td>
+          <td><span style="color:#b45309; font-weight:700;">30m prima di cena</span> (Parkinson)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #0284c7;">21:00</td>
+          <td><b>SIVASTIN 20 mg</b> (Alterni)</td>
+          <td>Prima di dormire a giorni alterni con Adenuric</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+        <tr>
+          <td style="text-align: center; font-weight: 800; color: #d97706;">SOS</td>
+          <td><b>FEDIVELLE 20.000 UI</b> (Vitamina D)</td>
+          <td>Dose periodica programmata (Segnare giorno)</td>
+          <td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td><td><div class="chk-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer-note">
+      <div>Note Settimana: ____________________________________________________________________________________</div>
+      <div>Firma Caregiver: ___________________________________</div>
+    </div>
+  </div>
+</body>
+</html>

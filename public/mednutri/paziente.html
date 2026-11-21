@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Piano Nutrizionale Tascabile - MedNutri Pro</title>
+<!-- PWA & Mobile Web App Manifest Support -->
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0284c7">
+<link rel="icon" type="image/png" href="/icon-512.png">
+<link rel="apple-touch-icon" href="/icon-512.png">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .header {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    padding: 24px 20px 28px 20px;
+    border-bottom-left-radius: 28px;
+    border-bottom-right-radius: 28px;
+    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.35);
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .clinic-badge {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .pat-name {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .doc-name {
+    font-size: 13px;
+    opacity: 0.9;
+    font-weight: 500;
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: -16px 16px 20px 16px;
+  }
+  .metric-card {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+  .metric-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: #38bdf8;
+  }
+  .metric-lbl {
+    font-size: 10.5px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .content-pad {
+    padding: 0 16px;
+  }
+  .card-box {
+    background: #1e293b;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #38bdf8;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .water-tracker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f172a;
+    border-radius: 14px;
+    padding: 12px 16px;
+  }
+  .water-btn {
+    background: #0284c7;
+    border: none;
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 13.5px;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #0284c7;
+  }
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #0f172a;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    z-index: 100;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+  .tab-btn.active {
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="clinic-badge">ASL Puglia &bull; MedNutri Pro</span>
+    <span style="font-size: 20px;">🥗</span>
+  </div>
+  <div class="pat-name" id="ui-nome">Caricamento...</div>
+  <div class="doc-name">Referente: <strong id="ui-doc">Dott. Ciro Milella</strong></div>
+</div>
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-val" id="ui-tdee">--</div>
+    <div class="metric-lbl">Target Kcal</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val" id="ui-bmi">--</div>
+    <div class="metric-lbl">BMI Attuale</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-val" id="ui-acqua-target">-- L</div>
+    <div class="metric-lbl">Acqua / Dì</div>
+  </div>
+</div>
+
+<div class="content-pad">
+
+  <!-- BOTTONE INSTALLAZIONE APP SMARTPHONE (PWA) -->
+  <div id="pwa-install-wrapper" style="margin-bottom:14px;">
+    <button id="btn-install-pwa" onclick="richiediInstallazionePWA()" style="width:100%; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#ffffff; border:1px solid rgba(255,255,255,0.2); padding:12px 16px; border-radius:14px; font-weight:800; font-size:13.5px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; box-shadow:0 6px 18px rgba(2,132,199,0.35);">
+      <span>📲 Salva App Personale sullo Schermo dello Smartphone</span>
+    </button>
+  </div>
+
+  <!-- IDRATAZIONE GIORNALIERA -->
+  <div class="card-box">
+    <div class="card-title">💧 Diario Idratazione Giornaliera</div>
+    <div class="water-tracker">
+      <div>
+        <div style="font-size:20px; font-weight:800;" id="water-count">0 / 8 Bicchieri</div>
+        <div style="font-size:11.5px; color:#94a3b8;">1 bicchiere = 250 ml</div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="water-btn" onclick="addWater(-1)" style="background:#475569;">-</button>
+        <button class="water-btn" onclick="addWater(1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROTOCOLLO E LINEE GUIDA -->
+  <div class="card-box">
+    <div class="card-title">🩺 Protocollo Nutrizionale Attivo</div>
+    <div style="font-size:14px; font-weight:700; color:#f8fafc; margin-bottom:4px;" id="ui-patologia">--</div>
+    <p style="font-size:12.5px; color:#94a3b8; line-height:1.4;" id="ui-alert">Caricamento delle indicazioni terapeutiche...</p>
+  </div>
+
+  <!-- LISTA DELLA SPESA SMART -->
+  <div class="card-box">
+    <div class="card-title">🛒 Lista della Spesa per il Supermercato</div>
+    <p style="font-size:11.5px; color:#94a3b8; margin-bottom:10px;">Spunta gli alimenti mano a mano che li metti nel carrello:</p>
+    <div id="spesa-checklist">
+      <!-- Generata via JS -->
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let wCount = parseInt(localStorage.getItem('mednutri_patient_water') || '0');
+  function updateWaterUI() {
+    document.getElementById('water-count').innerText = `${wCount} / 8 Bicchieri (${(wCount * 0.25).toFixed(2)} L)`;
+    localStorage.setItem('mednutri_patient_water', wCount);
+  }
+  function addWater(delta) {
+    wCount = Math.max(0, wCount + delta);
+    updateWaterUI();
+  }
+
+  // Lettura dati da URL hash o query
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const dataStr = params.get('data');
+    if (dataStr) {
+      const d = JSON.parse(decodeURIComponent(escape(atob(dataStr))));
+      document.getElementById('ui-nome').innerText = d.nome || 'Paziente';
+      document.getElementById('ui-doc').innerText = d.doc || 'Dott. Ciro Milella';
+      document.getElementById('ui-tdee').innerText = d.tdee || '1850';
+      document.getElementById('ui-bmi').innerText = d.bmi || '24.5';
+      document.getElementById('ui-acqua-target').innerText = (d.acqua || '2.0') + ' L';
+      document.getElementById('ui-patologia').innerText = d.patologia || 'Regime Bilanciato';
+      document.getElementById('ui-alert').innerText = d.alert || 'Alimentazione varia con idratazione costante e attività motoria quotidiana.';
+
+      if (d.spesa && Array.isArray(d.spesa)) {
+        const c = document.getElementById('spesa-checklist');
+        c.innerHTML = d.spesa.map((item, idx) => `
+          <label class="checklist-item">
+            <input type="checkbox" id="chk_${idx}">
+            <span>${item}</span>
+          </label>
+        `).join('');
+      }
+    } else {
+      // Dati demo predefiniti Ciro Milella
+      document.getElementById('ui-nome').innerText = 'Ciro Milella';
+      document.getElementById('ui-doc').innerText = 'Dott. Ciro Milella';
+      document.getElementById('ui-tdee').innerText = '1850';
+      document.getElementById('ui-bmi').innerText = '31.0';
+      document.getElementById('ui-acqua-target').innerText = '2.5 L';
+      document.getElementById('ui-patologia').innerText = 'Steatosi Epatica (Fegato Grasso)';
+      document.getElementById('ui-alert').innerText = 'Azzeramento alcol e zuccheri raffinati. Privilegiare verdure amare, carciofi, pesce magro e olio extravergine d\'oliva.';
+      
+      const spesaDemo = [
+        'Carciofi e Verdure a foglia amara',
+        'Filetti di Orata e Merluzzo fresco',
+        'Fiocchi d\'Avena integrali (500g)',
+        'Olio Extravergine d\'Oliva a crudo',
+        'Frutta fresca di stagione (Mele, Agrumi)',
+        'Legumi secchi o lessati (Lenticchie, Ceci)',
+        'Frutta secca a guscio naturale (Noci)'
+      ];
+      document.getElementById('spesa-checklist').innerHTML = spesaDemo.map((item, idx) => `
+        <label class="checklist-item">
+          <input type="checkbox" id="chk_${idx}">
+          <span>${item}</span>
+        </label>
+      `).join('');
+    }
+  } catch(e) {
+    console.error(e);
+  }
+  updateWaterUI();
+
+  // Gestione PWA BeforeInstallPrompt
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('btn-install-pwa');
+    if (btn) btn.style.display = 'flex';
+  });
+
+  function richiediInstallazionePWA() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choice) => {
+        if (choice.outcome === 'accepted') {
+          console.log('PWA MedNutri installata');
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      alert("📲 Per salvare l'App sullo Smartphone:\n\n• Su Android/Chrome: tocca i 3 puntini in alto a destra e seleziona 'Aggiungi a schermata Home'\n• Su iPhone/Safari: tocca il tasto Condividi (quadrato con freccia) e scegli 'Aggiungi alla schermata Home'");
+    }
+  }
+</script>
+
+</body>
+</html>

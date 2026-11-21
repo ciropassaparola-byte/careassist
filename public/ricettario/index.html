@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Ricettario di Famiglia</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#B71C1C">
+    <link rel="stylesheet" href="style.css?v=4">
+    
+    <script>
+        // Applica il tema immediatamente per evitare il "flash" bianco
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+    <script src="html2canvas.min.js"></script>
+    <script src="/suite_security_gate.js?v=1"></script>
+</head>
+<body>
+    <!-- Sfondo Elegante -->
+    <div class="bg-pattern"></div>
+
+    <!-- Hero Banner -->
+    <header class="hero-section">
+        <nav class="top-nav-hero">
+            <div class="nav-content">
+                <div class="nav-links" style="margin-left: auto; display: flex; gap: 10px; align-items: center;">
+                    <button onclick="window.location.href='/launcher.html'" style="background: rgba(15, 23, 42, 0.7); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: all 0.3s;" title="Torna al Portale Aziendale">🏠 Torna al Menu</button>
+                    <button id="btnNewRecipe" class="btn-primary"><span>+</span> Nuova Ricetta</button>
+                </div>
+            </div>
+        </nav>
+        <div class="hero-content">
+            <h1 class="hero-title">Il Ricettario di Famiglia</h1>
+        <div style="margin-top: 6px; font-size: 0.95rem; font-weight: 800; color: #fef08a; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">👑 CIRO MILELLA</div>
+            <p class="hero-subtitle">Profumi, ricordi e l'arte di cucinare col cuore.</p>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button id="btnRandomRecipe" class="btn-primary" style="width: 100%; margin-bottom: 20px; font-size: 1.1rem; padding: 1rem; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #e74c3c); box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);">🎲 Cosa Cucino Oggi?</button>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cerca una ricetta...">
+            </div>
+
+            <!-- SVUOTA FRIGO -->
+            <div class="filter-group svuota-frigo-group">
+                <h3>🧊 Svuota Frigo</h3>
+                <div class="search-box" style="margin-bottom: 0.5rem;">
+                    <input type="text" id="fridgeInput" placeholder="Inserisci ingrediente + Invio...">
+                </div>
+                <div id="fridgeTags" class="fridge-tags">
+                    <!-- Chip popolati da JS -->
+                </div>
+            </div>
+
+            <!-- OPZIONI E STATISTICHE -->
+            <div class="filter-group">
+                <h3>Opzioni</h3>
+                <ul class="category-list">
+                    <li id="btnToggleTheme" title="Scorciatoia da tastiera: ALT+D">🌙 Tema Scuro / Chiaro</li>
+                    <li id="btnOpenPlanner">📅 Menu Settimanale</li>
+                    <li id="btnOpenStats">📊 Le mie Statistiche</li>
+                    <li id="btnOpenShoppingSidebar">🛒 Lista della Spesa <span id="sidebarShoppingBadge" style="background: var(--primary); color: white; border-radius: 50%; padding: 2px 8px; font-size: 0.8rem; margin-left: 5px; display: none;">0</span></li>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h3>Categorie</h3>
+                <ul class="category-list" id="categoryFilter">
+                    <li class="active" data-cat="all">🍽️ Tutte le Ricette</li>
+                    <li data-cat="favorites">❤️ I Miei Preferiti</li>
+                    <li data-cat="Antipasti">🥗 Antipasti</li>
+                    <li data-cat="Primi">🍝 Primi Piatti</li>
+                    <li data-cat="Secondi">🥩 Secondi Piatti</li>
+                    <li data-cat="Contorni">🥔 Contorni</li>
+                    <li data-cat="Dolci">🍰 Dolci & Dessert</li>
+                    <li data-cat="Lievitati">🥖 Lievitati & Pane</li>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h3>Le Mie Fonti</h3>
+                <ul class="category-list" id="originFilter">
+                    <!-- Popolato dinamicamente da JS -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Griglia Ricette -->
+        <div class="content-area">
+            <div class="welcome-quote">
+                "Non c'è amore più sincero di quello per il cibo." <br>
+                <span style="font-size: 1rem; color: #999;">- George Bernard Shaw</span>
+            </div>
+            
+            <!-- Vetrina Stagionale -->
+            <div id="seasonalShowcase" style="display: none; margin-bottom: 3rem;">
+                <h2 id="seasonalTitle" style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; display: inline-block;">🍂 Consigliati per la Stagione</h2>
+                <div id="seasonalGrid" class="recipes-grid"></div>
+            </div>
+
+            <!-- Griglia Principale -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.8rem; color: #333;">Tutte le Ricette</h2>
+            </div>
+            <div class="recipes-grid" id="recipesGrid">
+                <!-- Recipe Cards generate dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Inserimento/Modifica -->
+    <div id="recipeModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" id="btnCloseModal">&times;</button>
+            <h2 id="modalTitle" class="modal-title">Aggiungi Ricetta</h2>
+            
+            <form id="recipeForm" class="recipe-form">
+                <div class="form-row">
+                    <div class="form-group image-upload-group">
+                        <label>Foto del Piatto</label>
+                        <div class="image-preview" id="imagePreview">
+                            <span class="preview-text">Clicca per caricare una foto</span>
+                        </div>
+                        <input type="file" id="fotoInput" accept="image/*" style="display: none;">
+                        <input type="hidden" id="fotoPath" value="">
+                    </div>
+                    
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="titolo">Nome della Ricetta</label>
+                            <input type="text" id="titolo" required placeholder="Es. Lasagne al Forno">
+                        </div>
+                        <div class="row-inline">
+                            <div class="form-group">
+                                <label for="categoria">Categoria</label>
+                                <select id="categoria" required>
+                                    <option value="Primi">Primi Piatti</option>
+                                    <option value="Secondi">Secondi Piatti</option>
+                                    <option value="Contorni">Contorni</option>
+                                    <option value="Dolci">Dolci & Dessert</option>
+                                    <option value="Lievitati">Lievitati & Pane</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="origine">Origine (Personale, Amico, Libro...)</label>
+                                <input type="text" id="origine" list="originSuggestions" placeholder="Es. Ricetta di Nonna">
+                                <datalist id="originSuggestions">
+                                    <option value="Personale">
+                                    <option value="Di Famiglia">
+                                    <option value="Da un Amico">
+                                    <option value="Libro di Ricette">
+                                    <option value="Internet">
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="row-inline">
+                            <div class="form-group">
+                                <label>⏱️ Tempo Prep. (min)</label>
+                                <div class="number-input-wrapper">
+                                    <button type="button" class="btn-num-control" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
+                                    <input type="number" id="recipeTime" placeholder="Es. 30" min="0">
+                                    <button type="button" class="btn-num-control" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>🥘 Tempo Cottura (min)</label>
+                                <div class="number-input-wrapper">
+                                    <button type="button" class="btn-num-control" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
+                                    <input type="number" id="recipeCookTime" placeholder="Es. 45" min="0">
+                                    <button type="button" class="btn-num-control" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>👥 Porzioni</label>
+                                <div class="number-input-wrapper">
+                                    <button type="button" class="btn-num-control" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
+                                    <input type="number" id="recipePortions" placeholder="Es. 4" min="1">
+                                    <button type="button" class="btn-num-control" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-inline">
+                            <div class="form-group">
+                                <label>👨‍🍳 Difficoltà</label>
+                                <select id="recipeDifficulty">
+                                    <option value="Bassa">Bassa</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>💶 Costo</label>
+                                <select id="recipeCost">
+                                    <option value="Basso">Basso</option>
+                                    <option value="Medio">Medio</option>
+                                    <option value="Alto">Alto</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row-inline">
+                            <div class="form-group">
+                                <label>🍳 Metodo di cottura</label>
+                                <select id="recipeMethod">
+                                    <option value="Fornello">Fornello</option>
+                                    <option value="Forno">Forno</option>
+                                    <option value="Microonde">Microonde</option>
+                                    <option value="Friggitrice ad aria">Friggitrice ad aria</option>
+                                    <option value="Senza cottura">Senza cottura</option>
+                                    <option value="Altro">Altro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>📅 Stagionalità</label>
+                                <select id="recipeSeason">
+                                    <option value="Tutte le stagioni">Tutte le stagioni</option>
+                                    <option value="Primavera">Primavera</option>
+                                    <option value="Estate">Estate</option>
+                                    <option value="Autunno">Autunno</option>
+                                    <option value="Inverno">Inverno</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row-inline">
+                            <div class="form-group">
+                                <label>🏳️ Cucina</label>
+                                <select id="recipeCuisine">
+                                    <option value="Italiana">Italiana</option>
+                                    <option value="Mediterranea">Mediterranea</option>
+                                    <option value="Asiatica">Asiatica</option>
+                                    <option value="Americana">Americana</option>
+                                    <option value="Francese">Francese</option>
+                                    <option value="Altro">Altra</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ingredienti">Ingredienti (uno per riga)</label>
+                    <textarea id="ingredienti" rows="4" required placeholder="- 500g di farina..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="procedimento">Procedimento</label>
+                    <textarea id="procedimento" rows="6" required placeholder="1. Inizia preparando..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="note">Note Speciali & Segreti</label>
+                    <textarea id="note" rows="3" placeholder="Aggiungi una nota personale per rendere perfetto il piatto..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" style="width: 100%;">Salva Ricetta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modale Visualizzazione -->
+    <div id="viewModal" class="modal-overlay">
+        <div class="modal-content view-mode">
+            <button class="close-modal" id="btnCloseView" data-html2canvas-ignore="true">&times;</button>
+            <div class="view-header-split">
+                <div class="view-header-left">
+                    <span id="viewCategory" class="badge-lci">Categoria</span>
+                    <h1 id="viewTitle" class="title-lci">Titolo Ricetta</h1>
+                    <div class="view-subtitle-lci">La tua preziosa raccolta di specialità.</div>
+                </div>
+                <div class="view-header-right">
+                    <img id="viewImage" src="" alt="Foto Piatto" class="view-image-lci">
+                </div>
+            </div>
+            
+            <div class="view-body-lci">
+                <div class="view-info-bar">
+                    <div class="info-details-lci" id="viewInfoDetails">
+                        <!-- Popolato dinamicamente -->
+                    </div>
+                </div>
+                
+                <div class="view-content-split">
+                    <div class="view-ingredients">
+                        <h3>Ingredienti</h3>
+                        <ul id="viewIngredientsList"></ul>
+                    </div>
+                    <div class="view-instructions">
+                        <h3>Procedimento</h3>
+                        <div id="viewInstructionsText" class="text-content"></div>
+                        
+                        <div class="view-notes" id="viewNotesContainer">
+                            <h3>💡 I Tuoi Segreti</h3>
+                            <p id="viewNotesText"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="view-actions" style="text-align: center;" data-html2canvas-ignore="true">
+                <button id="btnFocusMode" class="btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem; border-radius: 50px; margin-bottom: 1rem; width: 100%;" title="Scorciatoia da tastiera: ALT+F">🧑‍🍳 CUCINA ORA</button>
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <button id="btnShareInstagram" class="btn-primary" style="background: #E1306C; border-color: #E1306C;" title="Scorciatoia da tastiera: ALT+C">📸 Crea Cartolina</button>
+                    <button id="btnAddToShopping" class="btn-primary" style="background: #27ae60; border-color: #27ae60;">🛒 Metti nel Carrello</button>
+                    <button id="btnEditRecipe" class="btn-secondary">✏️ Modifica</button>
+                    <button id="btnPrintRecipe" class="btn-secondary">🖨️ Stampa</button>
+                    <button id="btnDeleteRecipe" class="btn-danger">🗑️ Elimina</button>
+                    <button id="btnBackRecipe" class="btn-secondary">⬅ Indietro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modale Lista della Spesa -->
+    <!-- Modale Lista della Spesa Unificata -->
+    <div id="shoppingModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 620px;">
+            <button class="close-modal" id="btnCloseShopping">&times;</button>
+            <h2 class="modal-title" style="margin-bottom: 0.4rem; font-family: 'Playfair Display', serif; color: var(--primary);">🛒 La Tua Lista della Spesa</h2>
+            <p id="shoppingSubtitle" style="color: #666; font-size: 0.95rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.6rem;"></p>
+            <div id="shoppingListContainer" class="shopping-list-container" style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                <!-- Lista generata da JS -->
+            </div>
+            <div class="form-actions" style="margin-top: 1.5rem; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                <button id="btnWhatsAppShoppingList" class="btn-primary" style="background-color: #25D366; border-color: #25D366;">💬 WhatsApp</button>
+                <button id="btnPrintShoppingList" class="btn-secondary">🖨️ Stampa Foglio</button>
+                <button id="btnCopyShoppingList" class="btn-secondary">📋 Copia Appunti</button>
+                <button id="btnClearShoppingList" class="btn-danger">🗑️ Svuota</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Assegna Giorno -->
+    <div id="assignDayModal" class="modal-overlay" style="z-index: 2100;">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <h3 style="margin-bottom: 1.5rem; font-family: 'Playfair Display', serif; color: var(--primary);">📅 Pianifica Ricetta</h3>
+            <select id="assignDaySelect" class="form-group" style="margin-bottom: 1.5rem; width: 100%; padding: 0.8rem; font-size: 1.1rem;">
+                <option value="lunedi">Lunedì</option>
+                <option value="martedi">Martedì</option>
+                <option value="mercoledi">Mercoledì</option>
+                <option value="giovedi">Giovedì</option>
+                <option value="venerdi">Venerdì</option>
+                <option value="sabato">Sabato</option>
+                <option value="domenica">Domenica</option>
+            </select>
+            <div class="form-actions" style="justify-content: center;">
+                <button id="btnConfirmAssignDay" class="btn-primary">Conferma</button>
+                <button id="btnCancelAssignDay" class="btn-secondary">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Planner -->
+    <div id="plannerModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 1200px; height: 90vh;">
+            <button class="close-modal" id="btnClosePlanner">&times;</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 class="modal-title" style="margin: 0; text-align: left;">📅 Menu Settimanale</h2>
+                <button id="btnPlannerToShopping" class="btn-primary" style="background-color: #25D366; border-color: #25D366;">🛒 Genera Spesa Settimanale</button>
+            </div>
+            <div id="plannerGrid" class="planner-grid">
+                <!-- Popolato da JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Focus Mode -->
+    <div id="focusModal" class="focus-overlay">
+        <button class="close-focus" id="btnCloseFocus">&times;</button>
+        <div class="focus-layout">
+            <div class="focus-sidebar">
+                <h3 style="color: #FF5252; margin-bottom: 1rem; font-family: 'Playfair Display', serif;">Ingredienti</h3>
+                <ul id="focusIngredientsList"></ul>
+            </div>
+            <div class="focus-main">
+                <h1 id="focusTitle" class="focus-title">Titolo Ricetta</h1>
+                <div class="focus-step-container">
+                    <p id="focusCurrentStepText" class="focus-step-text">Caricamento passo...</p>
+                </div>
+                <div class="focus-controls">
+                    <button id="btnFocusPrev" class="btn-focus-nav">← Precedente</button>
+                    <span id="focusStepCounter" class="focus-counter">Passo 1 di X</span>
+                    <button id="btnFocusNext" class="btn-focus-nav">Successivo →</button>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button id="btnReadAloud" class="btn-primary focus-read-btn" title="Scorciatoia da tastiera: ALT+V">🗣️ Leggi Passo Attuale</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Statistiche -->
+    <div id="statsModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 650px; text-align: center;">
+            <button class="close-modal" id="btnCloseStats">&times;</button>
+            <h2 class="modal-title" style="margin-bottom: 2rem;">📊 Statistiche Chef</h2>
+            
+            <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 2rem;">
+                <div style="background: #f9f9f9; padding: 2rem; border-radius: 12px; border: 1px solid #ddd; flex: 1;">
+                    <h1 id="statTotalCooked" style="font-size: 4rem; color: var(--primary); margin-bottom: 0.5rem;">0</h1>
+                    <p style="font-size: 1.1rem; color: #555; font-weight: bold; text-transform: uppercase;">Piatti Cucinati</p>
+                </div>
+                <div style="background: #f9f9f9; padding: 2rem; border-radius: 12px; border: 1px solid #ddd; flex: 1;">
+                    <h1 id="statFavCategory" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; line-height: 1.2;">-</h1>
+                    <p style="font-size: 1.1rem; color: #555; font-weight: bold; text-transform: uppercase;">Categoria Top</p>
+                </div>
+            </div>
+            
+            <div style="background: #FAFAFA; border: 1px solid var(--border); padding: 1.5rem; text-align: left;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-color); border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">🏆 La tua Top 3 Ricette</h3>
+                <ol id="statTopRecipes" style="padding-left: 1.5rem; font-size: 1.1rem; line-height: 2; color: #444;">
+                    <!-- Popolato da JS -->
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenitore Timer Fluttuanti -->
+    <div id="activeTimersContainer" style="position: fixed; bottom: 100px; right: 30px; z-index: 4000; display: flex; flex-direction: column; gap: 10px;"></div>
+
+    <!-- Notifica Toast (Elegante) -->
+    <div id="toastNotification" class="toast-notification">Notifica    </div>
+    
+    <!-- TEMPLATE NASCOSTO PER LA CARTOLINA -->
+    <div id="postcardTemplate" style="position: absolute; left: -9999px; top: 0; width: 800px; background: #FAF9F6; color: #333; box-sizing: border-box; display: flex; flex-direction: column; z-index: -100;">
+        <!-- HEADER -->
+        <div id="pcImage" style="width: 100%; height: 450px; background-image: url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800&auto=format&fit=crop'); background-size: cover; background-position: center; position: relative; display: flex; justify-content: center; align-items: center;">
+            
+            <!-- Foto stile Polaroid -->
+            <div style="background: white; padding: 12px 12px 35px 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.6); transform: rotate(3deg); border-radius: 4px; margin-bottom: 30px; z-index: 1;">
+                <img id="pcRecipeInnerImage" src="" style="width: 260px; height: 260px; object-fit: cover; border-radius: 2px;">
+            </div>
+
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, rgba(0,0,0,0.95)); z-index: 2;"></div>
+            <div style="position: absolute; bottom: 35px; left: 40px; right: 40px; color: white; z-index: 3;">
+                <p id="pcCategory" style="font-family: 'Inter', sans-serif; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; color: #FF9800; font-weight: bold;"></p>
+                <h1 id="pcTitle" style="font-family: 'Playfair Display', serif; font-size: 3.2rem; margin: 0; line-height: 1.1; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"></h1>
+            </div>
+        </div>
+
+        <!-- CORPO -->
+        <div style="padding: 40px; display: flex; gap: 40px; background: #FAF9F6;">
+            <!-- SINISTRA: Info e Ingredienti -->
+            <div style="flex: 1;">
+                <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'Inter', sans-serif; font-size: 1rem; color: #555; margin-bottom: 25px; background: #F4F1EB; padding: 15px 20px; border-radius: 8px; border-left: 4px solid #FF9800;">
+                    <div id="pcTime">⏱️ --</div>
+                    <div id="pcPortions">👥 --</div>
+                    <div id="pcDifficulty">👨‍🍳 --</div>
+                </div>
+                
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 15px; color: #8C1C13; border-left: 4px solid #8C1C13; padding-left: 10px;">Ingredienti</h2>
+                <ul id="pcIngredients" style="font-family: 'Inter', sans-serif; font-size: 1.05rem; line-height: 1.8; padding-left: 20px; color: #333;">
+                </ul>
+            </div>
+            
+            <!-- DESTRA: Procedimento -->
+            <div style="flex: 1.5;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 15px; color: #8C1C13; border-left: 4px solid #8C1C13; padding-left: 10px;">Procedimento</h2>
+                <div id="pcInstructions" style="font-family: 'Inter', sans-serif; font-size: 1.05rem; line-height: 1.6; color: #333; text-align: justify;">
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="padding: 20px 40px; background: #8C1C13; color: white; text-align: center; font-family: 'Inter', sans-serif; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase;">
+            ✨ Il Tuo Ricettario Personale ✨
+        </div>
+    </div>
+
+    <!-- Timer Fluttuante (Magic Timer) -->
+    <div id="floatingTimer">
+        <button id="timerClose">✖</button>
+        <span style="font-size: 0.9rem; color: #666; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Timer Cottura</span>
+        <div id="timerDisplay">00:00</div>
+        <button id="btnStopTimer" class="btn-danger" style="padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; display: none;">Ferma Suono</button>
+    </div>
+
+
+
+    <!-- FAB Carrello Spesa Galleggiante -->
+    <div id="shoppingCartFab" title="Apri Lista della Spesa">
+        🛒
+        <span id="shoppingCartBadge" style="display: none;">0</span>
+    </div>
+
+    <!-- Template Nascosto per Cartolina Instagram -->
+    <div id="postcardTemplate" style="position: absolute; left: -9999px; top: -9999px; width: 1080px; height: 1080px; background: #fdfbf7; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Playfair Display', serif;">
+        <div style="background: white; padding: 30px 30px 60px 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 4px; display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; box-sizing: border-box; position: relative;">
+            <img id="postcardImage" src="" alt="Recipe" style="width: 100%; height: 600px; object-fit: cover; border-radius: 4px; margin-bottom: 40px;">
+            <h1 id="postcardTitle" style="font-size: 3.5rem; color: #1A1A1A; margin-bottom: 20px; text-align: center; line-height: 1.1;">Titolo</h1>
+            <p id="postcardCategory" style="font-family: 'Lato', sans-serif; font-size: 1.5rem; color: #B71C1C; text-transform: uppercase; letter-spacing: 3px; font-weight: bold; margin-bottom: 20px;">CATEGORIA</p>
+            <p style="font-style: italic; color: #555; font-size: 1.8rem; position: absolute; bottom: 30px; text-align: center; width: 100%;">Il Ricettario di Famiglia ❤️</p>
+        </div>
+    </div>
+
+    <script src="html2canvas.min.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+
+  <!-- Universal Suite Mobile Bottom Navigation -->
+  <script src="/suite_nav.js"></script>
+
+
+<!-- ==========================================================================
+     BARRA DI NAVIGAZIONE MULTI-DISPOSITIVO GLOBALE SUITE MILELLA (PC & SMARTPHONE)
+     ========================================================================== -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style id="suite-unified-mobile-bar-style">
+  .mobile-bottom-bar {
+    position: fixed !important;
+    bottom: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 24px) !important;
+    max-width: 440px !important;
+    height: 64px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 22px !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 8px !important;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+    z-index: 999999 !important;
+    box-sizing: border-box !important;
+  }
+  .mobile-bottom-bar .bar-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #64748b !important;
+    text-decoration: none !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    gap: 3px !important;
+    cursor: pointer !important;
+    background: none !important;
+    border: none !important;
+    flex: 1 !important;
+    height: 100% !important;
+    transition: all 0.2s !important;
+    -webkit-tap-highlight-color: transparent !important;
+    padding: 0 !important;
+  }
+  .mobile-bottom-bar .bar-item:active,
+  .mobile-bottom-bar .bar-item.active {
+    color: #0284c7 !important;
+  }
+  .mobile-bottom-bar .bar-item .icon {
+    font-size: 20px !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action {
+    position: relative !important;
+    top: -12px !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action .btn-circle-add {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    border: 3px solid #ffffff !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 24px !important;
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4) !important;
+    cursor: pointer !important;
+    transition: transform 0.15s !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action .btn-circle-add:active {
+    transform: scale(0.92) !important;
+  }
+  body {
+    padding-bottom: 84px !important;
+  }
+</style>
+
+<nav class="mobile-bottom-bar" id="ricettario-mobile-bar" aria-label="Navigazione Suite">
+  <button type="button" class="bar-item" onclick="window.history.length > 1 ? window.history.back() : window.location.href='/launcher.html'" title="Torna Indietro">
+    <span class="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </span>
+    <span>Indietro</span>
+  </button>
+  
+  <a href="/launcher.html" class="bar-item" title="Home Suite Milella">
+    <span class="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </span>
+    <span>Home Suite</span>
+  </a>
+
+  <div class="bar-item center-action">
+    <button type="button" class="btn-circle-add" onclick="document.getElementById('btnNewRecipe').click()" title="Aggiungi Nuova Ricetta">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+    <span style="font-size:10px; font-weight:800; color:#0284c7; margin-top:3px;">Nuovo</span>
+  </div>
+
+  <button type="button" class="bar-item" onclick="location.reload()" title="Ricarica Dati">
+    <span class="icon">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+    </span>
+    <span>Ricarica</span>
+  </button>
+
+  <button type="button" class="bar-item" onclick="document.getElementById('shoppingModal').classList.add('active')" title="Lista della Spesa">
+    <span class="icon">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+    </span>
+    <span>Spesa</span>
+  </button>
+</nav>
+
+</body>
+</html>

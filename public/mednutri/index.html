@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedNutri Pro 👑 CIRO MILELLA - Ambulatorio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1793709034243">
+
+    <style id="custom-suite-select-contrast">
+      /* EXECUTIVE HIGH-CONTRAST SELECT BOX PERFETTAMENTE LEGGIBILE */
+      #select-import-mednutri-suite {
+        background-color: #0f172a !important;
+        color: #ffffff !important;
+        border: 2px solid #38bdf8 !important;
+        font-weight: 800 !important;
+        font-size: 14.5px !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.4) !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        outline: none !important;
+      }
+      #select-import-mednutri-suite:hover,
+      #select-import-mednutri-suite:focus {
+        border-color: #0284c7 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35) !important;
+      }
+      #select-import-mednutri-suite option {
+        background-color: #0f172a !important;
+        color: #f8fafc !important;
+        font-weight: 700 !important;
+        padding: 10px !important;
+      }
+    </style>
+</head>
+<body>
+    <!-- Schermata di Sblocco PIN Medico (Attiva di default all'avvio) -->
+    <div id="pin-lock-modal" class="setup-overlay" style="display:flex; z-index:999999; flex-direction:column; justify-content:space-between; background: radial-gradient(circle at 50% 25%, #1e293b 0%, #0f172a 60%, #080c14 100%); padding: 20px; box-sizing: border-box; min-height: 100vh; width: 100vw; position: fixed; top: 0; left: 0;">
+        
+        <!-- Top Navigation Bar Inquadratura -->
+        <header style="width:100%; max-width:1240px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding:12px 24px; background:rgba(30, 41, 59, 0.7); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.15); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.35);">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:2rem; filter:drop-shadow(0 2px 8px rgba(14,165,233,0.5));">⚕️</span>
+                <div>
+                    <h1 style="font-size:1.3rem; font-weight:800; color:#ffffff; margin:0; letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">
+                        MedNutri <span style="background:linear-gradient(135deg, #38bdf8, #0ea5e9); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Pro</span>
+                        <span style="font-size:0.68rem; background:rgba(14,165,233,0.2); color:#38bdf8; border:1px solid rgba(14,165,233,0.4); padding:3px 10px; border-radius:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Ambulatorio</span>
+                    </h1>
+                    <p style="font-size:0.78rem; color:#94a3b8; margin:0;">Nutrizione Clinica & Piani Dietoterapici Personalizzati</p>
+                </div>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:10px;">
+                <!-- TRIADE SANITARIA BRIDGES -->
+                <button onclick="navigaDaMedNutriACareAssist()" style="background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; border:1px solid rgba(255,255,255,0.3); padding:9px 16px; border-radius:20px; font-size:0.86rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(2,132,199,0.3); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.04)';" onmouseout="this.style.transform='scale(1)';" title="Apri CareAssist Pro per questo paziente">
+                    🏥 CareAssist Pro
+                </button>
+                <button onclick="navigaDaMedNutriASalute()" style="background:linear-gradient(135deg, #10b981, #059669); color:#ffffff; border:1px solid rgba(255,255,255,0.3); padding:9px 16px; border-radius:20px; font-size:0.86rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(16,185,129,0.3); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.04)';" onmouseout="this.style.transform='scale(1)';" title="Apri Progetto Salute per questo paziente">
+                    🥗 Progetto Salute
+                </button>
+                <button onclick="window.location.href='/launcher.html'" style="background:linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95)); color:#ffffff; border:1px solid rgba(255,255,255,0.3); padding:10px 24px; border-radius:24px; font-size:0.92rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 15px rgba(0,0,0,0.35); transition:all 0.25s;" onmouseover="this.style.transform='scale(1.05)'; this.style.borderColor='#38bdf8';" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(255,255,255,0.3)';" title="Torna al Portale Aziendale Suite">
+                    🏠 TORNA AL MENU
+                </button>
+            </div>
+        </header>
+
+        <!-- Maschera Centrale di Accesso Equilibrata all'Inquadratura -->
+        <div style="display:flex; justify-content:center; align-items:center; width:100%; margin:auto 0; padding:20px 0;">
+            <div class="setup-card glass-card" style="text-align:center; max-width:490px; width:100%; padding:42px 38px; background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); border-radius:24px; box-shadow:0 25px 60px -10px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.3); position:relative;">
+                
+                <!-- Badge Ambulatorio Protetto -->
+                <div style="display:inline-flex; align-items:center; gap:6px; background:#e0f2fe; color:#0369a1; padding:6px 16px; border-radius:20px; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:18px; border:1px solid #bae6fd;">
+                    <span style="font-size:0.85rem;">🔒</span> Ambulatorio Medico Protetto
+                </div>
+
+                <div id="lock-doc-avatar" style="font-size:4.2rem; margin-bottom:12px; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.15));">👨‍⚕️</div>
+                <h2 id="lock-doc-name" style="font-size:1.65rem; color:#0f172a; margin-bottom:6px; font-weight:800; letter-spacing:-0.3px;">Dott. Ciro Milella</h2>
+                <p style="color:#64748b; font-size:0.95rem; margin-bottom:24px; line-height:1.4;">Inserisci il tuo PIN di sicurezza per sbloccare la cartella clinica</p>
+                
+                <div style="margin-bottom:22px; position:relative; display:inline-block;">
+                    <input type="password" id="pin-input" maxlength="24" placeholder="••••" 
+                        style="text-align:center; font-size:2.2rem; letter-spacing:8px; width:220px; padding:12px 48px 12px 18px; border-radius:14px; border:2px solid #cbd5e1; font-family:monospace; background:#ffffff; box-shadow:inset 0 2px 4px rgba(0,0,0,0.05); outline:none; transition:border-color 0.2s;"
+                        onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='#cbd5e1'"
+                        onkeydown="if(event.key==='Enter') handleUnlockAttempt();">
+                    <button type="button" id="btn-toggle-pin-visibility" onclick="togglePinVisibility()" title="Mostra/Nascondi PIN"
+                        style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:1.4rem; color:#64748b; line-height:1;">👁️</button>
+                    <div id="pin-error-msg" style="color:#ef4444; font-size:0.88rem; margin-top:10px; display:none; font-weight:700;"></div>
+                </div>
+                
+                <button class="btn-primary" onclick="handleUnlockAttempt()" style="width:100%; padding:15px; font-size:1.05rem; font-weight:700; border-radius:12px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); box-shadow:0 6px 20px rgba(2,132,199,0.35); cursor:pointer; border:none; color:#ffffff; transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    🔓 Sblocca Ambulatorio
+                </button>
+                
+                <div style="margin-top:22px; border-top:1px solid #e2e8f0; padding-top:18px; display:flex; flex-direction:column; gap:10px; text-align:center;">
+                    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+                        <a href="javascript:void(0)" onclick="openCloudRecoveryModal(); return false;" style="font-size:0.82rem; color:#0284c7; text-decoration:none; font-weight:600; cursor:pointer;">☁️ Ripristina dal Cloud</a>
+                        <span style="color:#cbd5e1;">•</span>
+                        <a href="/launcher.html" style="font-size:0.82rem; color:#64748b; text-decoration:none; font-weight:600;">🏠 Torna al Menu Principale</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Discreto Inquadratura -->
+        <footer style="text-align:center; padding:10px; color:#94a3b8; font-size:0.75rem; letter-spacing:0.5px;">
+            SUITE AZIENDALE C. MILELLA • MEDNUTRI PRO AMBULATORIO CLINICO • ACCESSO PROTETTO
+        </footer>
+    </div>
+
+    <!-- Modale Ripristino Emergenza da Cloud -->
+    <div id="cloud-recovery-modal" class="setup-overlay" style="display:none; z-index:1000000;">
+        <div class="setup-card glass-card" style="max-width:460px; padding:30px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="font-size:1.25rem; color:#0f172a; margin:0;">☁️ Ripristino Emergenza Cloud</h3>
+                <button onclick="closeCloudRecoveryModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <p style="font-size:0.88rem; color:#64748b; margin-bottom:15px;">
+                Se hai smarrito la chiavetta USB precedente o hai cambiato computer, inserisci il tuo Codice Studio e il PIN per riscaricare tutti i pazienti e le patologie.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div class="input-group">
+                    <label>Codice Studio Medico (Riconosciuto automaticamente)</label>
+                    <input type="text" id="recovery-studio-id" readonly style="background:#f1f5f9; cursor:not-allowed; font-weight:700; color:#0369a1; border:1px solid #cbd5e1; font-family:'Courier New', monospace; font-size:1.05rem; letter-spacing:1px;">
+                </div>
+                <div class="input-group">
+                    <label>PIN di Sicurezza</label>
+                    <input type="password" id="recovery-pin" placeholder="Inserisci il tuo PIN">
+                </div>
+                <div id="recovery-status-msg" style="font-size:0.85rem; display:none; padding:8px; border-radius:6px; background:#f1f5f9;"></div>
+                <button class="btn-primary" onclick="executeCloudRecovery()" style="margin-top:5px; width:100%;">📥 Ripristina e Risincronizza (v2)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Richiesta PIN per Accesso Guida e Dati Riservati -->
+    <div id="help-auth-modal" class="setup-overlay" style="display:none; z-index:2500000; backdrop-filter:blur(10px); background:rgba(15,23,42,0.7); padding:20px;">
+        <div class="setup-card" style="max-width:390px; width:100%; padding:30px 26px; text-align:center; background:#ffffff; border-radius:22px; box-shadow:0 25px 50px -12px rgba(15,23,42,0.35); border:1px solid #e2e8f0; font-family:'Outfit', sans-serif;">
+            <div style="width:52px; height:52px; border-radius:50%; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin:0 auto 14px auto;">
+                🔒
+            </div>
+            <h3 style="font-size:1.25rem; color:#0f172a; margin-bottom:6px; font-weight:700;">Conferma Identità</h3>
+            <p style="font-size:0.86rem; color:#64748b; margin-bottom:20px; line-height:1.45;">
+                Inserisci il tuo <strong>PIN Medico</strong> per sbloccare la visualizzazione della Guida e del Codice Studio.
+            </p>
+            
+            <div style="margin-bottom:18px;">
+                <input type="password" id="help-auth-pin-input" maxlength="8" placeholder="••••"
+                    style="text-align:center; font-size:1.8rem; letter-spacing:8px; width:160px; padding:10px 12px; border-radius:12px; border:2px solid #cbd5e1; font-family:monospace; background:#f8fafc;"
+                    onkeydown="if(event.key==='Enter') confirmHelpAuthPin();">
+                <div id="help-auth-error-msg" style="color:#ef4444; font-size:0.82rem; margin-top:8px; display:none; font-weight:600;"></div>
+            </div>
+
+            <div style="display:flex; gap:12px; justify-content:center;">
+                <button onclick="closeHelpAuthModal()" style="padding:10px 18px; border-radius:10px; border:1px solid #cbd5e1; background:white; color:#64748b; font-weight:600; cursor:pointer; font-size:0.88rem;">Annulla</button>
+                <button onclick="confirmHelpAuthPin()" style="padding:10px 22px; border-radius:10px; border:none; background:#0284c7; color:white; font-weight:600; cursor:pointer; font-size:0.88rem; box-shadow:0 4px 10px rgba(2,132,199,0.3);">Sblocca Guida</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Guida Rapida & Emergenza (Top-Level) -->
+    <div id="help-modal" class="setup-overlay" style="display:none; z-index:2000000; backdrop-filter:blur(12px); background:rgba(15,23,42,0.65); padding:20px;">
+        <div class="setup-card" style="max-width:650px; width:100%; padding:32px 36px; text-align:left; max-height:92vh; overflow-y:auto; position:relative; background:#ffffff; border-radius:24px; box-shadow:0 25px 60px -15px rgba(15,23,42,0.35); border:1px solid rgba(226,232,240,0.8); font-family:'Outfit', sans-serif;">
+            
+            <!-- Header Elegante -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; border-bottom:1px solid #f1f5f9; padding-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:14px;">
+                    <div style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:1.6rem; box-shadow:0 8px 16px -4px rgba(2,132,199,0.35);">
+                        📖
+                    </div>
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <h2 style="font-size:1.35rem; color:#0f172a; margin:0; font-weight:700; letter-spacing:-0.3px;">MedNutri Pro</h2>
+                            <span style="background:#e0f2fe; color:#0369a1; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:12px; text-transform:uppercase;">Guida & Sicurezza</span>
+                        </div>
+                        <p style="color:#64748b; font-size:0.85rem; margin:3px 0 0 0;">Procedure cliniche essenziali, cloud e disaster recovery</p>
+                    </div>
+                </div>
+                <button onclick="closeHelpModal()" style="background:#f8fafc; border:1px solid #e2e8f0; width:34px; height:34px; border-radius:50%; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b; transition:all 0.2s;" onmouseover="this.style.background='#fee2e2'; this.style.color='#ef4444';" onmouseout="this.style.background='#f8fafc'; this.style.color='#64748b';">&times;</button>
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:15px; font-size:0.92rem; color:#334155; line-height:1.55;">
+                
+                <!-- Box Codice Studio Premium Card -->
+                <div style="background:linear-gradient(135deg, #f0fdfa 0%, #f0f9ff 100%); border:1.5px solid #bae6fd; border-radius:16px; padding:16px 20px; box-shadow:0 4px 12px -2px rgba(2,132,199,0.08);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <div style="font-size:0.72rem; color:#0369a1; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; display:flex; align-items:center; gap:5px;">
+                                <span>🛡️</span> Identificativo Studio Medico (Cloud ID)
+                            </div>
+                            <div id="help-modal-studio-id" style="font-size:1.55rem; font-weight:800; color:#0369a1; font-family:'Courier New', monospace; letter-spacing:1px; margin-top:2px;">
+                                Caricamento...
+                            </div>
+                        </div>
+                        <button id="copy-studio-btn" onclick="copyStudioIdToClipboard()" style="background:#0284c7; color:#fff; border:none; padding:10px 18px; border-radius:10px; font-size:0.88rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:7px; transition:all 0.2s ease; box-shadow:0 4px 10px rgba(2,132,199,0.25);">
+                            <span id="copy-btn-icon">📋</span>
+                            <span id="copy-btn-text">Copia Codice</span>
+                        </button>
+                    </div>
+                    <div id="copy-feedback-msg" style="display:none; font-size:0.8rem; color:#059669; font-weight:600; margin-top:8px;">
+                        ✓ Codice copiato negli appunti! Pronto da incollare.
+                    </div>
+                </div>
+
+                <!-- 1. Accesso Ambulatorio -->
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:4px solid #0ea5e9; border-radius:12px; padding:13px 16px; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+                    <div style="font-weight:700; color:#0f172a; margin-bottom:3px; display:flex; align-items:center; gap:8px;">
+                        <span style="color:#0ea5e9; font-size:1.1rem;">🔑</span> 1. Accesso & Sicurezza Ambulatorio
+                    </div>
+                    <div style="color:#475569; font-size:0.88rem;">Inserisci il tuo PIN medico per visualizzare la barra laterale e consultare le cartelle cliniche dei pazienti.</div>
+                </div>
+
+                <!-- 2. PUK SOS999 -->
+                <div style="background:#fff1f2; border:1px solid #fecdd3; border-left:4px solid #f43f5e; border-radius:12px; padding:13px 16px; box-shadow:0 2px 5px rgba(244,63,94,0.04);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <div style="font-weight:700; color:#9f1239; display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1.1rem;">🚨</span> 2. PIN Dimenticato? (PUK Master di Soccorso)
+                        </div>
+                        <span style="background:#ffe4e6; color:#be123c; border:1px solid #fecdd3; padding:2px 8px; border-radius:6px; font-weight:800; font-family:'Courier New', monospace; font-size:0.95rem; letter-spacing:0.5px;">SOS999</span>
+                    </div>
+                    <div style="color:#881337; font-size:0.88rem;">Digita il codice master <strong style="font-family:monospace; background:#fecdd3; padding:1px 4px; border-radius:4px;">SOS999</strong> nella casella del PIN per sbloccare all'istante l'ambulatorio e reimpostare le credenziali.</div>
+                </div>
+
+                <!-- 3. Salvataggio Cloud -->
+                <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #10b981; border-radius:12px; padding:13px 16px; box-shadow:0 2px 5px rgba(16,185,129,0.04);">
+                    <div style="font-weight:700; color:#166534; margin-bottom:3px; display:flex; align-items:center; gap:8px;">
+                        <span style="color:#10b981; font-size:1.1rem;">☁️</span> 3. Backup Silenzioso & Sicuro su Cloud
+                    </div>
+                    <div style="color:#14532d; font-size:0.88rem;">Tutti i dati salvati sono sincronizzati automaticamente sul Cloud in forma protetta quando sei online (vedi badge verde in basso a sinistra). Puoi forzare il backup in ogni momento dal menu.</div>
+                </div>
+
+                <!-- 4. Disaster Recovery -->
+                <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-left:4px solid #8b5cf6; border-radius:12px; padding:13px 16px; box-shadow:0 2px 5px rgba(139,92,246,0.04);">
+                    <div style="font-weight:700; color:#5b21b6; margin-bottom:3px; display:flex; align-items:center; gap:8px;">
+                        <span style="color:#8b5cf6; font-size:1.1rem;">🆘</span> 4. In caso di Smarrimento Chiavetta USB
+                    </div>
+                    <div style="color:#4c1d95; font-size:0.88rem;">Copia la cartella del programma su una nuova chiavetta, aprila e clicca su <strong>"Ripristina dal Cloud"</strong> inserendo il tuo Codice Studio sopra indicato per recuperare l'intero archivio.</div>
+                </div>
+            </div>
+
+            <!-- Footer con Pulsanti Raffinati -->
+            <div style="margin-top:24px; padding-top:16px; border-top:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <a href="GUIDA_RAPIDA_E_RECUPERO.html" target="_blank" style="display:inline-flex; align-items:center; gap:7px; color:#0284c7; text-decoration:none; font-weight:600; font-size:0.88rem; padding:8px 12px; border-radius:8px; background:#f0f9ff; transition:all 0.2s;" onmouseover="this.style.background='#e0f2fe';" onmouseout="this.style.background='#f0f9ff';">
+                    <span>📄</span> Consulta Manuale Completo / Stampabile ↗
+                </a>
+                <button onclick="closeHelpModal()" style="background:#0f172a; color:#fff; border:none; padding:10px 22px; border-radius:10px; font-weight:600; font-size:0.9rem; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 10px rgba(15,23,42,0.15);" onmouseover="this.style.background='#1e293b';" onmouseout="this.style.background='#0f172a';">
+                    Chiudi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schermata di Registrazione Medico -->
+    <div id="doctor-setup-modal" class="setup-overlay" style="display:none;">
+        <div class="setup-card glass-card">
+            <div class="setup-header">
+                <div class="logo-icon" style="font-size:3rem;">⚕️</div>
+                <h2>Benvenuto in MedNutri Pro</h2>
+                <p>Configura il profilo professionale per l'emissione dei referti.</p>
+            </div>
+            
+            <div class="setup-form">
+                <div class="input-group">
+                    <label>Avatar / Genere</label>
+                    <select id="setup-doc-avatar" style="font-size:1.2rem; cursor:pointer;">
+                        <option value="👨‍⚕️">👨‍⚕️ Uomo</option>
+                        <option value="👩‍⚕️" selected>👩‍⚕️ Donna</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Titolo, Nome e Cognome</label>
+                    <input type="text" id="setup-doc-name" placeholder="Es. Dott.ssa Maria Rossi">
+                </div>
+                <div class="input-group">
+                    <label>Specializzazione</label>
+                    <input type="text" id="setup-doc-spec" placeholder="Es. Medico di Medicina Generale">
+                </div>
+                <div class="input-group">
+                    <label>Struttura / Clinica / ASL</label>
+                    <input type="text" id="setup-doc-clinic" placeholder="Es. Studio Medico Privato, Ambulatorio, ASL">
+                </div>
+                <div class="input-group">
+                    <label>🏥 Denominazione Studio Medico (Nome Cloud)</label>
+                    <input type="text" id="setup-doc-studioname" placeholder="Es. Studio Medico Dott. Ciro Milella">
+                </div>
+                <div class="input-group">
+                    <label>🔒 PIN di Sicurezza Ambulatorio (Min. 4 caratteri)</label>
+                    <input type="password" id="setup-doc-pin" maxlength="24" placeholder="Lascia vuoto per mantenere il PIN attuale">
+                </div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button class="btn-primary" onclick="saveDoctorProfile()" style="flex:1;">Salva Profilo</button>
+                    <button id="setup-cancel-btn" style="display:none; padding:12px 18px; background:#e2e8f0; color:#1e293b; font-weight:bold; border:none; border-radius:8px; cursor:pointer;" onclick="closeDoctorSetup()" title="Chiudi finestra">Chiudi &times;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="main-app" style="display:none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">⚕️</div>
+                <div>
+                    <h1>MedNutri <span>Pro</span></h1>
+                    <div style="font-size: 0.72rem; font-weight: 800; color: #f59e0b; letter-spacing: 0.5px; margin-top: 2px;">👑 CIRO MILELLA</div>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="/launcher.html" class="nav-item nav-home-btn" style="background:rgba(15,23,42,0.06); font-weight:700; color:#0f172a; border-radius:10px;" title="Torna al Portale Generale">🏠 Menu</a>
+                <a href="#" class="nav-item active" onclick="if(typeof resetForm === 'function') resetForm();">👤 Nuovo Paziente</a>
+                <a href="#" class="nav-item" onclick="openArchive()">🗂️ Archivio</a>
+                <a href="#" class="nav-item" id="nav-database" onclick="return showDatabase(event)">📚 Patologie</a>
+                <a href="#" class="nav-item" onclick="triggerAutoCloudSync(true)" title="Sincronizza subito con il Cloud">☁️ Sincronizza</a>
+                <a href="#" class="nav-item" onclick="openHelpModal()" title="Apri la Guida rapida e istruzioni">📖 Guida</a>
+                <a href="#" class="nav-item" onclick="lockAppNow()" style="color:#ef4444;" title="Blocca lo schermo per privacy">🔒 Blocca</a>
+            </nav>
+            
+            <!-- Badge Cloud Sync Silenzioso -->
+            <div style="font-size:0.75rem; padding:8px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:12px;">
+                <div id="cloud-sync-badge"><span>🟢</span> Cloud Sincronizzato</div>
+            </div>
+
+            <div class="doctor-profile" onclick="resetDoctorProfile()" style="cursor:pointer;" title="Clicca per modificare il profilo">
+                <div class="doc-avatar">👨‍⚕️</div>
+                <div class="doc-info">
+                    <strong id="ui-doc-name">Dott. Ciro Milella</strong>
+                    <span id="ui-doc-spec">Medico Chirurgo Nutrizionista</span>
+                    <span id="ui-doc-clinic" style="font-size:0.75rem; color:var(--primary); margin-top:3px;">Ambulatorio Medico - ASL Puglia Salute</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="print-header" style="display:none; text-align:center; margin-bottom: 20px; border-bottom: 2px solid #0f172a; padding-bottom: 10px;">
+                <h1 style="font-size:24px; color:#0f172a; text-transform:uppercase; letter-spacing:3px; margin:0;">STUDIO MEDICO DI NUTRIZIONE CLINICA</h1>
+                <h2 style="font-size:18px; color:#3b82f6; margin: 5px 0 15px 0; font-weight: 500;">Dott. <span id="print-doc-info"></span></h2>
+                <div style="display:flex; justify-content:space-between; font-size:14px; text-align:left; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                    <div>
+                        <strong>Paziente:</strong> <span id="print-pat-info"></span><br>
+                        <strong>Data di Nascita:</strong> <span id="print-pat-dob"></span>
+                    </div>
+                    <div>
+                        <strong>Misure:</strong> <span id="print-pat-hw"></span><br>
+                        <strong>Periodo:</strong> <span id="print-period-info"></span>
+                    </div>
+                </div>
+                <div style="font-size:13px; text-align:left; background:#f8fafc; padding:8px 10px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom:15px;">
+                    <strong>Diagnosi Principale:</strong> <span id="print-diagnosis-info">-</span> &nbsp;|&nbsp; <strong>Obiettivo:</strong> <span id="print-goal-info">-</span>
+                    <div id="print-comorbidities-row" style="margin-top:4px; display:none;"><strong>Comorbidità:</strong> <span id="print-comorbidities-info">-</span></div>
+                </div>
+            </div>
+            <header class="topbar">
+                <h2>Generatore Terapia Nutrizionale</h2>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <button class="btn-secondary" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1;" onclick="savePatient()">💾 Salva Paziente</button>
+                    <button class="btn-secondary print-btn" onclick="prepareAndPrint()" style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; font-weight:600;">🖨️ Stampa Scheda A4</button>
+                    <button class="btn-primary" onclick="generateDiet()">⚡ Genera Protocollo</button>
+                    <button class="btn-secondary" onclick="window.location.href='/launcher.html'" style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color:#f8fafc; border:1px solid #475569; font-weight:600; cursor:pointer;" title="Torna al Portale Aziendale">🏠 Torna al Menu</button>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Patient Info -->
+                <section class="glass-card patient-card">
+                    <h3>Anagrafica Paziente</h3>
+                    <div class="input-grid">
+                        <!-- BOX 1-CLICK IMPORT SUITE IN MEDNUTRI -->
+                        <!-- MODULO ENTERPRISE: RICERCA SMART PAZIENTI SUITE & AZZERAMENTO (SCALABILE 1-5000+ PAZIENTI) -->
+                        <div class="input-group" style="grid-column: span 2; background:#f8fafc; border:1.5px solid #0284c7; padding:12px 16px; border-radius:14px; margin-bottom:12px; box-shadow:0 3px 12px rgba(2, 132, 199, 0.08); position:relative;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                                <label style="color:#0f172a; font-weight:800; font-size:13.5px; display:flex; align-items:center; gap:8px; margin:0;">
+                                    <span>🏛️</span> <span>CARICA ASSISTITO DALLA SUITE (Condivisione Master)</span>
+                                </label>
+                                <button type="button" onclick="applicaImportMedNutriDaSuite('NUOVO')" style="background:#0284c7; color:#ffffff; border:none; padding:6px 14px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(2,132,199,0.3); transition:all 0.2s;" onmouseover="this.style.background='#0369a1'" onmouseout="this.style.background='#0284c7'">
+                                    ➕ Nuovo Paziente (Pulisci)
+                                </button>
+                            </div>
+
+                            <!-- BARRA DI RICERCA LIVE SMART CON AUTOCOMPLETAMENTO AD ALTA EFFICIENZA -->
+                            <div style="position:relative; width:100%;">
+                                <div style="display:flex; align-items:center; background:#ffffff; border:1.5px solid #cbd5e1; border-radius:10px; padding:2px 10px; transition:border 0.2s; box-shadow:inset 0 1px 2px rgba(0,0,0,0.03);" id="suite-search-box-wrapper">
+                                    <span style="font-size:16px; margin-right:8px; color:#64748b;">🔍</span>
+                                    <input type="text" id="suite-patient-search-input" 
+                                           placeholder="es. Mario Rossi (Cerca assistito o anno)" 
+                                           autocomplete="off"
+                                           onfocus="mostraDropdownPazienti(true)" 
+                                           oninput="filtraPazientiSuite(this.value)"
+                                           style="border:none !important; outline:none !important; width:100%; padding:9px 0; font-size:13.5px; font-weight:600; color:#0f172a; background:transparent !important; box-shadow:none !important;">
+                                    <button type="button" id="suite-search-clear-btn" onclick="pulisciRicercaPazienti()" style="display:none; background:none; border:none; color:#94a3b8; font-size:16px; cursor:pointer; padding:0 4px;" title="Cancella ricerca">✕</button>
+                                </div>
+
+                                <!-- DROPDOWN RISULTATI SCALABILE (MAX 300px ALTEZZA CON SCROLL ELEGANTE) -->
+                                <div id="suite-patient-dropdown" style="display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; background:#ffffff; border:1.5px solid #0284c7; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.15); max-height:280px; overflow-y:auto; z-index:9999; padding:6px 0;">
+                                    <!-- Inserimento dinamico risultati -->
+                                </div>
+                            </div>
+
+                            <!-- ACCESSI RAPIDI (I PIÙ FREQUENTI / RECENTI) -->
+                            <div id="suite-quick-chips-row" style="display:flex; align-items:center; gap:6px; margin-top:8px; overflow-x:auto; padding-bottom:2px; font-size:11.5px; color:#64748b;">
+                                <span style="font-weight:700; color:#475569; white-space:nowrap;">Rapidi:</span>
+                                <div id="suite-patients-chips-container" style="display:inline-flex; gap:6px; flex-wrap:wrap;"></div>
+                            </div>
+
+                            <div id="mednutri-sync-feedback" style="display:none; margin-top:8px; font-size:12.5px; color:#15803d; font-weight:800; background:#dcfce7; padding:7px 12px; border-radius:8px; border:1px solid #86efac;"></div>
+                        </div>
+
+                        <div class="input-group" style="grid-column: span 2;">
+                            <label>Nome e Cognome</label>
+                            <input type="text" id="patient-name" placeholder="(Da compilare: Nome Cognome)">
+                        </div>
+                        <div class="input-group">
+                            <label>Sesso</label>
+                            <select id="patient-gender" onchange="calculateBMI()">
+                                <option value="M">Uomo</option>
+                                <option value="F">Donna</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Data di Nascita <span id="calculated-age" style="color:var(--primary); font-weight:600; margin-left:5px;"></span></label>
+                            <input type="date" id="patient-dob" onchange="calculateAge()">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>Altezza (cm)</label>
+                            <input type="number" id="patient-height" placeholder="(cm)" onkeyup="calculateBMI()" onchange="calculateBMI()">
+                        </div>
+                        <div class="input-group">
+                            <label>Peso (Kg) <span id="bmi-badge" style="margin-left: 5px; font-weight: 600; font-size: 0.85rem;"></span></label>
+                            <input type="number" id="patient-weight" placeholder="(kg)" onkeyup="calculateBMI()" onchange="calculateBMI()">
+                        </div>
+                        <div class="input-group">
+                            <label>Circonferenza Polso (cm) <span id="frame-badge" style="margin-left: 5px; font-weight: 600; font-size: 0.85rem;"></span></label>
+                            <select id="patient-wrist" onchange="calculateBMI()">
+                                <option value="">Seleziona...</option>
+                                <option value="13">13 cm</option>
+                                <option value="14">14 cm</option>
+                                <option value="15">15 cm</option>
+                                <option value="16">16 cm</option>
+                                <option value="17">17 cm</option>
+                                <option value="18">18 cm</option>
+                                <option value="19">19 cm</option>
+                                <option value="20">20 cm</option>
+                                <option value="21">21 cm</option>
+                                <option value="22">22 cm</option>
+                                <option value="23">23 cm</option>
+                                <option value="24">24 cm</option>
+                                <option value="25">25 cm</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>Stile di Vita <span id="tdee-badge" style="margin-left: 5px; font-weight: 600; font-size: 0.85rem;"></span></label>
+                            <select id="patient-lifestyle" onchange="calculateBMI()">
+                                <option value="1.2">Sedentario (Poco o zero sport)</option>
+                                <option value="1.375">Leggermente Attivo (1-3 gg a sett.)</option>
+                                <option value="1.55">Moderatamente Attivo (3-5 gg a sett.)</option>
+                                <option value="1.725">Molto Attivo (6-7 gg a sett.)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Obiettivo Nutrizionale <span id="goal-badge" style="margin-left: 5px; font-weight: 600; font-size: 0.85rem; color:#0284c7;"></span></label>
+                            <select id="patient-goal" onchange="applyGoalChange()">
+                                <option value="normo" selected>⚖️ Mantenimento / Standard (Normocalorica)</option>
+                                <option value="ipo">🔻 Dimagrimento (Ipocalorica -20% carbo)</option>
+                                <option value="iper">🔺 Incremento Massa / Sportivo (Iperproteica +20%)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Valido dal (Inizio)</label>
+                            <input type="date" id="period-start">
+                        </div>
+                        <div class="input-group">
+                            <label>al (Fine)</label>
+                            <input type="date" id="period-end">
+                        </div>
+                        <div class="input-group full-width" style="margin-top:10px; margin-bottom:12px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                <label style="font-weight:800; color:#0f172a; font-size:13px; display:flex; align-items:center; gap:6px;">
+                                    <span>📋</span> Note Cliniche, Diagnosi &amp; Terapie (Sincronizzate da CareAssist)
+                                </label>
+                                <span style="font-size:11px; background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:12px; font-weight:700;">
+                                    Fascicolo Elettronico
+                                </span>
+                            </div>
+                            <textarea id="patient-notes" rows="6" placeholder="Es. Diagnosi, terapie in corso, allergie o raccomandazioni dietetiche..." style="width:100%; min-height:130px; line-height:1.6; padding:12px 14px; border-radius:12px; border:1.5px solid #cbd5e1; font-family:'Outfit', sans-serif; font-size:13px; font-weight:600; color:#1e293b; resize:vertical; background:#f8fafc; box-shadow:inset 0 1px 3px rgba(0,0,0,0.04); transition:all 0.2s;" onfocus="this.style.background='#ffffff'; this.style.borderColor='#0284c7'; this.style.boxShadow='0 0 0 3px rgba(2,132,199,0.15)';" onblur="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';"></textarea>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Diagnosi / Patologia Principale</label>
+                            <select id="patient-pathology" onchange="updateAnalysis()">
+                                <option value="nessuna">Nessuna (Prevenzione Base)</option>
+                                <option value="celiachia">Celiachia (Gluten-Free)</option>
+                                <option value="diabete">Diabete di Tipo 2</option>
+                                <option value="gastrite">Gastrite Acuta / Cronica</option>
+                                <option value="renale">Insufficienza Renale (Stadio 1-3)</option>
+                                <option value="ipercolesterolemia">Ipercolesterolemia</option>
+                                <option value="ipertensione">Ipertensione Arteriosa</option>
+                                <option value="gotta">Iperuricemia / Gotta</option>
+                                <option value="tiroide">Ipotiroidismo</option>
+                                <option value="osteoporosi">Osteoporosi / Osteopenia</option>
+                                <option value="reflusso">Reflusso Gastroesofageo (MRGE)</option>
+                                <option value="colon">Sindrome Intestino Irritabile (IBS)</option>
+                                <option value="pcos">Sindrome Ovaio Policistico (PCOS)</option>
+                                <option value="steatosi">Steatosi Epatica (Fegato Grasso)</option>
+                                <option value="stipsi">Stipsi Cronica</option>
+                                <option value="altro">✏️ Altra Patologia (Personalizzata)</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width" id="comorbidities-wrapper" style="margin-top:15px; grid-column: span 2; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 8px;">
+                            <label style="margin-bottom: 10px; display:block; color:#3b82f6;">➕ Patologie Concomitanti (Comorbidità - Opzionale)</label>
+                            <div id="comorbidities-container" class="checkbox-grid">
+                                <!-- Generato dinamicamente via JS -->
+                            </div>
+                        </div>
+                        
+                        <!-- Custom Pathology Inputs (Hidden by default) -->
+                        <div id="custom-pathology-box" style="display:none; grid-column: span 2; background:#f8fafc; padding:15px; border-radius:10px; border:1px dashed var(--primary);">
+                            <div class="input-grid">
+                                <div class="input-group full-width">
+                                    <label>Nome Patologia</label>
+                                    <input type="text" id="custom-pat-name" placeholder="Es. Morbo di Crohn">
+                                </div>
+                                <div class="input-group">
+                                    <label style="color:var(--danger)">Cibi da Evitare (separati da virgola)</label>
+                                    <input type="text" id="custom-pat-avoid" placeholder="Es. Latticini, Fritti, Spezie">
+                                </div>
+                                <div class="input-group">
+                                    <label style="color:var(--success)">Cibi da Promuovere</label>
+                                    <input type="text" id="custom-pat-promote" placeholder="Es. Riso bianco, Zucchine lesse">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Medical Rules -->
+                <section class="glass-card rules-card">
+                    <h3>📋 Protocollo Medico Attivo</h3>
+                    <div id="medical-analysis" class="analysis-box">
+                        <p class="placeholder-text">Seleziona una patologia per visualizzare le direttive cliniche.</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Diet Plan -->
+            <section class="glass-card table-section">
+                <div class="table-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h3 style="margin:0; display:inline-block;">Piano Terapeutico Settimanale</h3>
+                        <span id="diet-goal-badge" style="margin-left:8px; font-size:0.8rem; background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:12px; font-weight:600;">⚖️ Normocalorica</span>
+                        <span style="font-size:0.8rem; color:#64748b; margin-left:10px; display:block; margin-top:4px;">💡 Clicca su qualsiasi casella della tabella per modificare il piatto o digitare a mano.</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-primary" onclick="generateDiet()" style="padding: 8px 15px; font-size: 13px;">⚡ Rigenera Variante</button>
+                        <button class="btn-secondary print-btn" onclick="prepareAndPrint()">🖨️ Stampa per Paziente (PDF)</button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="diet-table">
+                        <thead>
+                            <tr>
+                                <th>Giorno</th>
+                                <th>Colazione</th>
+                                <th>Pranzo</th>
+                                <th>Spuntino</th>
+                                <th>Cena</th>
+                            </tr>
+                        </thead>
+                        <tbody id="diet-body">
+                            <!-- JS fills this -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sezione Stampa Footer: Note del Medico e Timbro & Firma -->
+            <div class="print-footer" style="display:none; margin-top:20px; page-break-inside:avoid;">
+                <div id="print-notes-box" style="margin-bottom:20px; padding:12px; border:1px solid #000; border-radius:4px; font-size:12px; line-height:1.45; background:#fff;">
+                    <strong>📝 Prescrizioni & Raccomandazioni del Medico Curante:</strong>
+                    <div id="print-notes-text" style="margin-top:6px; white-space:pre-wrap;">(Nessuna nota specificata)</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:12px; padding-top:25px; border-top:1px solid #cbd5e1;">
+                    <div>
+                        <span>Data emissione referto: <strong><span id="print-date-today"></span></strong></span><br>
+                        <span style="font-size:11px; color:#475569;">Documento clinico ad uso esclusivo del paziente</span>
+                    </div>
+                    <div style="text-align:center; min-width:240px;">
+                        <div style="font-size:12px; margin-bottom:45px; font-weight:600;">Timbro e Firma del Medico</div>
+                        <div style="border-top:1px dashed #000; width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div> <!-- Fine main-app -->
+
+    <!-- BARRA DI CONTROLLO RAPIDA SMARTPHONE (FISSA IN BASSO SU CELLULARE) -->
+    
+    <script src="security_pin_v2.js?v=20261019_mobile5"></script>
+    <script src="cloud_sync_v2.js?v=20261019_mobile5"></script>
+    <script src="app.js?v=1793703116787"></script>
+    <script src="db_editor.js?v=20261019_mobile5"></script>
+
+
+<!-- Database Patologie Modal -->
+<div id="database-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:12px; width:880px; max-width:94%; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 style="font-size:1.5rem; color:#1e293b;">📚 Database Patologie e Linee Guida</h2>
+            <button onclick="document.getElementById('database-modal').style.display='none'" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div id="database-tabs-container"></div>
+        <div id="database-toolbar" style="display:flex; gap:10px; margin-bottom:15px;"></div>
+        <div id="database-list" style="max-height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:15px; padding-right:10px;">
+            <!-- DB content here -->
+        </div>
+    </div>
+</div>
+
+<!-- Archive Modal -->
+<div id="archive-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:30px; border-radius:12px; width:500px; max-width:90%; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="font-size:1.5rem; color:#1e293b;">🗄️ Archivio Clinico</h2>
+            <button onclick="document.getElementById('archive-modal').style.display='none'" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div id="archive-list" style="max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+            <!-- Pazienti salvati appariranno qui -->
+        </div>
+    </div>
+</div>
+
+
+<!-- Custom Confirm Modal -->
+<div id="custom-confirm" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(4px);">
+    <div style="background:white; padding:30px; border-radius:16px; width:400px; max-width:90%; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); text-align:center; transform: translateY(-20px); animation: modalIn 0.3s ease-out forwards;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 20px auto;">
+            <i>⚠️</i>
+        </div>
+        <h3 style="font-size:1.25rem; color:#1e293b; margin-bottom:10px; font-weight:600;">Conferma Eliminazione</h3>
+        <p id="custom-confirm-message" style="color:#64748b; font-size:0.95rem; margin-bottom:25px;">Sei sicuro?</p>
+        <div style="display:flex; justify-content:center; gap:15px;">
+            <button id="custom-confirm-cancel" style="padding:10px 20px; border-radius:8px; border:1px solid #cbd5e1; background:white; color:#475569; font-weight:500; cursor:pointer; transition:all 0.2s;">Annulla</button>
+            <button id="custom-confirm-ok" style="padding:10px 20px; border-radius:8px; border:none; background:#ef4444; color:white; font-weight:500; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 6px -1px rgba(239,68,68,0.2);">Elimina Definitivamente</button>
+        </div>
+    </div>
+</div>
+
+  <!-- Universal Suite Mobile Bottom Navigation -->
+  <script src="/suite_nav.js"></script>
+
+
+<!-- ==========================================================================
+     BARRA DI NAVIGAZIONE MULTI-DISPOSITIVO GLOBALE SUITE MILELLA (PC & SMARTPHONE)
+     ========================================================================== -->
+
+
+
+
+  <script src="suite_bridge.js?v=1793709547219"></script>
+  <script src="qrcode.min.js"></script>
+  <script src="mednutri_advanced.js?v=20261105_v2"></script>
+
+
+
+
+
+
+
+
+
+
+<style id="suite-unified-mobile-bar-style">
+  .mobile-bottom-bar {
+    position: fixed !important;
+    bottom: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 24px) !important;
+    max-width: 440px !important;
+    height: 64px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 22px !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 8px !important;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+    z-index: 999999 !important;
+    box-sizing: border-box !important;
+  }
+  .mobile-bottom-bar .bar-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #64748b !important;
+    text-decoration: none !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    gap: 3px !important;
+    cursor: pointer !important;
+    background: none !important;
+    border: none !important;
+    flex: 1 !important;
+    height: 100% !important;
+    transition: all 0.2s !important;
+    -webkit-tap-highlight-color: transparent !important;
+    padding: 0 !important;
+  }
+  .mobile-bottom-bar .bar-item:active,
+  .mobile-bottom-bar .bar-item.active {
+    color: #0284c7 !important;
+  }
+  .mobile-bottom-bar .bar-item .icon {
+    font-size: 20px !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action {
+    position: relative !important;
+    top: -12px !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action .btn-circle-add {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    border: 3px solid #ffffff !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 24px !important;
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4) !important;
+    cursor: pointer !important;
+    transition: transform 0.15s !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action .btn-circle-add:active {
+    transform: scale(0.92) !important;
+  }
+  body {
+    padding-bottom: 84px !important;
+  }
+</style>
+
+<nav class="mobile-bottom-bar" id="mednutri-mobile-bar" aria-label="Navigazione Suite">
+  <button type="button" class="bar-item" onclick="window.history.length > 1 ? window.history.back() : window.location.href='/launcher.html'" title="Torna Indietro">
+    <span class="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </span>
+    <span>Indietro</span>
+  </button>
+  
+  <a href="/launcher.html" class="bar-item" title="Home Suite Milella">
+    <span class="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </span>
+    <span>Home Suite</span>
+  </a>
+
+  <div class="bar-item center-action">
+    <button type="button" class="btn-circle-add" onclick="if(typeof azzeraFormPaziente==='function'){azzeraFormPaziente();}else{window.scrollTo({top:0,behavior:'smooth'});}" title="Nuovo Paziente / Pulisci Campi">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+    <span style="font-size:10px; font-weight:800; color:#0284c7; margin-top:3px;">Nuovo</span>
+  </div>
+
+  <button type="button" class="bar-item" onclick="location.reload()" title="Ricarica Dati">
+    <span class="icon">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+    </span>
+    <span>Ricarica</span>
+  </button>
+
+  <button type="button" class="bar-item" onclick="openArchive()" title="Archivio Clinico">
+    <span class="icon">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+    </span>
+    <span>Archivio</span>
+  </button>
+</nav>
+
+</body>
+</html>

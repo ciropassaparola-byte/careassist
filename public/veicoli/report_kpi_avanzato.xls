@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Styles>
+  <Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#D4AF37" ss:Pattern="Solid"/></Style>
+  <Style ss:ID="Data"><Font ss:Color="#333333"/><Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#DDDDDD"/></Borders></Style>
+ </Styles>
+ <Worksheet ss:Name="Report KPI Supervisor">
+  <Table>
+   <Column ss:Width="200"/>
+   <Column ss:Width="150"/>
+   <Row><Cell ss:StyleID="Header"><Data ss:Type="String">Indicatore Logistico</Data></Cell><Cell ss:StyleID="Header"><Data ss:Type="String">Valore Registrato</Data></Cell></Row>
+   <Row><Cell ss:StyleID="Data"><Data ss:Type="String">Totale Consegne Registrate</Data></Cell><Cell ss:StyleID="Data"><Data ss:Type="Number">230</Data></Cell></Row>
+   <Row><Cell ss:StyleID="Data"><Data ss:Type="String">Totale Anagrafica Clienti</Data></Cell><Cell ss:StyleID="Data"><Data ss:Type="Number">1258</Data></Cell></Row>
+   <Row><Cell ss:StyleID="Data"><Data ss:Type="String">Fondo TFR &amp; Ferie (Stimato)</Data></Cell><Cell ss:StyleID="Data"><Data ss:Type="String">€ 7203,25</Data></Cell></Row>
+  </Table>
+ </Worksheet>
+</Workbook>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Radar Flotta Live C. Milella (Platinum)</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="RadarFlotta"
+        ID="RadarFlottaV2"
+        BORDER="thin"
+        INNERBORDER="no"
+        SCROLL="no"
+        SINGLEINSTANCE="no"
+        WINDOWSTATE="maximize"
+        SYSMENU="yes"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Leaflet CSS & JS -->
+    
+    
+
+    <style>
+        body { margin: 0; padding: 0; background: #0a0a0c; font-family: 'Outfit', sans-serif; color: white; overflow: hidden; }
+        
+        #header {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            height: 60px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #0ea5e9;
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+        }
+        
+        #header h1 { margin: 0; font-size: 1.5rem; font-weight: 800; color: #f8fafc; letter-spacing: 1px; }
+        #header h1 i { color: #0ea5e9; }
+        
+        .status-box {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        .status-dot {
+            width: 10px; height: 10px; border-radius: 50%; background: #34c759;
+            box-shadow: 0 0 8px #34c759;
+            margin-right: 10px;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        #map {
+            position: absolute;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111;
+            z-index: 1;
+        }
+        
+        .driver-label {
+            background: #0ea5e9;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 11px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            white-space: nowrap;
+            border: 1px solid #fff;
+        }
+        
+        .info-btn {
+            background: transparent;
+            color: #0ea5e9;
+            border: 1px solid #0ea5e9;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 15px;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .info-btn:hover {
+            background: rgba(14, 165, 233, 0.2);
+        }
+
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            width: 350px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            color: #cbd5e1;
+        }
+        .info-modal h2 {
+            margin-top: 0;
+            color: #38bdf8;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .info-modal p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .info-modal ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        .info-modal li {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .close-modal {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Outfit', sans-serif;
+        }
+        .close-radar-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+            margin-left: 15px;
+        }
+        .close-radar-btn:hover {
+            background: linear-gradient(135deg, #f87171, #ef4444);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.5);
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+    <div id="header">
+        <h1 style="margin: 0; font-size: 1.1rem; font-weight: 800; color: #f8fafc;"><i class="fa fa-crosshairs"></i> RADAR FLOTTA LIVE</h1>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="info-btn" onclick="toggleInfo()"><i class="fa fa-info-circle"></i> Come Funziona</button>
+            <div class="status-box">
+                <div class="status-dot"></div>
+                <span id="lblStatus">In attesa connessione server...</span>
+            </div>
+            <button class="close-radar-btn" onclick="ChiudiRadar()"><i class="fa fa-times"></i> ESCI (ESC)</button>
+        </div>
+    </div>
+    
+    <div id="infoModal" class="info-modal">
+        <h2><i class="fa fa-info-circle"></i> Guida all'uso del Radar</h2>
+        <p>Il <b>Radar Flotta Live</b> ti permette di monitorare la posizione esatta dei tuoi autisti in tempo reale durante le consegne.</p>
+        <ul>
+            <li><b>Autisti:</b> devono aprire l'App Mobile sul loro smartphone e acconsentire alla richiesta "Consenti accesso alla Posizione" (GPS).</li>
+            <li><b>Aggiornamento:</b> finch&eacute; l'App rimane aperta o in esecuzione in background, il telefono invier&agrave; silenziosamente le coordinate al server di C. Milella.</li>
+            <li><b>Mappa:</b> i camioncini si spostano automaticamente sulla mappa, mostrandoti il nome dell'autista e da quanti secondi non invia un aggiornamento.</li>
+        </ul>
+        <p style="font-size:0.85rem; color:#94a3b8; font-style:italic;">Se noti ritardi o "Errore", assicurati che il Ponte Mobile sia avviato correttamente o che gli autisti abbiano una buona connessione internet.</p>
+        <button class="close-modal" onclick="toggleInfo()">Ho Capito</button>
+    </div>
+    
+    <div id="map"></div>
+
+    <script>
+        if (typeof console === "undefined") {
+            window.console = { log: function() {}, error: function() {} };
+        }
+        var map = null;
+        var markers = {};
+        var truckIcon = null;
+        var deliveryLayer = null;
+        
+        function ChiudiRadar() {
+            if (window.parent && typeof window.parent.ApriModulo === "function" && window.parent !== window) {
+                window.parent.ApriModulo("dashboard.html");
+                return;
+            }
+            if (window.top && typeof window.top.ApriModulo === "function" && window.top !== window) {
+                window.top.ApriModulo("dashboard.html");
+                return;
+            }
+            try { window.close(); } catch(e) {}
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                ChiudiRadar();
+            }
+        });
+
+        function toggleInfo() {
+            var modal = document.getElementById('infoModal');
+            if (modal.style.display === 'block') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'block';
+            }
+        }
+        
+        function formatTimeAgo(ts) {
+            var diff = Math.floor((Date.now() - ts) / 1000);
+            if (diff < 60) return diff + " sec fa";
+            return Math.floor(diff/60) + " min fa";
+        }
+
+        function initRadarMap() {
+            if (typeof L === 'undefined') {
+                setTimeout(initRadarMap, 100);
+                return;
+            }
+
+            try {
+                if (!map) {
+                    map = L.map('map').setView([41.9028, 12.4964], 6); // Default Italia
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    truckIcon = L.icon({
+                        iconUrl: 'https://img.icons8.com/color/48/truck.png',
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20],
+                        popupAnchor: [0, -20]
+                    });
+
+                    deliveryLayer = L.layerGroup().addTo(map);
+
+                    setInterval(fetchLocations, 5000);
+                    fetchLocations();
+
+                    setInterval(fetchConsegne, 5000);
+                    fetchConsegne();
+                }
+            } catch(e) {
+                console.error("Errore inizializzazione mappa:", e);
+            }
+        }
+
+        function fetchLocations() {
+            if (!map || typeof L === 'undefined') return;
+            try {
+                var xhr = new XMLHttpRequest();
+                var cacheBuster = new Date().getTime();
+                xhr.open("GET", "http://localhost:3002/api/fleet_locations?_t=" + cacheBuster, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                var data = JSON.parse(xhr.responseText);
+                                
+                                var count = 0;
+                                for (var k in data) { if (data.hasOwnProperty(k)) count++; }
+                                document.getElementById('lblStatus').innerText = count + " veicoli attivi";
+                                
+                                var bounds = [];
+
+                                // Aggiungi o aggiorna i marker
+                                for (var user in data) {
+                                    if (!data.hasOwnProperty(user)) continue;
+                                    var pos = data[user];
+                                    if (markers[user]) {
+                                        markers[user].setLatLng([pos.lat, pos.lon]);
+                                        markers[user].setTooltipContent("<b>" + user + "</b><br>Ultimo agg: " + formatTimeAgo(pos.timestamp));
+                                    } else {
+                                        var marker = L.marker([pos.lat, pos.lon], {icon: truckIcon}).addTo(map);
+                                        marker.bindTooltip("<b>" + user + "</b><br>Ultimo agg: " + formatTimeAgo(pos.timestamp), {
+                                            permanent: true, 
+                                            direction: 'top',
+                                            className: 'driver-label'
+                                        });
+                                        markers[user] = marker;
+                                    }
+                                    bounds.push([pos.lat, pos.lon]);
+                                }
+
+                                // Rimuovi i marker obsoleti che non sono più nel server
+                                for (var m in markers) {
+                                    if (markers.hasOwnProperty(m) && !data[m]) {
+                                        map.removeLayer(markers[m]);
+                                        delete markers[m];
+                                    }
+                                }
+                                
+                                // Centra la mappa sui veicoli
+                                if (bounds.length > 0 && map.getZoom() < 10) {
+                                    map.fitBounds(bounds, {padding: [50, 50], maxZoom: 14});
+                                }
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        } else {
+                            document.getElementById('lblStatus').innerText = "In attesa dati GPS...";
+                        }
+                    }
+                };
+                xhr.send();
+            } catch (err) {
+                document.getElementById('lblStatus').innerText = "Errore di connessione";
+                console.error(err);
+            }
+        }
+
+        function fetchConsegne() {
+            if (!map || typeof L === 'undefined' || !deliveryLayer) return;
+            try {
+                var fso = (typeof window.ActiveXObject !== "undefined") ? new ActiveXObject("Scripting.FileSystemObject") : null;
+                if (!fso) return;
+                var path = window.location.pathname;
+                if(path.charAt(0) === '/') path = path.slice(1);
+                path = decodeURI(path.replace(/\//g, "\\").replace(/%20/g, " "));
+                var folder = fso.GetParentFolderName(path);
+                var file = fso.BuildPath(folder, "consegne.json");
+
+                if (fso.FileExists(file)) {
+                    var ts = fso.OpenTextFile(file, 1, false, -2);
+                    var jsonStr = ts.ReadAll();
+                    ts.Close();
+                    var consegne = eval("(" + jsonStr + ")");
+
+                    deliveryLayer.clearLayers();
+                    
+                    var greenIcon = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
+                    var blueIcon = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
+                    var redIcon = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
+                    var grayIcon = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
+                    
+                    for(var k=0; k<consegne.length; k++) {
+                        var d = consegne[k];
+                        var icn = grayIcon;
+                        if(d.stato === "CONSEGNATO") icn = greenIcon;
+                        else if(d.stato === "IN TRANSITO") icn = blueIcon;
+                        else if(d.stato === "ANOMALIA") icn = redIcon;
+                        
+                        var labelStr = "<b style='color:#333;'>" + d.id + " - " + d.cliente + "</b><br><span style='color:#666;'>Stato: " + d.stato + "</span>";
+                        if(d.autista && d.autista !== "") labelStr += "<br><span style='color:#0ea5e9; font-weight:bold;'>?? Assegnato a: " + d.autista + "</span>";
+                        else labelStr += "<br><span style='color:#ef4444; font-weight:bold;'>? Da Assegnare</span>";
+                        
+                        L.marker([d.lat, d.lng], {icon: icn}).bindPopup(labelStr).addTo(deliveryLayer);
+                    }
+                }
+            } catch(e) {
+                console.log("Errore lettura consegne: " + e.message);
+            }
+        }
+
+        initRadarMap();
+    </script>
+</body>
+</html>

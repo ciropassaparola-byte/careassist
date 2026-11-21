@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>GESTIONE CATALOGO ARTICOLI - C. Milella</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="ArticoliManagerCM"
+        ID="ArticoliManagerCM"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        WINDOWSTATE="maximize"
+        ICON="assets/img/app_icon.ico"
+        TRUSTED="yes"
+        NAVIGABLE="yes"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <link rel="stylesheet" href="assets/css/articoli.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e) {}
+    </script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <div class="enterprise-container" role="main">
+        
+        <!-- STRISCIA NERA SUPERIORE (APPLE STYLE) -->
+        <div class="danea-top-black-bar" onmousedown="StartDrag()" style="height:35px; background:#1a1a1a; color:white; display:flex; align-items:center; padding:0 15px; font-size:11px; font-weight:bold; cursor:move;">
+            <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:5px; cursor:default;">
+                <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+                <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+                <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+            </div>
+            <img src="assets/img/logo_final.jpg" style="height:22px; margin-left:10px; margin-right:12px; border-radius:4px; background:white; padding:2px;" alt="">
+            <span style="text-transform:uppercase; letter-spacing:1px;">Gestione Catalogo Articoli - Pannello Amministrativo</span>
+            <div style="flex-grow: 1;"></div>
+            <div id="userProfileWidget" style="display:flex; align-items:center; gap:8px; font-size:0.9rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px; margin-right:8px;">AUTENTICAZIONE...</div>
+            <div id="titleTime" style="font-size:0.8rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px;">--:--</div>
+        </div>
+
+        <!-- RIGA 1: RIBBON BAR ENTERPRISE UNIVERSALE -->
+        <header class="danea-ribbon" role="toolbar" aria-label="Strumenti del catalogo">
+            <div class="ribbon-tabs" role="tablist">
+                <div class="ribbon-tab active" onclick="switchRibbonTab('nav-operazioni', this)" role="tab" aria-selected="true">Catalogo</div>
+                <div class="ribbon-tab" onclick="switchRibbonTab('nav-moduli', this)" role="tab" aria-selected="false">Navigazione</div>
+            </div>
+            
+            <!-- GRUPPO 1: AZIONI LOCALI (Default) -->
+            <div id="nav-operazioni" class="ribbon-items">
+                <button class="ribbon-item" id="btnAnnulla" aria-label="Nuovo Articolo - Scorciatoia Ctrl+N">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/add-file.png" alt=""></div>
+                    <span aria-hidden="true">Nuovo</span>
+                </button>
+                <button class="ribbon-item" id="btnSalva" aria-label="Salva Modifiche - Scorciatoia Ctrl+S">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/save-as.png" alt=""></div>
+                    <span aria-hidden="true">Salva</span>
+                </button>
+                <div class="ribbon-separator"></div>
+                <button class="ribbon-item" id="btnExportPDF_Tool" aria-label="Esporta catalogo in PDF">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/pdf.png" alt=""></div>
+                    <span aria-hidden="true">Esporta PDF</span>
+                </button>
+                <div class="ribbon-separator"></div>
+                <button class="ribbon-item" id="btnElimina_Tool" aria-label="Elimina articolo selezionato">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/delete-forever.png" alt=""></div>
+                    <span aria-hidden="true">Elimina</span>
+                </button>
+                <div class="ribbon-separator"></div>
+                <button class="ribbon-item danger" id="btnEsci" aria-label="Chiudi modulo e torna alla dashboard - Scorciatoia Alt+F4">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt=""></div>
+                    <span aria-hidden="true">Esci</span>
+                </button>
+            </div>
+
+            <!-- GRUPPO 2: MODULI (Universale) -->
+            <div id="nav-moduli" class="ribbon-items" style="display:none;">
+                <button class="ribbon-item" onclick="NavigaModulo('dashboard.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/home.png" alt="Start"></div>
+                    <span>Start</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('anagrafica.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/address-book.png" alt="Anagrafica"></div>
+                    <span>Anagrafica</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('consegne.hta')">
+                    <div class="icon-img"><img src="assets/img/icona_consegne_trasparente.png" alt="Consegne" style="width:40px; height:auto;"></div>
+                    <span>Consegne</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('storico.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/time-machine.png" alt="Storico"></div>
+                    <span>Storico</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('presenze.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/stopwatch.png" alt="Presenze"></div>
+                    <span>Presenze</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('promemoria.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/calendar--v1.png" alt="Agenda"></div>
+                    <span>Agenda</span>
+                </button>
+                <div class="ribbon-separator"></div>
+                <button class="ribbon-item danger" onclick="Script_BackToDashboard()">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt="Chiudi"></div>
+                    <span>Chiudi Modulo</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- RIGA 2: DARK NAVIGATION BAR (FASCIA BLU) -->
+        <nav class="danea-nav-bar" role="status">
+            <div class="nav-left">
+                <span class="nav-breadcrumb">GESTIONE CATALOGO ARTICOLI</span>
+            </div>
+            <div class="nav-right" style="display:flex; align-items:center; gap:20px;">
+                <div style="font-size:11px; text-transform:uppercase; font-weight:800; color:#e3f2fd;">
+                    Prodotti Totali: <span id="lblBadgeCount" style="color:#ffffff; font-size:14px; margin-left:5px;" aria-live="polite">...</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="enterprise-main">
+            
+            <!-- SIDEBAR LISTA MODELLI (SINISTRA) -->
+            <aside class="enterprise-sidebar" role="region" aria-label="Area ricerca e filtri">
+                <div class="sidebar-header">
+                    <div class="sidebar-title">🔍 Filtri Ricerca</div>
+                    <div class="form-group">
+                        <label for="cmbClassifica" class="sr-only">Categoria</label>
+                        <select id="cmbClassifica">
+                            <option value="">Tutte le categorie</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtRicerca" class="sr-only">Cerca modello</label>
+                        <input type="text" id="txtRicerca" placeholder="Cerca modello...">
+                    </div>
+                    <div id="lblCounter" style="font-size: 10px; font-weight: bold; color: #666; margin-top: 10px;" aria-live="polite">...</div>
+                </div>
+                
+                <div class="search-results-grid" id="lstArticoli" role="listbox" aria-label="Elenco modelli articoli">
+                    <!-- Dinamico via JS -->
+                </div>
+            </aside>
+
+            <!-- WORKSPACE (DESTRA) -->
+            <main class="workspace-container">
+                
+                <div style="display:flex; gap:20px;">
+                    <!-- CARD DATI -->
+                    <div class="card-gold" style="flex: 1;" role="region" aria-label="Dettagli articolo selezionato">
+                        <div class="card-gold-header" aria-hidden="true">📝 DATI ARTICOLO</div>
+                        <div class="card-gold-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="txtNuovaCategoria">Categoria (Nuova o Esistente):</label>
+                                    <input type="text" id="txtNuovaCategoria" placeholder="Es. AUSILI PER LA MOBILITÀ">
+                                </div>
+                                <div class="form-group">
+                                    <label for="txtNuovoModello">Nome Modello:</label>
+                                    <input type="text" id="txtNuovoModello" placeholder="Es. Bastone Giallo v2">
+                                </div>
+                                <div style="margin-top:15px; text-align:right;">
+                                    <button type="button" class="btn-gold-save" id="btnSalvaCard">
+                                        <i class="fa fa-save"></i> Memorizza Articolo nel Catalogo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="guide-banner-enterprise">
+                                <i class="fa fa-info-circle"></i>
+                                <div>
+                                    <strong>GUIDA RAPIDA</strong><br>
+                                    Seleziona un articolo dalla lista a sinistra per modificarlo.<br>
+                                    Fai <b>Doppio Click</b> per caricare i dati e <b>Salva</b> per confermare le modifiche.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD FOTO -->
+                    <div class="card-gold" style="width: 400px;" role="region" aria-label="Anteprima e gestione foto">
+                        <div class="card-gold-header" aria-hidden="true">🖼️ ANTEPRIMA FOTO</div>
+                        <div class="card-gold-body">
+                            <div class="photo-frame-premium">
+                                <img id="imgPreview" style="display:none;" alt="Anteprima articolo">
+                                <div id="noImageLabel" style="text-align:center; color:#999;" aria-hidden="true">
+                                    <i class="fa fa-camera" style="font-size:48px;"></i>
+                                    <p style="font-weight:bold; margin-top:10px;">Nessuna immagine</p>
+                                </div>
+                                <div class="photo-badge" id="lblImgStatus" aria-live="polite">NESSUNA FOTO</div>
+                            </div>
+                            
+                            <div class="photo-actions">
+                                <button class="btn-photo-action" id="btnAssegnaFoto" aria-label="Carica o assegna foto all'articolo">
+                                    <img src="https://img.icons8.com/fluency/48/camera.png" style="width:24px;" alt="">
+                                    Assegna Foto
+                                </button>
+                                <button class="btn-photo-action" id="btnSfogliaCartella" aria-label="Apri cartella immagini articoli">
+                                    <img src="https://img.icons8.com/fluency/48/folder-invoices.png" style="width:24px;" alt="">
+                                    Cartella
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD MANUALI -->
+                    <div class="card-gold" style="width: 400px;" role="region" aria-label="Documentazione tecnica">
+                        <div class="card-gold-header" aria-hidden="true">📜 DOCUMENTAZIONE TECNICA</div>
+                        <div class="card-gold-body">
+                            <div class="manual-badge" id="lblManualStatus" aria-live="polite">SELEZIONA ARTICOLO</div>
+                            
+                            <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                                <button class="btn-gold-save" id="btnApriManuale" style="width: 100%; justify-content: center; background: #0284c7;" disabled>
+                                    <i class="fa fa-file-pdf-o"></i> Apri Manuale Tecnico
+                                </button>
+                                
+                                <div class="photo-actions">
+                                    <button class="btn-photo-action" id="btnAssegnaManuale" aria-label="Collega manuale PDF">
+                                        <img src="https://img.icons8.com/fluency/48/add-link.png" style="width:24px;" alt="">
+                                        Assegna
+                                    </button>
+                                    <button class="btn-photo-action" id="btnSfogliaManuali" aria-label="Apri cartella manuali">
+                                        <img src="https://img.icons8.com/fluency/48/archive.png" style="width:24px;" alt="">
+                                        Cartella
+                                    </button>
+                                    <button class="btn-photo-action" id="btnCercaManualeWeb" aria-label="Cerca manuale su Google">
+                                        <img src="https://img.icons8.com/fluency/48/google-logo.png" style="width:24px;" alt="">
+                                        Web
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CAMPI NASCOSTI PER COMPATIBILITÀ -->
+                <div style="display:none;">
+                    <button id="btnElimina"></button>
+                    <button id="btnExportPDF"></button>
+                </div>
+
+            </main>
+        </div>
+
+        <footer class="enterprise-status-bar" role="contentinfo">
+            <span id="lblHint" aria-live="polite">Sistema pronto. Pronto per la gestione catalogo.</span>
+        </footer>
+
+    </div>
+
+    <script src="assets/js/articoli_hta.js"></script>
+
+    <script src="assets/js/accessibility.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+
+

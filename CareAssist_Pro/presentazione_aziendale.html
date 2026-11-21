@@ -1,0 +1,2026 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareAssist Pro Enterprise — Vetrina Prodotto & Video Cartone Animato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amz-navy: #131921;
+            --amz-subnav: #232f3e;
+            --amz-orange: #ff9900;
+            --amz-gold-btn: #ffd814;
+            --amz-buy-btn: #ffa41c;
+            --amz-teal: #007185;
+            --bg-page: #f1f5f9;
+            --bg-white: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-dark);
+            font-size: 16px;
+            line-height: 1.55;
+            padding-bottom: 70px;
+        }
+
+        /* ==========================================================================
+           BARRA SUPERIORE STILE AMAZON ENTERPRISE
+           ========================================================================== */
+        .amz-header {
+            background: var(--amz-navy);
+            color: #ffffff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.28);
+        }
+
+        .amz-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .amz-logo-badge {
+            background: linear-gradient(135deg, #ff9900 0%, #e47911 100%);
+            color: #111827;
+            font-weight: 900;
+            font-size: 22px;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(255,153,0,0.35);
+        }
+
+        .amz-brand h1 {
+            font-size: 19px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: #fff;
+        }
+
+        .amz-brand span {
+            font-size: 12.5px;
+            color: #fbbf24;
+            font-weight: 700;
+            display: block;
+        }
+
+        .amz-subbar {
+            background: var(--amz-subnav);
+            color: #f8fafc;
+            padding: 9px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13.5px;
+            font-weight: 700;
+        }
+
+        .subbar-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .subbar-links a, .subbar-links button {
+            color: #f8fafc;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+
+        .subbar-links a:hover, .subbar-links button:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fbbf24;
+        }
+
+        /* ==========================================================================
+           CONTAINER SCHEDA PRODOTTO STILE AMAZON (3 COLONNE: MEDIA | INFO | LICENZA)
+           ========================================================================== */
+        .amz-container {
+            max-width: 1460px;
+            margin: 20px auto;
+            padding: 0 18px;
+        }
+
+        .amz-product-sheet {
+            background: var(--bg-white);
+            border-radius: 18px;
+            border: 1px solid #cbd5e1;
+            padding: 26px;
+            display: grid;
+            grid-template-columns: 580px 1fr 350px;
+            gap: 28px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+            margin-bottom: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1280px) {
+            .amz-product-sheet {
+                grid-template-columns: 1fr 340px;
+            }
+            .amz-media-column {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .amz-product-sheet {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* COLONNA 1: THUMBNAILS VERTICALI A SINISTRA + PALCOSCENICO VIDEO/FOTO */
+        .amz-media-column {
+            display: grid;
+            grid-template-columns: 82px 1fr;
+            gap: 14px;
+            position: sticky;
+            top: 80px;
+        }
+
+        @media (max-width: 600px) {
+            .amz-media-column {
+                grid-template-columns: 1fr;
+                position: static;
+            }
+            .amz-thumb-strip {
+                flex-direction: row !important;
+                overflow-x: auto;
+            }
+        }
+
+        .amz-thumb-strip {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .amz-thumb-btn {
+            width: 78px;
+            height: 68px;
+            border-radius: 10px;
+            border: 2px solid #cbd5e1;
+            background: #f8fafc;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 4px;
+            transition: all 0.15s;
+            color: #0f172a;
+        }
+
+        .amz-thumb-btn:hover {
+            border-color: var(--amz-orange);
+            transform: scale(1.04);
+        }
+
+        .amz-thumb-btn.active {
+            border: 2.5px solid #e47911;
+            background: #fffbeb;
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.25);
+        }
+
+        .amz-thumb-btn.video-thumb {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: #ffffff;
+            border-color: #38bdf8;
+        }
+
+        .amz-thumb-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .amz-thumb-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        /* STAGE PRINCIPALE (VIDEO CARTONE ANIMATO O FOTO HD) */
+        .amz-main-viewer {
+            background: #070e1e;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+            display: flex;
+            flex-direction: column;
+            min-height: 470px;
+        }
+
+        .viewer-top-bar {
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .viewer-stage-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* SUBTITLES CARTOON (CINEMATIC GLASS) */
+        .cartoon-subtitle-box {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(7, 12, 26, 0.99) 100%);
+            border-top: 2px solid #f59e0b;
+            padding: 14px 18px;
+            min-height: 82px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .speaker-pill {
+            background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%);
+            color: #0f172a;
+            font-size: 11.5px;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 999px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .subtitle-spoken-text {
+            color: #f8fafc;
+            font-size: 14.5px;
+            font-weight: 700;
+            line-height: 1.45;
+            width: 100%;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+        }
+
+        /* PLAYER CONTROLS */
+        .cartoon-controls {
+            background: #090f1d;
+            padding: 10px 14px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-cartoon-play {
+            background: linear-gradient(135deg, #ffd814 0%, #f59e0b 100%);
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 10px rgba(245,158,11,0.35);
+        }
+
+        .btn-cartoon-step {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 7px 11px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .cartoon-progress-wrap {
+            flex: 1;
+            min-width: 110px;
+            height: 8px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .cartoon-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #38bdf8, #fbbf24);
+            transition: width 0.2s linear;
+        }
+
+        /* COLONNA 2: DETTAGLI PRODOTTO STILE AMAZON */
+        .amz-info-column h2 {
+            font-size: 25px;
+            font-weight: 900;
+            color: #0f172a;
+            line-height: 1.28;
+            margin-bottom: 6px;
+        }
+
+        .amz-brand-link {
+            color: var(--amz-teal);
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .amz-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 14px;
+        }
+
+        .amz-choice-badge {
+            background: #232f3e;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .amz-choice-badge span {
+            color: #ff9900;
+        }
+
+        .amz-about-title {
+            font-size: 17px;
+            font-weight: 900;
+            color: #0f172a;
+            margin: 14px 0 10px 0;
+        }
+
+        .amz-bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .amz-bullet-list li {
+            font-size: 15px;
+            color: #1e293b;
+            line-height: 1.5;
+            padding-left: 14px;
+            border-left: 3.5px solid #ff9900;
+        }
+
+        /* BOX ALLEANZA STRATEGICA CIRO + ANTIGRAVITY AI */
+        .ai-partnership-card {
+            margin-top: 18px;
+            background: linear-gradient(135deg, #eff6ff 0%, #fefce8 100%);
+            border: 2px solid #0284c7;
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        /* COLONNA 3: AMAZON BUY BOX -> REGISTRAZIONE LICENZA AZIENDALE DEL CAPO */
+        .amz-buy-box {
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+        }
+
+        .amz-status-green {
+            color: #007600;
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .amz-input-group {
+            margin-bottom: 10px;
+        }
+
+        .amz-input-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #334155;
+            margin-bottom: 3px;
+        }
+
+        .amz-input {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1.5px solid #94a3b8;
+            border-radius: 8px;
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #0f172a;
+            outline: none;
+        }
+
+        .amz-input:focus {
+            border-color: #e47911;
+            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.25);
+        }
+
+        .btn-amz-primary {
+            width: 100%;
+            background: var(--amz-gold-btn);
+            border: 1px solid #fcd200;
+            color: #0f172a;
+            padding: 12px;
+            border-radius: 99px;
+            font-size: 14.5px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 2px 6px rgba(15,23,42,0.15);
+            transition: transform 0.15s, background 0.15s;
+        }
+
+        .btn-amz-primary:hover {
+            background: #f7ca00;
+            transform: translateY(-1px);
+        }
+
+        .btn-amz-secondary {
+            width: 100%;
+            background: var(--amz-buy-btn);
+            border: 1px solid #ff8f00;
+            color: #0f172a;
+            padding: 12px;
+            border-radius: 99px;
+            font-size: 14.5px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 2px 6px rgba(15,23,42,0.15);
+            transition: transform 0.15s;
+        }
+
+        .btn-amz-secondary:hover {
+            background: #fa8900;
+            transform: translateY(-1px);
+        }
+
+        /* ==========================================================================
+           SEZIONE AMAZON A+ CONTENT: FIGURE CON "PER SAPERNE DI PIÙ"
+           ========================================================================== */
+        .aplus-section {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .aplus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 22px;
+            margin-top: 20px;
+        }
+
+        .aplus-card {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .aplus-card:hover {
+            border-color: #e47911;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .aplus-figure-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            padding: 18px;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .aplus-body {
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .btn-per-saperne {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-per-saperne:hover {
+            filter: brightness(1.08);
+        }
+
+        /* CARTOON ANIMATIONS (SVG CHARACTERS) */
+        @keyframes talkMouth {
+            0%, 100% { opacity: 0.75; }
+            50% { opacity: 1; }
+        }
+        @keyframes floatAi {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes pulseSignal {
+            0% { stroke-dashoffset: 120; opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 0.4; }
+        }
+        .talking-mouth {
+            transition: opacity 0.2s ease;
+        }
+        .is-speaking .talking-mouth {
+            animation: none;
+        }
+        .ai-float {
+            animation: floatAi 2.6s infinite ease-in-out;
+        }
+        .signal-beam {
+            stroke-dasharray: 12 8;
+            animation: pulseSignal 1.4s infinite linear;
+        }
+
+        /* MODALE PER SAPERNE DI PIÙ */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .modal-window {
+            background: #ffffff;
+            border: 2px solid #f59e0b;
+            border-radius: 20px;
+            max-width: 860px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+        }
+
+        @media print {
+            .amz-header, .amz-subbar, .no-print { display: none !important; }
+            .amz-product-sheet { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INTESTAZIONE STILE AMAZON -->
+    <header class="amz-header">
+        <div class="amz-brand">
+            <div class="amz-logo-badge">🩺</div>
+            <div>
+                <h1 id="headerDynamicBrand">CareAssist Pro — Edizione Aziendale Enterprise</h1>
+                <span>Co-Progettato da Ciro Milella &amp; Google DeepMind Antigravity AI</span>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button type="button" onclick="attivaModalitaCartone(0, true)" style="background:#ffd814; color:#0f172a; border:none; padding:9px 16px; border-radius:10px; font-weight:900; font-size:13.5px; cursor:pointer;">
+                🎬 Avvia Cartone Animato con Voce Umana HD
+            </button>
+            <a href="/careassist/" style="background:#0284c7; color:#fff; text-decoration:none; padding:9px 16px; border-radius:10px; font-weight:800; font-size:13.5px;">
+                🚀 Apri CareAssist Pro Live
+            </a>
+            <a href="/launcher.html" style="background:rgba(255,255,255,0.12); color:#fff; text-decoration:none; padding:9px 14px; border-radius:10px; font-weight:700; font-size:13.5px;">
+                🏠 Portale Suite
+            </a>
+        </div>
+    </header>
+
+    <!-- SOTTO-BARRA NAVIGAZIONE RAPIDA -->
+    <nav class="amz-subbar">
+        <div class="subbar-links">
+            <button type="button" onclick="attivaModalitaCartone(0, true)">🎬 Video Cartone Animato (5 Scene)</button>
+            <button type="button" onclick="mostraFotoAmazon(0)">🖼️ 1. Quadro Terapie Leggibile</button>
+            <button type="button" onclick="mostraFotoAmazon(1)">🔔 2. Alert PC ↔ Cellulare (2s)</button>
+            <button type="button" onclick="mostraFotoAmazon(2)">🩸 3. Kit Diabete &amp; Scorte</button>
+            <button type="button" onclick="mostraFotoAmazon(3)">🚨 4. Passaporto 118 &amp; Moduli ASL</button>
+            <button type="button" onclick="mostraFotoAmazon(4)">🗑️ 5. Cestino 60gg &amp; Audit</button>
+            <button type="button" onclick="document.getElementById('sec-aplus').scrollIntoView({behavior:'smooth'})">💡 Tutte le Figure «Per saperne di più»</button>
+        </div>
+        <div style="color:#fde047;">
+            🔊 Voci Umane Neurali Studio 24kHz Attive (Isabella, Diego &amp; Giuseppe)
+        </div>
+    </nav>
+
+    <div class="amz-container">
+
+        <!-- ======================================================================
+             SCHEDA PRODOTTO STILE AMAZON (GALLERIA + VIDEO CARTONE | INFO | LICENZA)
+             ====================================================================== -->
+        <section class="amz-product-sheet">
+
+            <!-- COLONNA 1: GALLERIA MINIATURE AMAZON + STAGE VIDEO CARTONE ANIMATO / FOTO -->
+            <div class="amz-media-column">
+                <div class="amz-thumb-strip">
+                    <button type="button" class="amz-thumb-btn video-thumb active" id="thumb-video" onclick="attivaModalitaCartone(0, true)" title="Guarda il Video Cartone Animato con Voci Umane">
+                        <span class="amz-thumb-icon">🎬</span>
+                        <span class="amz-thumb-label" style="color:#fde047;">VIDEO CARTONE</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-foto-0" onclick="mostraFotoAmazon(0)">
+                        <span class="amz-thumb-icon">💊</span>
+                        <span class="amz-thumb-label">1. Terapie Leggibili</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-foto-1" onclick="mostraFotoAmazon(1)">
+                        <span class="amz-thumb-icon">📲</span>
+                        <span class="amz-thumb-label">2. Alert PC↔Tel</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-foto-2" onclick="mostraFotoAmazon(2)">
+                        <span class="amz-thumb-icon">🩸</span>
+                        <span class="amz-thumb-label">3. Diabete &amp; Penne</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-foto-3" onclick="mostraFotoAmazon(3)">
+                        <span class="amz-thumb-icon">🚑</span>
+                        <span class="amz-thumb-label">4. QR 118 &amp; ASL</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-foto-4" onclick="mostraFotoAmazon(4)">
+                        <span class="amz-thumb-icon">🗑️</span>
+                        <span class="amz-thumb-label">5. Cestino 60gg</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-foto-5" onclick="mostraFotoAmazon(5)">
+                        <span class="amz-thumb-icon">🗓️</span>
+                        <span class="amz-thumb-label">6. Turni &amp; PIN</span>
+                    </button>
+                </div>
+
+                <!-- PALCOSCENICO PRINCIPALE -->
+                <div class="amz-main-viewer">
+                    <div class="viewer-top-bar">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="width:10px; height:10px; border-radius:50%; background:#ef4444; display:inline-block; box-shadow:0 0 8px #ef4444;"></span>
+                            <span id="viewerTopTitle" style="font-size:13px; font-weight:800; color:#fef08a;">
+                                🎬 CORTOMETRAGGIO ANIMATO — ATTO 1 DI 5
+                            </span>
+                        </div>
+                        <button type="button" class="btn-per-saperne" style="padding:5px 12px; font-size:12px;" onclick="apriPerSaperneCorrente()">
+                            💡 Per saperne di più
+                        </button>
+                    </div>
+
+                    <!-- CONTENUTO DINAMICO: CARTONE ANIMATO SVG O SCHEDA FOTO HD -->
+                    <div class="viewer-stage-body" id="mainStageContainer">
+                        <!-- Iniettato via JS -->
+                    </div>
+
+                    <!-- SOTTOTITOLI DIALOGO PERSONAGGI -->
+                    <div class="cartoon-subtitle-box">
+                        <span class="speaker-pill" id="speakerBadge">🎙️ Voce Umana HD</span>
+                        <div class="subtitle-spoken-text" id="subtitleText">
+                            Premi «▶️ Avvia Video Cartone» per ascoltare il dialogo con voci umane reali tra il Direttore, Ciro Milella, Antigravity AI e l'Operatrice!
+                        </div>
+                    </div>
+
+                    <!-- BARRA CONTROLLI VIDEO & AUDIO -->
+                    <div class="cartoon-controls no-print">
+                        <button type="button" class="btn-cartoon-play" id="btnPlayCartoon" onclick="togglePlayCartoon()">
+                            ▶️ Avvia Video Cartone
+                        </button>
+                        <button type="button" class="btn-cartoon-step" onclick="scenaPrecedente()">⏮️</button>
+                        <button type="button" class="btn-cartoon-step" onclick="scenaSuccessiva()">⏭️</button>
+                        <div class="cartoon-progress-wrap">
+                            <div class="cartoon-progress-bar" id="cartoonProgressBar"></div>
+                        </div>
+                        <span id="cartoonTimeLabel" style="font-size:12px; font-weight:800; color:#cbd5e1;">Atto 1/5</span>
+                        <button type="button" onclick="condividiCareAssistWhatsApp()" style="background:#25D366; color:#fff; border:none; padding:7px 11px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:5px;" title="Condividi CareAssist su WhatsApp">
+                            <span>💬</span> WhatsApp
+                        </button>
+                    </div>
+
+                    <!-- PANNELLO CONTROLLO RAPIDO VOCI CAREASSIST -->
+                    <div class="no-print" style="background:#090d16; border-top:1px solid rgba(255,255,255,0.1); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:12px; color:#cbd5e1;">
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-weight:700;">
+                                <span>Modalità Voce:</span>
+                                <select id="selectVoiceModeCareAssist" onchange="cambiaVoiceModeCareAssist(this.value)" style="background:#1e293b; color:#ffd814; border:1px solid #d4af37; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:800;">
+                                    <option value="neural">🎙️ Voci Studio HD (Giuseppe, Isabella &amp; Diego)</option>
+                                    <option value="browser">🗣️ Voce Sintetica Browser</option>
+                                    <option value="silent">🔇 Solo Sottotitoli Muto</option>
+                                </select>
+                            </label>
+
+                            <label style="display:flex; align-items:center; gap:5px; font-weight:700;">
+                                <span>Velocità:</span>
+                                <select id="selectAudioSpeedCareAssist" onchange="cambiaAudioSpeedCareAssist(this.value)" style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.25); padding:4px 8px; border-radius:6px; font-size:12px;">
+                                    <option value="0.9">0.9x</option>
+                                    <option value="1.0" selected>1.0x</option>
+                                    <option value="1.15">1.15x</option>
+                                    <option value="1.3">1.3x</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label style="display:flex; align-items:center; gap:6px; font-weight:700;">
+                                <span id="labelVolIconCareAssist">🔊</span>
+                                <input type="range" id="sliderVolCareAssist" min="0" max="100" value="85" oninput="cambiaVolumeCareAssist(this.value)" style="width:75px; accent-color:#ffd814; cursor:pointer;">
+                                <span id="labelVolValCareAssist" style="color:#ffd814; font-weight:800; min-width:30px;">85%</span>
+                            </label>
+                            <button type="button" id="btnMuteCareAssist" onclick="toggleMuteCareAssist()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:4px 8px; border-radius:6px; font-size:11.5px; font-weight:800; cursor:pointer;">
+                                Muto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNA 2: DESCRIZIONE PRODOTTO STILE AMAZON -->
+            <div class="amz-info-column">
+                <span class="amz-brand-link">Visita lo Store Ufficiale CareAssist Pro &amp; Suite Aziendale</span>
+                <h2 id="productMainTitle">
+                    CareAssist Pro — Piattaforma Clinica &amp; Assistenza Domiciliare con Alert in Tempo Reale PC ↔ Smartphone, Scorte Predittive e Intelligenza Artificiale
+                </h2>
+
+                <div class="amz-rating-row">
+                    <span style="color:#f59e0b; font-size:18px; letter-spacing:1px;">★★★★★</span>
+                    <span style="font-weight:800; color:#007185; font-size:14px;">5.0 su 5 stelle (Eccellenza Operativa)</span>
+                    <span class="amz-choice-badge">Scelta <span>Consigliata</span> per Direttori &amp; Aziende</span>
+                </div>
+
+                <!-- MINI PULSANTI SCENA RAPIDA -->
+                <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; margin-bottom:14px;">
+                    <div style="font-size:12.5px; font-weight:900; color:#0f172a; text-transform:uppercase; margin-bottom:8px;">
+                        🎬 Scegli un Atto del Cartone Animato (Voce Umana Multi-Personaggio):
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                        <button type="button" onclick="attivaModalitaCartone(0, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #cbd5e1; background:#fff; font-size:12.5px; font-weight:800; cursor:pointer;">1. Il Problema del Capo</button>
+                        <button type="button" onclick="attivaModalitaCartone(1, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #0284c7; background:#f0f9ff; color:#0369a1; font-size:12.5px; font-weight:800; cursor:pointer;">2. Ciro + Antigravity AI</button>
+                        <button type="button" onclick="attivaModalitaCartone(2, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #16a34a; background:#f0fdf4; color:#15803d; font-size:12.5px; font-weight:800; cursor:pointer;">3. Alert Tel ↔ PC (2s)</button>
+                        <button type="button" onclick="attivaModalitaCartone(3, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #d97706; background:#fffbeb; color:#b45309; font-size:12.5px; font-weight:800; cursor:pointer;">4. Piccole Rifiniture</button>
+                        <button type="button" onclick="attivaModalitaCartone(4, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #7c3aed; background:#f5f3ff; color:#6d28d9; font-size:12.5px; font-weight:800; cursor:pointer;">5. Licenza Nuova Azienda</button>
+                    </div>
+                </div>
+
+                <div class="amz-about-title">Informazioni su questo articolo (Perché convince la Direzione):</div>
+                <ul class="amz-bullet-list">
+                    <li>
+                        <strong>SINCRONIZZAZIONE ISTANTANEA CELLULARE ↔ PC (2 SECONDI):</strong> Quando l'operatore a domicilio tocca <em>«✓ Assunto Oggi»</em> sullo smartphone, il computer della direzione diventa verde in diretta, emette un segnale acustico e scala 1 compressa dalla scatola reale. <a href="javascript:void(0)" onclick="apriModalInfoFoto(1)" style="color:#007185; font-weight:800;">💡 Per saperne di più</a>
+                    </li>
+                    <li>
+                        <strong>ALTA LEGGIBILITÀ (PROGETTATO PER ETÀ MEDIA 50+ ANNI):</strong> Caratteri nitidi, contrasto riposante, pillola visiva del dosaggio e pulsanti grandi anti-errore. Chiunque lo usa dal primo minuto senza bisogno di corsi tecnici. <a href="javascript:void(0)" onclick="apriModalInfoFoto(0)" style="color:#007185; font-weight:800;">💡 Per saperne di più</a>
+                    </li>
+                    <li>
+                        <strong>PICCOLE RIFINITURE CLINICHE UNICHE:</strong> Scorta condivisa per farmaci presi più volte al giorno, Kit Diabete collegato alle penne di insulina in frigo, badge automatici <em>"A Digiuno"</em> e <em>"Giorni Alterni"</em>, e Cestino di recupero 60 giorni. <a href="javascript:void(0)" onclick="apriModalInfoFoto(2)" style="color:#007185; font-weight:800;">💡 Per saperne di più</a>
+                    </li>
+                    <li>
+                        <strong>PASSAPORTO EMERGENZA 118 QR &amp; MODULI ASL BARI EX-CTO:</strong> Genera e stampa in A4 il Passaporto 118 da frigo con QR Code, la Lettera per Visita Specialistica e i moduli per la Farmacia Territoriale ASL. <a href="javascript:void(0)" onclick="apriModalInfoFoto(3)" style="color:#007185; font-weight:800;">💡 Per saperne di più</a>
+                    </li>
+                    <li>
+                        <strong>🛡️ PROTOCOLLO "ZERO-SCUSE" ANTI-FURBI (VOLUME FORZATO ≥ 70% + ESCALATION 3 STADI):</strong> Impedisce a chiunque di mettere il Muto o abbassare il volume a discapito del paziente. All'ora del farmaco sblocca l'audio hardware al <strong>75%</strong>; dopo 10 minuti di ritardo sale al <strong>90%</strong>; oltre 20 minuti scrive automaticamente una <strong>Segnalazione Certificata nel Diario del Coordinatore</strong>!
+                    </li>
+                </ul>
+
+                <!-- CARD EXECUTIVE: PROTOCOLLO ZERO-SCUSE & ESCALATION 3 STADI -->
+                <div style="background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:2px solid #f59e0b; border-radius:16px; padding:16px 18px; margin:16px 0; color:#ffffff; box-shadow:0 10px 25px rgba(15,23,42,0.18); position:relative; overflow:hidden;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; border-bottom:1px solid rgba(251,191,36,0.25); padding-bottom:8px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%); display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 4px 12px rgba(245,158,11,0.4);">
+                                🛡️
+                            </div>
+                            <div>
+                                <div style="font-size:11px; font-weight:900; color:#fde047; letter-spacing:0.8px; text-transform:uppercase;">
+                                    TUTELA MEDICO-LEGALE PER LA DIREZIONE
+                                </div>
+                                <div style="font-size:15.5px; font-weight:900; color:#ffffff;">
+                                    Protocollo «Zero-Scuse» Anti-Sabotaggio Volume
+                                </div>
+                            </div>
+                        </div>
+                        <span style="background:rgba(16,185,129,0.2); border:1px solid #34d399; color:#6ee7b7; font-size:11px; font-weight:900; padding:4px 10px; border-radius:999px;">
+                            ● ATTIVO H24
+                        </span>
+                    </div>
+
+                    <p style="font-size:13.5px; color:#e2e8f0; line-height:1.5; margin-bottom:12px;">
+                        Nessun operatore potrà mai giustificarsi dicendo <em style="color:#fde047;">«Non avevo sentito la sveglia»</em>: CareAssist Pro impedisce di silenziare gli avvisi a discapito del paziente grazie alla <strong>Catena di Sicurezza a 3 Stadi</strong>:
+                    </p>
+
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(56,189,248,0.4); border-radius:10px; padding:9px 10px; text-align:center;">
+                            <div style="font-size:11px; font-weight:900; color:#38bdf8;">STADIO 1 (MIN 0)</div>
+                            <div style="font-size:15px; font-weight:900; color:#ffffff; margin:2px 0;">🔊 Vol. ≥ 75%</div>
+                            <div style="font-size:11px; color:#cbd5e1; line-height:1.25;">Sblocco Muto PC + Boost 320% Mobile</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(245,158,11,0.5); border-radius:10px; padding:9px 10px; text-align:center;">
+                            <div style="font-size:11px; font-weight:900; color:#fbbf24;">STADIO 2 (+10 MIN)</div>
+                            <div style="font-size:15px; font-weight:900; color:#fde047; margin:2px 0;">🚨 Vol. 90%</div>
+                            <div style="font-size:11px; color:#cbd5e1; line-height:1.25;">Sirena + Voce HD + Schermo Rosso</div>
+                        </div>
+                        <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(248,113,113,0.6); border-radius:10px; padding:9px 10px; text-align:center;">
+                            <div style="font-size:11px; font-weight:900; color:#fca5a5;">STADIO 3 (+20 MIN)</div>
+                            <div style="font-size:15px; font-weight:900; color:#fecaca; margin:2px 0;">📋 Audit Capo</div>
+                            <div style="font-size:11px; color:#fecaca; line-height:1.25;">Notifica certificata al Coordinatore</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD EXECUTIVE: SINERGIA UOMO + ANTIGRAVITY AI -->
+                <div style="background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border:2px solid #0284c7; border-radius:16px; padding:15px 18px; box-shadow:0 6px 18px rgba(2,132,199,0.12);">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                        <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; box-shadow:0 4px 10px rgba(2,132,199,0.3);">
+                            🤖
+                        </div>
+                        <div>
+                            <div style="font-size:11px; font-weight:900; color:#0369a1; text-transform:uppercase; letter-spacing:0.6px;">
+                                IL VANTAGGIO COMPETITIVO ESCLUSIVO
+                            </div>
+                            <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">
+                                Esperienza Clinica Ciro Milella + Partner Antigravity AI
+                            </h3>
+                        </div>
+                    </div>
+                    <p style="font-size:13.5px; color:#1e293b; line-height:1.5; margin:0;">
+                        Non è un software rigido comprato a scatola chiusa: nasce dall'<strong>esperienza pratica sul campo di Ciro Milella</strong> potenziata in tempo reale da <strong>Antigravity AI</strong>. Qualsiasi nuova esigenza della vostra Azienda viene implementata su misura in pochi minuti!
+                    </p>
+                </div>
+            </div>
+
+            <!-- COLONNA 3: IL "BUY BOX" DI AMAZON -> ATTIVAZIONE NUOVA AZIENDA DEL CAPO -->
+            <aside class="amz-buy-box">
+                <div class="amz-status-green">🟢 Licenza Aziendale Pronta</div>
+                <p style="font-size:13px; color:#475569; margin-bottom:12px;">
+                    La tua Suite personale resta intatta. Qui puoi <strong>registrare il nome dell'Azienda del tuo Datore di Lavoro</strong> per mostrargli il programma già intestato a lui con <strong>Database Vergine</strong>:
+                </p>
+
+                <div class="amz-input-group">
+                    <label>🏢 Nome Azienda / Cooperativa / Ente *</label>
+                    <input type="text" id="azNome" class="amz-input" placeholder="es. Cooperativa Sanitaria S.r.l." oninput="aggiornaIntestazioneLive()">
+                </div>
+
+                <div class="amz-input-group">
+                    <label>🧾 Partita IVA &amp; Codice SDI / Accreditamento</label>
+                    <input type="text" id="azPiva" class="amz-input" placeholder="es. IT 08945120726 • SDI M5UXCR1" oninput="aggiornaIntestazioneLive()">
+                </div>
+
+                <div class="amz-input-group">
+                    <label>👔 Nome Direttore / Datore di Lavoro</label>
+                    <input type="text" id="azDirettore" class="amz-input" placeholder="es. Dott. Mario Rossi" oninput="aggiornaIntestazioneLive()">
+                </div>
+
+                <div class="amz-input-group">
+                    <label>📍 Sede Operativa &amp; Recapito Telefonico</label>
+                    <input type="text" id="azSede" class="amz-input" placeholder="es. Bari (BA) • Tel. 080 5551234" oninput="aggiornaIntestazioneLive()">
+                </div>
+
+                <button type="button" class="btn-amz-primary" onclick="attivaLicenzaAziendale()">
+                    ✅ Intesta Subito la Suite a Questa Azienda
+                </button>
+
+                <button type="button" class="btn-amz-secondary" onclick="compilaEsempioCapo()">
+                    ⚡ Simula Dati Azienda per Demo Rapida
+                </button>
+
+                <div id="boxConfermaAzienda" style="display:none; margin-top:12px; padding:10px 12px; background:#f0fdf4; border:1.5px solid #16a34a; border-radius:10px; font-size:13px; color:#14532d; font-weight:700;"></div>
+
+                <div style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; font-size:12px; color:#475569; display:flex; flex-direction:column; gap:5px;">
+                    <div>🔒 <strong>Archivio Pazienti:</strong> Consegnato 100% Vergine (GDPR)</div>
+                    <div>📱 <strong>Dispositivi:</strong> PC Ufficio + Smartphone Operatori Illimitati</div>
+                    <div>🖨️ <a href="javascript:void(0)" onclick="window.print()" style="color:#007185; font-weight:800;">Stampa Scheda Esecutiva A4 per il Capo</a></div>
+                </div>
+            </aside>
+
+        </section>
+
+        <!-- ======================================================================
+             SEZIONE AMAZON A+ CONTENT: LE 6 FIGURE CON LINK "💡 PER SAPERNE DI PIÙ"
+             ====================================================================== -->
+        <section class="aplus-section" id="sec-aplus">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:2px solid #f1f5f9; padding-bottom:14px;">
+                <div>
+                    <span style="font-size:12px; font-weight:900; color:#e47911; text-transform:uppercase; letter-spacing:1px;">DAL PRODUTTORE • GALLERIA DETTAGLIATA STILE AMAZON A+</span>
+                    <h2 style="font-size:24px; font-weight:900; color:#0f172a;">
+                        Esplora le 6 Figure Chiave di CareAssist Pro (con Link «Per saperne di più» e Voce Umana HD)
+                    </h2>
+                </div>
+            </div>
+
+            <div class="aplus-grid" id="aplusGalleryContainer">
+                <!-- Popolato via JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- MODALE "💡 PER SAPERNE DI PIÙ" -->
+    <div class="modal-backdrop" id="modalInfoFoto" onclick="if(event.target===this) chiudiModalInfoFoto()">
+        <div class="modal-window">
+            <div style="background:linear-gradient(135deg, #131921 0%, #232f3e 100%); color:#fff; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:11.5px; font-weight:800; color:#fbbf24; text-transform:uppercase;">💡 PER SAPERNE DI PIÙ • APPROFONDIMENTO FUNZIONALE</div>
+                    <h3 id="modalInfoTitle" style="font-size:21px; font-weight:900;">Titolo</h3>
+                </div>
+                <button type="button" onclick="chiudiModalInfoFoto()" style="background:rgba(255,255,255,0.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <div style="padding:24px;" id="modalInfoBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // LE 5 SCENE DEL VIDEO CARTONE ANIMATO (CON VOCI UMANE STUDIO MP3 PRE-REGISTRATE)
+        // =========================================================================
+        const CARTOON_SCENES = [
+            {
+                id: 0,
+                title: 'Atto 1: Il Problema Quotidiano del Direttore',
+                audioUrl: '/assets/audio_presentazione/scena_1.mp3',
+                speaker: '👨‍💼 Direttore & Voce Guida (Giuseppe + Isabella HD)',
+                subtitle: '«Come Direttore, ogni giorno mi chiedo: l\'operatore avrà dato la compressa delle 08:00? Quante scatole restano? E se qualcuno abbassa il volume o cancella per sbaglio?»',
+                linkedPhotoIdx: 0,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 38% 35%, #1e293b 0%, #090d16 100%);">
+                        <defs>
+                            <linearGradient id="winSky" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="100%" stop-color="#1e3a8a"/>
+                            </linearGradient>
+                            <linearGradient id="suitGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#1e40af"/>
+                                <stop offset="100%" stop-color="#0f172a"/>
+                            </linearGradient>
+                            <linearGradient id="deskGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#334155"/>
+                                <stop offset="50%" stop-color="#475569"/>
+                                <stop offset="100%" stop-color="#1e293b"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Finestra Panoramica Ufficio Direzione -->
+                        <rect x="28" y="22" width="195" height="145" rx="12" fill="url(#winSky)" stroke="#334155" stroke-width="3"/>
+                        <line x1="125" y1="22" x2="125" y2="167" stroke="#334155" stroke-width="2.5"/>
+                        <line x1="28" y1="95" x2="223" y2="95" stroke="#334155" stroke-width="2.5"/>
+                        <!-- Grattacieli / Città sullo sfondo -->
+                        <rect x="42" y="80" width="26" height="84" fill="#0f172a" opacity="0.65"/>
+                        <rect x="74" y="62" width="34" height="102" fill="#0f172a" opacity="0.75"/>
+                        <rect x="140" y="72" width="32" height="92" fill="#0f172a" opacity="0.65"/>
+                        <circle cx="192" cy="52" r="12" fill="#fde047" opacity="0.85"/>
+
+                        <!-- Orologio da Parete Ufficio (Ore 08:15 - Ritardo!) -->
+                        <g transform="translate(262, 54)">
+                            <circle cx="0" cy="0" r="26" fill="#0f172a" stroke="#ef4444" stroke-width="3"/>
+                            <circle cx="0" cy="0" r="21" fill="none" stroke="rgba(248,113,113,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                            <line x1="0" y1="0" x2="-10" y2="6" stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="0" y1="0" x2="13" y2="0" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="0" cy="0" r="3" fill="#ef4444"/>
+                            <rect x="-34" y="32" width="68" height="18" rx="6" fill="#7f1d1d"/>
+                            <text x="0" y="44" font-size="9.5" font-weight="900" fill="#fecaca" text-anchor="middle">ORE 08:15 ⏰</text>
+                        </g>
+
+                        <!-- Poltrona Direzionale Ergonomica -->
+                        <rect x="260" y="102" width="110" height="145" rx="26" fill="#0f172a" stroke="#475569" stroke-width="3"/>
+
+                        <!-- IL DIRETTORE (Illustrazione Ricca Executive) -->
+                        <g transform="translate(255, 76)">
+                            <!-- Spalle e Giacca Sartoriale -->
+                            <path d="M12,132 Q60,104 108,132 L124,195 L-4,195 Z" fill="url(#suitGrad)" stroke="#60a5fa" stroke-width="2.5"/>
+                            <!-- Camicia Bianca e Rever -->
+                            <polygon points="44,116 76,116 60,162" fill="#f8fafc"/>
+                            <!-- Cravatta Bordeaux -->
+                            <polygon points="56,120 64,120 67,168 60,178 53,168" fill="#dc2626"/>
+                            <!-- Collo -->
+                            <rect x="49" y="98" width="22" height="22" rx="6" fill="#fdba74"/>
+                            <!-- Volto -->
+                            <circle cx="60" cy="64" r="40" fill="#fed7aa" stroke="#fb923c" stroke-width="2.5"/>
+                            <!-- Capelli Brizzolati Executive -->
+                            <path d="M20,56 Q28,16 60,18 Q92,16 100,56 Q84,34 60,36 Q36,34 20,56 Z" fill="#475569"/>
+                            <!-- Sopracciglia Preoccupate -->
+                            <line x1="34" y1="45" x2="52" y2="49" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="86" y1="45" x2="68" y2="49" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Occhiali Montatura Oro/Nero -->
+                            <rect x="33" y="52" width="23" height="15" rx="4" fill="rgba(255,255,255,0.2)" stroke="#0f172a" stroke-width="2.8"/>
+                            <rect x="64" y="52" width="23" height="15" rx="4" fill="rgba(255,255,255,0.2)" stroke="#0f172a" stroke-width="2.8"/>
+                            <line x1="56" y1="59" x2="64" y2="59" stroke="#fbbf24" stroke-width="2.8"/>
+                            <circle cx="44" cy="59" r="3.5" fill="#0f172a"/>
+                            <circle cx="75" cy="59" r="3.5" fill="#0f172a"/>
+                            <!-- Bocca Naturale Sobria -->
+                            <path d="M51,85 Q60,91 69,85" fill="none" stroke="#991b1b" stroke-width="3" stroke-linecap="round" class="talking-mouth"/>
+                        </g>
+
+                        <!-- Scrivania Presidenziale -->
+                        <rect x="20" y="262" width="435" height="22" rx="8" fill="url(#deskGrad)" stroke="#64748b" stroke-width="1.5"/>
+                        <rect x="38" y="284" width="395" height="50" rx="6" fill="#0f172a" opacity="0.8"/>
+                        <!-- Targhetta Oro sulla Scrivania -->
+                        <rect x="255" y="244" width="128" height="22" rx="5" fill="#fbbf24" stroke="#78350f" stroke-width="1.5"/>
+                        <text x="319" y="259" font-size="10.5" font-weight="900" fill="#0f172a" text-anchor="middle">DIREZIONE SANITARIA</text>
+
+                        <!-- Faldoni Cartacei Caotici & Blister Scaduto a Sinistra -->
+                        <g transform="translate(56, 194)">
+                            <rect x="0" y="22" width="84" height="46" rx="4" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+                            <rect x="8" y="8" width="84" height="46" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+                            <line x1="18" y1="22" x2="72" y2="22" stroke="#ef4444" stroke-width="3"/>
+                            <line x1="18" y1="32" x2="80" y2="32" stroke="#64748b" stroke-width="2"/>
+                            <rect x="14" y="38" width="72" height="18" rx="4" fill="#dc2626"/>
+                            <text x="50" y="50" font-size="9.5" fill="#ffffff" text-anchor="middle" font-weight="900">FOGLIO PERSO?</text>
+                        </g>
+
+                        <!-- Laptop con Warning Rosso -->
+                        <g transform="translate(158, 198)">
+                            <rect x="0" y="0" width="82" height="56" rx="6" fill="#1e293b" stroke="#f87171" stroke-width="2.5"/>
+                            <rect x="6" y="6" width="70" height="42" rx="3" fill="#450a0a"/>
+                            <text x="41" y="26" font-size="16" text-anchor="middle">🔇</text>
+                            <text x="41" y="42" font-size="8.5" font-weight="900" fill="#fca5a5" text-anchor="middle">MUTO ATTIVO?</text>
+                            <polygon points="-8,56 90,56 98,64 -16,64" fill="#94a3b8"/>
+                        </g>
+
+                        <!-- 3 CARD OLOGRAFICHE DEI RISCHI QUOTIDIANI (A DESTRA) -->
+                        <g transform="translate(430, 22)">
+                            <rect x="0" y="0" width="308" height="304" rx="18" fill="rgba(15,23,42,0.88)" stroke="#ef4444" stroke-width="2.5"/>
+                            <rect x="16" y="14" width="276" height="28" rx="8" fill="rgba(239,68,68,0.2)"/>
+                            <text x="154" y="33" font-size="11.5" font-weight="900" fill="#fca5a5" text-anchor="middle">⚠️ I 4 TIMORI DELLA DIREZIONE SENZA CAREASSIST</text>
+
+                            <!-- Dubbio 1 -->
+                            <rect x="16" y="52" width="276" height="52" rx="10" fill="#1e293b" stroke="rgba(248,113,113,0.4)" stroke-width="1.5"/>
+                            <circle cx="42" cy="78" r="15" fill="#7f1d1d"/>
+                            <text x="42" y="83" font-size="14" text-anchor="middle">💊</text>
+                            <text x="68" y="73" font-size="12.5" font-weight="900" fill="#ffffff">Pastiglia delle 08:00 data?</text>
+                            <text x="68" y="91" font-size="11" fill="#fca5a5">Nessuna conferma in tempo reale in sede</text>
+
+                            <!-- Dubbio 2 -->
+                            <rect x="16" y="114" width="276" height="52" rx="10" fill="#1e293b" stroke="rgba(251,191,36,0.4)" stroke-width="1.5"/>
+                            <circle cx="42" cy="140" r="15" fill="#78350f"/>
+                            <text x="42" y="145" font-size="14" text-anchor="middle">🔇</text>
+                            <text x="68" y="135" font-size="12.5" font-weight="900" fill="#fde047">Volume abbassato dai «furbi»?</text>
+                            <text x="68" y="153" font-size="11" fill="#fef08a">Rischio sveglia ignorata a discapito del paziente</text>
+
+                            <!-- Dubbio 3 -->
+                            <rect x="16" y="176" width="276" height="52" rx="10" fill="#1e293b" stroke="rgba(56,189,248,0.4)" stroke-width="1.5"/>
+                            <circle cx="42" cy="202" r="15" fill="#0c4a6e"/>
+                            <text x="42" y="207" font-size="14" text-anchor="middle">📦</text>
+                            <text x="68" y="197" font-size="12.5" font-weight="900" fill="#ffffff">Quante scatole restano a casa?</text>
+                            <text x="68" y="215" font-size="11" fill="#bae6fd">Emergenza ricette all'ultimo minuto</text>
+
+                            <!-- Dubbio 4 -->
+                            <rect x="16" y="238" width="276" height="52" rx="10" fill="#1e293b" stroke="rgba(168,85,247,0.4)" stroke-width="1.5"/>
+                            <circle cx="42" cy="264" r="15" fill="#4c1d95"/>
+                            <text x="42" y="269" font-size="14" text-anchor="middle">🗑️</text>
+                            <text x="68" y="259" font-size="12.5" font-weight="900" fill="#ffffff">Cancellazioni per errore?</text>
+                            <text x="68" y="277" font-size="11" fill="#e9d5ff">Chi ha modificato il piano terapeutico?</text>
+                        </g>
+                    </svg>
+                `
+            },
+            {
+                id: 1,
+                title: 'Atto 2: L\'Alleanza Strategica — Ciro Milella + Antigravity AI',
+                audioUrl: '/assets/audio_presentazione/scena_2.mp3',
+                speaker: '👨‍💻 Ciro Milella & 🤖 Antigravity AI (Diego + Isabella HD)',
+                subtitle: '«Ciro ha messo l\'esperienza reale sul campo; io, Antigravity AI, ho trasformato ogni sua intuizione in codice sicuro, maschere leggibili e controlli automatici!»',
+                linkedPhotoIdx: 0,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 45%, #172554 0%, #060b16 100%);">
+                        <!-- Griglia Tecnologica Sfondo -->
+                        <line x1="0" y1="85" x2="760" y2="85" stroke="rgba(56,189,248,0.08)" stroke-width="1"/>
+                        <line x1="0" y1="175" x2="760" y2="175" stroke="rgba(56,189,248,0.08)" stroke-width="1"/>
+                        <line x1="0" y1="265" x2="760" y2="265" stroke="rgba(56,189,248,0.08)" stroke-width="1"/>
+
+                        <!-- CARD SINISTRA: CIRO MILELLA (ESPERIENZA SUL CAMPO) -->
+                        <g transform="translate(26, 28)">
+                            <rect x="0" y="0" width="235" height="292" rx="18" fill="rgba(15,23,42,0.88)" stroke="#38bdf8" stroke-width="2.5"/>
+                            <rect x="18" y="14" width="199" height="24" rx="6" fill="rgba(2,132,199,0.3)"/>
+                            <text x="117" y="30" font-size="10.5" font-weight="900" fill="#7dd3fc" text-anchor="middle">🧠 IDEATORE &amp; ESPERIENZA REALE</text>
+
+                            <!-- Illustrazione Ciro Milella -->
+                            <g transform="translate(57, 46)">
+                                <path d="M12,108 Q60,88 108,108 L120,162 L0,162 Z" fill="#0284c7" stroke="#7dd3fc" stroke-width="2.5"/>
+                                <polygon points="46,98 74,98 60,132" fill="#e0f2fe"/>
+                                <circle cx="60" cy="58" r="36" fill="#fed7aa" stroke="#fb923c" stroke-width="2.5"/>
+                                <path d="M24,46 Q40,18 60,20 Q85,18 96,46 Q75,32 60,32 Q42,32 24,46 Z" fill="#1e293b"/>
+                                <circle cx="46" cy="54" r="3.5" fill="#0f172a"/>
+                                <circle cx="74" cy="54" r="3.5" fill="#0f172a"/>
+                                <path d="M51,75 Q60,82 69,75" fill="none" stroke="#991b1b" stroke-width="3" stroke-linecap="round" class="talking-mouth"/>
+                            </g>
+
+                            <rect x="20" y="218" width="195" height="30" rx="8" fill="#fbbf24"/>
+                            <text x="117" y="238" font-size="13" font-weight="900" fill="#0f172a" text-anchor="middle">👨‍💻 CIRO MILELLA</text>
+                            <text x="117" y="270" font-size="11" font-weight="700" fill="#cbd5e1" text-anchor="middle">Conoscenza reale dei bisogni</text>
+                            <text x="117" y="284" font-size="11" font-weight="700" fill="#fde047" text-anchor="middle">di Pazienti, OSS e Direzione</text>
+                        </g>
+
+                        <!-- PONTE CENTRALE SINERGIA UOMO + AI -->
+                        <g transform="translate(275, 55)">
+                            <line x1="0" y1="115" x2="210" y2="115" stroke="#fbbf24" stroke-width="5" class="signal-beam"/>
+                            <rect x="12" y="18" width="186" height="44" rx="12" fill="#0f172a" stroke="#fbbf24" stroke-width="2.5"/>
+                            <text x="105" y="37" font-size="11" font-weight="900" fill="#fbbf24" text-anchor="middle">⚡ ALLEANZA STRATEGICA</text>
+                            <text x="105" y="53" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">UOMO + INTELLIGENZA AI</text>
+
+                            <!-- Badge Funzionalità Generate -->
+                            <rect x="18" y="82" width="174" height="28" rx="8" fill="#065f46" stroke="#34d399" stroke-width="1.5"/>
+                            <text x="105" y="100" font-size="11" font-weight="900" fill="#ecfdf5" text-anchor="middle">🔊 Volume Forzato ≥ 70%</text>
+
+                            <rect x="18" y="122" width="174" height="28" rx="8" fill="#1e3a8a" stroke="#60a5fa" stroke-width="1.5"/>
+                            <text x="105" y="140" font-size="11" font-weight="900" fill="#eff6ff" text-anchor="middle">🎙️ Voci Neurali Studio HD</text>
+
+                            <rect x="18" y="162" width="174" height="28" rx="8" fill="#78350f" stroke="#fbbf24" stroke-width="1.5"/>
+                            <text x="105" y="180" font-size="11" font-weight="900" fill="#fef3c7" text-anchor="middle">🚨 Escalation 3 Stadi H24</text>
+
+                            <rect x="18" y="202" width="174" height="28" rx="8" fill="#3b0764" stroke="#c084fc" stroke-width="1.5"/>
+                            <text x="105" y="220" font-size="11" font-weight="900" fill="#f3e8ff" text-anchor="middle">🔄 Sync Cloud + USB Sicura</text>
+                        </g>
+
+                        <!-- CARD DESTRA: ANTIGRAVITY AI (PARTNER TECNOLOGICO) -->
+                        <g transform="translate(499, 28)">
+                            <rect x="0" y="0" width="235" height="292" rx="18" fill="rgba(15,23,42,0.88)" stroke="#a855f7" stroke-width="2.5"/>
+                            <rect x="18" y="14" width="199" height="24" rx="6" fill="rgba(168,85,247,0.25)"/>
+                            <text x="117" y="30" font-size="10.5" font-weight="900" fill="#e9d5ff" text-anchor="middle">🤖 PARTNER INGEGNERISTICO H24</text>
+
+                            <g transform="translate(42, 48)" class="ai-float">
+                                <circle cx="75" cy="75" r="56" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="8 4"/>
+                                <rect x="36" y="36" width="78" height="70" rx="20" fill="linear-gradient(135deg,#0284c7,#1e3a8a)" fill="#0284c7" stroke="#bae6fd" stroke-width="3"/>
+                                <circle cx="58" cy="64" r="7.5" fill="#fef08a"/>
+                                <circle cx="92" cy="64" r="7.5" fill="#fef08a"/>
+                                <rect x="54" y="84" width="42" height="8" rx="4" fill="#38bdf8" class="talking-mouth"/>
+                                <line x1="75" y1="14" x2="75" y2="36" stroke="#fbbf24" stroke-width="4"/>
+                                <circle cx="75" cy="12" r="7" fill="#fbbf24"/>
+                            </g>
+
+                            <rect x="20" y="218" width="195" height="30" rx="8" fill="#38bdf8"/>
+                            <text x="117" y="238" font-size="13" font-weight="900" fill="#0f172a" text-anchor="middle">🤖 ANTIGRAVITY AI</text>
+                            <text x="117" y="270" font-size="11" font-weight="700" fill="#cbd5e1" text-anchor="middle">Sviluppo immediato su misura</text>
+                            <text x="117" y="284" font-size="11" font-weight="700" fill="#7dd3fc" text-anchor="middle">senza costi di agenzie esterne</text>
+                        </g>
+                    </svg>
+                `
+            },
+            {
+                id: 2,
+                title: 'Atto 3: Alert Cellulare ↔ PC in 2 Secondi + Volume Anti-Furbi ≥ 70%',
+                audioUrl: '/assets/audio_presentazione/scena_3.mp3',
+                speaker: '👩‍⚕️ Operatrice a Domicilio & 👨‍💻 Ciro (Isabella + Diego HD)',
+                subtitle: '«Tocco "✓ Assunto Oggi" sullo smartphone a casa del paziente... e in 2 secondi il PC della Direzione diventa verde, sblocca il volume ≥ 70% e scala la scatola!»',
+                linkedPhotoIdx: 1,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:linear-gradient(135deg, #042f2e 0%, #0f172a 55%, #172554 100%);">
+                        <!-- SINISTRA: SMARTPHONE OPERATORE A DOMICILIO -->
+                        <g transform="translate(28, 24)">
+                            <rect x="0" y="0" width="210" height="300" rx="24" fill="#1e293b" stroke="#38bdf8" stroke-width="3.5"/>
+                            <rect x="12" y="22" width="186" height="256" rx="14" fill="#09101f"/>
+                            <rect x="75" y="10" width="60" height="5" rx="2.5" fill="#475569"/>
+
+                            <rect x="22" y="34" width="166" height="24" rx="6" fill="rgba(56,189,248,0.18)"/>
+                            <text x="105" y="50" font-size="10.5" font-weight="900" fill="#38bdf8" text-anchor="middle">📱 DOMICILIO PAZIENTE</text>
+
+                            <rect x="22" y="68" width="166" height="68" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                            <text x="105" y="90" font-size="13" font-weight="900" fill="#ffffff" text-anchor="middle">💊 Entecavir 0,5 mg</text>
+                            <text x="105" y="108" font-size="11" font-weight="800" fill="#fde047" text-anchor="middle">⏰ Ore 07:00 • A digiuno</text>
+                            <text x="105" y="125" font-size="10" fill="#94a3b8" text-anchor="middle">Operatore: Maria R. (PIN Verificato)</text>
+
+                            <!-- Pulsante Verde Toccato -->
+                            <rect x="22" y="148" width="166" height="48" rx="12" fill="#10b981" stroke="#a7f3d0" stroke-width="2.5"/>
+                            <text x="105" y="177" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">✓ ASSUNTO OGGI</text>
+
+                            <!-- Badge Guadagno Audio Mobile -->
+                            <rect x="22" y="208" width="166" height="56" rx="10" fill="rgba(245,158,11,0.16)" stroke="#f59e0b" stroke-width="1.5"/>
+                            <text x="105" y="228" font-size="10.5" font-weight="900" fill="#fde047" text-anchor="middle">🔊 BOOSTER MOBILE +220%</text>
+                            <text x="105" y="244" font-size="9.5" fill="#fef3c7" text-anchor="middle">Suona anche a schermo bloccato</text>
+                            <text x="105" y="257" font-size="9.5" fill="#fef3c7" text-anchor="middle">con sintesi vocale in italiano</text>
+                        </g>
+
+                        <!-- CENTRO: RAGGIO CLOUD 2 SECONDI + ANTI-SABOTAGGIO -->
+                        <g transform="translate(248, 45)">
+                            <path d="M10,125 Q105,55 200,125" fill="none" stroke="#34d399" stroke-width="5" class="signal-beam"/>
+                            <path d="M200,145 Q105,215 10,145" fill="none" stroke="#38bdf8" stroke-width="4" class="signal-beam"/>
+
+                            <circle cx="105" cy="135" r="46" fill="#065f46" stroke="#6ee7b7" stroke-width="3"/>
+                            <text x="105" y="122" font-size="11" font-weight="900" fill="#a7f3d0" text-anchor="middle">CLOUD SYNC</text>
+                            <text x="105" y="144" font-size="19" font-weight="900" fill="#fde047" text-anchor="middle">2 sec</text>
+                            <text x="105" y="160" font-size="9.5" font-weight="800" fill="#ffffff" text-anchor="middle">TEMPO REALE</text>
+
+                            <rect x="12" y="212" width="186" height="44" rx="10" fill="#7f1d1d" stroke="#f87171" stroke-width="2"/>
+                            <text x="105" y="231" font-size="10.5" font-weight="900" fill="#fef2f2" text-anchor="middle">🛡️ ANTI-SABOTAGGIO VOLUME</text>
+                            <text x="105" y="247" font-size="10" font-weight="800" fill="#fde047" text-anchor="middle">75% ➔ 90% (+10m) ➔ Capo (+20m)</text>
+                        </g>
+
+                        <!-- DESTRA: MONITOR PC DIREZIONE / COORDINAMENTO -->
+                        <g transform="translate(465, 28)">
+                            <rect x="0" y="0" width="268" height="238" rx="16" fill="#1e293b" stroke="#fbbf24" stroke-width="3.5"/>
+                            <rect x="10" y="12" width="248" height="214" rx="10" fill="#09101f"/>
+
+                            <rect x="20" y="22" width="228" height="24" rx="6" fill="rgba(251,191,36,0.2)"/>
+                            <text x="134" y="38" font-size="11" font-weight="900" fill="#fbbf24" text-anchor="middle">💻 PC DIREZIONE / GUARDIOLA</text>
+
+                            <!-- Notifica Verde Istantanea -->
+                            <rect x="20" y="56" width="228" height="54" rx="10" fill="rgba(16,185,129,0.22)" stroke="#10b981" stroke-width="2"/>
+                            <text x="134" y="76" font-size="12.5" font-weight="900" fill="#6ee7b7" text-anchor="middle">🔔 DOSE CONFERMATA ORA!</text>
+                            <text x="134" y="96" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">Scorta scalata: 39 compresse residue</text>
+
+                            <!-- Barra Volume Hardware Sbloccato -->
+                            <rect x="20" y="120" width="228" height="50" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                            <text x="134" y="138" font-size="10.5" font-weight="900" fill="#7dd3fc" text-anchor="middle">🔊 VOLUME HARDWARE FORZATO: 75%</text>
+                            <rect x="34" y="147" width="200" height="12" rx="6" fill="#0f172a"/>
+                            <rect x="34" y="147" width="152" height="12" rx="6" fill="#10b981"/>
+
+                            <!-- Blocco Doppia Dose -->
+                            <rect x="20" y="180" width="228" height="34" rx="8" fill="rgba(56,189,248,0.15)"/>
+                            <text x="134" y="201" font-size="11" font-weight="800" fill="#bae6fd" text-anchor="middle">✅ Zero Rischio Doppia Somministrazione</text>
+
+                            <!-- Base Monitor -->
+                            <rect x="114" y="238" width="40" height="32" fill="#64748b"/>
+                            <rect x="78" y="268" width="112" height="12" rx="6" fill="#475569"/>
+                        </g>
+                    </svg>
+                `
+            },
+            {
+                id: 3,
+                title: 'Atto 4: Le Piccole Rifiniture Cliniche che Fanno la Differenza',
+                audioUrl: '/assets/audio_presentazione/scena_4.mp3',
+                speaker: '👨‍💻 Ciro Milella & 👩‍⚕️ Assistente Clinica (Diego + Isabella HD)',
+                subtitle: '«Scorta condivisa per farmaci multi-orario, Kit Diabete collegato alle penne in frigo, Passaporto 118 con QR Code e Protocollo Escalation a 3 Stadi!»',
+                linkedPhotoIdx: 2,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 50%, #172554 0%, #090d16 100%);">
+                        <!-- Card 1: Scorta Unificata -->
+                        <g transform="translate(26, 22)">
+                            <rect x="0" y="0" width="342" height="142" rx="16" fill="rgba(15,23,42,0.92)" stroke="#38bdf8" stroke-width="2.5"/>
+                            <circle cx="38" cy="40" r="22" fill="rgba(56,189,248,0.2)" stroke="#38bdf8" stroke-width="1.5"/>
+                            <text x="38" y="47" font-size="20" text-anchor="middle">🔗</text>
+                            <text x="72" y="35" font-size="15" font-weight="900" fill="#38bdf8">Scorta Unificata Multi-Orario</text>
+                            <text x="72" y="54" font-size="11.5" font-weight="800" fill="#fde047">1 Sola Scatola Reale per 08:00 / 16:00 / 20:00</text>
+                            <text x="22" y="84" font-size="12.5" fill="#e2e8f0">Se lo stesso farmaco si assume più volte al giorno,</text>
+                            <text x="22" y="103" font-size="12.5" fill="#e2e8f0">ogni conferma scala dallo stesso blister fisico.</text>
+                            <rect x="22" y="114" width="298" height="18" rx="6" fill="rgba(56,189,248,0.15)"/>
+                            <text x="171" y="127" font-size="10.5" font-weight="900" fill="#7dd3fc" text-anchor="middle">📦 Calcolo automatico data esaurimento e ricetta</text>
+                        </g>
+
+                        <!-- Card 2: Kit Diabete + Insulina -->
+                        <g transform="translate(392, 22)">
+                            <rect x="0" y="0" width="342" height="142" rx="16" fill="rgba(15,23,42,0.92)" stroke="#10b981" stroke-width="2.5"/>
+                            <circle cx="38" cy="40" r="22" fill="rgba(16,185,129,0.2)" stroke="#10b981" stroke-width="1.5"/>
+                            <text x="38" y="47" font-size="20" text-anchor="middle">🩸</text>
+                            <text x="72" y="35" font-size="15" font-weight="900" fill="#34d399">Kit Diabete + Penna Insulina</text>
+                            <text x="72" y="54" font-size="11.5" font-weight="800" fill="#a7f3d0">Sincronizzazione Unità UI, Aghi, Lancette e Strisce</text>
+                            <text x="22" y="84" font-size="12.5" fill="#e2e8f0">Registrando la glicemia o l'iniezione di Toujeo,</text>
+                            <text x="22" y="103" font-size="12.5" fill="#e2e8f0">aggiorna le penne in frigo e i materiali pungidito.</text>
+                            <rect x="22" y="114" width="298" height="18" rx="6" fill="rgba(16,185,129,0.18)"/>
+                            <text x="171" y="127" font-size="10.5" font-weight="900" fill="#6ee7b7" text-anchor="middle">❄️ Alert automatico quando resta 1 sola penna</text>
+                        </g>
+
+                        <!-- Card 3: Passaporto 118 QR + ASL -->
+                        <g transform="translate(26, 184)">
+                            <rect x="0" y="0" width="342" height="142" rx="16" fill="rgba(15,23,42,0.92)" stroke="#ef4444" stroke-width="2.5"/>
+                            <circle cx="38" cy="40" r="22" fill="rgba(239,68,68,0.2)" stroke="#ef4444" stroke-width="1.5"/>
+                            <text x="38" y="47" font-size="20" text-anchor="middle">🚑</text>
+                            <text x="72" y="35" font-size="15" font-weight="900" fill="#f87171">Passaporto 118 QR &amp; ASL Bari</text>
+                            <text x="72" y="54" font-size="11.5" font-weight="800" fill="#fecaca">Emergenza Medica + Modulo Ufficiale Ex-CTO</text>
+                            <text x="22" y="84" font-size="12.5" fill="#e2e8f0">QR Code immediato con allergie, patologie e</text>
+                            <text x="22" y="103" font-size="12.5" fill="#e2e8f0">terapie salvavita per i soccorritori del 118.</text>
+                            <rect x="22" y="114" width="298" height="18" rx="6" fill="rgba(239,68,68,0.18)"/>
+                            <text x="171" y="127" font-size="10.5" font-weight="900" fill="#fca5a5" text-anchor="middle">🏥 Compilazione PDF Fornitura ASL in 1 clic</text>
+                        </g>
+
+                        <!-- Card 4: Cestino 60gg + Escalation 3 Stadi -->
+                        <g transform="translate(392, 184)">
+                            <rect x="0" y="0" width="342" height="142" rx="16" fill="rgba(15,23,42,0.92)" stroke="#fbbf24" stroke-width="2.5"/>
+                            <circle cx="38" cy="40" r="22" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1.5"/>
+                            <text x="38" y="47" font-size="20" text-anchor="middle">🛡️</text>
+                            <text x="72" y="35" font-size="15" font-weight="900" fill="#fde047">Zero-Scuse &amp; Cestino 60 Giorni</text>
+                            <text x="72" y="54" font-size="11.5" font-weight="800" fill="#fef08a">Volume Forzato ≥ 70% + Ripristino Dati</text>
+                            <text x="22" y="84" font-size="12.5" fill="#e2e8f0">Impedisce il muto sugli avvisi e recupera</text>
+                            <text x="22" y="103" font-size="12.5" fill="#e2e8f0">qualsiasi dato cancellato per errore entro 60 gg.</text>
+                            <rect x="22" y="114" width="298" height="18" rx="6" fill="rgba(251,191,36,0.18)"/>
+                            <text x="171" y="127" font-size="10.5" font-weight="900" fill="#fde047" text-anchor="middle">📋 Nota Audit automatica al Capo dopo 20 min</text>
+                        </g>
+                    </svg>
+                `
+            },
+            {
+                id: 4,
+                title: 'Atto 5: Il Direttore Convinto & La Nuova Licenza Aziendale',
+                audioUrl: '/assets/audio_presentazione/scena_5.mp3',
+                speaker: '👨‍💼 Direttore Entusiasta & 👨‍💻 Ciro Milella (Giuseppe + Diego HD)',
+                subtitle: '«Straordinario! È intuitivo, leggibile anche per chi ha 50 anni e tiene tutto sotto controllo. Intestiamolo subito alla nostra Azienda!»',
+                linkedPhotoIdx: 5,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 35%, #065f46 0%, #09101f 100%);">
+                        <!-- Personaggio Sinistra: Direttore Sorridente -->
+                        <g transform="translate(36, 95)">
+                            <path d="M10,112 Q55,92 100,112 L112,175 L-2,175 Z" fill="#1e3a8a" stroke="#60a5fa" stroke-width="2.5"/>
+                            <polygon points="51,110 59,110 62,155 55,163 48,155" fill="#10b981"/>
+                            <circle cx="55" cy="60" r="36" fill="#fed7aa" stroke="#fb923c" stroke-width="2.5"/>
+                            <path d="M19,52 Q27,18 55,20 Q83,18 91,52 Q75,34 55,36 Q35,34 19,52 Z" fill="#64748b"/>
+                            <rect x="31" y="48" width="20" height="13" rx="3" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+                            <rect x="59" y="48" width="20" height="13" rx="3" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+                            <line x1="51" y1="54" x2="59" y2="54" stroke="#fbbf24" stroke-width="2.5"/>
+                            <path d="M42,76 Q55,88 68,76" fill="none" stroke="#065f46" stroke-width="3.5" stroke-linecap="round"/>
+                            <rect x="0" y="182" width="110" height="24" rx="7" fill="#10b981"/>
+                            <text x="55" y="198" font-size="10.5" font-weight="900" fill="#052e16" text-anchor="middle">DIRETTORE APPROVA</text>
+                        </g>
+
+                        <!-- CERTIFICATO ESECUTIVO D'ORO AL CENTRO -->
+                        <g transform="translate(175, 24)">
+                            <rect x="0" y="0" width="410" height="300" rx="22" fill="#0f172a" stroke="#fbbf24" stroke-width="3.5"/>
+                            <rect x="10" y="10" width="390" height="280" rx="16" fill="none" stroke="rgba(251,191,36,0.35)" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+                            <!-- Coccarda Superiore -->
+                            <rect x="85" y="24" width="240" height="28" rx="14" fill="rgba(251,191,36,0.18)" stroke="#fbbf24" stroke-width="1.5"/>
+                            <text x="205" y="43" font-size="11.5" font-weight="900" fill="#fde047" text-anchor="middle">⭐⭐⭐⭐⭐ LICENZA ENTERPRISE CAREASSIST PRO</text>
+
+                            <text x="205" y="82" font-size="13" font-weight="800" fill="#94a3b8" text-anchor="middle">INTESTAZIONE UFFICIALE DELLA PIATTAFORMA:</text>
+                            <text x="205" y="114" font-size="21" font-weight="900" fill="#ffffff" text-anchor="middle" id="svgCertCompanyName">LA VOSTRA AZIENDA S.R.L.</text>
+
+                            <rect x="45" y="134" width="320" height="38" rx="10" fill="rgba(16,185,129,0.22)" stroke="#10b981" stroke-width="2"/>
+                            <text x="205" y="158" font-size="13" font-weight="900" fill="#6ee7b7" text-anchor="middle">✅ DATABASE VERGINE &amp; PROTETTO GDPR</text>
+
+                            <text x="205" y="198" font-size="12.5" fill="#e2e8f0" text-anchor="middle">Pronto in 10 secondi per registrare i vostri Assistiti,</text>
+                            <text x="205" y="218" font-size="12.5" fill="#e2e8f0" text-anchor="middle">Operatori con PIN, Farmaci e Alert Vocali H24.</text>
+
+                            <rect x="55" y="238" width="300" height="36" rx="10" fill="#fbbf24"/>
+                            <text x="205" y="261" font-size="12.5" font-weight="900" fill="#0f172a" text-anchor="middle">🚀 PERSONALIZZA ORA IN FONDO ALLA PAGINA</text>
+                        </g>
+
+                        <!-- Personaggio Destra: Ciro Milella -->
+                        <g transform="translate(614, 95)">
+                            <path d="M10,112 Q55,92 100,112 L112,175 L-2,175 Z" fill="#0284c7" stroke="#7dd3fc" stroke-width="2.5"/>
+                            <circle cx="55" cy="60" r="36" fill="#fed7aa" stroke="#fb923c" stroke-width="2.5"/>
+                            <path d="M19,48 Q35,18 55,20 Q80,18 91,48 Q70,32 55,32 Q37,32 19,48 Z" fill="#1e293b"/>
+                            <circle cx="42" cy="54" r="3.5" fill="#0f172a"/>
+                            <circle cx="68" cy="54" r="3.5" fill="#0f172a"/>
+                            <path d="M42,76 Q55,88 68,76" fill="none" stroke="#991b1b" stroke-width="3.5" stroke-linecap="round"/>
+                            <rect x="0" y="182" width="110" height="24" rx="7" fill="#fbbf24"/>
+                            <text x="55" y="198" font-size="10.5" font-weight="900" fill="#0f172a" text-anchor="middle">CIRO + AI PRONTI</text>
+                        </g>
+                    </svg>
+                `
+            }
+        ];
+
+        // =========================================================================
+        // LE 6 SCHEDE FOTO STILE AMAZON (CON AUDIO NEURALE DEDICATO E "PER SAPERNE DI PIÙ")
+        // =========================================================================
+        const AMAZON_PHOTOS = [
+            {
+                idx: 0,
+                icon: '💊',
+                shortTitle: '1. Quadro Terapeutico ad Alta Leggibilità (50+ Anni)',
+                badge: 'ERGONOMIA VISIVA',
+                audioUrl: '/assets/audio_presentazione/foto_1.mp3',
+                summary: 'Maschera pulita, caratteri chiari, pillola visiva del dosaggio e stato scorta reale con data di esaurimento.',
+                visualHtml: `
+                    <div style="background:#ffffff; color:#0f172a; border-radius:12px; padding:16px; border:2px solid #cbd5e1;">
+                        <div style="display:grid; grid-template-columns:90px 1.2fr 1fr 1.2fr 130px; gap:10px; align-items:center; background:#f8fafc; padding:10px; border-radius:8px; font-size:12px; font-weight:800; color:#475569; margin-bottom:10px;">
+                            <div>ORARIO</div><div>FARMACO &amp; PRINCIPIO</div><div>DOSAGGIO</div><div>SCORTA REALE</div><div>AZIONE OGGI</div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:90px 1.2fr 1fr 1.2fr 130px; gap:10px; align-items:center; padding:12px 10px; border:1.5px solid #e2e8f0; border-radius:10px;">
+                            <div><span style="background:#e0f2fe; color:#0369a1; font-weight:800; padding:4px 8px; border-radius:6px; font-size:12px;">07:00 Digiuno</span></div>
+                            <div><strong style="font-size:15px; color:#1e3a8a;">Entecavir 0,5 mg</strong><div style="font-size:12px; color:#64748b;">Antivirale Salvavita</div></div>
+                            <div><span style="background:#dcfce7; color:#15803d; font-weight:800; padding:5px 10px; border-radius:8px; font-size:12.5px;">💊 1 DOSE (1 cpr)</span></div>
+                            <div><strong style="color:#0f172a;">📦 39 compresse</strong><div style="font-size:12px; color:#0284c7; font-weight:700;">⏳ Fine: 09/12/2026</div></div>
+                            <div><button style="background:#10b981; color:#fff; border:none; padding:10px 12px; border-radius:8px; font-weight:900; width:100%;">✓ Assunto Oggi</button></div>
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'L\'operatore legge da sinistra a destra: Orario, Nome Farmaco, Quante compresse dare e tasto verde «✓ Assunto Oggi».',
+                    'Premendo «+1 Scatola» quando si ritira il farmaco, il contatore aggiunge automaticamente le compresse della confezione.'
+                ],
+                refinements: [
+                    'Evidenziazione automatica dei farmaci "A Digiuno" e blocco automatico nei giorni di riposo per le terapie a "Giorni Alterni".',
+                    'Distinzione automatica tra compresse orali (es. Diamicron) e penne iniettabili.'
+                ],
+                bossBenefit: 'Azzera gli errori di lettura anche per operatori con età media 50-60 anni e riduce a zero i tempi di formazione.'
+            },
+            {
+                idx: 1,
+                icon: '📲',
+                shortTitle: '2. Alert in Tempo Reale tra Cellulare e PC (2 Secondi)',
+                badge: 'SINCRONIZZAZIONE LIVE',
+                audioUrl: '/assets/audio_presentazione/foto_2.mp3',
+                summary: '5 livelli di allerta: sveglia orario terapia, conferma somministrazione in 2s tra telefono e PC, e semaforo scorte a 10 giorni.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:16px; border:2px solid #38bdf8;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <span style="font-weight:900; color:#fef08a;">🔔 DIAGNOSTICA ALERT PC ↔ SMARTPHONE</span>
+                            <span style="background:#059669; padding:4px 10px; border-radius:99px; font-size:12px; font-weight:800;">● CONNESSO IN TEMPO REALE (2s)</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
+                            <div style="background:rgba(255,255,255,0.06); padding:10px; border-radius:8px;">⏰ <strong>1. Sveglia Orario Farmaco:</strong> Trillo sonoro + vibrazione all'ora esatta</div>
+                            <div style="background:rgba(255,255,255,0.06); padding:10px; border-radius:8px;">📲 <strong>2. Sync Istantaneo:</strong> Evita doppie somministrazioni tra colleghi</div>
+                            <div style="background:rgba(255,255,255,0.06); padding:10px; border-radius:8px;">📦 <strong>3. Semaforo Scorte:</strong> Preavviso automatico 10 giorni prima</div>
+                            <div style="background:rgba(255,255,255,0.06); padding:10px; border-radius:8px;">💬 <strong>4. Invio Rapido:</strong> Promemoria WhatsApp / Calendario in 1 clic</div>
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Tieni aperta l\'app sul PC in ufficio e sullo smartphone dell\'operatore.',
+                    'Qualsiasi spunta o avviso inviato da uno dei due dispositivi compare sull\'altro in meno di 2 secondi con avviso acustico.'
+                ],
+                refinements: [
+                    'Include un pulsante di «Test Live PC ↔ Cellulare» per verificare in qualsiasi momento audio, vibrazione e rete.'
+                ],
+                bossBenefit: 'Il Direttore sa in tempo reale dal proprio PC o telefono se tutte le terapie domiciliari sono state eseguite puntualmente.'
+            },
+            {
+                idx: 2,
+                icon: '🩸',
+                shortTitle: '3. Kit Diabete Collegato, Penne Insulina & Scorta Unificata',
+                badge: 'INTELLIGENZA CLINICA',
+                audioUrl: '/assets/audio_presentazione/foto_3.mp3',
+                summary: 'Gestione millimetrica delle Unità Internazionali (UI) in frigorifero e scarico automatico di lancette e strisce reattive.',
+                visualHtml: `
+                    <div style="background:#f0fdf4; color:#0f172a; border-radius:12px; padding:16px; border:2px solid #16a34a;">
+                        <div style="font-weight:900; color:#15803d; margin-bottom:8px;">💉 GESTIONE INSULINA &amp; PRESIDI DIABETE COLLEGATI</div>
+                        <div style="display:flex; gap:12px; flex-wrap:wrap; font-size:13.5px;">
+                            <div style="flex:1; background:#fff; padding:10px; border-radius:8px; border:1px solid #bbf7d0;">
+                                <strong>Toujeo Solostar (Frigo):</strong><br>Scala esattamente le Unità iniettate (es. 16 UI) calcolando quante penne restano.
+                            </div>
+                            <div style="flex:1; background:#fff; padding:10px; border-radius:8px; border:1px solid #bbf7d0;">
+                                <strong>Kit Autocontrollo Associato:</strong><br>Aggiorna in automatico Sensori Glicemia e Lancette Pungidito collegate.
+                            </div>
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Quando si preme «✓ Iniettato Oggi» su una penna di insulina, il programma scala le Unità Internazionali dalla penna attiva.',
+                    'Se un farmaco in compresse è assunto 2 o 3 volte al giorno, tutte le fasce orarie attingono dalla stessa scatola fisica.'
+                ],
+                refinements: [
+                    'Calcolo automatico della data entro cui richiedere la nuova ricetta al medico curante.'
+                ],
+                bossBenefit: 'Elimina gli sprechi di presidi costosi e impedisce che un paziente diabetico rimanga senza insulina o strisce nel weekend.'
+            },
+            {
+                idx: 3,
+                icon: '🚑',
+                shortTitle: '4. Passaporto Emergenza 118 QR & Lettera Specialistica A4',
+                badge: 'STAMPE UFFICIALI',
+                audioUrl: '/assets/audio_presentazione/foto_4.mp3',
+                summary: 'Documenti clinici A4 pronti in 1 clic per il Pronto Soccorso 118, i medici specialisti e la Farmacia Territoriale ASL.',
+                visualHtml: `
+                    <div style="background:#fef2f2; color:#0f172a; border-radius:12px; padding:16px; border:2px solid #dc2626;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-weight:900; color:#b91c1c;">🚨 PASSAPORTO EMERGENZA 118 + LETTERA SPECIALISTICA</span>
+                            <span style="background:#dc2626; color:#fff; padding:3px 8px; border-radius:6px; font-size:11.5px; font-weight:800;">QR CODE INCLUSO</span>
+                        </div>
+                        <p style="font-size:13.5px; color:#7f1d1d;">
+                            Stampa immediata con Allergie in evidenza rossa, Farmaci Salvavita con orari, Patologie, Contatti Caregiver e Modulo Ufficiale Farmacia Territoriale Ex-CTO Bari.
+                        </p>
+                    </div>
+                `,
+                howToUse: [
+                    'Dal menu «⚙️ Opzioni & Backup» scegli «Passaporto Emergenza 118» o «Lettera per Visita Specialistica (A4)».',
+                    'Scegli la branca specialistica (Cardiologia, Epatologia, Diabetologia, ecc.) e premi Stampa.'
+                ],
+                refinements: [
+                    'Include spazio dedicato agli appunti e al timbro del medico specialista durante la visita.'
+                ],
+                bossBenefit: 'Presenta l\'Azienda ai medici e alle famiglie con una documentazione clinica impeccabile e autorevole.'
+            },
+            {
+                idx: 4,
+                icon: '🗑️',
+                shortTitle: '5. Cestino di Sicurezza 60 Giorni & Storico Audit «Traccia»',
+                badge: 'PROTEZIONE TOTALE',
+                audioUrl: '/assets/audio_presentazione/foto_5.mp3',
+                summary: 'Protezione contro le cancellazioni accidentali e registro cronologico indelebile di ogni modifica o somministrazione.',
+                visualHtml: `
+                    <div style="background:#fffbeb; color:#0f172a; border-radius:12px; padding:16px; border:2px solid #f59e0b;">
+                        <div style="font-weight:900; color:#b45309; margin-bottom:6px;">🗑️ RETE DI PROTEZIONE ANTI-ERRORE UMANO (60 GIORNI)</div>
+                        <p style="font-size:13.5px; color:#78350f;">
+                            Qualsiasi terapia, visita o fornitura eliminata per errore finisce nel Cestino protetto per 60 giorni ed è ripristinabile con un solo clic su <strong>«↩️ Ripristina Subito»</strong>.
+                        </p>
+                    </div>
+                `,
+                howToUse: [
+                    'Prima di ogni eliminazione, un avviso chiaro chiede conferma.',
+                    'Aprendo il Cestino, l\'amministratore vede giorno, ora ed elemento cancellato e può rimetterlo al suo posto all\'istante.'
+                ],
+                refinements: [
+                    'Il pulsante «🕵️ Traccia» su ogni riga mostra lo storico completo di chi ha somministrato o modificato il farmaco.'
+                ],
+                bossBenefit: 'Offre al Datore di Lavoro la certezza assoluta che nessun operatore possa distruggere dati clinici per disattenzione.'
+            },
+            {
+                idx: 5,
+                icon: '🗓️',
+                shortTitle: '6. Turnario H24 & Accessi Operatori Protetti da PIN',
+                badge: 'ORGANIZZAZIONE PERSONALE',
+                audioUrl: '/assets/audio_presentazione/foto_6.mp3',
+                summary: 'Gestione dei turni domiciliari H24 e permessi differenziati tra chi somministra e chi può modificare le terapie.',
+                visualHtml: `
+                    <div style="background:#eff6ff; color:#0f172a; border-radius:12px; padding:16px; border:2px solid #0284c7;">
+                        <div style="font-weight:900; color:#0369a1; margin-bottom:6px;">👥 CONTROLLO ACCESSI PIN &amp; TURNARIO OPERATORI H24</div>
+                        <p style="font-size:13.5px; color:#1e3a8a;">
+                            Ogni collaboratore accede col proprio PIN personale, vede solo i pazienti a lui affidati e può essere impostato in modalità «Sola Spunta Somministrazione».
+                        </p>
+                    </div>
+                `,
+                howToUse: [
+                    'Il Direttore crea i profili degli operatori assegnando PIN, pazienti visibili e permessi.',
+                    'Nel Turnario H24 pianifica e stampa la copertura settimanale di mattina, pomeriggio e notte.'
+                ],
+                refinements: [
+                    'Blocco automatico di sicurezza per inattività e accesso rapido biometrico.'
+                ],
+                bossBenefit: 'Pieno rispetto della normativa GDPR sulla privacy sanitaria e controllo preciso del lavoro di ogni dipendente.'
+            }
+        ];
+
+        // =========================================================================
+        // STATO DEL PLAYER E FUNZIONI INTERATTIVE (CON CONTROLLO VOCI AUTONOMO)
+        // =========================================================================
+        let viewMode = 'cartoon'; // 'cartoon' | 'photo'
+        let currentCartoonIdx = 0;
+        let currentPhotoIdx = 0;
+        let isCartoonPlaying = false;
+        let studioAudio = new Audio();
+        studioAudio.preload = 'auto';
+
+        let audioConfigCareAssist = {
+            mode: localStorage.getItem('careassist_voicemode') || 'neural',
+            speed: parseFloat(localStorage.getItem('careassist_audiospeed')) || 1.0,
+            volume: parseInt(localStorage.getItem('careassist_volume')) || 85,
+            muted: localStorage.getItem('careassist_muted') === 'true'
+        };
+
+        function applicaAudioConfigCareAssist() {
+            studioAudio.playbackRate = audioConfigCareAssist.speed;
+            studioAudio.volume = audioConfigCareAssist.muted ? 0 : (audioConfigCareAssist.volume / 100);
+
+            const selMode = document.getElementById('selectVoiceModeCareAssist');
+            if (selMode) selMode.value = audioConfigCareAssist.mode;
+            const selSpeed = document.getElementById('selectAudioSpeedCareAssist');
+            if (selSpeed) selSpeed.value = audioConfigCareAssist.speed.toString();
+            const sliderVol = document.getElementById('sliderVolCareAssist');
+            if (sliderVol) sliderVol.value = audioConfigCareAssist.volume;
+            const lblVal = document.getElementById('labelVolValCareAssist');
+            if (lblVal) lblVal.textContent = (audioConfigCareAssist.muted ? '0%' : audioConfigCareAssist.volume + '%');
+            const lblIcon = document.getElementById('labelVolIconCareAssist');
+            if (lblIcon) lblIcon.textContent = audioConfigCareAssist.muted || audioConfigCareAssist.volume === 0 ? '🔇' : '🔊';
+            const btnMute = document.getElementById('btnMuteCareAssist');
+            if (btnMute) {
+                btnMute.style.background = audioConfigCareAssist.muted ? '#ef4444' : 'rgba(255,255,255,0.1)';
+                btnMute.textContent = audioConfigCareAssist.muted ? 'Riattiva' : 'Muto';
+            }
+        }
+
+        function cambiaVoiceModeCareAssist(val) {
+            audioConfigCareAssist.mode = val;
+            localStorage.setItem('careassist_voicemode', val);
+            fermaAudioStudio();
+            if (isCartoonPlaying) avviaRiproduzioneCartone();
+        }
+
+        function cambiaAudioSpeedCareAssist(val) {
+            audioConfigCareAssist.speed = parseFloat(val);
+            localStorage.setItem('careassist_audiospeed', val);
+            studioAudio.playbackRate = audioConfigCareAssist.speed;
+        }
+
+        function cambiaVolumeCareAssist(val) {
+            audioConfigCareAssist.volume = parseInt(val);
+            audioConfigCareAssist.muted = false;
+            localStorage.setItem('careassist_volume', val);
+            localStorage.setItem('careassist_muted', 'false');
+            applicaAudioConfigCareAssist();
+        }
+
+        function toggleMuteCareAssist() {
+            audioConfigCareAssist.muted = !audioConfigCareAssist.muted;
+            localStorage.setItem('careassist_muted', audioConfigCareAssist.muted ? 'true' : 'false');
+            applicaAudioConfigCareAssist();
+        }
+
+        function condividiCareAssistWhatsApp() {
+            const testo = encodeURIComponent(
+                "🏥 *CAREASSIST PRO — PRESENTAZIONE AZIENDALE*\n" +
+                "Guarda la presentazione interattiva con cartoni animati, alert in tempo reale e gestione farmaci H24:\n\n" +
+                "🔗 https://milella-suite-un8j.onrender.com/presentazione_aziendale.html\n\n" +
+                "Co-Progettato da Ciro Milella & Google DeepMind Antigravity AI"
+            );
+            window.open('https://api.whatsapp.com/send?text=' + testo, '_blank');
+        }
+
+        function fermaAudioStudio() {
+            try {
+                studioAudio.pause();
+                studioAudio.onended = null;
+                studioAudio.ontimeupdate = null;
+                document.getElementById('mainStageContainer')?.classList.remove('is-speaking');
+            } catch (e) {}
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+        }
+
+        function evidenziaThumbnail(idAttivo) {
+            document.querySelectorAll('.amz-thumb-btn').forEach(b => b.classList.remove('active'));
+            const el = document.getElementById(idAttivo);
+            if (el) el.classList.add('active');
+        }
+
+        function attivaModalitaCartone(sceneIdx = 0, autoPlay = false) {
+            viewMode = 'cartoon';
+            currentCartoonIdx = sceneIdx;
+            evidenziaThumbnail('thumb-video');
+            renderCartoonStage();
+            if (autoPlay) {
+                avviaRiproduzioneCartone();
+            } else {
+                fermaAudioStudio();
+                isCartoonPlaying = false;
+                document.getElementById('btnPlayCartoon').innerHTML = '▶️ Avvia Video Cartone';
+            }
+        }
+
+        function renderCartoonStage() {
+            const scene = CARTOON_SCENES[currentCartoonIdx] || CARTOON_SCENES[0];
+            document.getElementById('viewerTopTitle').textContent = `🎬 CORTOMETRAGGIO ANIMATO — ${scene.title.toUpperCase()}`;
+            document.getElementById('speakerBadge').textContent = scene.speaker;
+            document.getElementById('subtitleText').textContent = scene.subtitle;
+            document.getElementById('cartoonTimeLabel').textContent = `Atto ${currentCartoonIdx + 1}/5`;
+
+            const container = document.getElementById('mainStageContainer');
+            container.innerHTML = scene.svgRender();
+
+            // Se siamo nell'atto 5, aggiorna il nome azienda dentro l'SVG!
+            const nomeAz = document.getElementById('azNome')?.value?.trim();
+            const svgTxt = document.getElementById('svgCertCompanyName');
+            if (svgTxt && nomeAz) svgTxt.textContent = nomeAz.toUpperCase();
+        }
+
+        function avviaRiproduzioneCartone() {
+            fermaAudioStudio();
+            isCartoonPlaying = true;
+            document.getElementById('btnPlayCartoon').innerHTML = '⏸️ Pausa Cartone';
+            const scene = CARTOON_SCENES[currentCartoonIdx] || CARTOON_SCENES[0];
+
+            if (audioConfigCareAssist.mode === 'silent') {
+                let dur = 12, cur = 0;
+                const intv = setInterval(() => {
+                    if (!isCartoonPlaying) { clearInterval(intv); return; }
+                    cur++;
+                    document.getElementById('cartoonProgressBar').style.width = Math.min(100, (cur/dur)*100) + '%';
+                    if (cur >= dur) {
+                        clearInterval(intv);
+                        if (currentCartoonIdx + 1 < CARTOON_SCENES.length) {
+                            currentCartoonIdx++;
+                            renderCartoonStage();
+                            setTimeout(() => { if (isCartoonPlaying) avviaRiproduzioneCartone(); }, 650);
+                        } else {
+                            isCartoonPlaying = false;
+                            document.getElementById('btnPlayCartoon').innerHTML = '▶️ Riguarda Video Cartone';
+                        }
+                    }
+                }, 1000);
+                return;
+            }
+
+            if (audioConfigCareAssist.mode === 'browser') {
+                if ('speechSynthesis' in window) {
+                    const utt = new SpeechSynthesisUtterance(scene.subtitle.replace(/[«»]/g, ''));
+                    utt.lang = 'it-IT';
+                    utt.rate = audioConfigCareAssist.speed;
+                    utt.volume = audioConfigCareAssist.muted ? 0 : (audioConfigCareAssist.volume / 100);
+                    utt.onend = () => {
+                        if (!isCartoonPlaying) return;
+                        if (currentCartoonIdx + 1 < CARTOON_SCENES.length) {
+                            currentCartoonIdx++;
+                            renderCartoonStage();
+                            setTimeout(() => { if (isCartoonPlaying) avviaRiproduzioneCartone(); }, 650);
+                        } else {
+                            isCartoonPlaying = false;
+                            document.getElementById('btnPlayCartoon').innerHTML = '▶️ Riguarda Video Cartone';
+                        }
+                    };
+                    window.speechSynthesis.speak(utt);
+                    return;
+                }
+            }
+
+            studioAudio.src = scene.audioUrl;
+            studioAudio.playbackRate = audioConfigCareAssist.speed;
+            studioAudio.volume = audioConfigCareAssist.muted ? 0 : (audioConfigCareAssist.volume / 100);
+            studioAudio.ontimeupdate = () => {
+                if (studioAudio.duration && isFinite(studioAudio.duration)) {
+                    const pct = Math.min(100, (studioAudio.currentTime / studioAudio.duration) * 100);
+                    document.getElementById('cartoonProgressBar').style.width = pct + '%';
+                }
+            };
+            studioAudio.onended = () => {
+                if (!isCartoonPlaying) return;
+                if (currentCartoonIdx + 1 < CARTOON_SCENES.length) {
+                    currentCartoonIdx++;
+                    renderCartoonStage();
+                    setTimeout(() => {
+                        if (isCartoonPlaying) avviaRiproduzioneCartone();
+                    }, 650);
+                } else {
+                    isCartoonPlaying = false;
+                    document.getElementById('btnPlayCartoon').innerHTML = '▶️ Riguarda Video Cartone';
+                }
+            };
+            studioAudio.play().then(() => {
+                document.getElementById('mainStageContainer')?.classList.add('is-speaking');
+            }).catch(err => {
+                console.warn('Errore play audio:', err);
+            });
+        }
+
+        function togglePlayCartoon() {
+            if (viewMode !== 'cartoon') {
+                attivaModalitaCartone(0, true);
+                return;
+            }
+            if (isCartoonPlaying) {
+                fermaAudioStudio();
+                isCartoonPlaying = false;
+                document.getElementById('btnPlayCartoon').innerHTML = '▶️ Riprendi Video Cartone';
+            } else {
+                avviaRiproduzioneCartone();
+            }
+        }
+
+        function scenaPrecedente() {
+            if (viewMode === 'cartoon') {
+                currentCartoonIdx = (currentCartoonIdx - 1 + CARTOON_SCENES.length) % CARTOON_SCENES.length;
+                renderCartoonStage();
+                if (isCartoonPlaying) avviaRiproduzioneCartone();
+            } else {
+                mostraFotoAmazon((currentPhotoIdx - 1 + AMAZON_PHOTOS.length) % AMAZON_PHOTOS.length);
+            }
+        }
+
+        function scenaSuccessiva() {
+            if (viewMode === 'cartoon') {
+                currentCartoonIdx = (currentCartoonIdx + 1) % CARTOON_SCENES.length;
+                renderCartoonStage();
+                if (isCartoonPlaying) avviaRiproduzioneCartone();
+            } else {
+                mostraFotoAmazon((currentPhotoIdx + 1) % AMAZON_PHOTOS.length);
+            }
+        }
+
+        // =========================================================================
+        // MODALITÀ FOTO HD STILE AMAZON CON VOCE UMANA E "PER SAPERNE DI PIÙ"
+        // =========================================================================
+        function mostraFotoAmazon(idx) {
+            fermaAudioStudio();
+            isCartoonPlaying = false;
+            viewMode = 'photo';
+            currentPhotoIdx = idx;
+            evidenziaThumbnail('thumb-foto-' + idx);
+
+            const item = AMAZON_PHOTOS[idx] || AMAZON_PHOTOS[0];
+            document.getElementById('viewerTopTitle').textContent = `🖼️ FIGURA ${idx + 1} DI 6 — ${item.shortTitle.toUpperCase()}`;
+            document.getElementById('speakerBadge').textContent = '🎙️ Voce Umana Isabella HD';
+            document.getElementById('subtitleText').textContent = item.summary;
+            document.getElementById('btnPlayCartoon').innerHTML = '🎙️ Ascolta Spiegazione Foto';
+            document.getElementById('cartoonTimeLabel').textContent = `Foto ${idx + 1}/6`;
+
+            const container = document.getElementById('mainStageContainer');
+            container.innerHTML = `
+                <div style="padding:24px; background:radial-gradient(circle at 50% 20%, #1e3a8a 0%, #091122 100%); flex:1; display:flex; flex-direction:column; justify-content:center; gap:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <span style="background:#fbbf24; color:#0f172a; font-size:12px; font-weight:900; padding:4px 10px; border-radius:6px;">${item.badge}</span>
+                        <button type="button" onclick="riproduciAudioFoto(${idx})" style="background:#0284c7; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer;">
+                            🔊 Ascolta Voce Umana HD
+                        </button>
+                    </div>
+                    ${item.visualHtml}
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.06); padding:12px 16px; border-radius:10px;">
+                        <span style="font-size:13.5px; color:#e2e8f0; font-weight:600;">Vuoi approfondire come si usa e i suggerimenti base?</span>
+                        <button type="button" class="btn-per-saperne" onclick="apriModalInfoFoto(${idx})">
+                            💡 Per saperne di più
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Riproduci subito la spiegazione vocale umana HD della foto!
+            riproduciAudioFoto(idx);
+        }
+
+        function riproduciAudioFoto(idx) {
+            fermaAudioStudio();
+            const item = AMAZON_PHOTOS[idx] || AMAZON_PHOTOS[0];
+            studioAudio.src = item.audioUrl;
+            studioAudio.ontimeupdate = () => {
+                if (studioAudio.duration && isFinite(studioAudio.duration)) {
+                    const pct = Math.min(100, (studioAudio.currentTime / studioAudio.duration) * 100);
+                    document.getElementById('cartoonProgressBar').style.width = pct + '%';
+                }
+            };
+            studioAudio.play().catch(() => {});
+        }
+
+        function apriPerSaperneCorrente() {
+            if (viewMode === 'photo') {
+                apriModalInfoFoto(currentPhotoIdx);
+            } else {
+                const scene = CARTOON_SCENES[currentCartoonIdx] || CARTOON_SCENES[0];
+                apriModalInfoFoto(scene.linkedPhotoIdx || 0);
+            }
+        }
+
+        // =========================================================================
+        // RENDER GALLERIA AMAZON A+ E MODALE "PER SAPERNE DI PIÙ"
+        // =========================================================================
+        function renderAplusGallery() {
+            const grid = document.getElementById('aplusGalleryContainer');
+            grid.innerHTML = '';
+            AMAZON_PHOTOS.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'aplus-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="aplus-figure-header" onclick="apriModalInfoFoto(${item.idx})">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                <span style="background:#fbbf24; color:#0f172a; font-size:11px; font-weight:900; padding:3px 9px; border-radius:6px;">${item.badge}</span>
+                                <span style="font-size:12px; color:#fde047; font-weight:800;">💡 Clicca per saperne di più ↗</span>
+                            </div>
+                            ${item.visualHtml}
+                        </div>
+                        <div class="aplus-body">
+                            <div>
+                                <h3 style="font-size:18px; font-weight:900; color:#0f172a; margin-bottom:6px;">${item.icon} ${item.shortTitle}</h3>
+                                <p style="font-size:14.5px; color:#475569; margin-bottom:14px;">${item.summary}</p>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="btn-per-saperne" style="flex:1;" onclick="apriModalInfoFoto(${item.idx})">
+                                    💡 Per saperne di più
+                                </button>
+                                <button type="button" onclick="riproduciAudioFoto(${item.idx})" style="background:#0284c7; color:#fff; border:none; padding:10px 14px; border-radius:10px; font-weight:800; font-size:13.5px; cursor:pointer;" title="Ascolta con Voce Umana HD">
+                                    🎙️ Voce HD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function apriModalInfoFoto(idx) {
+            const item = AMAZON_PHOTOS[idx] || AMAZON_PHOTOS[0];
+            document.getElementById('modalInfoTitle').textContent = `${item.icon} ${item.shortTitle}`;
+            document.getElementById('modalInfoBody').innerHTML = `
+                <div style="margin-bottom:18px;">
+                    ${item.visualHtml}
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; margin-bottom:18px;">
+                    <div style="background:#f0f9ff; border:1.5px solid #bae6fd; border-radius:12px; padding:16px;">
+                        <h4 style="font-size:16px; font-weight:900; color:#0369a1; margin-bottom:8px;">📘 Come si utilizza l'applicazione</h4>
+                        <ol style="padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:14.5px; color:#0f172a;">
+                            ${item.howToUse.map(s => `<li>${s}</li>`).join('')}
+                        </ol>
+                    </div>
+                    <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:16px;">
+                        <h4 style="font-size:16px; font-weight:900; color:#b45309; margin-bottom:8px;">✨ Suggerimenti Base &amp; Piccole Rifiniture</h4>
+                        <ul style="padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:14.5px; color:#0f172a;">
+                            ${item.refinements.map(r => `<li>${r}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:14px 16px; margin-bottom:18px;">
+                    <strong style="color:#15803d; font-size:15px;">📈 Perché convince il Datore di Lavoro:</strong>
+                    <p style="font-size:14.5px; color:#14532d; font-weight:600; margin-top:4px;">${item.bossBenefit}</p>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <button type="button" class="btn-per-saperne" style="background:#0284c7;" onclick="riproduciAudioFoto(${item.idx})">
+                        🔊 Ascolta Spiegazione con Voce Umana Naturale HD
+                    </button>
+                    <button type="button" onclick="chiudiModalInfoFoto()" style="background:#e2e8f0; border:none; color:#0f172a; padding:10px 20px; border-radius:10px; font-weight:800; cursor:pointer;">
+                        Chiudi
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalInfoFoto').style.display = 'flex';
+            riproduciAudioFoto(idx);
+        }
+
+        function chiudiModalInfoFoto() {
+            fermaAudioStudio();
+            document.getElementById('modalInfoFoto').style.display = 'none';
+        }
+
+        // =========================================================================
+        // GESTIONE REGISTRAZIONE NUOVA AZIENDA UTILIZZATRICE (BUY BOX DESTRO)
+        // =========================================================================
+        function aggiornaIntestazioneLive() {
+            const nome = document.getElementById('azNome').value.trim();
+            if (nome) {
+                document.getElementById('headerDynamicBrand').textContent = `CareAssist Pro — Licenza per ${nome}`;
+                const svgTxt = document.getElementById('svgCertCompanyName');
+                if (svgTxt) svgTxt.textContent = nome.toUpperCase();
+            } else {
+                document.getElementById('headerDynamicBrand').textContent = 'CareAssist Pro — Edizione Aziendale Enterprise';
+            }
+        }
+
+        function compilaEsempioCapo() {
+            document.getElementById('azNome').value = 'Gruppo Socio-Sanitario & Assistenza S.r.l.';
+            document.getElementById('azPiva').value = 'IT 08945120726 • Cod. SDI M5UXCR1';
+            document.getElementById('azDirettore').value = 'Direzione Generale';
+            document.getElementById('azSede').value = 'Via Sparano 145, Bari (BA) • 080 5210000';
+            aggiornaIntestazioneLive();
+            attivaLicenzaAziendale();
+        }
+
+        function attivaLicenzaAziendale() {
+            const nome = document.getElementById('azNome').value.trim() || 'Nuova Azienda Utilizzatrice';
+            const piva = document.getElementById('azPiva').value.trim();
+            const dir = document.getElementById('azDirettore').value.trim();
+            const sede = document.getElementById('azSede').value.trim();
+            localStorage.setItem('careassist_azienda_capo', JSON.stringify({ nome, piva, dir, sede }));
+            aggiornaIntestazioneLive();
+            const box = document.getElementById('boxConfermaAzienda');
+            box.style.display = 'block';
+            box.innerHTML = `✅ <strong>Licenza Intestata a: ${nome}</strong><br>Archivio pronto in modalità <em>Database Vergine</em> (i tuoi dati personali familiari restano separati e protetti).`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applicaAudioConfigCareAssist();
+            try {
+                const saved = JSON.parse(localStorage.getItem('careassist_azienda_capo') || 'null');
+                if (saved && saved.nome) {
+                    document.getElementById('azNome').value = saved.nome || '';
+                    document.getElementById('azPiva').value = saved.piva || '';
+                    document.getElementById('azDirettore').value = saved.dir || '';
+                    document.getElementById('azSede').value = saved.sede || '';
+                    aggiornaIntestazioneLive();
+                }
+            } catch (e) {}
+            renderCartoonStage();
+            renderAplusGallery();
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js?v=116').catch(() => {});
+            }
+        });
+    </script>
+</body>
+</html>

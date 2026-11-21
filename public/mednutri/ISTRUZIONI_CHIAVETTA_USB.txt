@@ -1,0 +1,29 @@
+========================================================================
+             ⚕️ MedNutri Pro - Versione Portatile USB
+========================================================================
+
+Gentile Dott.ssa,
+Questa versione di MedNutri Pro e' concepita per essere utilizzata
+ovunque (ambulatorio, studio privato, PC di casa o portatile) direttamente
+da una chiavetta USB, senza dover installare alcun software.
+
+COME SI USA:
+1. Inserisci la chiavetta USB in qualsiasi computer con Windows (10 o 11).
+2. Fai doppio clic sul file:
+   👉 0_AVVIA_MEDNUTRI_PORTATILE.vbs
+3. Il programma si aprira' all'istante in modalita' applicazione desktop.
+
+VANTAGGI PER LA TUA ATTIVITA' CLINICA:
+✅ Tutti i pazienti salvati, le diete e le patologie personalizzate
+   vengono memorizzati ESCLUSIVAMENTE all'interno di questa cartella
+   (nella cartella 'Dati_Clinici_USB').
+✅ Sul computer dell'ambulatorio o dell'ospedale NON rimane alcuna traccia
+   dei dati dei tuoi pazienti (massima privacy e tutela GDPR).
+✅ Quando stacchi la chiavetta e la colleghi a un altro PC, ritroverai
+   esattamente tutti i tuoi dati aggiornati e pronti all'uso.
+✅ Funziona anche senza connessione internet.
+
+CONSIGLIO DI SICUREZZA:
+Una volta ogni tanto (es. a fine mese), fai una copia di questa intera
+cartella sul tuo computer personale o su una seconda chiavetta di riserva.
+========================================================================

@@ -1,0 +1,25 @@
+{
+  "name": "Progetto Salute - C. Milella",
+  "short_name": "Salute",
+  "description": "Monitoraggio parametri vitali, fitness e benessere personale quotidiano",
+  "start_url": "/salute/",
+  "scope": "/salute/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070d18",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/salute/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/salute/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

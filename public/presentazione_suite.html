@@ -1,0 +1,3022 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suite Gestionale C. Milella — Vetrina Ufficiale & Presentazione Completa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amz-navy: #131921;
+            --amz-subnav: #232f3e;
+            --amz-orange: #ff9900;
+            --amz-gold-btn: #ffd814;
+            --amz-buy-btn: #ffa41c;
+            --amz-teal: #007185;
+            --bg-page: #f1f5f9;
+            --bg-white: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-dark);
+            font-size: 16px;
+            line-height: 1.55;
+            padding-bottom: 70px;
+        }
+
+        /* BARRA SUPERIORE STILE AMAZON ENTERPRISE */
+        .amz-header {
+            background: var(--amz-navy);
+            color: #ffffff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.28);
+        }
+
+        .amz-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .amz-logo-badge {
+            background: #ffffff;
+            color: #111827;
+            font-weight: 900;
+            font-size: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.8);
+        }
+
+        .amz-brand h1 {
+            font-size: 19px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: #fff;
+        }
+
+        .amz-brand span {
+            font-size: 12.5px;
+            color: #fbbf24;
+            font-weight: 700;
+            display: block;
+        }
+
+        .amz-subbar {
+            background: var(--amz-subnav);
+            color: #f8fafc;
+            padding: 9px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13.5px;
+            font-weight: 700;
+        }
+
+        .subbar-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .subbar-links button {
+            color: #f8fafc;
+            background: none;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+
+        .subbar-links button:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fbbf24;
+        }
+
+        /* CONTAINER SCHEDA PRODOTTO STILE AMAZON (3 COLONNE) */
+        .amz-container {
+            max-width: 1460px;
+            margin: 20px auto;
+            padding: 0 18px;
+        }
+
+        .amz-product-sheet {
+            background: var(--bg-white);
+            border-radius: 18px;
+            border: 1px solid #cbd5e1;
+            padding: 26px;
+            display: grid;
+            grid-template-columns: 580px 1fr 350px;
+            gap: 28px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+            margin-bottom: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1280px) {
+            .amz-product-sheet {
+                grid-template-columns: 1fr 340px;
+            }
+            .amz-media-column {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .amz-product-sheet {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* COLONNA 1: THUMBNAILS VERTICALI + VIEWER */
+        .amz-media-column {
+            display: grid;
+            grid-template-columns: 82px 1fr;
+            gap: 14px;
+            position: sticky;
+            top: 80px;
+        }
+
+        @media (max-width: 600px) {
+            .amz-media-column {
+                grid-template-columns: 1fr;
+                position: static;
+            }
+            .amz-thumb-strip {
+                flex-direction: row !important;
+                overflow-x: auto;
+            }
+        }
+
+        .amz-thumb-strip {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            max-height: 520px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .amz-thumb-btn {
+            width: 78px;
+            min-height: 56px;
+            border-radius: 10px;
+            border: 2px solid #cbd5e1;
+            background: #f8fafc;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 4px;
+            transition: all 0.15s;
+            color: #0f172a;
+        }
+
+        .amz-thumb-btn:hover {
+            border-color: var(--amz-orange);
+            transform: scale(1.04);
+        }
+
+        .amz-thumb-btn.active {
+            border: 2.5px solid #d4af37;
+            background: #fffbeb;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+        }
+
+        .amz-thumb-btn.video-thumb {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: #ffffff;
+            border-color: #38bdf8;
+        }
+
+        .amz-thumb-icon {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .amz-thumb-label {
+            font-size: 9.5px;
+            font-weight: 800;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        /* VIEWER PRINCIPALE */
+        .amz-main-viewer {
+            background: #070e1e;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+            display: flex;
+            flex-direction: column;
+            min-height: 480px;
+        }
+
+        .viewer-top-bar {
+            background: #0f172a;
+            color: #ffffff;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .viewer-stage-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* SUBTITLES BOX A TUTTA LARGHEZZA */
+        .cartoon-subtitle-box {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(7, 12, 26, 0.99) 100%);
+            border-top: 2px solid #d4af37;
+            padding: 14px 18px;
+            min-height: 86px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .speaker-pill {
+            background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%);
+            color: #0f172a;
+            font-size: 11.5px;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 999px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .subtitle-spoken-text {
+            color: #f8fafc;
+            font-size: 14.5px;
+            font-weight: 700;
+            line-height: 1.45;
+            width: 100%;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+        }
+
+        /* CONTROLLI MULTIMEDIALI */
+        .cartoon-controls {
+            background: #090f1d;
+            padding: 10px 14px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-cartoon-play {
+            background: linear-gradient(135deg, #ffd814 0%, #f59e0b 100%);
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 10px rgba(245,158,11,0.35);
+        }
+
+        .btn-cartoon-step {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 7px 11px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .cartoon-progress-wrap {
+            flex: 1;
+            min-width: 110px;
+            height: 8px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .cartoon-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #38bdf8, #d4af37);
+            transition: width 0.25s linear;
+        }
+
+        /* COLONNA 2: DETTAGLI PRODOTTO STILE AMAZON */
+        .amz-info-column h2 {
+            font-size: 25px;
+            font-weight: 900;
+            color: #0f172a;
+            line-height: 1.28;
+            margin-bottom: 6px;
+        }
+
+        .amz-brand-link {
+            color: var(--amz-teal);
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .amz-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 14px;
+        }
+
+        .amz-choice-badge {
+            background: #232f3e;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .amz-choice-badge span {
+            color: #ffd814;
+        }
+
+        .amz-about-title {
+            font-size: 17px;
+            font-weight: 900;
+            color: #0f172a;
+            margin: 14px 0 10px 0;
+        }
+
+        .amz-bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .amz-bullet-list li {
+            font-size: 14.5px;
+            color: #1e293b;
+            line-height: 1.5;
+            padding-left: 14px;
+            border-left: 3.5px solid #d4af37;
+        }
+
+        /* COLONNA 3: AMAZON BUY BOX */
+        .amz-buy-box {
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+        }
+
+        .amz-status-green {
+            color: #007600;
+            font-size: 17px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .btn-amz-primary {
+            width: 100%;
+            background: var(--amz-gold-btn);
+            border: 1px solid #fcd200;
+            color: #0f172a;
+            padding: 12px;
+            border-radius: 99px;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 2px 6px rgba(15,23,42,0.15);
+            transition: transform 0.15s, background 0.15s;
+        }
+
+        .btn-amz-primary:hover {
+            background: #f7ca00;
+            transform: translateY(-1px);
+        }
+
+        .btn-amz-secondary {
+            width: 100%;
+            background: var(--amz-buy-btn);
+            border: 1px solid #ff8f00;
+            color: #0f172a;
+            padding: 12px;
+            border-radius: 99px;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 2px 6px rgba(15,23,42,0.15);
+        }
+
+        /* SEZIONE A+ GALLERIA SCHEDE */
+        .aplus-section {
+            background: var(--bg-white);
+            border-radius: 18px;
+            border: 1px solid #cbd5e1;
+            padding: 28px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+            margin-top: 20px;
+        }
+
+        .aplus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 22px;
+            margin-top: 20px;
+        }
+
+        .aplus-card {
+            border: 1.5px solid #cbd5e1;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .aplus-card:hover {
+            border-color: #d4af37;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .aplus-figure-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            padding: 16px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .aplus-body {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .btn-per-saperne {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* MODALE PER SAPERNE DI PIÙ */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .modal-window {
+            background: #ffffff;
+            border: 2px solid #d4af37;
+            border-radius: 20px;
+            max-width: 860px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+        }
+
+        /* STILI PER LA STAMPA DEPLIANT A4 SUITE */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+            }
+            .amz-header, .amz-subbar, .cartoon-controls, #panelVoiceControl, .btn-per-saperne, .amz-buy-box, .amz-thumb-strip, .modal-backdrop, #btnShareWhatsapp, #btnShareSuiteTop {
+                display: none !important;
+            }
+            .amz-container {
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+            .amz-product-sheet {
+                grid-template-columns: 1fr !important;
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+            .print-depliant-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 2px solid #d4af37;
+                padding-bottom: 12px;
+                margin-bottom: 16px;
+            }
+            .print-qr-section {
+                display: flex !important;
+                align-items: center;
+                gap: 16px;
+                background: #f8fafc;
+                border: 1.5px solid #0284c7;
+                border-radius: 12px;
+                padding: 14px;
+                margin-top: 18px;
+                page-break-inside: avoid;
+            }
+        }
+        .print-depliant-header, .print-qr-section {
+            display: none;
+        }
+
+        /* EVIDENZIAZIONE SOTTOTITOLO KARAOKE TELEPROMPTER */
+        .karaoke-active-phrase {
+            color: #ffd814 !important;
+            text-shadow: 0 0 10px rgba(255, 216, 20, 0.5);
+            font-weight: 900;
+            transition: all 0.25s ease;
+        }
+        .karaoke-dimmed-phrase {
+            opacity: 0.65;
+            transition: opacity 0.25s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INTESTAZIONE STILE AMAZON -->
+    <header class="amz-header">
+        <div class="amz-brand">
+            <div class="amz-logo-badge">
+                <img src="/assets/img/suite_mc_official_full.png" alt="Logo Ufficiale Suite M.C." style="width:100%; height:100%; object-fit:cover; display:block;">
+            </div>
+            <div>
+                <h1 id="headerDynamicBrand">Suite Gestionale C. Milella — Presentazione Ufficiale Completa</h1>
+                <span>8 Applicazioni Integrate • Dati Protetti • Progettata con Google DeepMind Antigravity AI</span>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button type="button" onclick="condividiSuiteWhatsApp()" id="btnShareSuiteTop" style="background:#25D366; color:#ffffff; border:none; padding:9px 16px; border-radius:10px; font-weight:900; font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(37,211,102,0.35);" title="Condividi la presentazione su WhatsApp con testo e link automatico">
+                <span>💬</span> Condividi su WhatsApp
+            </button>
+            <button type="button" onclick="apriRegiaVociModal()" id="btnHeaderGestisciVoci" style="background:linear-gradient(135deg, #a855f7, #6366f1); color:#ffffff; border:1px solid #c084fc; padding:9px 16px; border-radius:10px; font-weight:800; font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(168,85,247,0.35);" title="Gestisci le voci, sorgente studio/sintesi, velocita e volume"><span>🎛️</span> Gestisci Voci &amp; Audio</button>
+            <button type="button" onclick="attivaModalitaFilm(0, true)" style="background:#ffd814; color:#0f172a; border:none; padding:9px 16px; border-radius:10px; font-weight:900; font-size:13.5px; cursor:pointer;">
+                🎬 Avvia Presentazione
+            </button>
+            <button type="button" onclick="apriModalComponiPresentazione()" style="background:linear-gradient(135deg, #a855f7, #6b21a8); color:#ffffff; border:1px solid #d8b4fe; padding:9px 16px; border-radius:10px; font-weight:900; font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(168,85,247,0.35);">
+                <span>✨</span> Componi Presentazione Su Misura
+            </button>
+            <a href="/launcher.html" style="background:#0284c7; color:#fff; text-decoration:none; padding:9px 16px; border-radius:10px; font-weight:800; font-size:13.5px;">
+                🚀 Apri Launcher
+            </a>
+            <a href="/presentazione_aziendale.html" style="background:rgba(255,255,255,0.12); color:#fff; text-decoration:none; padding:9px 14px; border-radius:10px; font-weight:700; font-size:13.5px;">
+                🏥 Solo CareAssist
+            </a>
+        </div>
+    </header>
+
+    <!-- SOTTO-BARRA RAPIDA -->
+    <nav class="amz-subbar">
+        <div class="subbar-links">
+            <button type="button" onclick="attivaModalitaFilm(0, true)">🎬 Film Completo Suite (5 Situazioni)</button>
+            <button type="button" onclick="mostraAppDettaglio(0)">🩺 1. CareAssist</button>
+            <button type="button" onclick="mostraAppDettaglio(1)">🚗 2. Flotta Veicoli</button>
+            <button type="button" onclick="mostraAppDettaglio(2)">🛠️ 3. Inventario</button>
+            <button type="button" onclick="mostraAppDettaglio(3)">📦 4. Logistica</button>
+            <button type="button" onclick="mostraAppDettaglio(4)">👨‍🍳 5. Ricettario</button>
+            <button type="button" onclick="mostraAppDettaglio(5)">🥗 6. MedNutri</button>
+            <button type="button" onclick="mostraAppDettaglio(6)">❤️ 7. Salute</button>
+            <button type="button" onclick="mostraAppDettaglio(7)">🎰 8. Gioco</button>
+            <button type="button" onclick="document.getElementById('sec-aplus').scrollIntoView({behavior:'smooth'})">💡 Tutte le 8 Schede A+</button>
+        </div>
+        <button type="button" onclick="apriRegiaVociModal()" class="subbar-voice-pill" style="background:rgba(253,224,71,0.12); border:1px solid rgba(253,224,71,0.5); color:#fde047; padding:6px 14px; border-radius:20px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(253,224,71,0.25)'" onmouseout="this.style.background='rgba(253,224,71,0.12)'" title="Clicca per aprire la Regia Voci e personalizzare audio o testi">
+            <span id="subbarVoiceIcon">🔊</span> <span id="subbarVoiceLabel">Voci Studio HD Neurali (Isabella &amp; Ciro)</span> <span style="background:#fde047; color:#0f172a; padding:2px 7px; border-radius:10px; font-size:10.5px;">🎛️ Gestisci</span>
+        </button>
+    </nav>
+
+    <div class="amz-container">
+
+        <!-- INTESTAZIONE SPECIALE PER STAMPA A4 DEPLIANT ESECUTIVO -->
+        <div class="print-depliant-header">
+            <div style="display:flex; align-items:center; gap:14px;">
+                <img src="/assets/img/suite_mc_official_full.png" alt="Logo Suite M.C." style="width:58px; height:58px; object-fit:cover; border-radius:12px; border:2px solid #d4af37;">
+                <div>
+                    <h1 style="font-size:22px; font-weight:900; margin:0; color:#0f172a;">SUITE GESTIONALE C. MILELLA</h1>
+                    <div style="font-size:13px; font-weight:700; color:#b45309;">Scheda Ufficiale Esecutiva di Presentazione • 8 Moduli Software Integrati</div>
+                </div>
+            </div>
+            <div style="text-align:right; font-size:11px; color:#475569; font-weight:700;">
+                <div>Progettata da Ciro Milella</div>
+                <div>Potenziata con Google Antigravity AI</div>
+                <div>Data: 31 Ottobre 2026</div>
+            </div>
+        </div>
+
+        <!-- SCHEDA PRODOTTO STILE AMAZON A 3 COLONNE -->
+        <section class="amz-product-sheet">
+
+            <!-- COLONNA 1: THUMBNAILS + PALCOSCENICO PRINCIPALE -->
+            <div class="amz-media-column">
+                <div class="amz-thumb-strip">
+                    <button type="button" class="amz-thumb-btn video-thumb active" id="thumb-video" onclick="attivaModalitaFilm(0, true)" title="Guarda il Film Completo della Suite">
+                        <span class="amz-thumb-icon">🎬</span>
+                        <span class="amz-thumb-label" style="color:#fde047;">FILM SUITE</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-0" onclick="mostraAppDettaglio(0)">
+                        <span class="amz-thumb-icon">🩺</span>
+                        <span class="amz-thumb-label">CareAssist</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-1" onclick="mostraAppDettaglio(1)">
+                        <span class="amz-thumb-icon">🚗</span>
+                        <span class="amz-thumb-label">Flotta Auto</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-2" onclick="mostraAppDettaglio(2)">
+                        <span class="amz-thumb-icon">🛠️</span>
+                        <span class="amz-thumb-label">Inventario</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-3" onclick="mostraAppDettaglio(3)">
+                        <span class="amz-thumb-icon">📦</span>
+                        <span class="amz-thumb-label">Logistica</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-4" onclick="mostraAppDettaglio(4)">
+                        <span class="amz-thumb-icon">👨‍🍳</span>
+                        <span class="amz-thumb-label">Ricettario</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-5" onclick="mostraAppDettaglio(5)">
+                        <span class="amz-thumb-icon">🥗</span>
+                        <span class="amz-thumb-label">MedNutri</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-6" onclick="mostraAppDettaglio(6)">
+                        <span class="amz-thumb-icon">❤️</span>
+                        <span class="amz-thumb-label">Salute</span>
+                    </button>
+                    <button type="button" class="amz-thumb-btn" id="thumb-app-7" onclick="mostraAppDettaglio(7)">
+                        <span class="amz-thumb-icon">🎰</span>
+                        <span class="amz-thumb-label">Gioco</span>
+                    </button>
+                </div>
+
+                <!-- PALCOSCENICO PRINCIPALE -->
+                <div class="amz-main-viewer">
+                    <div class="viewer-top-bar">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="width:10px; height:10px; border-radius:50%; background:#ef4444; display:inline-block; box-shadow:0 0 8px #ef4444;"></span>
+                            <span id="viewerTopTitle" style="font-size:13px; font-weight:800; color:#fef08a;">
+                                🎬 SUITE GESTIONALE C. MILELLA — SITUAZIONE 1 DI 5
+                            </span>
+                        </div>
+                        <button type="button" class="btn-per-saperne" style="padding:5px 12px; font-size:12px;" onclick="apriPerSaperneCorrente()">
+                            💡 Per saperne di più
+                        </button>
+                    </div>
+
+                    <!-- CONTENUTO DINAMICO: SCENA ILLUSTRATA O SCHEDA APP -->
+                    <div class="viewer-stage-body" id="mainStageContainer">
+                        <!-- Popolato via JS -->
+                    </div>
+
+                    <!-- SOTTOTITOLI DIALOGO A TUTTA LARGHEZZA -->
+                    <div class="cartoon-subtitle-box">
+                        <span class="speaker-pill" id="speakerBadge">🎙️ Voce Guida Umana HD</span>
+                        <div class="subtitle-spoken-text" id="subtitleText">
+                            Premi «▶️ Avvia Presentazione» per ascoltare la panoramica della Suite completa!
+                        </div>
+                    </div>
+
+                    <!-- BARRA CONTROLLI -->
+                    <div class="cartoon-controls">
+                        <button type="button" class="btn-cartoon-play" id="btnPlayFilm" onclick="togglePlayFilm()">
+                            ▶️ Avvia Presentazione
+                        </button>
+                        <button type="button" class="btn-cartoon-step" onclick="scenaPrecedente()">⏮️</button>
+                        <button type="button" class="btn-cartoon-step" onclick="scenaSuccessiva()">⏭️</button>
+                        <div class="cartoon-progress-wrap" onclick="saltaPosizioneFilm(event)" style="cursor:pointer;" title="Clicca per avanzare o riavvolgere">
+                            <div class="cartoon-progress-bar" id="filmProgressBar"></div>
+                        </div>
+                        <span id="filmTimeLabel" style="font-size:12px; font-weight:800; color:#cbd5e1;">Situazione 1/5</span>
+                        
+                        <!-- PULSANTE REGIA & GESTIONE VOCI IN AUTONOMIA -->
+                        <button type="button" onclick="apriRegiaVociModal()" style="background:linear-gradient(135deg, #a855f7, #6366f1); color:#fff; border:none; padding:7px 12px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(168,85,247,0.4);" title="Personalizza le voci, il volume, la velocità e i testi">
+                            🎛️ Gestisci Voci
+                        </button>
+                    </div>
+
+                    <!-- PANNELLO CONTROLLO RAPIDO VOCI (INLINE) -->
+                    <div id="panelVoiceControl" style="background:#090d16; border-top:1px solid rgba(255,255,255,0.1); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:12px; color:#cbd5e1;">
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-weight:700;">
+                                <span>Modalità Voce:</span>
+                                <select id="selectVoiceMode" onchange="cambiaVoiceMode(this.value)" style="background:#1e293b; color:#ffd814; border:1px solid #d4af37; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:800;">
+                                    <option value="neural" selected>🎙️ Voci Reali Studio Umane HD (Isabella &amp; Ciro - Consigliato)</option>
+                                    
+                                    <option value="silent">🔇 Modalità Silenziosa (Solo Sottotitoli)</option>
+                                </select>
+                            </label>
+
+                            <label style="display:flex; align-items:center; gap:5px; font-weight:700;">
+                                <span>Velocità:</span>
+                                <select id="selectAudioSpeed" onchange="cambiaAudioSpeed(this.value)" style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.25); padding:4px 8px; border-radius:6px; font-size:12px;">
+                                    <option value="0.9">0.9x (Calma)</option>
+                                    <option value="1.0" selected>1.0x (Normale)</option>
+                                    <option value="1.15">1.15x (Dinamica)</option>
+                                    <option value="1.3">1.3x (Veloce)</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label style="display:flex; align-items:center; gap:6px; font-weight:700;">
+                                <span id="labelVolumeIcon">🔊</span>
+                                <input type="range" id="sliderSuiteVolume" min="0" max="100" value="85" oninput="cambiaSuiteVolume(this.value)" style="width:75px; accent-color:#ffd814; cursor:pointer;">
+                                <span id="labelVolumeVal" style="color:#ffd814; font-weight:800; min-width:30px;">85%</span>
+                            </label>
+
+                            <button type="button" id="btnToggleMute" onclick="toggleMuteAudio()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:4px 8px; border-radius:6px; font-size:11.5px; font-weight:800; cursor:pointer;">
+                                Muto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNA 2: DETTAGLI PRODOTTO STILE AMAZON -->
+            <div class="amz-info-column">
+                <span class="amz-brand-link">Suite Gestionale C. Milella • Portale Completo Multi-Modulo</span>
+                <h2 id="productMainTitle">
+                    La Suite Gestionale di Ciro Milella — 8 Moduli Software Integrati per Casa, Assistenza Clinica, Lavoro, Veicoli e Famiglia
+                </h2>
+
+                <div class="amz-rating-row">
+                    <span style="color:#d4af37; font-size:18px; letter-spacing:1px;">★★★★★</span>
+                    <span style="font-weight:800; color:#007185; font-size:14px;">5.0 su 5 stelle (Suite Completa All-in-One)</span>
+                    <span class="amz-choice-badge">Scelta <span>Completa</span> Casa &amp; Lavoro</span>
+                </div>
+
+                <!-- MINI PULSANTI SCENA RAPIDA -->
+                <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:12px; margin-bottom:14px;">
+                    <div style="font-size:12.5px; font-weight:900; color:#0f172a; text-transform:uppercase; margin-bottom:8px;">
+                        🎬 Scegli una Situazione della Presentazione Suite:
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                        <button type="button" onclick="attivaModalitaFilm(0, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #cbd5e1; background:#fff; font-size:12px; font-weight:800; cursor:pointer;">1. Portale &amp; Sicurezza</button>
+                        <button type="button" onclick="attivaModalitaFilm(1, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #0284c7; background:#f0f9ff; color:#0369a1; font-size:12px; font-weight:800; cursor:pointer;">2. CareAssist Domicilio</button>
+                        <button type="button" onclick="attivaModalitaFilm(2, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #475569; background:#f8fafc; color:#334155; font-size:12px; font-weight:800; cursor:pointer;">3. Auto, Attrezzi &amp; Merci</button>
+                        <button type="button" onclick="attivaModalitaFilm(3, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #dc2626; background:#fef2f2; color:#991b1b; font-size:12px; font-weight:800; cursor:pointer;">4. Ricette, Nutrizione &amp; Benessere</button>
+                        <button type="button" onclick="attivaModalitaFilm(4, true)" style="padding:6px 10px; border-radius:8px; border:1px solid #d4af37; background:#fffbeb; color:#78350f; font-size:12px; font-weight:800; cursor:pointer;">5. Backup USB &amp; AI</button>
+                    </div>
+                </div>
+
+                <div class="amz-about-title">Punti di Forza della Suite Completa:</div>
+                <ul class="amz-bullet-list">
+                    <li>
+                        <strong>8 APPLICAZIONI IN UN UNICO ACCESSO:</strong> Non devi più usare 8 programmi diversi o fogli sparsi. Dalla gestione dei pazienti di CareAssist al controllo delle scadenze dei veicoli, dall'inventario attrezzi al ricettario di casa, tutto vive nello stesso portale unificato.
+                    </li>
+                    <li>
+                        <strong>ACCESSO UNIVERSALE PC ↔ SMARTPHONE (CON QR CODE):</strong> Puoi consultare e aggiornare la Suite dal computer di casa o dell'ufficio, e con un clic inquadrare il QR Code per aprirla all'istante sullo smartphone, senza installare nulla dallo store.
+                    </li>
+                    <li>
+                        <strong>DOPPIA COPIA DI SICUREZZA (CLOUD + CHIAVETTA USB):</strong> I tuoi dati sono sempre online per essere consultati ovunque, e con un solo clic puoi sincronizzarli su chiavetta USB per avere la sicurezza assoluta che niente andrà mai perduto.
+                    </li>
+                    <li>
+                        <strong>POTENZIATO CON INTELLIGENZA ARTIFICIALE ANTIGRAVITY AI:</strong> Ogni modulo è vivo e può essere adattato o arricchito su misura per le esigenze tue o della tua azienda in pochi minuti.
+                    </li>
+                </ul>
+
+                <!-- CARD EXECUTIVE: LE 8 APPLICAZIONI DELLA SUITE -->
+                <div style="background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border:2px solid #d4af37; border-radius:16px; padding:16px 18px; margin:16px 0; color:#ffffff; box-shadow:0 10px 25px rgba(15,23,42,0.18);">
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; border-bottom:1px solid rgba(212,175,55,0.3); padding-bottom:8px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width:40px; height:40px; border-radius:10px; border:2px solid rgba(255,255,255,0.7); overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(0,0,0,0.5); background:#ffffff; flex-shrink:0;">
+                                <img src="/assets/img/suite_mc_official_full.png" alt="Logo Ufficiale Suite M.C." style="width:100%; height:100%; object-fit:cover; display:block;">
+                            </div>
+                            <div>
+                                <div style="font-size:11px; font-weight:900; color:#fde047; text-transform:uppercase; letter-spacing:0.8px;">PORTAFOGLIO APPLICATIVO INTEGRATO</div>
+                                <div style="font-size:15.5px; font-weight:900; color:#ffffff;">Gli 8 Moduli della Suite C. Milella</div>
+                            </div>
+                        </div>
+                        <span style="background:rgba(16,185,129,0.2); border:1px solid #34d399; color:#6ee7b7; font-size:11px; font-weight:900; padding:4px 10px; border-radius:999px;">
+                            ● 8 MODULI OPERATIVI
+                        </span>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; font-size:12px;">
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(56,189,248,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">🩺</div>
+                            <div style="font-weight:900; color:#7dd3fc;">CareAssist Pro</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Clinica &amp; Domicilio</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(251,191,36,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">🚗</div>
+                            <div style="font-weight:900; color:#fde047;">Flotta Auto</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Scadenze &amp; Spese</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(245,158,11,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">🛠️</div>
+                            <div style="font-weight:900; color:#fde047;">Inventario</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Catalogo &amp; Prestiti</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(168,85,247,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">📦</div>
+                            <div style="font-weight:900; color:#d8b4fe;">Logistica</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Ordini &amp; Consegne</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(239,68,68,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">👨‍🍳</div>
+                            <div style="font-weight:900; color:#fca5a5;">Ricettario</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Archivio &amp; Spesa</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(34,197,94,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">🥗</div>
+                            <div style="font-weight:900; color:#86efac;">MedNutri Pro</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Nutrizione Su Misura</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(244,63,94,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">❤️</div>
+                            <div style="font-weight:900; color:#fda4af;">Salute</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Parametri &amp; Fitness</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(234,179,8,0.4); border-radius:8px; padding:8px; text-align:center;">
+                            <div style="font-size:18px;">🎰</div>
+                            <div style="font-weight:900; color:#fef08a;">Gioco</div>
+                            <div style="font-size:10.5px; color:#cbd5e1;">Bilancio Consapevole</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD SINERGIA AI -->
+                <div style="background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border:2px solid #0284c7; border-radius:16px; padding:15px 18px; box-shadow:0 6px 18px rgba(2,132,199,0.12);">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                        <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">
+                            🤖
+                        </div>
+                        <div>
+                            <div style="font-size:11px; font-weight:900; color:#0369a1; text-transform:uppercase;">SVILUPPO SU MISURA CONTINUO</div>
+                            <h3 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">Ciro Milella + Google DeepMind Antigravity AI</h3>
+                        </div>
+                    </div>
+                    <p style="font-size:13.5px; color:#1e293b; line-height:1.5; margin:0;">
+                        Questa Suite non è un prodotto statico: è un sistema che cresce con te. Qualsiasi nuova funzione per la casa, la salute o l'azienda può essere creata e pubblicata in Cloud in pochi minuti.
+                    </p>
+                </div>
+
+                <!-- BOX QR CODE PER STAMPA DEPLIANT A4 -->
+                <div class="print-qr-section">
+                    <img src="/assets/img/qr_turni.png" alt="QR Code Suite" style="width:105px; height:105px; border-radius:10px; border:2px solid #0f172a; background:#fff; padding:4px;">
+                    <div>
+                        <div style="font-size:14px; font-weight:900; color:#0f172a; margin-bottom:4px;">INQUADRA DAL TUO SMARTPHONE PER APRIRE LA SUITE COMPLETA</div>
+                        <div style="font-size:12px; color:#334155; line-height:1.4;">
+                            Nessuna installazione richiesta. Apri la fotocamera del telefono e inquadra questo codice per consultare le presentazioni animate, i turni, le scadenze dei veicoli e il diario clinico CareAssist in tempo reale.
+                        </div>
+                        <div style="font-size:11.5px; font-weight:800; color:#0284c7; margin-top:6px;">
+                            Indirizzo Cloud Render: https://milella-suite-iv93.onrender.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNA 3: BUY BOX AZIONI SUITE -->
+            <aside class="amz-buy-box">
+                <div class="amz-status-green">🟢 Scegli: Intera Suite o Singole App</div>
+                <p style="font-size:12.5px; color:#475569; margin-bottom:12px; line-height:1.4;">
+                    Massima flessibilità commerciale: puoi adottare <strong>l'Intera Suite Unificata</strong> oppure <strong>attivare solo le App necessarie</strong> per ciascun collaboratore o reparto:
+                </p>
+
+                <!-- Selettore Pacchetto o Singole App -->
+                <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:12px; padding:10px 12px; margin-bottom:12px;">
+                    <label style="font-size:11.5px; font-weight:800; color:#1e293b; display:block; margin-bottom:4px;">🎯 MODALITÀ DI ADOZIONE:</label>
+                    <select id="modalitaSuiteSelect" onchange="cambiaModalitaPresentazione(this.value)" style="width:100%; padding:8px 10px; border-radius:8px; border:1.5px solid #0284c7; background:#fff; font-size:13px; font-weight:700; color:#0f172a; outline:none; cursor:pointer;">
+                        <option value="all">🌟 Intera Suite Completa (Tutti gli 8 Moduli)</option>
+                        <option value="careassist">🩺 Solo CareAssist Pro (Sanitario / RSA / Domiciliare)</option>
+                        <option value="veicoli">🚗 Solo Flotta Veicoli & Spese (Autisti / Spese ACI)</option>
+                        <option value="logistica">📦 Solo Logistica & Magazzino Attrezzi</option>
+                        <option value="mednutri">🥗 Solo Nutrizione Clinica & Ricettario</option>
+                        <option value="personal">✨ Configurazione Su Misura (Scegli Tu)</option>
+                    </select>
+                </div>
+
+                <button type="button" onclick="apriModalComponiPresentazione()" style="width:100%; background:linear-gradient(135deg, #9333ea, #6b21a8); color:#fff; border:1px solid #c084fc; padding:12px; border-radius:99px; font-size:14px; font-weight:900; cursor:pointer; margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(147,51,234,0.35);">
+                    <span>✨</span> Scegli le App & Intesta Azienda
+                </button>
+                <button type="button" class="btn-amz-primary" onclick="window.location.href='/launcher.html'">
+                    🚀 Apri la Suite Completa (Launcher)
+                </button>
+
+                <button type="button" class="btn-amz-secondary" onclick="window.location.href='/presentazione_aziendale.html'">
+                    🏢 Vetrina Aziendale CareAssist Pro
+                </button>
+
+                <button type="button" onclick="condividiSuiteWhatsApp()" id="btnShareWhatsapp" style="width:100%; background:#25D366; color:#ffffff; border:none; padding:12px; border-radius:99px; font-size:14px; font-weight:900; cursor:pointer; margin-top:8px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 3px 10px rgba(37,211,102,0.35);">
+                    <span>💬</span> Invia su WhatsApp
+                </button>
+
+                <button type="button" onclick="stampaDepliantA4()" style="width:100%; background:#f1f5f9; color:#0f172a; border:1.5px solid #cbd5e1; padding:10px; border-radius:99px; font-size:13px; font-weight:800; cursor:pointer; margin-top:8px; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <span>📄</span> Stampa Depliant A4 Esecutivo
+                </button>
+
+                <div style="margin-top:16px; padding:12px; background:#f8fafc; border-radius:12px; border:1px solid #cbd5e1; font-size:12.5px; color:#334155;">
+                    <div style="font-weight:800; color:#0f172a; margin-bottom:4px;">📱 Come aprirla sul cellulare:</div>
+                    1. Apri la fotocamera dello smartphone.<br>
+                    2. Inquadra il QR Code dal Launcher.<br>
+                    3. Tutti gli 8 moduli si aprono sincronizzati in tempo reale.
+                </div>
+
+                <div style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; font-size:12px; color:#475569; display:flex; flex-direction:column; gap:5px;">
+                    <div>🔒 <strong>Accessi:</strong> Protetti da PIN Personale</div>
+                    <div>💾 <strong>Sicurezza:</strong> Sincronizzazione USB + Cloud</div>
+                    <div>🖨️ <a href="javascript:void(0)" onclick="stampaDepliantA4()" style="color:#007185; font-weight:800;">Stampa Depliant Esecutivo A4</a></div>
+                </div>
+            </aside>
+
+        </section>
+
+        <!-- SEZIONE A+ GALLERIA DELLE 8 SCHEDE DETTAGLIATE -->
+        <section class="aplus-section" id="sec-aplus">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:2px solid #f1f5f9; padding-bottom:14px;">
+                <div>
+                    <span style="font-size:12px; font-weight:900; color:#d4af37; text-transform:uppercase; letter-spacing:1px;">DAL PRODUTTORE • SCHEDE DETTAGLIATE STILE AMAZON A+</span>
+                    <h2 style="font-size:24px; font-weight:900; color:#0f172a;">
+                        Esplora gli 8 Moduli della Suite C. Milella (con Link «Per saperne di più» e Voce Guida)
+                    </h2>
+                </div>
+            </div>
+
+            <div class="aplus-grid" id="aplusGalleryContainer">
+                <!-- Popolato via JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- MODALE "PER SAPERNE DI PIÙ" -->
+    <div class="modal-backdrop" id="modalInfoApp" onclick="if(event.target===this) chiudiModalInfoApp()">
+        <div class="modal-window">
+            <div style="background:linear-gradient(135deg, #131921 0%, #232f3e 100%); color:#fff; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:11.5px; font-weight:800; color:#fbbf24; text-transform:uppercase;">💡 SCHEDA TECNICA • APPROFONDIMENTO MODULO</div>
+                    <h3 id="modalAppTitle" style="font-size:21px; font-weight:900;">Titolo Modulo</h3>
+                </div>
+                <button type="button" onclick="chiudiModalInfoApp()" style="background:rgba(255,255,255,0.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <div style="padding:24px;" id="modalAppBody"></div>
+        </div>
+    </div>
+
+    <!-- MODALE COMPONI PRESENTAZIONE SU MISURA (SELEZIONE APP & AZIENDA AUTONOMA) -->
+    <div class="modal-backdrop" id="modalComponiPres" style="display:none;" onclick="if(event.target===this) chiudiModalComponiPresentazione()">
+        <div class="modal-window" style="max-width:740px; max-height:92vh; overflow-y:auto; border:2px solid #a855f7; box-shadow:0 25px 60px rgba(0,0,0,0.65);">
+            <!-- Header Finestra Modale -->
+            <div style="background:linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); color:#fff; padding:18px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #a855f7;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="font-size:30px;">🎛️</div>
+                    <div>
+                        <div style="font-size:11px; font-weight:800; color:#f0abfc; text-transform:uppercase; letter-spacing:0.8px;">CONFIGURATORE COMMERCIALE AUTONOMO</div>
+                        <h3 style="font-size:20px; font-weight:900; margin:0; color:#ffffff;">Componi la Presentazione: Scegli le App &amp; Intesta l'Azienda</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="chiudiModalComponiPresentazione()" style="background:rgba(255,255,255,0.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <!-- Corpo Modale -->
+            <div style="padding:22px; background:#0f172a; color:#f8fafc;">
+                <!-- SEZIONE 1: DATI AZIENDA / CLIENTE -->
+                <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(168,85,247,0.35); border-radius:14px; padding:16px; margin-bottom:18px;">
+                    <h4 style="font-size:14.5px; font-weight:900; color:#e9d5ff; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+                        <span>🏢</span> 1. Inserisci Nome Azienda o Referente (Visualizzazione Immediata)
+                    </h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div>
+                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:4px;">Nome Azienda / Cooperativa / RSA:</label>
+                            <input type="text" id="componiNomeAz" placeholder="es. Cooperativa Sanitaria Santa Rita" style="width:100%; padding:10px 12px; border-radius:8px; border:1.5px solid #a855f7; background:#1e293b; color:#fff; font-size:14px; font-weight:700; outline:none;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:4px;">Nome Direttore / Referente (Opzionale):</label>
+                            <input type="text" id="componiDirAz" placeholder="es. Dott. Mario Rossi" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #475569; background:#1e293b; color:#fff; font-size:14px; font-weight:700; outline:none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEZIONE 2: SCELTA APPLICAZIONI (DA 1 A TUTTE) -->
+                <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(168,85,247,0.35); border-radius:14px; padding:16px; margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                        <h4 style="font-size:14.5px; font-weight:900; color:#e9d5ff; margin:0; display:flex; align-items:center; gap:8px;">
+                            <span>📱</span> 2. Seleziona le Applicazioni da Presentare:
+                        </h4>
+                        <div style="display:flex; gap:6px;">
+                            <button type="button" onclick="impostaSelezioneApp('all')" style="background:rgba(168,85,247,0.25); border:1px solid #c084fc; color:#e9d5ff; padding:4px 9px; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">✓ Tutte (8)</button>
+                            <button type="button" onclick="impostaSelezioneApp('sanita')" style="background:rgba(56,189,248,0.2); border:1px solid #38bdf8; color:#7dd3fc; padding:4px 9px; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">🩺 Sanità &amp; Flotta</button>
+                            <button type="button" onclick="impostaSelezioneApp('none')" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#94a3b8; padding:4px 9px; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;">✕ Deseleziona</button>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:10px;" id="componiAppsGrid">
+                        <!-- Popolato dinamicamente via JS con le 8 App -->
+                    </div>
+                </div>
+
+                <!-- SEZIONE 3: PULSANTI AZIONE -->
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <button type="button" onclick="ripristinaPresentazioneStandard()" style="background:rgba(255,255,255,0.08); border:1px solid #475569; color:#cbd5e1; padding:11px 18px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer;">
+                        🔄 Ripristina Presentazione Completa
+                    </button>
+                    <button type="button" onclick="applicaPresentazionePersonalizzata()" style="background:linear-gradient(135deg, #10b981, #059669); border:none; color:#ffffff; padding:12px 24px; border-radius:10px; font-weight:900; font-size:15px; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 16px rgba(16,185,129,0.35);">
+                        <span>🚀</span> Genera &amp; Mostra Presentazione Su Misura
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE REGIA & GESTIONE VOCI IN COMPLETA AUTONOMIA -->
+    <div class="modal-backdrop" id="modalRegiaVoci" onclick="if(event.target===this) chiudiRegiaVociModal()">
+        <div class="modal-window" style="max-width:820px; max-height:90vh; overflow-y:auto;">
+            <div style="background:linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); color:#fff; padding:18px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #a855f7;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="font-size:28px;">🎛️</div>
+                    <div>
+                        <div style="font-size:11.5px; font-weight:800; color:#f0abfc; text-transform:uppercase; letter-spacing:0.8px;">STANZA REGIA VOCALE AUTONOMA</div>
+                        <h3 style="font-size:20px; font-weight:900; margin:0;">Gestione e Personalizzazione Voci della Suite</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="chiudiRegiaVociModal()" style="background:rgba(255,255,255,0.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <div style="padding:24px; background:#0f172a; color:#f8fafc;">
+                <!-- 1. PREFERENZE DI RIPRODUZIONE GLOBALI -->
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(168,85,247,0.3); border-radius:12px; padding:16px; margin-bottom:20px;">
+                    <h4 style="font-size:15px; font-weight:900; color:#e9d5ff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+                        <span>⚙️</span> Impostazioni Audio Generali
+                    </h4>
+                    
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; font-size:13px;">
+                        <div>
+                            <label style="display:block; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Sorgente Vocale:</label>
+                            <select id="modalSelectVoiceMode" onchange="cambiaVoiceMode(this.value); document.getElementById('selectVoiceMode').value=this.value;" style="width:100%; background:#1e293b; color:#ffd814; border:1px solid #a855f7; padding:8px 10px; border-radius:8px; font-weight:800;">
+                                <option value="neural">🎙️ Voci Studio HD Neurali (Isabella &amp; Ciro)</option>
+                                
+                                <option value="silent">🔇 Solo Sottotitoli (Muto)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display:block; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Voce Locale del Browser:</label>
+                            <select id="selectBrowserVoiceList" onchange="salvaBrowserVoiceScelta(this.value)" style="width:100%; background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2); padding:8px 10px; border-radius:8px;">
+                                <option value="">Rilevamento voci in corso...</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display:block; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Velocità di Eloquio:</label>
+                            <select id="modalSelectAudioSpeed" onchange="cambiaAudioSpeed(this.value); document.getElementById('selectAudioSpeed').value=this.value;" style="width:100%; background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2); padding:8px 10px; border-radius:8px;">
+                                <option value="0.85">0.85x — Molto Calma</option>
+                                <option value="1.0" selected>1.0x — Naturale Standard</option>
+                                <option value="1.15">1.15x — Vivace &amp; Scorrevole</option>
+                                <option value="1.3">1.3x — Rapida</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. EDITOR COPIONE TESTI & ANTEPRIMA ASCOLTO -->
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(212,175,55,0.3); border-radius:12px; padding:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                        <h4 style="font-size:15px; font-weight:900; color:#fde047; margin:0; display:flex; align-items:center; gap:8px;">
+                            <span>✍️</span> Personalizza Copione e Testi Parlati
+                        </h4>
+                        <span style="font-size:11.5px; background:rgba(253,224,71,0.15); color:#fde047; padding:4px 8px; border-radius:6px; border:1px solid rgba(253,224,71,0.3);">
+                            Modifiche salvate automaticamente in memoria locale
+                        </span>
+                    </div>
+
+                    <p style="font-size:13px; color:#94a3b8; margin-bottom:14px;">
+                        Seleziona la scena o l'applicazione per modificare il testo recitato. Puoi ascoltare immediatamente l'anteprima vocale con le tue parole!
+                    </p>
+
+                    <div style="margin-bottom:14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label style="font-weight:700; color:#cbd5e1;">Seleziona Scena o Modulo da Modificare:</label>
+                            <span id="badgeStatoTesto" style="font-size:11px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);">Testo Originale di Fabbrica</span>
+                        </div>
+                        <select id="selectEditorItem" onchange="caricaTestoItemInEditor(this.value)" style="width:100%; background:#1e293b; color:#fff; border:1px solid #d4af37; padding:10px; border-radius:8px; font-weight:700; font-size:13.5px;">
+                            <optgroup label="🎬 Le 5 Scene del Film Suite">
+                                <option value="scene-0">Situazione 1: Il Portale Unificato &amp; La Sicurezza degli Accessi</option>
+                                <option value="scene-1">Situazione 2: CareAssist Pro — Il Cuore Clinico &amp; Assistenziale</option>
+                                <option value="scene-2">Situazione 3: Flotta Veicoli, Inventario Attrezzi &amp; Logistica</option>
+                                <option value="scene-3">Situazione 4: Il Ricettario di Famiglia, MedNutri &amp; Progetto Salute</option>
+                                <option value="scene-4">Situazione 5: La Sicurezza Totale — Cloud, USB e Partner Antigravity AI</option>
+                            </optgroup>
+                            <optgroup label="📱 Le 8 Schede Applicative">
+                                <option value="app-0">App 1: CareAssist Pro</option>
+                                <option value="app-1">App 2: Flotta Veicoli &amp; Spese</option>
+                                <option value="app-2">App 3: Inventario Attrezzi &amp; Magazzino</option>
+                                <option value="app-3">App 4: Logistica Consegne &amp; Pacchi</option>
+                                <option value="app-4">App 5: Il Ricettario di Famiglia</option>
+                                <option value="app-5">App 6: MedNutri Terapie Nutrizionali</option>
+                                <option value="app-6">App 7: Progetto Salute &amp; Benessere</option>
+                                <option value="app-7">App 8: Progetto Gioco &amp; Bilancio</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    
+<!-- PANNELLO SCELTA CAST & PERSONAGGI SUPER CHIARO -->
+                    <div style="margin-bottom:14px; background:linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.95) 100%); border:2px solid #38bdf8; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+                        
+                        <!-- 1. PULSANTIERA SCELTA FORMAZIONE AD ALTA VISIBILITÀ -->
+                        <div style="margin-bottom:14px;">
+                            <div style="font-size:12px; font-weight:900; color:#38bdf8; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                                <span>👥</span> 1. SCEGLI CHI DEVE PARLARE NEL DIALOGO (Clicca il tipo che preferisci):
+                            </div>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px;">
+                                <button type="button" id="btnCast_due_uomini" onclick="selezionaFormazioneRapida('due_uomini')" style="padding:10px 8px; border-radius:8px; font-size:12.5px; font-weight:900; cursor:pointer; background:#0f172a; border:1.5px solid #fbbf24; color:#fde047; transition:all 0.2s;">
+                                    👬 2 UOMINI
+                                </button>
+                                <button type="button" id="btnCast_tre_uomini" onclick="selezionaFormazioneRapida('tre_uomini')" style="padding:10px 8px; border-radius:8px; font-size:12.5px; font-weight:900; cursor:pointer; background:#0f172a; border:1.5px solid #38bdf8; color:#7dd3fc; transition:all 0.2s;">
+                                    👨‍👨‍👦 3 UOMINI
+                                </button>
+                                <button type="button" id="btnCast_due_donne" onclick="selezionaFormazioneRapida('due_donne')" style="padding:10px 8px; border-radius:8px; font-size:12.5px; font-weight:900; cursor:pointer; background:#0f172a; border:1.5px solid #f472b6; color:#fbcfe8; transition:all 0.2s;">
+                                    👭 2 DONNE
+                                </button>
+                                <button type="button" id="btnCast_tre_donne" onclick="selezionaFormazioneRapida('tre_donne')" style="padding:10px 8px; border-radius:8px; font-size:12.5px; font-weight:900; cursor:pointer; background:#0f172a; border:1.5px solid #c084fc; color:#e9d5ff; transition:all 0.2s;">
+                                    👩‍👩‍👧 3 DONNE
+                                </button>
+                                <button type="button" id="btnCast_misto" onclick="selezionaFormazioneRapida('misto')" style="padding:10px 8px; border-radius:8px; font-size:12.5px; font-weight:900; cursor:pointer; background:#0f172a; border:1.5px solid #10b981; color:#6ee7b7; transition:all 0.2s;">
+                                    👫 MISTO (Donna + Uomo)
+                                </button>
+                            </div>
+                            <input type="hidden" id="selectCastMode" value="misto">
+                        </div>
+
+                        <!-- 2. I CAMPI CON I NOMI BEN VISIBILI E COLORATI -->
+                        <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                                <div style="font-size:12px; font-weight:900; color:#fde047; text-transform:uppercase;">
+                                    🏷️ 2. NOMI DEI PERSONAGGI (Modifica il nome dentro il riquadro):
+                                </div>
+                                <span style="font-size:11px; color:#94a3b8;">Si aggiornano automaticamente anche nel testo sotto</span>
+                            </div>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <div id="boxColNome1" style="flex:1; min-width:140px;">
+                                    <label id="lblNomeP1" style="display:block; font-size:11.5px; font-weight:900; color:#38bdf8; margin-bottom:4px;">1° Personaggio:</label>
+                                    <input type="text" id="inputNomeP1" value="Ciro" oninput="cambiaNomePersonaggio(1, this.value)" style="width:100%; background:#040711; color:#fff; border:2px solid #38bdf8; border-radius:8px; padding:8px 12px; font-size:14px; font-weight:800; box-sizing:border-box;">
+                                </div>
+                                <div id="boxColNome2" style="flex:1; min-width:140px;">
+                                    <label id="lblNomeP2" style="display:block; font-size:11.5px; font-weight:900; color:#fbbf24; margin-bottom:4px;">2° Personaggio:</label>
+                                    <input type="text" id="inputNomeP2" value="Diego" oninput="cambiaNomePersonaggio(2, this.value)" style="width:100%; background:#040711; color:#fff; border:2px solid #fbbf24; border-radius:8px; padding:8px 12px; font-size:14px; font-weight:800; box-sizing:border-box;">
+                                </div>
+                                <div id="boxNomeP3" style="flex:1; min-width:140px;">
+                                    <label id="lblNomeP3" style="display:block; font-size:11.5px; font-weight:900; color:#34d399; margin-bottom:4px;">3° Personaggio:</label>
+                                    <input type="text" id="inputNomeP3" value="Marco" oninput="cambiaNomePersonaggio(3, this.value)" style="width:100%; background:#040711; color:#fff; border:2px solid #34d399; border-radius:8px; padding:8px 12px; font-size:14px; font-weight:800; box-sizing:border-box;">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label style="font-weight:800; color:#cbd5e1; font-size:13.5px;">Scrivi il Tuo Dialogo Personalizzato (Voci Umane Reali):</label>
+                            <span id="labelHintSeparatore" style="font-size:11.5px; color:#38bdf8; background:rgba(56,189,248,0.12); padding:3px 8px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">
+                                💡 Puoi scrivere QUALSIASI nome (es: Maria:, Paolo:, Dottore:, Roberto:)
+                            </span>
+                        </div>
+                        
+                        <!-- BOX EDITOR ATTIVO E TOTALMENTE MODIFICABILE -->
+                        <div style="position:relative;">
+                            <textarea id="editorCopioneText" rows="5" placeholder="Scrivi liberamente con qualsiasi nome, ad esempio:&#10;Maria: Hai controllato la terapia?&#10;Laura: Sì dottoressa, tutto pronto nel frigo.&#10;Oppure per uomini:&#10;Roberto: Matteo, hai verificato il furgone?&#10;Matteo: Tutto ok Roberto, revisione prenotata." style="width:100%; background:#040711; color:#fde047; border:2px solid #38bdf8; border-radius:10px; padding:14px; font-family:inherit; font-size:14px; line-height:1.55; resize:vertical; box-sizing:border-box; box-shadow:inset 0 2px 8px rgba(0,0,0,0.6);"></textarea>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px;">
+                                <div id="legendSpeakerCast" style="font-size:12px; color:#94a3b8; display:flex; gap:12px; flex-wrap:wrap;">
+                                    <span style="color:#f472b6;">👑 <strong>Libertà Totale:</strong> Riconosce qualsiasi nome inserito</span>
+                                    <span style="color:#38bdf8;">⚡ Assegna automaticamente voci distinte a ciascun personaggio</span>
+                                </div>
+                                <button type="button" onclick="caricaOriginaleInEditor()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#cbd5e1; padding:4px 10px; border-radius:6px; font-size:11.5px; font-weight:700; cursor:pointer;" title="Ricarica la frase originale esatta dentro questo riquadro per poterla modificare subito">
+                                    📋 Ricarica Testo Originale nel Riquadro
+                                </button>
+                            </div>
+                        </div>
+                        <div style="margin-top:6px; font-size:12px; color:#94a3b8;">
+                            ✨ <em>Massima Personalizzazione:</em> Scrivi qualsiasi nome seguito dai due punti (es: <code>Dottoressa:</code>, <code>Mario:</code>, <code>Chiara:</code>, <code>Giampiero:</code>). Il sistema assegnerà automaticamente una voce neurale umana dedicata a ciascuno!
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" onclick="anteprimaVoceEditor()" style="background:#0284c7; color:#fff; border:none; padding:9px 16px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                                🔊 Prova Ascolto Testo
+                            </button>
+                            <button type="button" onclick="fermaAudioSuite()" style="background:rgba(255,255,255,0.1); color:#fff; border:none; padding:9px 14px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+                                ⏹️ Stop
+                            </button>
+                        </div>
+
+                        <div style="display:flex; gap:8px;">
+                            
+                            <label style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700; color:#e2e8f0; cursor:pointer;" title="Riproduce un'atmosfera acustica lounge morbida durante la narrazione">
+                                <input type="checkbox" id="chkMusicaSottofondo" onchange="toggleMusicaSottofondo(this.checked)" style="accent-color:#ffd814; cursor:pointer;">
+                                <span>🎵 Sottofondo Soft</span>
+                            </label>
+                            <button type="button" onclick="ripristinaTestoOriginaleEditor()" style="background:rgba(239,68,68,0.18); border:1px solid #ef4444; color:#fca5a5; padding:9px 14px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer;">
+                                🔄 Ripristina
+                            </button>
+                            <button type="button" onclick="salvaTestoEditor()" style="background:#10b981; color:#fff; border:none; padding:9px 18px; border-radius:8px; font-size:13.5px; font-weight:900; cursor:pointer; box-shadow:0 3px 10px rgba(16,185,129,0.35);">
+                                💾 Salva Copione
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. FOOTER AZIONI -->
+                <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="chiudiRegiaVociModal()" style="background:#ffd814; color:#0f172a; border:none; padding:10px 24px; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer;">
+                        ✓ Fatto &amp; Chiudi Regia
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function playAudio(type) {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const actx = new AudioCtx();
+                const osc = actx.createOscillator();
+                const gain = actx.createGain();
+                osc.connect(gain);
+                gain.connect(actx.destination);
+                const now = actx.currentTime;
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.exponentialRampToValueAtTime(400, now + 0.05);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                }
+            } catch(e) {}
+        }
+        // =========================================================================
+        // LE 5 SCENE ILLUSTRATE DELLA SUITE COMPLETA
+        // =========================================================================
+        const SUITE_SCENES = [
+            {
+                id: 0,
+                title: 'Situazione 1: Il Portale Unificato & La Sicurezza degli Accessi',
+                audioUrl: '/assets/audio_suite/atto_1.mp3?v=186',
+                speaker: '👑 Dialogo: Isabella & Ciro (Voci Neurali HD)',
+                subtitle: '«Isabella: Ciro, come è nata l\'idea della Suite? — Ciro: Chi gestisce famiglia, lavoro e assistenza ha decine di foglietti sparsi. Con la Suite abbiamo unificato 8 programmi sotto un unico PIN, da PC e smartphone con QR Code!»',
+                linkedAppIdx: 0,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 40%, #1e293b 0%, #070b14 100%);">
+                        <!-- Logo Ufficiale Suite M.C. Centrale -->
+                        <g transform="translate(310, 70)">
+                            <circle cx="70" cy="70" r="72" fill="#ffffff" stroke="#ffd814" stroke-width="3" filter="drop-shadow(0 0 14px rgba(212,175,55,0.7))"/>
+                            <clipPath id="suiteBadgeClip">
+                                <circle cx="70" cy="70" r="70"/>
+                            </clipPath>
+                            <image href="/assets/img/suite_mc_official_full.png" x="0" y="0" width="140" height="140" preserveAspectRatio="xMidYMid slice" clip-path="url(#suiteBadgeClip)"/>
+                        </g>
+
+                        <!-- Titolo Portale -->
+                        <rect x="220" y="22" width="320" height="34" rx="10" fill="rgba(15,23,42,0.9)" stroke="#d4af37" stroke-width="2"/>
+                        <text x="380" y="44" font-size="13" font-weight="900" fill="#fde047" text-anchor="middle">SUITE GESTIONALE C. MILELLA</text>
+
+                        <!-- Raggi verso i Moduli -->
+                        <!-- 1. CareAssist -->
+                        <g transform="translate(60, 80)">
+                            <rect x="0" y="0" width="160" height="70" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+                            <text x="24" y="42" font-size="24">🩺</text>
+                            <text x="56" y="34" font-size="12" font-weight="900" fill="#7dd3fc">CareAssist Pro</text>
+                            <text x="56" y="52" font-size="10.5" fill="#cbd5e1">Clinica &amp; Terapie</text>
+                        </g>
+
+                        <!-- 2. Flotta Auto -->
+                        <g transform="translate(60, 180)">
+                            <rect x="0" y="0" width="160" height="70" rx="12" fill="#0f172a" stroke="#fbbf24" stroke-width="2"/>
+                            <text x="24" y="42" font-size="24">🚗</text>
+                            <text x="56" y="34" font-size="12" font-weight="900" fill="#fde047">Flotta Veicoli</text>
+                            <text x="56" y="52" font-size="10.5" fill="#cbd5e1">Bolli &amp; Revisioni</text>
+                        </g>
+
+                        <!-- 3. Inventario Attrezzi -->
+                        <g transform="translate(540, 80)">
+                            <rect x="0" y="0" width="160" height="70" rx="12" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                            <text x="24" y="42" font-size="24">🛠️</text>
+                            <text x="56" y="34" font-size="12" font-weight="900" fill="#fde047">Inventario</text>
+                            <text x="56" y="52" font-size="10.5" fill="#cbd5e1">Garage &amp; Cantiere</text>
+                        </g>
+
+                        <!-- 4. Ricettario & Famiglia -->
+                        <g transform="translate(540, 180)">
+                            <rect x="0" y="0" width="160" height="70" rx="12" fill="#0f172a" stroke="#ef4444" stroke-width="2"/>
+                            <text x="24" y="42" font-size="24">👨‍🍳</text>
+                            <text x="56" y="34" font-size="12" font-weight="900" fill="#fca5a5">Ricettario</text>
+                            <text x="56" y="52" font-size="10.5" fill="#cbd5e1">Ricette &amp; Spesa</text>
+                        </g>
+
+                        <!-- Barra Inferiore Sicurezza & QR -->
+                        <rect x="180" y="275" width="400" height="48" rx="14" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                        <text x="380" y="296" font-size="12" font-weight="900" fill="#6ee7b7" text-anchor="middle">🔐 ACCESSO CON PIN • 📱 QR CODE SMARTPHONE</text>
+                        <text x="380" y="313" font-size="11" fill="#cbd5e1" text-anchor="middle">I tuoi dati viaggiano sincronizzati e protetti</text>
+                    </svg>
+                `
+            },
+            {
+                id: 1,
+                title: 'Situazione 2: CareAssist Pro — Il Cuore Clinico & Assistenziale',
+                audioUrl: '/assets/audio_suite/atto_2.mp3?v=186',
+                speaker: '🩺 Dialogo: Isabella & Ciro (Voci Neurali HD)',
+                subtitle: '«Isabella: Ciro, perché CareAssist è il cuore clinico? — Ciro: Perché accoglie l\'operatore all\'avvio allineando le scorte dei giorni di assenza, protegge i farmaci assunti con blocco anti-doppia dose, calcola le capsule reali ed esporta la Scheda Terapeutica A4 con firma del Medico!»',
+                linkedAppIdx: 0,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 50%, #064e3b 0%, #091122 100%);">
+                        <!-- Riquadro 1: Terapie & Scorte -->
+                        <g transform="translate(35, 35)">
+                            <rect x="0" y="0" width="330" height="135" rx="16" fill="rgba(15,23,42,0.92)" stroke="#38bdf8" stroke-width="2.5"/>
+                            <text x="20" y="32" font-size="15" font-weight="900" fill="#38bdf8">💊 Terapie &amp; Scorte Condivise</text>
+                            <text x="20" y="62" font-size="12.5" fill="#e2e8f0">Scala compresse dallo stesso blister reale,</text>
+                            <text x="20" y="84" font-size="12.5" fill="#fef08a" font-weight="700">preavvisa la ricetta 10 giorni prima!</text>
+                            <text x="20" y="112" font-size="11.5" font-weight="800" fill="#7dd3fc">✓ Badge A Digiuno &amp; Giorni Alterni</text>
+                        </g>
+
+                        <!-- Riquadro 2: Kit Diabete & Insulina -->
+                        <g transform="translate(395, 35)">
+                            <rect x="0" y="0" width="330" height="135" rx="16" fill="rgba(15,23,42,0.92)" stroke="#10b981" stroke-width="2.5"/>
+                            <text x="20" y="32" font-size="15" font-weight="900" fill="#34d399">🩸 Kit Diabete &amp; Insulina</text>
+                            <text x="20" y="62" font-size="12.5" fill="#e2e8f0">Toujeo Solostar collegato al frigo,</text>
+                            <text x="20" y="84" font-size="12.5" fill="#a7f3d0" font-weight="700">Lancette e Strisce reattive scalate insieme!</text>
+                            <text x="20" y="112" font-size="11.5" font-weight="800" fill="#6ee7b7">❄️ Alert quando resta 1 sola penna</text>
+                        </g>
+
+                        <!-- Riquadro 3: Passaporto 118 QR & ASL -->
+                        <g transform="translate(35, 190)">
+                            <rect x="0" y="0" width="330" height="130" rx="16" fill="rgba(15,23,42,0.92)" stroke="#ef4444" stroke-width="2.5"/>
+                            <text x="20" y="32" font-size="15" font-weight="900" fill="#f87171">🚑 Passaporto 118 QR &amp; ASL</text>
+                            <text x="20" y="62" font-size="12.5" fill="#e2e8f0">Documento A4 salvavita da frigo con QR,</text>
+                            <text x="20" y="84" font-size="12.5" fill="#fecaca" font-weight="700">Lettera per visita specialistica &amp; Modulo ASL.</text>
+                            <text x="20" y="108" font-size="11.5" font-weight="800" fill="#fca5a5">🏥 Pronto per i soccorritori</text>
+                        </g>
+
+                        <!-- Riquadro 4: Protocollo Zero-Scuse & Cestino -->
+                        <g transform="translate(395, 190)">
+                            <rect x="0" y="0" width="330" height="130" rx="16" fill="rgba(15,23,42,0.92)" stroke="#fbbf24" stroke-width="2.5"/>
+                            <text x="20" y="32" font-size="15" font-weight="900" fill="#fde047">🛡️ Protocollo Zero-Scuse &amp; Cestino</text>
+                            <text x="20" y="62" font-size="12.5" fill="#e2e8f0">Volume forzato ≥ 75% per non perdere avvisi,</text>
+                            <text x="20" y="84" font-size="12.5" fill="#fef08a" font-weight="700">e Cestino 60 giorni per recuperare ogni errore!</text>
+                            <text x="20" y="108" font-size="11.5" font-weight="800" fill="#fde047">📋 Audit automatico Coordinatore</text>
+                        </g>
+                    </svg>
+                `
+            },
+            {
+                id: 2,
+                title: 'Situazione 3: Flotta Veicoli, Inventario Attrezzi & Logistica',
+                audioUrl: '/assets/audio_suite/atto_3.mp3?v=186',
+                speaker: '🚗 Dialogo: Isabella & Ciro (Voci Neurali HD)',
+                subtitle: '«Isabella: Come ci aiutano nella pratica? — Ciro: Con Flotta niente multe per revisioni e bolli scaduti; con l\'Inventario sai sempre dove sta ogni attrezzo; con Logistica segui spedizioni e magazzino!»',
+                linkedAppIdx: 1,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 50%, #1e293b 0%, #0b1120 100%);">
+                        <g transform="translate(30, 45)">
+                            <rect x="0" y="0" width="215" height="260" rx="16" fill="rgba(15,23,42,0.9)" stroke="#fbbf24" stroke-width="2.5"/>
+                            <text x="107" y="55" font-size="44" text-anchor="middle">🚗</text>
+                            <text x="107" y="95" font-size="15" font-weight="900" fill="#fde047" text-anchor="middle">Flotta Veicoli</text>
+                            <text x="107" y="130" font-size="12" fill="#cbd5e1" text-anchor="middle">Revisioni &amp; Bolli</text>
+                            <text x="107" y="152" font-size="12" fill="#cbd5e1" text-anchor="middle">Manutenzioni &amp; Spese</text>
+                            <text x="107" y="174" font-size="12" fill="#cbd5e1" text-anchor="middle">Rimborsi Km Auto</text>
+                            <rect x="20" y="205" width="175" height="30" rx="8" fill="#78350f"/>
+                            <text x="107" y="225" font-size="11" font-weight="900" fill="#fef08a" text-anchor="middle">ZERO MULTE</text>
+                        </g>
+
+                        <g transform="translate(272, 45)">
+                            <rect x="0" y="0" width="215" height="260" rx="16" fill="rgba(15,23,42,0.9)" stroke="#38bdf8" stroke-width="2.5"/>
+                            <text x="107" y="55" font-size="44" text-anchor="middle">🛠️</text>
+                            <text x="107" y="95" font-size="15" font-weight="900" fill="#7dd3fc" text-anchor="middle">Inventario Attrezzi</text>
+                            <text x="107" y="130" font-size="12" fill="#cbd5e1" text-anchor="middle">Catalogo con Foto</text>
+                            <text x="107" y="152" font-size="12" fill="#cbd5e1" text-anchor="middle">Posizione: Garage/Casa</text>
+                            <text x="107" y="174" font-size="12" fill="#cbd5e1" text-anchor="middle">Registro Prestiti</text>
+                            <rect x="20" y="205" width="175" height="30" rx="8" fill="#0369a1"/>
+                            <text x="107" y="225" font-size="11" font-weight="900" fill="#e0f2fe" text-anchor="middle">TROVI SUBITO TUTTO</text>
+                        </g>
+
+                        <g transform="translate(515, 45)">
+                            <rect x="0" y="0" width="215" height="260" rx="16" fill="rgba(15,23,42,0.9)" stroke="#a855f7" stroke-width="2.5"/>
+                            <text x="107" y="55" font-size="44" text-anchor="middle">📦</text>
+                            <text x="107" y="95" font-size="15" font-weight="900" fill="#d8b4fe" text-anchor="middle">Logistica Consegne</text>
+                            <text x="107" y="130" font-size="12" fill="#cbd5e1" text-anchor="middle">Spedizioni &amp; Ritiro</text>
+                            <text x="107" y="152" font-size="12" fill="#cbd5e1" text-anchor="middle">Tracciamento Pacchi</text>
+                            <text x="107" y="174" font-size="12" fill="#cbd5e1" text-anchor="middle">Controllo Magazzino</text>
+                            <rect x="20" y="205" width="175" height="30" rx="8" fill="#581c87"/>
+                            <text x="107" y="225" font-size="11" font-weight="900" fill="#f3e8ff" text-anchor="middle">MERCI SOTTO OCCHIO</text>
+                        </g>
+                    </svg>
+                `
+            },
+            {
+                id: 3,
+                title: 'Situazione 4: Il Ricettario di Famiglia, MedNutri & Progetto Salute',
+                audioUrl: '/assets/audio_suite/atto_4.mp3?v=186',
+                speaker: '🥗 Dialogo: Isabella & Ciro (Voci Neurali HD)',
+                subtitle: '«Isabella: Raccontami di cucina e benessere — Ciro: Il Ricettario prepara da solo la lista della spesa; MedNutri cura i piani alimentari clinici; Progetto Salute monitora pressione e acqua!»',
+                linkedAppIdx: 4,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 50%, #450a0a 0%, #09101f 100%);">
+                        <g transform="translate(30, 45)">
+                            <rect x="0" y="0" width="215" height="260" rx="16" fill="rgba(15,23,42,0.9)" stroke="#ef4444" stroke-width="2.5"/>
+                            <text x="107" y="55" font-size="44" text-anchor="middle">👨‍🍳</text>
+                            <text x="107" y="95" font-size="15" font-weight="900" fill="#fca5a5" text-anchor="middle">Il Ricettario</text>
+                            <text x="107" y="130" font-size="12" fill="#cbd5e1" text-anchor="middle">Ricette Personali</text>
+                            <text x="107" y="152" font-size="12" fill="#cbd5e1" text-anchor="middle">Ingredienti &amp; Dosi</text>
+                            <text x="107" y="174" font-size="12" fill="#cbd5e1" text-anchor="middle">Lista Spesa Automatica</text>
+                            <rect x="20" y="205" width="175" height="30" rx="8" fill="#7f1d1d"/>
+                            <text x="107" y="225" font-size="11" font-weight="900" fill="#fecaca" text-anchor="middle">SAPORI DI CASA</text>
+                        </g>
+
+                        <g transform="translate(272, 45)">
+                            <rect x="0" y="0" width="215" height="260" rx="16" fill="rgba(15,23,42,0.9)" stroke="#16a34a" stroke-width="2.5"/>
+                            <text x="107" y="55" font-size="44" text-anchor="middle">🥗</text>
+                            <text x="107" y="95" font-size="15" font-weight="900" fill="#86efac" text-anchor="middle">MedNutri Pro</text>
+                            <text x="107" y="130" font-size="12" fill="#cbd5e1" text-anchor="middle">Piani Alimentari</text>
+                            <text x="107" y="152" font-size="12" fill="#cbd5e1" text-anchor="middle">Valori Nutrizionali</text>
+                            <text x="107" y="174" font-size="12" fill="#cbd5e1" text-anchor="middle">Diete Cliniche</text>
+                            <rect x="20" y="205" width="175" height="30" rx="8" fill="#14532d"/>
+                            <text x="107" y="225" font-size="11" font-weight="900" fill="#bbf7d0" text-anchor="middle">NUTRIZIONE SU MISURA</text>
+                        </g>
+
+                        <g transform="translate(515, 45)">
+                            <rect x="0" y="0" width="215" height="260" rx="16" fill="rgba(15,23,42,0.9)" stroke="#f43f5e" stroke-width="2.5"/>
+                            <text x="107" y="55" font-size="44" text-anchor="middle">❤️</text>
+                            <text x="107" y="95" font-size="15" font-weight="900" fill="#fda4af" text-anchor="middle">Progetto Salute</text>
+                            <text x="107" y="130" font-size="12" fill="#cbd5e1" text-anchor="middle">Pressione &amp; Parametri</text>
+                            <text x="107" y="152" font-size="12" fill="#cbd5e1" text-anchor="middle">Bicchieri d'Acqua</text>
+                            <text x="107" y="174" font-size="12" fill="#cbd5e1" text-anchor="middle">Passi &amp; Attività Fisica</text>
+                            <rect x="20" y="205" width="175" height="30" rx="8" fill="#881337"/>
+                            <text x="107" y="225" font-size="11" font-weight="900" fill="#fecdd3" text-anchor="middle">BENESSERE H24</text>
+                        </g>
+                    </svg>
+                `
+            },
+            {
+                id: 4,
+                title: 'Situazione 5: La Sicurezza Totale — Cloud, USB e Partner Antigravity AI',
+                audioUrl: '/assets/audio_suite/atto_5.mp3?v=186',
+                speaker: '👑 Dialogo: Isabella & Ciro (Voci Neurali HD)',
+                subtitle: '«Isabella: Cosa garantisce che i dati siano sempre al sicuro? — Ciro: Doppia protezione: Cloud per accedere ovunque e copia USB fisica con un clic. E con Antigravity AI, ogni nuova idea diventa realtà!»',
+                linkedAppIdx: 7,
+                svgRender: () => `
+                    <svg viewBox="0 0 760 350" style="width:100%; height:350px; display:block; background:radial-gradient(circle at 50% 40%, #064e3b 0%, #070b14 100%);">
+                        <rect x="180" y="30" width="400" height="290" rx="20" fill="#0f172a" stroke="#d4af37" stroke-width="3"/>
+                        <circle cx="380" cy="80" r="32" fill="rgba(212,175,55,0.2)" stroke="#d4af37" stroke-width="2"/>
+                        <text x="380" y="92" font-size="34" text-anchor="middle">💾</text>
+
+                        <text x="380" y="138" font-size="15" font-weight="900" fill="#fde047" text-anchor="middle">DOPPIA COPIA DI SICUREZZA CERTIFICATA</text>
+                        <text x="380" y="162" font-size="12.5" fill="#cbd5e1" text-anchor="middle">1. Cloud Render per consultazione da ogni luogo</text>
+                        <text x="380" y="184" font-size="12.5" fill="#cbd5e1" text-anchor="middle">2. Copia fisica su Chiavetta USB sempre aggiornata</text>
+
+                        <rect x="220" y="205" width="320" height="38" rx="10" fill="#065f46" stroke="#34d399" stroke-width="1.5"/>
+                        <text x="380" y="229" font-size="12.5" font-weight="900" fill="#6ee7b7" text-anchor="middle">🤝 POTENZIATO CON ANTIGRAVITY AI</text>
+
+                        <text x="380" y="272" font-size="12" fill="#94a3b8" text-anchor="middle">Ogni idea o perfezionamento diventa realtà in pochi minuti.</text>
+                        <text x="380" y="292" font-size="13" font-weight="900" fill="#ffffff" text-anchor="middle">Questa è la Suite Gestionale di Ciro Milella.</text>
+                    </svg>
+                `
+            }
+        ];
+
+        // =========================================================================
+        // LE 8 SCHEDE APPLICATIVE STILE AMAZON (CON "PER SAPERNE DI PIÙ")
+        // =========================================================================
+        const SUITE_APPS = [
+            {
+                idx: 0,
+                icon: '🩺',
+                name: 'CareAssist Pro',
+                shortTitle: '1. CareAssist Pro — Assistenza Domiciliare & Terapie H24',
+                badge: 'CLINICA & ASSISTENZA',
+                audioUrl: '/assets/audio_suite/app_1.mp3?v=189',
+                summary: 'Diario socio-sanitario condiviso, avvisi vocali delle terapie ad alto volume protetto, scorte intelligenti dei farmaci, gestione dedicata del diabete e scheda salvavita 118 sempre a portata di mano.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #38bdf8;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#7dd3fc; font-size:13px;">🩺 DIARIO SOCIO-SANITARIO H24</strong>
+                            <span style="background:#0284c7; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">VOLUME ≥ 70% ATTIVO</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Allarmi sonori a prova di disattivazione involontaria<br>
+                            • Sincronizzazione Smartphone ↔ PC Direzione in 2 secondi<br>
+                            • Kit Diabete Toujeo Solostar + Strisce e Pungidito in frigo<br>
+                            • Passaporto 118 con QR Code e Cestino di sicurezza per 60 giorni
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Si apre sul PC dell\'ufficio o sullo smartphone dell\'operatore a domicilio.',
+                    'L\'operatore tocca «✓ Assunto Oggi» e in 2 secondi il PC in sede si aggiorna, scala la compressa e calcola quando richiedere la nuova ricetta medica.'
+                ],
+                benefits: [
+                    'Nessun rischio di dimenticare una terapia o di somministrare una doppia dose.',
+                    'Famiglie e medici hanno sempre una documentazione clinica A4 chiara e autorevole.'
+                ]
+            },
+            {
+                idx: 1,
+                icon: '🚗',
+                name: 'Flotta Veicoli & Spese',
+                shortTitle: '2. Flotta Veicoli & Spese — Zero Multe e Controllo Costi',
+                badge: 'GESTIONE MEZZI',
+                audioUrl: '/assets/audio_suite/app_2.mp3',
+                summary: 'Monitoraggio scadenze di revisioni, bolli e assicurazioni, tagliandi, manutenzioni, rifornimenti e rimborsi chilometrici aziendali.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #fbbf24;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#fde047; font-size:13px;">🚗 FLOTTA VEICOLI &amp; SPESE STILE SEGUGIO</strong>
+                            <span style="background:#78350f; color:#fef08a; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">MODIFICA &amp; RICALCOLO LIVE</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Box contabili: Rimborsi ACI, Carburante, Officina e Utile Netto<br>
+                            • Scheda spesa dettagliata con modifica e cancellazione istantanea<br>
+                            • Scadenze Bollo, Revisione e Assicurazione con semaforo verde/giallo/rosso<br>
+                            • Barra di navigazione universale per tornare al Menù con un tocco
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Registri targa e scadenze del veicolo una volta sola.',
+                    'Il programma calcola i giorni mancanti e colora di rosso o arancione i veicoli vicini alla scadenza.'
+                ],
+                benefits: [
+                    'Evita sanzioni stradali per revisioni scadute e fermi macchina imprevisti.',
+                    'Tieni sotto controllo ogni euro speso per carburante e riparazioni.'
+                ]
+            },
+            {
+                idx: 2,
+                icon: '🛠️',
+                name: 'Inventario Attrezzi',
+                shortTitle: '3. Inventario Attrezzi — Catalogo Fotografico & Prestiti',
+                badge: 'MAGAZZINO & STRUMENTI',
+                audioUrl: '/assets/audio_suite/app_3.mp3',
+                summary: 'Catalogo fotografico ad alta definizione degli attrezzi, posizione esatta tra casa, garage e furgone, e tracciamento dei prestiti ad amici e colleghi.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #f59e0b;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#fde047; font-size:13px;">🛠️ CATALOGO ATTREZZI CON FOTO</strong>
+                            <span style="background:#b45309; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">RICERCA VELOCE</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Foto nitida di ogni strumento da lavoro e da fai-da-te<br>
+                            • Collocazione esatta: Banco 1, Cantiere, Garage o Cassetta<br>
+                            • Tracciabilità prestiti con nome del destinatario e data<br>
+                            • Ricerca istantanea in 1 secondo anche da cellulare
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Scatti la foto con lo smartphone o carichi l\'immagine dal PC.',
+                    'Indichi dove si trova lo strumento e, se lo presti a qualcuno, scrivi a chi è stato affidato.'
+                ],
+                benefits: [
+                    'Non perdi più ore a cercare un attrezzo e non ricompri doppioni inutili.',
+                    'Sai sempre a chi hai prestato trapano, saldatrice o chiavi inglesi.'
+                ]
+            },
+            {
+                idx: 3,
+                icon: '📦',
+                name: 'Logistica Consegne',
+                shortTitle: '4. Logistica Consegne — Spedizioni, Ordini & Merci',
+                badge: 'LOGISTICA & MAGAZZINO',
+                audioUrl: '/assets/audio_suite/app_4.mp3',
+                summary: 'Gestione flussi di magazzino, spedizioni in partenza, tracciamento pacchi e monitoraggio delle consegne ai clienti o ai cantieri.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #a855f7;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#d8b4fe; font-size:13px;">📦 FLUSSO SPEDIZIONI &amp; CONSEGNE</strong>
+                            <span style="background:#581c87; color:#f3e8ff; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">TRACKING ATTIVO</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Pianificazione consegne con indirizzi e orari concordati<br>
+                            • Stato spedizione: In Lavorazione, In Viaggio, Consegnato<br>
+                            • Registro giacenze e carichi di magazzino principale<br>
+                            • Integrazione rapida con note di trasporto e DDT
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Inserisci il numero d\'ordine e la destinazione della merce.',
+                    'L\'operatore o l\'autista visualizza lo stato e conferma la consegna con un clic.'
+                ],
+                benefits: [
+                    'Controllo completo sulle merci e nessun ordine disperso nel tragitto.',
+                    'Comunicazione chiara e puntuale con i clienti e con i magazzinieri.'
+                ]
+            },
+            {
+                idx: 4,
+                icon: '👨‍🍳',
+                name: 'Il Ricettario di Famiglia',
+                shortTitle: '5. Il Ricettario di Famiglia — Tradizione & Lista Spesa',
+                badge: 'CASA & CUCINA',
+                audioUrl: '/assets/audio_suite/app_5.mp3',
+                summary: 'Archivio delle ricette di famiglia tramandate nel tempo, ingredienti dettagliati, dosi per persone e generazione automatica della lista della spesa.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #ef4444;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#fca5a5; font-size:13px;">👨‍🍳 ARCHIVIO SEGRETO DELLE RICETTE</strong>
+                            <span style="background:#7f1d1d; color:#fecaca; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">LISTA SPESA RAPIDA</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Custodia sicura delle ricette tradizionali e piatti speciali<br>
+                            • Foto dei piatti finiti e passaggi passo-passo<br>
+                            • Calcolo automatico della lista degli ingredienti da acquistare<br>
+                            • Consultabile comodamente dallo smartphone tra i banchi del supermercato
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Selezioni la ricetta che vuoi preparare per pranzo o per cena.',
+                    'Il programma estrae tutti gli ingredienti mancanti e crea la lista della spesa pronta da spuntare.'
+                ],
+                benefits: [
+                    'Le ricette preziose della famiglia non andranno mai perse su fogli volanti.',
+                    'Fai la spesa senza dimenticare ingredienti essenziali.'
+                ]
+            },
+            {
+                idx: 5,
+                icon: '🥗',
+                name: 'MedNutri Pro',
+                shortTitle: '6. MedNutri Pro — Piani Nutrizionali Clinici Personalizzati',
+                badge: 'SALUTE & NUTRIZIONE',
+                audioUrl: '/assets/audio_suite/app_6.mp3',
+                summary: 'Piattaforma avanzata per la gestione della nutrizione clinica, bilanciamento dei macronutrienti e regimi dietetici per patologie specifiche.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #16a34a;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#86efac; font-size:13px;">🥗 PIANI NUTRIZIONALI SU MISURA</strong>
+                            <span style="background:#14532d; color:#bbf7d0; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">APPROCCIO CLINICO</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Piani alimentari personalizzati per diabete, fegato e reni<br>
+                            • Calcolo calorie, carboidrati, proteine e lipidi giornalieri<br>
+                            • Schemi settimanali chiari e stampabili per il paziente<br>
+                            • Monitoraggio dell\'aderenza alla dieta nel tempo
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Si imposta il profilo nutrizionale e le eventuali patologie da considerare.',
+                    'Il programma struttura il piano settimanale giorno per giorno con indicazioni precise.'
+                ],
+                benefits: [
+                    'Supporto concreto per mangiare bene secondo le reali esigenze di salute.',
+                    'Chiarezza totale per pazienti e famiglie che devono seguire una dieta medica.'
+                ]
+            },
+            {
+                idx: 6,
+                icon: '❤️',
+                name: 'Progetto Salute',
+                shortTitle: '7. Progetto Salute — Parametri Vitali & Benessere Quotidiano',
+                badge: 'BENESSERE & VITALI',
+                audioUrl: '/assets/audio_suite/app_7.mp3',
+                summary: 'Tracciamento della pressione sanguigna, frequenza cardiaca, idratazione (bicchieri d\'acqua) e attività fisica per restare in forma ogni giorno.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #f43f5e;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#fda4af; font-size:13px;">❤️ MONITORAGGIO VITALI &amp; FITNESS</strong>
+                            <span style="background:#881337; color:#fecdd3; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">DIARIO GIORNALIERO</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Registrazione rapida di Massima, Minima e Pulsazioni<br>
+                            • Contatore bicchieri d\'acqua con promemoria idratazione<br>
+                            • Diario dei passi camminati e delle uscite all\'aperto<br>
+                            • Grafici visivi dell\'andamento della salute nel mese
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Inserisci i valori della misurazione dopo aver provato la pressione.',
+                    'Tocchi i bicchieri d\'acqua ogni volta che bevi per raggiungere l\'obiettivo giornaliero.'
+                ],
+                benefits: [
+                    'Il medico curante può vedere l\'andamento reale della pressione senza fogli sparsi.',
+                    'Ti aiuta a mantenere sane abitudini quotidiane di bere e muoverti.'
+                ]
+            },
+            {
+                idx: 7,
+                icon: '🎰',
+                name: 'Progetto Gioco',
+                shortTitle: '8. Progetto Gioco — Statistiche & Bilancio Consapevole',
+                badge: 'STATISTICHE & BILANCIO',
+                audioUrl: '/assets/audio_suite/app_8.mp3',
+                summary: 'Archivio storico delle estrazioni di SuperEnalotto e Gratta & Vinci con calcolo del bilancio netto tra spese e vincite per giocare con la testa.',
+                visualHtml: `
+                    <div style="background:#0f172a; color:#fff; border-radius:12px; padding:14px; border:2px solid #ca8a04;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <strong style="color:#fef08a; font-size:13px;">🎰 MONITORAGGIO ESTRAZIONI &amp; SPESA</strong>
+                            <span style="background:#713f12; color:#fef08a; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:800;">GIOCO RESPONSABILE</span>
+                        </div>
+                        <div style="font-size:12.5px; line-height:1.4; color:#cbd5e1;">
+                            • Frequenze numeriche, ritardi e combinazioni storiche<br>
+                            • Bilancio trasparente: Speso vs Incassato sempre visibile<br>
+                            • Statistiche di probabilità reale per non farsi illusioni<br>
+                            • Strumento per vivere il gioco come semplice svago consapevole
+                        </div>
+                    </div>
+                `,
+                howToUse: [
+                    'Registri le giocate effettuate e le eventuali vincite realizzate.',
+                    'Il modulo aggiorna all\'istante il saldo netto complessivo.'
+                ],
+                benefits: [
+                    'Trasparenza totale sul denaro speso per evitare brutte sorprese.',
+                    'Approccio matematico e divertimento senza eccessi.'
+                ]
+            }
+        ];
+
+        // =========================================================================
+        // STATO DEL PLAYER MULTIMEDIALE CON AUDIO NEURALI STUDIO MP3 (ISABELLA & CIRO)
+        // E GESTIONE VOCI IN COMPLETA AUTONOMIA (VOLUME, VELOCITÀ, VOCI SINTETICHE/NEURALI, COPIONE)
+        // =========================================================================
+        let viewMode = 'film'; // 'film' | 'app'
+        let currentSceneIdx = 0;
+        let currentAppIdx = 0;
+        let isFilmPlaying = false;
+        let suiteAudio = new Audio();
+        suiteAudio.preload = 'auto';
+
+        // Preferenze Audio: VOCI UMANE REALI IN STUDIO DI DEFAULT E PERMANENTI
+        localStorage.setItem('milella_suite_voicemode', 'neural');
+        let audioConfig = {
+            mode: 'neural', // ESCLUSIVAMENTE Voci Umane Reali MP3 Studio
+            speed: parseFloat(localStorage.getItem('milella_suite_audiospeed')) || 1.0,
+            volume: parseInt(localStorage.getItem('milella_suite_volume')) || 85,
+            muted: localStorage.getItem('milella_suite_muted') === 'true',
+            browserVoice: ''
+        };
+
+        // Cache dei copioni personalizzati dall'utente
+        let customCopioni = {};
+        try {
+            const saved = localStorage.getItem('milella_suite_custom_copioni');
+            if (saved) customCopioni = JSON.parse(saved);
+        } catch(e) {}
+
+        function applicaAudioConfig() {
+            suiteAudio.playbackRate = audioConfig.speed;
+            suiteAudio.volume = audioConfig.muted ? 0 : (audioConfig.volume / 100);
+
+            // Aggiorna indicatore Vocale interattivo nella barra
+            const subIcon = document.getElementById('subbarVoiceIcon');
+            const subLbl = document.getElementById('subbarVoiceLabel');
+            if (subLbl) {
+                if (audioConfig.mode === 'silent' || audioConfig.muted) {
+                    if (subIcon) subIcon.textContent = '🔇';
+                    subLbl.textContent = 'Audio Muto (Solo Sottotitoli)';
+                } else if (audioConfig.mode === 'browser') {
+                    if (subIcon) subIcon.textContent = '🗣️';
+                    subLbl.textContent = 'Voce Sintetica Browser (' + audioConfig.speed + 'x)';
+                } else {
+                    if (subIcon) subIcon.textContent = '🔊';
+                    subLbl.textContent = 'Voci Studio HD Neurali (' + audioConfig.speed + 'x)';
+                }
+            }
+            const modalSel = document.getElementById('modalSelectVoiceMode');
+            if (modalSel) modalSel.value = audioConfig.mode;
+            const modalSpeed = document.getElementById('modalSelectAudioSpeed');
+            if (modalSpeed) modalSpeed.value = audioConfig.speed.toString();
+
+            const selMode = document.getElementById('selectVoiceMode');
+            if (selMode) selMode.value = audioConfig.mode;
+            const selSpeed = document.getElementById('selectAudioSpeed');
+            if (selSpeed) selSpeed.value = audioConfig.speed.toString();
+            const sliderVol = document.getElementById('sliderSuiteVolume');
+            if (sliderVol) sliderVol.value = audioConfig.volume;
+            const lblVol = document.getElementById('labelVolumeVal');
+            if (lblVol) lblVol.textContent = (audioConfig.muted ? '0%' : audioConfig.volume + '%');
+            const lblIcon = document.getElementById('labelVolumeIcon');
+            if (lblIcon) lblIcon.textContent = audioConfig.muted || audioConfig.volume === 0 ? '🔇' : (audioConfig.volume > 50 ? '🔊' : '🔉');
+            const btnMute = document.getElementById('btnToggleMute');
+            if (btnMute) {
+                btnMute.style.background = audioConfig.muted ? '#ef4444' : 'rgba(255,255,255,0.1)';
+                btnMute.textContent = audioConfig.muted ? 'Riattiva' : 'Muto';
+            }
+        }
+
+        function cambiaVoiceMode(val) {
+            audioConfig.mode = val;
+            localStorage.setItem('milella_suite_voicemode', val);
+            fermaAudioSuite();
+            if (isFilmPlaying) avviaRiproduzioneFilm();
+        }
+
+        function cambiaAudioSpeed(val) {
+            audioConfig.speed = parseFloat(val);
+            localStorage.setItem('milella_suite_audiospeed', val);
+            suiteAudio.playbackRate = audioConfig.speed;
+        }
+
+        function cambiaSuiteVolume(val) {
+            audioConfig.volume = parseInt(val);
+            audioConfig.muted = false;
+            localStorage.setItem('milella_suite_volume', val);
+            localStorage.setItem('milella_suite_muted', 'false');
+            applicaAudioConfig();
+        }
+
+        function toggleMuteAudio() {
+            audioConfig.muted = !audioConfig.muted;
+            localStorage.setItem('milella_suite_muted', audioConfig.muted ? 'true' : 'false');
+            applicaAudioConfig();
+        }
+
+        function fermaAudioSuite() {
+            try {
+                suiteAudio.pause();
+                suiteAudio.onended = null;
+                suiteAudio.ontimeupdate = null;
+            } catch (e) {}
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // =========================================================================
+        // VOCI SINTETICHE LOCALI DEL BROWSER (SPEECH SYNTHESIS)
+        // =========================================================================
+        let availableBrowserVoices = [];
+        function popolaListaVociBrowser() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            if (!voices || voices.length === 0) return;
+            let itVoices = voices.filter(v => v.lang.startsWith('it'));
+            // Ordina mettendo per prime le voci Umane Neurali / Naturali di Microsoft Edge e Google
+            itVoices.sort((a, b) => {
+                const aName = a.name.toLowerCase();
+                const bName = b.name.toLowerCase();
+                const aIsNatural = aName.includes('natural') || aName.includes('online') || aName.includes('neural') || aName.includes('google');
+                const bIsNatural = bName.includes('natural') || bName.includes('online') || bName.includes('neural') || bName.includes('google');
+                if (aIsNatural && !bIsNatural) return -1;
+                if (!aIsNatural && bIsNatural) return 1;
+                return 0;
+            });
+            availableBrowserVoices = itVoices.length > 0 ? itVoices : voices;
+
+            const sel = document.getElementById('selectBrowserVoiceList');
+            if (!sel) return;
+            sel.innerHTML = '';
+            availableBrowserVoices.forEach((v, idx) => {
+                const opt = document.createElement('option');
+                opt.value = v.name;
+                opt.textContent = `${v.name} (${v.lang})`;
+                if (audioConfig.browserVoice && v.name === audioConfig.browserVoice) {
+                    opt.selected = true;
+                } else if (!audioConfig.browserVoice && v.lang.startsWith('it')) {
+                    opt.selected = true;
+                }
+                sel.appendChild(opt);
+            });
+        }
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = popolaListaVociBrowser;
+        }
+
+        function salvaBrowserVoiceScelta(name) {
+            audioConfig.browserVoice = name;
+            localStorage.setItem('milella_suite_browservoice', name);
+        }
+
+        // DISTRUZIONE TOTALE SINTESI VOCALE ROBOTICA
+        function parlaConBrowserSpeech(testo, onEndCallback) {
+            console.log('[AUDIO] Sintesi vocale artificiale disattivata in favore delle Voci Umane Reali MP3 Studio.');
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            if (onEndCallback) setTimeout(onEndCallback, 1000);
+        }
+
+        function ottieniTestoAttualeScena(sceneIdx) {
+            const key = 'scene-' + sceneIdx;
+            if (customCopioni[key]) return customCopioni[key];
+            const sc = SUITE_SCENES[sceneIdx] || SUITE_SCENES[0];
+            return sc.subtitle;
+        }
+
+        function ottieniTestoAttualeApp(appIdx) {
+            const key = 'app-' + appIdx;
+            if (customCopioni[key]) return customCopioni[key];
+            const app = SUITE_APPS[appIdx] || SUITE_APPS[0];
+            return app.summary;
+        }
+
+        function evidenziaThumbnail(idAttivo) {
+            document.querySelectorAll('.amz-thumb-btn').forEach(b => b.classList.remove('active'));
+            const el = document.getElementById(idAttivo);
+            if (el) el.classList.add('active');
+        }
+
+        function attivaModalitaFilm(sceneIdx = 0, autoPlay = false) {
+            viewMode = 'film';
+            currentSceneIdx = sceneIdx;
+            evidenziaThumbnail('thumb-video');
+            renderFilmStage();
+            if (autoPlay) {
+                avviaRiproduzioneFilm();
+            } else {
+                fermaAudioSuite();
+                isFilmPlaying = false;
+                document.getElementById('btnPlayFilm').innerHTML = '▶️ Avvia Presentazione';
+            }
+        }
+
+        function renderFilmStage() {
+            const sc = SUITE_SCENES[currentSceneIdx] || SUITE_SCENES[0];
+            document.getElementById('viewerTopTitle').textContent = `🎬 SUITE GESTIONALE C. MILELLA — ${sc.title.toUpperCase()}`;
+            document.getElementById('speakerBadge').textContent = sc.speaker;
+            aggiornaSottotitoloKaraoke(ottieniTestoAttualeScena(currentSceneIdx), 0);
+            document.getElementById('filmTimeLabel').textContent = `Situazione ${currentSceneIdx + 1}/5`;
+
+            const container = document.getElementById('mainStageContainer');
+            container.innerHTML = sc.svgRender();
+        }
+
+        // FUNZIONE TELEPROMPTER / KARAOKE SOTTOTITOLI
+        
+        // TEMPLATE DIALOGHI RAPIDI PER PRESENTAZIONI DI SUCCESSO
+        const TEMPLATE_DIALOGHI = {
+            sanita: 'Isabella: Dottoressa Elsa, abbiamo aggiornato il diario clinico di Mario? — Elsa: Sì Isabella, parametri glicemici stabili e scorta predittiva dell\'insulina già confermata nel frigo. — Isabella: Ottimo, così abbiamo azzerato ogni rischio di errore!',
+            tre_donne: 'Isabella: Benvenute al passaggio consegne del reparto. — Elsa: Tutti i parametri dei pazienti del settore B sono allineati sul Cloud. — Elena: Perfetto, procedo con la somministrazione terapeutica con controllo vocale automatico!',
+            due_uomini: 'Ciro: Diego, hai verificato la scadenza della revisione del furgone e il livello carburante? — Diego: Controllato Ciro: la Suite mi segnalava cinque giorni alla scadenza, revisione prenotata e tagliando registrato!',
+            tre_uomini: 'Ciro: Ragazzi, confermiamo lo stato dei backup della giornata? — Diego: Copia fisica su chiavetta USB completata con un clic e crittografata. — Marco: Allineamento con il server Cloud di Render attivo al cento percento!',
+            sicurezza: 'Isabella: Cosa garantisce che i dati dell\'azienda siano sempre al sicuro da guasti o attacchi? — Ciro: La protezione a doppio livello: copia Cloud per lavorare ovunque e backup istantaneo su chiavetta USB fisica con un solo clic. — Isabella: Massima serenità per titolare e collaboratori!'
+        };
+
+        let currentCastMode = localStorage.getItem('milella_suite_cast_mode') || 'tre_uomini';
+        let nomiPersonaggi = { p1: 'Isabella', p2: 'Elsa', p3: 'Elena' };
+
+        function selezionaFormazioneRapida(mode) {
+            playAudio('click');
+            currentCastMode = mode;
+            const castInput = document.getElementById('selectCastMode');
+            if (castInput) castInput.value = mode;
+
+            // Evidenzia con massima visibilità il pulsante cliccato
+            ['due_uomini', 'tre_uomini', 'due_donne', 'tre_donne', 'misto'].forEach(m => {
+                const b = document.getElementById('btnCast_' + m);
+                if (b) {
+                    if (m === mode) {
+                        b.style.boxShadow = '0 0 25px #38bdf8, inset 0 0 12px #38bdf8';
+                        b.style.border = '3px solid #38bdf8';
+                        b.style.background = '#0284c7';
+                        b.style.color = '#ffffff';
+                        b.style.transform = 'scale(1.08)';
+                    } else {
+                        b.style.boxShadow = 'none';
+                        b.style.border = '1px solid rgba(255,255,255,0.2)';
+                        b.style.background = '#0f172a';
+                        b.style.color = '#94a3b8';
+                        b.style.transform = 'scale(1)';
+                    }
+                }
+            });
+
+            const p1 = document.getElementById('inputNomeP1');
+            const p2 = document.getElementById('inputNomeP2');
+            const p3 = document.getElementById('inputNomeP3');
+            const box3 = document.getElementById('boxNomeP3');
+            const l1 = document.getElementById('lblNomeP1');
+            const l2 = document.getElementById('lblNomeP2');
+            const l3 = document.getElementById('lblNomeP3');
+            const txtArea = document.getElementById('editorCopioneText');
+
+            if (mode === 'tre_uomini') {
+                if (p1) p1.value = 'Ciro';
+                if (p2) p2.value = 'Diego';
+                if (p3) p3.value = 'Marco';
+                if (l1) l1.textContent = '1° Uomo:';
+                if (l2) l2.textContent = '2° Uomo:';
+                if (l3) l3.textContent = '3° Uomo:';
+                if (box3) box3.style.display = 'block';
+                if (txtArea) txtArea.value = 'Ciro: Diego, hai verificato la scadenza della revisione del furgone? — Diego: Controllato Ciro, tutto registrato nel gestionale. — Marco: Confermato, attrezzi caricati e pronti a partire!';
+            } else if (mode === 'due_uomini') {
+                if (p1) p1.value = 'Ciro';
+                if (p2) p2.value = 'Diego';
+                if (l1) l1.textContent = '1° Uomo:';
+                if (l2) l2.textContent = '2° Uomo:';
+                if (box3) box3.style.display = 'none';
+                if (txtArea) txtArea.value = 'Ciro: Diego, hai verificato la scadenza della revisione del furgone e il livello carburante? — Diego: Controllato Ciro: revisione prenotata e tagliando registrato!';
+            } else if (mode === 'tre_donne') {
+                if (p1) p1.value = 'Isabella';
+                if (p2) p2.value = 'Elsa';
+                if (p3) p3.value = 'Elena';
+                if (l1) l1.textContent = '1ª Donna:';
+                if (l2) l2.textContent = '2ª Donna:';
+                if (l3) l3.textContent = '3ª Donna:';
+                if (box3) box3.style.display = 'block';
+                if (txtArea) txtArea.value = 'Isabella: Dottoressa Elsa, abbiamo aggiornato il diario clinico di Mario? — Elsa: Sì Isabella, glicemia stabile e insulina confermata in frigo. — Elena: Perfetto, procedo con la somministrazione terapeutica!';
+            } else if (mode === 'due_donne') {
+                if (p1) p1.value = 'Isabella';
+                if (p2) p2.value = 'Elsa';
+                if (l1) l1.textContent = '1ª Donna:';
+                if (l2) l2.textContent = '2ª Donna:';
+                if (box3) box3.style.display = 'none';
+                if (txtArea) txtArea.value = 'Isabella: Dottoressa Elsa, abbiamo aggiornato il diario clinico di Mario? — Elsa: Sì Isabella, parametri glicemici stabili e scorta insulina già confermata nel frigo!';
+            } else {
+                if (p1) p1.value = 'Isabella';
+                if (p2) p2.value = 'Ciro';
+                if (l1) l1.textContent = '1ª Voce (Donna):';
+                if (l2) l2.textContent = '2ª Voce (Uomo):';
+                if (box3) box3.style.display = 'none';
+                if (txtArea) txtArea.value = 'Isabella: Ciro, come è nata l\'idea della Suite? — Ciro: Chi gestisce famiglia, lavoro e assistenza ha decine di foglietti sparsi. Con la Suite abbiamo unificato 8 programmi sotto un unico PIN!';
+            }
+
+            nomiPersonaggi.p1 = p1 ? p1.value : 'Ciro';
+            nomiPersonaggi.p2 = p2 ? p2.value : 'Diego';
+            nomiPersonaggi.p3 = p3 ? p3.value : 'Marco';
+            try { salvaTestoEditor(); } catch(e){}
+        }
+
+        function cambiaCastMode(mode) {
+            playAudio('click');
+            currentCastMode = mode;
+            const p1 = document.getElementById('inputNomeP1');
+            const p2 = document.getElementById('inputNomeP2');
+            const p3 = document.getElementById('inputNomeP3');
+            const box3 = document.getElementById('boxNomeP3');
+            const l1 = document.getElementById('lblNomeP1');
+            const l2 = document.getElementById('lblNomeP2');
+            const l3 = document.getElementById('lblNomeP3');
+
+            if (mode === 'due_donne') {
+                if (p1) p1.value = 'Isabella';
+                if (p2) p2.value = 'Elsa';
+                if (l1) l1.textContent = '1ª Donna:';
+                if (l2) l2.textContent = '2ª Donna:';
+                if (box3) box3.style.display = 'none';
+            } else if (mode === 'tre_donne') {
+                if (p1) p1.value = 'Isabella';
+                if (p2) p2.value = 'Elsa';
+                if (p3) p3.value = 'Elena';
+                if (l1) l1.textContent = '1ª Donna:';
+                if (l2) l2.textContent = '2ª Donna:';
+                if (l3) l3.textContent = '3ª Donna:';
+                if (box3) box3.style.display = 'block';
+            } else if (mode === 'due_uomini') {
+                if (p1) p1.value = 'Ciro';
+                if (p2) p2.value = 'Diego';
+                if (l1) l1.textContent = '1° Uomo:';
+                if (l2) l2.textContent = '2° Uomo:';
+                if (box3) box3.style.display = 'none';
+            } else if (mode === 'tre_uomini') {
+                if (p1) p1.value = 'Ciro';
+                if (p2) p2.value = 'Diego';
+                if (p3) p3.value = 'Marco';
+                if (l1) l1.textContent = '1° Uomo:';
+                if (l2) l2.textContent = '2° Uomo:';
+                if (l3) l3.textContent = '3° Uomo:';
+                if (box3) box3.style.display = 'block';
+            } else {
+                if (p1) p1.value = 'Isabella';
+                if (p2) p2.value = 'Ciro';
+                if (l1) l1.textContent = '1ª Voce (Donna):';
+                if (l2) l2.textContent = '2ª Voce (Uomo):';
+                if (box3) box3.style.display = 'none';
+            }
+            nomiPersonaggi.p1 = p1 ? p1.value : 'Isabella';
+            nomiPersonaggi.p2 = p2 ? p2.value : 'Ciro';
+            nomiPersonaggi.p3 = p3 ? p3.value : 'Elena';
+        }
+
+        function cambiaNomePersonaggio(index, nuovoNome) {
+            const oldName = (index === 1 ? nomiPersonaggi.p1 : (index === 2 ? nomiPersonaggi.p2 : nomiPersonaggi.p3));
+            const cleanNew = (nuovoNome || '').trim();
+            if (!cleanNew) return;
+            if (index === 1) nomiPersonaggi.p1 = cleanNew;
+            else if (index === 2) nomiPersonaggi.p2 = cleanNew;
+            else if (index === 3) nomiPersonaggi.p3 = cleanNew;
+            const txtArea = document.getElementById('editorCopioneText');
+            if (txtArea && oldName && oldName !== cleanNew) {
+                const reg = new RegExp('(^|\\n|—)\\s*' + oldName + '\\s*:', 'gi');
+                txtArea.value = txtArea.value.replace(reg, '$1 ' + cleanNew + ':');
+            }
+        }
+
+        function applicaTemplateDialogo(tipo) {
+            playAudio('click');
+            const txt = TEMPLATE_DIALOGHI[tipo];
+            if (txt) {
+                const txtArea = document.getElementById('editorCopioneText');
+                if (txtArea) {
+                    txtArea.value = txt;
+                    txtArea.focus();
+                    showToast('Esempio Applicato', 'Puoi ascoltarlo subito o modificarlo a piacimento', '✨');
+                }
+            }
+            const castSel = document.getElementById('selectCastMode');
+            if (castSel) {
+                if (tipo === 'sanita') { castSel.value = 'due_donne'; cambiaCastMode('due_donne'); }
+                else if (tipo === 'tre_donne') { castSel.value = 'tre_donne'; cambiaCastMode('tre_donne'); }
+                else if (tipo === 'due_uomini') { castSel.value = 'due_uomini'; cambiaCastMode('due_uomini'); }
+                else if (tipo === 'tre_uomini') { castSel.value = 'tre_uomini'; cambiaCastMode('tre_uomini'); }
+                else { castSel.value = 'misto'; cambiaCastMode('misto'); }
+            }
+        }
+
+        // MOTORE DI SOTTOFONDO MUSICALE SOFT LOUNGE (Web Audio API Synthesizer)
+        let bgMusicGainNode = null;
+        let isBgMusicEnabled = localStorage.getItem('milella_bg_music') === 'true';
+
+        function initSynthesizedBgMusic() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+            if (!audioCtx) return;
+
+            if (!bgMusicGainNode) {
+                bgMusicGainNode = audioCtx.createGain();
+                bgMusicGainNode.gain.setValueAtTime(0.025, audioCtx.currentTime); // Volume rilassante bassissimo
+                bgMusicGainNode.connect(audioCtx.destination);
+            }
+        }
+
+        function toggleMusicaSottofondo(attiva) {
+            playAudio('click');
+            isBgMusicEnabled = attiva;
+            localStorage.setItem('milella_bg_music', attiva ? 'true' : 'false');
+            if (attiva) {
+                showToast('Sottofondo Attivo', 'Atmosfera soft di accompagnamento abilitata', '🎵');
+            } else {
+                showToast('Sottofondo Disattivato', 'Solo voci umane in primo piano', '🔇');
+            }
+        }
+
+        // TELEPROMPTER MULTI-BATTUTA CON EVIDENZIAZIONE DINAMICA FRASE PER FRASE E CAST MULTI-RUOLO
+        function aggiornaSottotitoloKaraoke(testoCompleto, percentualeProgresso = 0) {
+            const box = document.getElementById('subtitleText');
+            if (!box) return;
+
+            // Pulizia virgolette/caporali iniziali e finali « » "
+            let clean = (testoCompleto || '').replace(/[«»"]/g, '').trim();
+            const parti = clean.split(/—|\n/).map(s => s.trim()).filter(Boolean);
+
+            let battute = [];
+            parti.forEach((p, idx) => {
+                const colonIdx = p.indexOf(':');
+                if (colonIdx !== -1) {
+                    const spk = p.substring(0, colonIdx).trim();
+                    const txt = p.substring(colonIdx + 1).trim();
+                    battute.push({ speaker: spk, text: txt });
+                } else {
+                    let defaultSpk = (idx % 2 === 0) ? (nomiPersonaggi.p1 || 'Isabella') : (nomiPersonaggi.p2 || 'Ciro');
+                    battute.push({ speaker: defaultSpk, text: p });
+                }
+            });
+
+            if (battute.length === 0) {
+                box.textContent = clean;
+                return;
+            }
+
+            const activeIdx = Math.min(battute.length - 1, Math.floor((percentualeProgresso / 100) * battute.length));
+            const paletteColori = ['#38bdf8', '#f472b6', '#facc15', '#4ade80', '#c084fc', '#fb923c'];
+            const speakerColors = {};
+            let cIndex = 0;
+
+            let html = '';
+            battute.forEach((b, idx) => {
+                if (!speakerColors[b.speaker]) {
+                    speakerColors[b.speaker] = paletteColori[cIndex % paletteColori.length];
+                    cIndex++;
+                }
+                const isCurrent = (idx === activeIdx);
+                const color = speakerColors[b.speaker];
+                html += `
+                    <div style="margin:8px 0; padding:6px 10px; border-radius:8px; transition:all 0.25s ease; background:${isCurrent ? 'rgba(255,255,255,0.08)' : 'transparent'}; border-left:${isCurrent ? '3px solid #ffd814' : '3px solid transparent'};">
+                        <span style="font-weight:900; font-size:13px; color:${color}; text-transform:uppercase; letter-spacing:0.5px;">🗣️ ${b.speaker}:</span>
+                        <span style="font-size:14px; font-weight:${isCurrent ? '800' : '600'}; color:${isCurrent ? '#ffd814' : '#e2e8f0'}; margin-left:6px; line-height:1.5;">${b.text}</span>
+                    </div>
+                `;
+            });
+
+            box.innerHTML = html;
+        }
+
+        // CONDIVISIONE WHATSAPP AUTOMATICA
+        function condividiSuiteWhatsApp() {
+            const testo = encodeURIComponent(
+                "👑 *SUITE GESTIONALE C. MILELLA*\n" +
+                "Guarda la presentazione ufficiale con audio e cartoni animati degli 8 moduli software integrati:\n\n" +
+                "🔗 https://milella-suite-iv93.onrender.com/presentazione_suite.html\n\n" +
+                "Dati protetti • Backup USB • Progettata con Google DeepMind Antigravity AI"
+            );
+            window.open('https://api.whatsapp.com/send?text=' + testo, '_blank');
+        }
+
+        // STAMPA DEPLIANT ESECUTIVO A4
+        function stampaDepliantA4() {
+            window.print();
+        }
+
+        let filmTimerFallback = null;
+        function saltaPosizioneFilm(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const pct = Math.max(0, Math.min(100, (clickX / rect.width) * 100));
+            if (suiteAudio && suiteAudio.duration && isFinite(suiteAudio.duration)) {
+                suiteAudio.currentTime = (pct / 100) * suiteAudio.duration;
+            }
+            document.getElementById('filmProgressBar').style.width = pct + '%';
+            const currentText = ottieniTestoAttualeScena(currentSceneIdx);
+            aggiornaSottotitoloKaraoke(currentText, pct);
+        }
+
+        function avviaRiproduzioneFilm() {
+            if (filmTimerFallback) clearInterval(filmTimerFallback);
+            fermaAudioSuite();
+            isFilmPlaying = true;
+            document.getElementById('btnPlayFilm').innerHTML = '⏸️ Pausa';
+            
+            const sc = SUITE_SCENES[currentSceneIdx] || SUITE_SCENES[0];
+            const currentText = sc.subtitle;
+
+            // Riproduzione Voci Umane Reali MP3 Studio Ufficiali (Isabella & Ciro)
+            audioConfig.mode = 'neural';
+
+            if (suiteAudio) {
+                try { suiteAudio.pause(); suiteAudio.src = ''; } catch(e){}
+            }
+            suiteAudio = new Audio(sc.audioUrl);
+            suiteAudio.playbackRate = audioConfig.speed || 1.0;
+            suiteAudio.volume = audioConfig.muted ? 0 : ((audioConfig.volume || 100) / 100);
+
+            // Avanzamento barra e sottotitoli in tempo reale con l'audio
+            suiteAudio.ontimeupdate = () => {
+                if (!isFilmPlaying) return;
+                if (suiteAudio.duration && isFinite(suiteAudio.duration) && suiteAudio.duration > 0) {
+                    const pct = Math.min(100, (suiteAudio.currentTime / suiteAudio.duration) * 100);
+                    const bar = document.getElementById('filmProgressBar');
+                    if (bar) bar.style.width = pct + '%';
+                    aggiornaSottotitoloKaraoke(currentText, pct);
+                }
+            };
+
+            suiteAudio.onended = () => {
+                if (!isFilmPlaying) return;
+                document.getElementById('filmProgressBar').style.width = '100%';
+                aggiornaSottotitoloKaraoke(currentText, 100);
+                setTimeout(() => {
+                    if (isFilmPlaying) prossimaScenaFilm();
+                }, 600);
+            };
+
+            // Avvio riproduzione sicuro
+            const playPromise = suiteAudio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(err => {
+                    console.warn('Autoplay ristretto, audio pronto al tocco:', err);
+                });
+            }
+        }
+
+        function prossimaScenaFilm() {
+            if (currentSceneIdx + 1 < SUITE_SCENES.length) {
+                currentSceneIdx++;
+                renderFilmStage();
+                setTimeout(() => {
+                    if (isFilmPlaying) avviaRiproduzioneFilm();
+                }, 650);
+            } else {
+                isFilmPlaying = false;
+                document.getElementById('btnPlayFilm').innerHTML = '▶️ Riguarda Presentazione';
+            }
+        }
+
+        function togglePlayFilm() {
+            if (viewMode !== 'film') {
+                attivaModalitaFilm(0, true);
+                return;
+            }
+            if (isFilmPlaying) {
+                fermaAudioSuite();
+                isFilmPlaying = false;
+                document.getElementById('btnPlayFilm').innerHTML = '▶️ Riprendi Presentazione';
+            } else {
+                avviaRiproduzioneFilm();
+            }
+        }
+
+        function scenaPrecedente() {
+            if (viewMode === 'film') {
+                currentSceneIdx = (currentSceneIdx - 1 + SUITE_SCENES.length) % SUITE_SCENES.length;
+                renderFilmStage();
+                if (isFilmPlaying) avviaRiproduzioneFilm();
+            } else {
+                mostraAppDettaglio((currentAppIdx - 1 + SUITE_APPS.length) % SUITE_APPS.length);
+            }
+        }
+
+        function scenaSuccessiva() {
+            if (viewMode === 'film') {
+                currentSceneIdx = (currentSceneIdx + 1) % SUITE_SCENES.length;
+                renderFilmStage();
+                if (isFilmPlaying) avviaRiproduzioneFilm();
+            } else {
+                mostraAppDettaglio((currentAppIdx + 1) % SUITE_APPS.length);
+            }
+        }
+
+        // =========================================================================
+        // MODALITÀ DETTAGLIO SINGOLA APPLICAZIONE (CON AUDIO MP3 DOMANDA/RISPOSTA)
+        // =========================================================================
+        function mostraAppDettaglio(idx) {
+            fermaAudioSuite();
+            isFilmPlaying = false;
+            viewMode = 'app';
+            currentAppIdx = idx;
+            evidenziaThumbnail('thumb-app-' + idx);
+
+            const app = SUITE_APPS[idx] || SUITE_APPS[0];
+            const testoApp = ottieniTestoAttualeApp(idx);
+            document.getElementById('viewerTopTitle').textContent = `📱 SCHEDA MODULO ${idx + 1} DI 8 — ${app.name.toUpperCase()}`;
+            document.getElementById('speakerBadge').textContent = '🎙️ Dialogo: Isabella & Ciro';
+            document.getElementById('subtitleText').textContent = testoApp;
+            document.getElementById('btnPlayFilm').innerHTML = '🎙️ Ascolta Spiegazione';
+            document.getElementById('filmTimeLabel').textContent = `App ${idx + 1}/8`;
+
+            const container = document.getElementById('mainStageContainer');
+            container.innerHTML = `
+                <div style="padding:24px; background:radial-gradient(circle at 50% 20%, #1e3a8a 0%, #091122 100%); flex:1; display:flex; flex-direction:column; justify-content:center; gap:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <span style="background:#ffd814; color:#0f172a; font-size:12px; font-weight:900; padding:4px 10px; border-radius:6px;">${app.badge}</span>
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" onclick="parlaApp(${idx})" style="background:#0284c7; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer;">
+                                🔊 Ascolta Voce
+                            </button>
+                            <button type="button" onclick="apriRegiaVociModal('app-${idx}')" style="background:#a855f7; color:#fff; border:none; padding:7px 12px; border-radius:8px; font-size:12.5px; font-weight:800; cursor:pointer;" title="Personalizza testo o voce per questa app">
+                                🎛️ Modifica
+                            </button>
+                        </div>
+                    </div>
+                    ${app.visualHtml}
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.06); padding:12px 16px; border-radius:10px;">
+                        <span style="font-size:13.5px; color:#e2e8f0; font-weight:600;">Vuoi vedere le istruzioni e i vantaggi di questo modulo?</span>
+                        <button type="button" class="btn-per-saperne" onclick="apriModalInfoApp(${idx})">
+                            💡 Per saperne di più
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            parlaApp(idx);
+        }
+
+        function parlaApp(idx) {
+            fermaAudioSuite();
+            const app = SUITE_APPS[idx] || SUITE_APPS[0];
+            const testoApp = ottieniTestoAttualeApp(idx);
+
+            if (audioConfig.mode === 'silent' || audioConfig.muted) return;
+
+            if (customCopioni['app-' + idx]) {
+                fetch('/api/genera-dialogo-audio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ testo: testoApp, sceneKey: 'app-' + idx })
+                }).then(res => res.blob()).then(blob => {
+                    const customUrl = URL.createObjectURL(blob);
+                    suiteAudio.src = customUrl;
+                    suiteAudio.playbackRate = audioConfig.speed;
+                    suiteAudio.volume = audioConfig.muted ? 0 : (audioConfig.volume / 100);
+                    suiteAudio.ontimeupdate = () => {
+                        if (suiteAudio.duration && isFinite(suiteAudio.duration)) {
+                            const pct = Math.min(100, (suiteAudio.currentTime / suiteAudio.duration) * 100);
+                            document.getElementById('filmProgressBar').style.width = pct + '%';
+                            aggiornaSottotitoloKaraoke(testoApp, pct);
+                        }
+                    };
+                    suiteAudio.play().catch(e => console.warn('Play app custom warning:', e));
+                }).catch(err => {
+                    suiteAudio.src = app.audioUrl;
+                    suiteAudio.play();
+                });
+                return;
+            }
+
+            // Usa sempre e solo la voce umana reale registrata in studio per l'app
+            suiteAudio.src = app.audioUrl;
+            suiteAudio.playbackRate = audioConfig.speed;
+            suiteAudio.volume = audioConfig.muted ? 0 : (audioConfig.volume / 100);
+
+            suiteAudio.ontimeupdate = () => {
+                if (suiteAudio.duration && isFinite(suiteAudio.duration)) {
+                    const pct = Math.min(100, (suiteAudio.currentTime / suiteAudio.duration) * 100);
+                    document.getElementById('filmProgressBar').style.width = pct + '%';
+                    aggiornaSottotitoloKaraoke(testoApp, pct);
+                }
+            };
+            suiteAudio.play().catch(e => {
+                console.warn('Riproduzione audio umano:', e);
+            });
+        }
+
+        // =========================================================================
+        // GESTIONE DELLA STANZA REGIA VOCI & EDITOR COPIONE
+        // =========================================================================
+        function apriRegiaVociModal(targetItem) {
+            fermaAudioSuite();
+            popolaListaVociBrowser();
+            applicaAudioConfig();
+
+            const modalSel = document.getElementById('modalSelectVoiceMode');
+            if (modalSel) modalSel.value = audioConfig.mode;
+            const modalSpeed = document.getElementById('modalSelectAudioSpeed');
+            if (modalSpeed) modalSpeed.value = audioConfig.speed.toString();
+
+            const selItem = document.getElementById('selectEditorItem');
+            if (targetItem && selItem) {
+                selItem.value = targetItem;
+            } else if (selItem) {
+                selItem.value = (viewMode === 'film' ? 'scene-' + currentSceneIdx : 'app-' + currentAppIdx);
+            }
+
+            caricaTestoItemInEditor(selItem ? selItem.value : 'scene-0');
+            document.getElementById('modalRegiaVoci').style.display = 'flex';
+        }
+
+        function chiudiRegiaVociModal() {
+            fermaAudioSuite();
+            document.getElementById('modalRegiaVoci').style.display = 'none';
+            if (viewMode === 'film') renderFilmStage();
+            else mostraAppDettaglio(currentAppIdx);
+        }
+
+        function ottieniTestoOriginaleItem(key) {
+            if (key.startsWith('scene-')) {
+                const sIdx = parseInt(key.replace('scene-', ''));
+                return (SUITE_SCENES[sIdx] || SUITE_SCENES[0]).subtitle;
+            } else if (key.startsWith('app-')) {
+                const aIdx = parseInt(key.replace('app-', ''));
+                return (SUITE_APPS[aIdx] || SUITE_APPS[0]).summary;
+            }
+            return '';
+        }
+
+        function caricaTestoItemInEditor(key) {
+            const txtArea = document.getElementById('editorCopioneText');
+            const badge = document.getElementById('badgeStatoTesto');
+            if (!txtArea) return;
+
+            let curText = '';
+            if (customCopioni[key]) {
+                curText = customCopioni[key];
+                if (badge) {
+                    badge.textContent = '✏️ Testo Personalizzato da Te';
+                    badge.style.background = 'rgba(253,224,71,0.18)';
+                    badge.style.color = '#fde047';
+                    badge.style.borderColor = 'rgba(253,224,71,0.4)';
+                }
+            } else {
+                curText = ottieniTestoOriginaleItem(key);
+                if (badge) {
+                    badge.textContent = '🔒 Testo Originale di Fabbrica';
+                    badge.style.background = 'rgba(16,185,129,0.15)';
+                    badge.style.color = '#10b981';
+                    badge.style.borderColor = 'rgba(16,185,129,0.3)';
+                }
+            }
+            txtArea.value = curText;
+            sincronizzaCampiNomiDaTesto(curText);
+        }
+
+        function sincronizzaCampiNomiDaTesto(testo) {
+            const genericTagRegex = /(?:^|\n|—)\s*([A-Za-zÀ-ÿ0-9_\s]{2,20})\s*:/g;
+            const matches = [...(testo || '').matchAll(genericTagRegex)];
+            const names = [...new Set(matches.map(m => m[1].trim()))];
+            const p1 = document.getElementById('inputNomeP1');
+            const p2 = document.getElementById('inputNomeP2');
+            const p3 = document.getElementById('inputNomeP3');
+            const box3 = document.getElementById('boxNomeP3');
+            const l1 = document.getElementById('lblNomeP1');
+            const l2 = document.getElementById('lblNomeP2');
+            const l3 = document.getElementById('lblNomeP3');
+            const castSel = document.getElementById('selectCastMode');
+            const isMale = (castSel && (castSel.value === 'due_uomini' || castSel.value === 'tre_uomini'));
+
+            if (names.length >= 1 && p1) {
+                p1.value = names[0];
+                nomiPersonaggi.p1 = names[0];
+                if (l1) l1.textContent = isMale ? '1° Uomo (Nome):' : '1ª Voce (Nome):';
+            }
+            if (names.length >= 2 && p2) {
+                p2.value = names[1];
+                nomiPersonaggi.p2 = names[1];
+                if (l2) l2.textContent = isMale ? '2° Uomo (Nome):' : '2ª Voce (Nome):';
+            }
+            if (names.length >= 3 && p3) {
+                p3.value = names[2];
+                nomiPersonaggi.p3 = names[2];
+                if (l3) l3.textContent = isMale ? '3° Uomo (Nome):' : '3ª Voce (Nome):';
+                if (box3) box3.style.display = 'block';
+            } else if (names.length < 3 && box3 && (currentCastMode === 'due_donne' || currentCastMode === 'due_uomini' || currentCastMode === 'misto')) {
+                box3.style.display = 'none';
+            }
+        }
+
+        function caricaOriginaleInEditor() {
+            playAudio('click');
+            const key = document.getElementById('selectEditorItem').value;
+            const txtArea = document.getElementById('editorCopioneText');
+            if (txtArea) {
+                txtArea.value = ottieniTestoOriginaleItem(key);
+                txtArea.focus();
+                showToast('Testo Caricato', 'Ora puoi modificare liberamente le parole e cliccare Salva Copione', '✏️');
+            }
+        }
+
+        function salvaTestoEditor() {
+            const key = document.getElementById('selectEditorItem').value;
+            const text = document.getElementById('editorCopioneText').value.trim();
+            if (!text) {
+                delete customCopioni[key];
+            } else {
+                customCopioni[key] = text;
+            }
+            localStorage.setItem('milella_suite_custom_copioni', JSON.stringify(customCopioni));
+            showToast('Copione Salvato!', 'La presentazione reciterà il tuo nuovo testo con voce umana', '✨');
+            if (viewMode === 'film') renderFilmStage();
+            else mostraAppDettaglio(currentAppIdx);
+        }
+
+        function ripristinaTestoOriginaleEditor() {
+            const key = document.getElementById('selectEditorItem').value;
+            delete customCopioni[key];
+            localStorage.setItem('milella_suite_custom_copioni', JSON.stringify(customCopioni));
+            caricaTestoItemInEditor(key);
+            showToast('Ripristino Completato', 'Riaccreditato il testo ufficiale originale di fabbrica', '🔄');
+            if (viewMode === 'film') renderFilmStage();
+            else mostraAppDettaglio(currentAppIdx);
+        }
+
+        // Generazione al volo di voce umana HD dal dialogo scritto dall'utente
+        async function anteprimaVoceEditor(btnElement) {
+            fermaAudioSuite();
+            const textInp = document.getElementById('editorCopioneText');
+            const text = textInp ? textInp.value.trim() : '';
+            if (!text) {
+                alert('Inserisci prima il testo o il dialogo da ascoltare!');
+                return;
+            }
+
+            const btn = btnElement || document.getElementById('btnAnteprimaVoceEditor');
+            const oldHtml = btn ? btn.innerHTML : '';
+            const player = document.getElementById('audioPlayerAnteprima');
+
+            if (btn) {
+                btn.innerHTML = '<span>⏳ Generazione Audio...</span>';
+                btn.disabled = true;
+            }
+
+            try {
+                const castMode = document.getElementById('selectCastMode') ? document.getElementById('selectCastMode').value : (currentCastMode || 'tre_uomini');
+                const res = await fetch('/api/genera-dialogo-audio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ testo: text, castMode: castMode })
+                });
+
+                if (!res.ok) throw new Error('Risposta server non valida: ' + res.status);
+                const blob = await res.blob();
+                const audioBlobUrl = URL.createObjectURL(blob);
+
+                // Mostra e collega il lettore audio visibile
+                if (player) {
+                    player.src = audioBlobUrl;
+                    player.style.display = 'inline-block';
+                    player.volume = 1.0;
+                    player.play().catch(e => console.warn('Player inline play warning:', e));
+                }
+
+                // Avvia anche tramite istanza globale
+                if (suiteAudio) {
+                    try { suiteAudio.pause(); } catch(e){}
+                }
+                suiteAudio = new Audio(audioBlobUrl);
+                suiteAudio.volume = 1.0;
+                suiteAudio.play().catch(e => console.warn('Global audio play warning:', e));
+
+            } catch(e) {
+                console.warn('Errore riproduzione dialogo:', e);
+                alert('Errore generazione voce: verifica la connessione internet e riprova.');
+            } finally {
+                if (btn) {
+                    btn.innerHTML = oldHtml;
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        function apriPerSaperneCorrente() {
+            if (viewMode === 'app') {
+                apriModalInfoApp(currentAppIdx);
+            } else {
+                const sc = SUITE_SCENES[currentSceneIdx] || SUITE_SCENES[0];
+                apriModalInfoApp(sc.linkedAppIdx || 0);
+            }
+        }
+
+        // =========================================================================
+        // RENDER DELLA GALLERIA STILE AMAZON A+
+        // =========================================================================
+        function renderAplusGallery() {
+            const grid = document.getElementById('aplusGalleryContainer');
+            grid.innerHTML = '';
+            SUITE_APPS.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'aplus-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="aplus-figure-header" onclick="apriModalInfoApp(${item.idx})">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <span style="background:#ffd814; color:#0f172a; font-size:11px; font-weight:900; padding:3px 9px; border-radius:6px;">${item.badge}</span>
+                                <span style="font-size:12px; color:#fde047; font-weight:800;">💡 Clicca per approfondire ↗</span>
+                            </div>
+                            ${item.visualHtml}
+                        </div>
+                        <div class="aplus-body">
+                            <div>
+                                <h3 style="font-size:17px; font-weight:900; color:#0f172a; margin-bottom:6px;">${item.icon} ${item.name}</h3>
+                                <p style="font-size:14px; color:#475569; margin-bottom:12px; line-height:1.45;">${item.summary}</p>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="btn-per-saperne" style="flex:1;" onclick="apriModalInfoApp(${item.idx})">
+                                    💡 Per saperne di più
+                                </button>
+                                <button type="button" onclick="mostraAppDettaglio(${item.idx})" style="background:#0284c7; color:#fff; border:none; padding:8px 12px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer;" title="Mostra nel viewer">
+                                    👁️ Guarda
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // =========================================================================
+        // MODALE PER SAPERNE DI PIÙ
+        // =========================================================================
+        function apriModalInfoApp(idx) {
+            const app = SUITE_APPS[idx] || SUITE_APPS[0];
+            document.getElementById('modalAppTitle').textContent = `${app.icon} ${app.shortTitle}`;
+
+            const body = document.getElementById('modalAppBody');
+            body.innerHTML = `
+                <div style="margin-bottom:18px;">
+                    <span style="background:#0284c7; color:#fff; font-size:11.5px; font-weight:900; padding:4px 10px; border-radius:6px;">${app.badge}</span>
+                    <p style="font-size:15px; color:#334155; margin-top:10px; line-height:1.5;">${app.summary}</p>
+                </div>
+
+                <div style="margin-bottom:18px;">
+                    ${app.visualHtml}
+                </div>
+
+                <div style="background:#f8fafc; border-left:4px solid #0284c7; padding:12px 16px; border-radius:0 10px 10px 0; margin-bottom:14px;">
+                    <h4 style="font-size:14.5px; font-weight:900; color:#0f172a; margin-bottom:6px;">📋 Come si usa nella vita quotidiana:</h4>
+                    <ul style="padding-left:18px; font-size:13.5px; color:#334155; line-height:1.5;">
+                        ${app.howToUse.map(p => `<li style="margin-bottom:4px;">${p}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div style="background:#f0fdf4; border-left:4px solid #16a34a; padding:12px 16px; border-radius:0 10px 10px 0; margin-bottom:18px;">
+                    <h4 style="font-size:14.5px; font-weight:900; color:#14532d; margin-bottom:6px;">🏆 Vantaggi e Serenità:</h4>
+                    <ul style="padding-left:18px; font-size:13.5px; color:#14532d; line-height:1.5;">
+                        ${app.benefits.map(b => `<li style="margin-bottom:4px;">${b}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="parlaApp(${idx})" style="background:#ffd814; color:#0f172a; border:none; padding:10px 18px; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer;">
+                        🔊 Ascolta Dialogo Uomo/Donna
+                    </button>
+                    <button type="button" onclick="chiudiModalInfoApp()" style="background:#0f172a; color:#fff; border:none; padding:10px 20px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer;">
+                        Chiudi Scheda
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalInfoApp').style.display = 'flex';
+            parlaApp(idx);
+        }
+
+        function chiudiModalInfoApp() {
+            fermaAudioSuite();
+            document.getElementById('modalInfoApp').style.display = 'none';
+        }
+
+        function cambiaModalitaPresentazione(val) {
+            const cards = document.querySelectorAll('.aplus-card');
+            const toast = document.getElementById('btnShareWhatsapp');
+            if (val === 'all') {
+                cards.forEach(c => c.style.display = 'flex');
+            } else if (val === 'careassist') {
+                cards.forEach((c, i) => c.style.display = (i === 0) ? 'flex' : 'none');
+            } else if (val === 'veicoli') {
+                cards.forEach((c, i) => c.style.display = (i === 1) ? 'flex' : 'none');
+            } else if (val === 'logistica') {
+                cards.forEach((c, i) => c.style.display = (i === 2 || i === 3) ? 'flex' : 'none');
+            } else if (val === 'mednutri') {
+                cards.forEach((c, i) => c.style.display = (i === 4 || i === 5) ? 'flex' : 'none');
+            } else if (val === 'personal') {
+                cards.forEach(c => c.style.display = 'flex');
+            }
+        }
+
+        
+        // =========================================================================
+        // GESTIONE CONFIGURATORE COMMERCIALE AUTONOMO (DA 1 A TUTTE LE APP & AZIENDA)
+        // =========================================================================
+        let _customPresState = {
+            azienda: '',
+            direttore: '',
+            selectedApps: [0, 1, 2, 3, 4, 5, 6, 7] // Tutte attive di default
+        };
+
+        function apriModalComponiPresentazione() {
+            caricaStatoComponi();
+            renderComponiAppsGrid();
+            document.getElementById('modalComponiPres').style.display = 'flex';
+        }
+
+        function chiudiModalComponiPresentazione() {
+            document.getElementById('modalComponiPres').style.display = 'none';
+        }
+
+        function caricaStatoComponi() {
+            try {
+                const salvato = JSON.parse(localStorage.getItem('suite_presentazione_personalizzata') || 'null');
+                if (salvato) {
+                    _customPresState = salvato;
+                }
+            } catch(e) {}
+            document.getElementById('componiNomeAz').value = _customPresState.azienda || '';
+            document.getElementById('componiDirAz').value = _customPresState.direttore || '';
+        }
+
+        function renderComponiAppsGrid() {
+            const container = document.getElementById('componiAppsGrid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            SUITE_APPS.forEach(app => {
+                const isChecked = _customPresState.selectedApps.includes(app.idx);
+                const item = document.createElement('label');
+                item.style.cssText = 'display:flex; align-items:center; gap:10px; background:' + (isChecked ? 'rgba(168,85,247,0.18)' : 'rgba(255,255,255,0.03)') + '; border:1.5px solid ' + (isChecked ? '#c084fc' : 'rgba(255,255,255,0.1)') + '; padding:10px 12px; border-radius:10px; cursor:pointer; transition:all 0.15s;';
+                item.innerHTML = `
+                    <input type="checkbox" value="${app.idx}" ${isChecked ? 'checked' : ''} onchange="toggleAppInComponi(${app.idx}, this.checked, this.parentElement)" style="width:18px; height:18px; accent-color:#a855f7; cursor:pointer;">
+                    <span style="font-size:22px;">${app.icon}</span>
+                    <div style="overflow:hidden; flex:1;">
+                        <strong style="display:block; font-size:13px; color:${isChecked ? '#f5d0fe' : '#e2e8f0'};">${app.name}</strong>
+                        <span style="display:block; font-size:11px; color:#94a3b8; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${app.badge}</span>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleAppInComponi(idx, checked, parentEl) {
+            if (checked) {
+                if (!_customPresState.selectedApps.includes(idx)) _customPresState.selectedApps.push(idx);
+                parentEl.style.background = 'rgba(168,85,247,0.18)';
+                parentEl.style.borderColor = '#c084fc';
+            } else {
+                _customPresState.selectedApps = _customPresState.selectedApps.filter(i => i !== idx);
+                parentEl.style.background = 'rgba(255,255,255,0.03)';
+                parentEl.style.borderColor = 'rgba(255,255,255,0.1)';
+            }
+        }
+
+        function impostaSelezioneApp(tipo) {
+            if (tipo === 'all') {
+                _customPresState.selectedApps = [0, 1, 2, 3, 4, 5, 6, 7];
+            } else if (tipo === 'sanita') {
+                _customPresState.selectedApps = [0, 1]; // CareAssist Pro + Flotta Veicoli & Spese
+            } else if (tipo === 'none') {
+                _customPresState.selectedApps = [];
+            }
+            renderComponiAppsGrid();
+        }
+
+        function applicaPresentazionePersonalizzata() {
+            const az = document.getElementById('componiNomeAz').value.trim();
+            const dir = document.getElementById('componiDirAz').value.trim();
+
+            if (_customPresState.selectedApps.length === 0) {
+                alert('Attenzione: seleziona almeno un\'applicazione da presentare!');
+                return;
+            }
+
+            _customPresState.azienda = az;
+            _customPresState.direttore = dir;
+
+            localStorage.setItem('suite_presentazione_personalizzata', JSON.stringify(_customPresState));
+            eseguiRenderingPresentazionePersonalizzata();
+            chiudiModalComponiPresentazione();
+
+            // Mostra notifica di successo
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed; bottom:24px; right:24px; background:#10b981; color:#fff; font-weight:800; font-size:14px; padding:14px 22px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.4); z-index:99999; animation:fadeIn 0.3s ease;';
+            toast.innerHTML = '✅ Presentazione generata per: ' + (az || 'Configurazione Personalizzata') + ' (' + _customPresState.selectedApps.length + ' App attive)';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function eseguiRenderingPresentazionePersonalizzata() {
+            const az = _customPresState.azienda;
+            const dir = _customPresState.direttore;
+            const sel = _customPresState.selectedApps;
+
+            // 1. Aggiorna Titolo Brand Header
+            const brandH1 = document.getElementById('headerDynamicBrand');
+            if (brandH1) {
+                if (az) {
+                    brandH1.textContent = 'Suite Gestionale — Presentazione Ufficiale per: ' + az + (dir ? ' (' + dir + ')' : '');
+                } else {
+                    brandH1.textContent = 'Suite Gestionale C. Milella — Presentazione Personalizzata';
+                }
+            }
+
+            // 2. Filtra le card della galleria A+
+            const cards = document.querySelectorAll('.aplus-card');
+            cards.forEach((card, idx) => {
+                if (sel.includes(idx)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // 3. Aggiorna il titolo della galleria
+            const secTitle = document.querySelector('.aplus-header h2');
+            if (secTitle) {
+                secTitle.textContent = 'Esplora i ' + sel.length + ' Moduli Selezionati ' + (az ? 'per ' + az : 'della Suite');
+            }
+        }
+
+        function ripristinaPresentazioneStandard() {
+            _customPresState = {
+                azienda: '',
+                direttore: '',
+                selectedApps: [0, 1, 2, 3, 4, 5, 6, 7]
+            };
+            localStorage.removeItem('suite_presentazione_personalizzata');
+            renderComponiAppsGrid();
+            eseguiRenderingPresentazionePersonalizzata();
+            document.getElementById('componiNomeAz').value = '';
+            document.getElementById('componiDirAz').value = '';
+            chiudiModalComponiPresentazione();
+        }
+
+        function inizializzaDaParametriUrl() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const az = params.get('az') || params.get('cliente') || params.get('nome') || '';
+                const dir = params.get('dir') || params.get('reparto') || params.get('azienda') || '';
+                const appsParam = params.get('apps') || params.get('moduli') || '';
+                const isDemoParam = params.get('demo') === '1' || params.get('isDemo') === 'true';
+
+                let aggiornato = false;
+                if (az) {
+                    _customPresState.azienda = az.trim();
+                    aggiornato = true;
+                }
+                if (dir) {
+                    _customPresState.direttore = dir.trim();
+                    aggiornato = true;
+                }
+                if (appsParam) {
+                    const parsed = appsParam.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n) && n >= 0 && n <= 7);
+                    if (parsed.length > 0) {
+                        _customPresState.selectedApps = parsed;
+                        aggiornato = true;
+                    }
+                }
+
+                if (aggiornato) {
+                    localStorage.setItem('suite_presentazione_personalizzata', JSON.stringify(_customPresState));
+                    const azInp = document.getElementById('componiNomeAz');
+                    const dirInp = document.getElementById('componiDirAz');
+                    if (azInp) azInp.value = _customPresState.azienda || '';
+                    if (dirInp) dirInp.value = _customPresState.direttore || '';
+                    renderComponiAppsGrid();
+                    eseguiRenderingPresentazionePersonalizzata();
+
+                    // Se è in modalità demo da URL o eseguibile, avvia automaticamente presentazione/film se desiderato
+                    if (isDemoParam) {
+                        console.log('⚡ Modalità DEMO interattiva attiva per:', _customPresState.azienda);
+                    }
+                }
+
+                if (params.get('openVoices') === '1') {
+                    setTimeout(() => {
+                        apriRegiaVociModal();
+                    }, 400);
+                }
+            } catch(e) {
+                console.warn('Errore parsing parametri URL:', e);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+        // FORZA SVUOTAMENTO CACHE BROWSER LOCALE PER NUOVI AUDIO
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                for (let name of names) {
+                    if (name !== 'milella-suite-v186') caches.delete(name);
+                }
+            });
+        }
+        
+            applicaAudioConfig();
+            popolaListaVociBrowser();
+            caricaPresentazionePersonalizzata();
+            renderFilmStage();
+            renderAplusGallery();
+            inizializzaDaParametriUrl();
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js?v=186').catch(() => {});
+            }
+        });
+    </script>
+</body>
+</html>

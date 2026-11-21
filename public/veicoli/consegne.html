@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>GESTIONE CONSEGNE - C. Milella</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="DashboardConsegne"
+        ID="DashboardConsegne"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        SCROLLFLAT="yes"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="maximize"
+        ICON="assets/img/app_icon.ico"
+        TRUSTED="yes"
+        NAVIGABLE="yes"
+    />
+    <script>
+        window.onerror = function(msg, url, line) {
+            try {
+                var fso = new ActiveXObject("Scripting.FileSystemObject");
+                var f = fso.OpenTextFile("C:\\Users\\Utente\\Desktop\\LOGISTICA_CONSEGNE_MC\\error.log", 8, true);
+                f.WriteLine("Error: " + msg + " in " + url + " at line " + line);
+                f.Close();
+            } catch(e) {}
+        };
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e) {}
+    </script>
+    <script>
+        // Setup Base Direttrice per fix caricamento CSS/JS in HTA
+        var p = document.location.pathname;
+        if(p.indexOf("/") === 0) p = p.substring(1);
+        p = decodeURIComponent(p).replace(/\//g, "\\");
+        var baseDir = p.substring(0, p.lastIndexOf("\\") + 1);
+        document.write('<base href="file:///' + baseDir.replace(/\\/g, "/") + '">');
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/consegne.css">
+    <link rel="stylesheet" href="assets/css/report_mensile.css">
+    <link rel="stylesheet" href="assets/css/toast.css">
+    <script src="assets/js/toast_manager.js"></script>
+    <style>
+        /* CHIPS INVALIDITA */
+        .invalidity-chips-wrapper {
+            border: 1.5px solid #334155 !important;
+            border-radius: 12px !important;
+            background: rgba(15, 23, 42, 0.7) !important;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4) !important;
+            min-height: 42px !important;
+            padding: 5px 10px !important;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .invalidity-chip {
+            background: #eab308;
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .invalidity-chip .remove-inv {
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        .invalidity-chip .remove-inv:hover { opacity: 1; }
+        .inv-input-inline, #txtStatoInvalidita {
+            background: transparent !important;
+            border: none !important;
+            color: #fff !important;
+            outline: none !important;
+            box-shadow: none !important;
+            flex: 1;
+            min-width: 150px;
+            height: 30px !important;
+            font-size: 13px !important;
+        }
+        .inv-label-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .inv-label-btn:hover { background: #06b6d4; color: #fff; border-color: #06b6d4; }
+
+        /* SEZIONI COLLASSABILI */
+        .card-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            cursor: pointer;
+            transition: background 0.2s ease, filter 0.2s ease;
+        }
+        .card-header:hover {
+            filter: brightness(1.2);
+            background: rgba(14, 165, 233, 0.1);
+        }
+        .btn-toggle-card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #cbd5e1;
+            border-radius: 6px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-toggle-card:hover { background: rgba(255,255,255,0.2); color: white; }
+        .card-content {
+            transition: all 0.3s ease-out;
+            overflow: hidden;
+        }
+        .danea-card.collapsed .card-content {
+            display: none;
+        }
+        .calendar-overlay { 
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(15, 23, 42, 0.5); z-index:20000; justify-content:center; align-items:center; 
+            backdrop-filter: blur(6px);
+        }
+        .calendar-modal { 
+            background:#0f172a; padding:25px; border-radius:18px; 
+            border:1.5px solid #334155; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6); 
+            width:370px;
+            color: #cbd5e1;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .calendar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px; }
+        .calendar-header h3 { margin:0; font-size:1.25rem; color:#0ea5e9; font-weight:900; text-transform:uppercase; }
+        
+        .cal-table { width:100%; border-collapse:separate; border-spacing: 2px; table-layout: fixed; }
+        .cal-table th { padding:8px 0; color:#64748b; font-weight:800; text-align:center; font-size: 0.85rem; text-transform: uppercase; }
+        .cal-table td { padding:2px; text-align:center; vertical-align: middle; }
+        
+        .calendar-day-btn { 
+            width:40px; height:40px; border:none; background:none; cursor:pointer; 
+            font-size:1.05rem; border-radius:50%; font-weight:650; transition: all 0.2s;
+            color: #cbd5e1;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .calendar-day-btn:hover { background:#0ea5e9; color:white; transform: scale(1.1); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
+        
+        /* Weekend e Festivi */
+        .calendar-day-btn.sat { color: #f59e0b !important; background: rgba(245, 158, 11, 0.05); }
+        .calendar-day-btn.sun { color: #ef4444 !important; font-weight: 800; }
+        
+        .calendar-day-btn.today { 
+            background:#eab308 !important; color:#000 !important; 
+            box-shadow: 0 0 15px rgba(234,179,8,0.4);
+            transform: scale(1.05);
+            position: relative;
+        }
+        
+        .calendar-footer { margin-top:20px; display:flex; justify-content:space-between; border-top:1px solid #1e293b; padding-top:15px; }
+        .btn-cal-action {
+            padding:10px 22px; border-radius:10px; cursor:pointer; font-weight:800; font-size:0.95rem;
+            transition: all 0.2s; border: 1px solid #334155; text-transform: uppercase;
+        }
+        #btnCalOggi { background:#1e293b; color:#cbd5e1; }
+        #btnCalOggi:hover { background:#334155; color:white; transform: translateY(-1px); }
+        
+        #btnCalChiudi { background:rgba(239, 68, 68, 0.1); color:#fca5a5; border-color:#ef4444; }
+        #btnCalChiudi:hover { background:#ef4444; color:white; transform: translateY(-1px); box-shadow: 0 5px 15px rgba(239,68,68,0.4); }
+
+        .badge-status-client { padding: 3px 8px; border-radius: 6px; font-size: 9.5px; font-weight: 900; text-transform: uppercase; margin-left: 8px; }
+        .badge-smart-excel { 
+            padding: 3px 10px; border-radius: 20px; font-size: 9px; font-weight: 900; 
+            background: #eab308; color: #000; margin-left: 12px; 
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.3); border: none; 
+            display: inline-block; vertical-align: middle;
+            letter-spacing: 0.5px;
+            animation: pulse-excel 2s infinite; 
+        }
+        @keyframes pulse-excel { 0% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.8; transform: scale(1); } }
+
+        /* STILI MULTI-CONTATTO (CHIPS) */
+        .phone-chips-wrapper {
+            display: flex; flex-wrap: wrap; gap: 6px; padding: 6px;
+            background: rgba(15, 23, 42, 0.7) !important;
+            border: 1.5px solid #334155 !important;
+            border-radius: 10px !important;
+            min-height: 38px !important;
+            height: auto !important;
+            padding: 4px 8px !important;
+            align-items: center;
+            transition: all 0.25s;
+            box-sizing: border-box !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important;
+        }
+        .phone-chips-wrapper:focus-within { 
+            border-color: #06b6d4 !important; 
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3), inset 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+        .phone-chips-wrapper.populated, .invalidity-chips-wrapper.populated { 
+            background: rgba(234, 179, 8, 0.08) !important; 
+            border-color: #eab308 !important;
+        }
+        .phone-chip {
+            display: flex; align-items: center; 
+            background: rgba(14, 165, 233, 0.15); 
+            color: #38bdf8;
+            padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800;
+            border: 1px solid rgba(14, 165, 233, 0.4); cursor: default; animation: chip-in 0.3s ease-out;
+        }
+        @keyframes chip-in { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .phone-chip .remove-chip {
+            margin-left: 8px; cursor: pointer; color: #ef4444; font-size: 14px;
+            display: inline-block; transition: transform 0.2s;
+        }
+        .phone-chip .remove-chip:hover { font-weight: bold; transform: scale(1.2); }
+        .phone-chip .chip-wa-icon { margin-right: 6px; cursor: pointer; height: 13px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
+
+        .phone-input-inline, #txtTelefono {
+            border: none !important; 
+            outline: none !important; 
+            box-shadow: none !important;
+            background: transparent !important;
+            flex: 1; 
+            min-width: 100px; 
+            font-size: 13.5px; 
+            padding: 2px 6px !important;
+            color: #ffffff !important;
+        }
+
+        .phone-labels-bar { display: flex; gap: 6px; margin-top: 5px; }
+        .label-btn {
+            background: #1e293b; border: 1px solid #334155; border-radius: 6px;
+            padding: 3px 10px; font-size: 9.5px; font-weight: 800; color: #94a3b8;
+            cursor: pointer; transition: all 0.2s; text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .label-btn:hover { background: #0ea5e9; color: white; border-color: #0ea5e9; }
+        .label-btn.wa { border-color: rgba(37, 211, 102, 0.4); color: #25D366; background: rgba(37, 211, 102, 0.05); }
+        .label-btn.wa:hover { background: #25D366; color: white; box-shadow: 0 0 10px rgba(37,211,102,0.3); }
+
+        /* RESTYLING PREMIUM INPUTS */
+        .form-group label {
+            font-size: 10.5px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #06b6d4; /* Neon Cyan */
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 800;
+            min-height: 12px;
+        }
+
+        .form-row.recapiti-row {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            background: rgba(15, 23, 42, 0.4) !important;
+            padding: 18px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.04) !important;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        input[type="text"], input[type="email"], input[type="date"], select, textarea {
+            border: 1.5px solid #334155 !important; 
+            border-radius: 10px !important;
+            padding: 10px 14px !important;
+            font-size: 13.5px !important;
+            font-weight: 600 !important;
+            background: rgba(15, 23, 42, 0.7) !important;
+            color: #ffffff !important;
+            transition: all 0.25s ease;
+            height: 38px;
+            box-sizing: border-box;
+        }
+
+        /* CORREZIONE TAGLIO TESTO IN SELECT SU IE11 */
+        select {
+            padding-top: 2px !important;
+            padding-bottom: 2px !important;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #06b6d4 !important;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3), inset 0 2px 4px rgba(0,0,0,0.1) !important;
+            outline: none;
+            background: #0f172a !important;
+        }
+
+        /* HIGHLIGHT CAMPI POPOLATI (Alta Visibilità) */
+        input.populated, select.populated, textarea.populated {
+            background: rgba(234, 179, 8, 0.08) !important;
+            border-color: #eab308 !important;
+            color: #fef08a !important;
+            box-shadow: 0 2px 10px rgba(234, 179, 8, 0.15) !important;
+        }
+
+        /* CORREZIONE VISIBILITÀ DROPDOWN DATALIST (INTERNET EXPLORER HTA) */
+        input[list]:focus {
+            background: #ffffff !important;
+            color: #0f172a !important;
+        }
+
+        /* CORREZIONE VISIBILITÀ DROPDOWN SELECT (INTERNET EXPLORER HTA) */
+        select option {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+
+
+        /* ANIMAZIONE PULSE GLOW PER ELEMENTO SELEZIONATO DA DASHBOARD (UX-3) */
+        @keyframes pulseHighlight {
+            0% { box-shadow: 0 0 0 0px rgba(6, 182, 212, 0.8); border-color: #06b6d4; transform: scale(1.0); }
+            50% { box-shadow: 0 0 30px 15px rgba(6, 182, 212, 0.4); border-color: #06b6d4; transform: scale(1.025); background-color: rgba(6, 182, 212, 0.1) !important; }
+            100% { box-shadow: 0 0 0 0px rgba(6, 182, 212, 0); border-color: #c7d2fe; transform: scale(1.0); }
+        }
+        .delivery-gold-card.pulse-highlight {
+            animation: pulseHighlight 1.4s ease-in-out 2;
+            position: relative;
+            z-index: 150 !important;
+        }
+        @keyframes pulsePos {
+            0% { transform: scale(1); box-shadow: 0 0 0 0px rgba(6, 182, 212, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 10px 4px rgba(6, 182, 212, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0px rgba(6, 182, 212, 0); }
+        }
+        .pulse-position {
+            animation: pulsePos 0.5s ease-in-out;
+        }
+        #customToast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            color: #f8fafc;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1.5px solid #0ea5e9;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 999999;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .date-separator-header {
+            background: linear-gradient(90deg, rgba(14, 165, 233, 0.12) 0%, rgba(15, 23, 42, 0.2) 100%);
+            border-left: 4px solid #0ea5e9;
+            color: #38bdf8;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .delivery-gold-card.urgent {
+            border-left-color: #ef4444 !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15), inset 0 1px 0 #ffffff !important;
+        }
+        .delivery-gold-card.urgent .client-name {
+        }
+    </style>
+    <script>window.onerror = function() { return true; };</script>
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script src="assets/js/hacker_mode.js"></script>
+<script>
+    // --- SMART AUTO-SAVE (LOGISTICA E KM) ---
+    window.addEventListener('load', function() {
+        // Sync nome cliente in header editor
+        var syncNome = function() {
+            var txtNome = document.getElementById('txtNome');
+            var lblNomeHeader = document.getElementById('lblNomeClienteHeader');
+            if(txtNome && lblNomeHeader) {
+                var val = txtNome.value.trim();
+                lblNomeHeader.innerText = val ? ("- " + val) : "";
+            }
+        };
+        setInterval(syncNome, 500);
+        
+        setTimeout(function() {
+            var txtNome = document.getElementById('txtNome');
+            if(txtNome) {
+                txtNome.addEventListener('input', syncNome);
+                txtNome.addEventListener('change', syncNome);
+            }
+            
+            var fieldsToWatch = ['txtDataConsegna', 'cmbOra', 'cmbStato', 'chkConsegnato', 'txtOrdine', 'txtKmAndata', 'txtKmRitorno'];
+            for(var i=0; i<fieldsToWatch.length; i++) {
+                var el = document.getElementById(fieldsToWatch[i]);
+                if(el) {
+                    el.addEventListener('change', function() {
+                        var id = document.getElementById('txtId').value;
+                        if (id && id !== 'NEW') {
+                            if(typeof ActionSalva === 'function') {
+                                ActionSalva(true); 
+                            }
+                        }
+                    });
+                }
+            }
+        }, 1000);
+    });
+</script>
+</head>
+    <!-- CONTAINER GLOBALE -->
+    <div class="app-container" id="mainDashboardContainer" role="main">
+
+        <!-- STRISCIA NERA SUPERIORE (APPLE STYLE) -->
+        <div class="danea-top-black-bar" onmousedown="StartDrag()" style="height:35px; background:#1a1a1a; color:white; display:flex; align-items:center; padding:0 15px; font-size:11px; font-weight:bold; flex-shrink:0; cursor:move;">
+            <!-- Apple Traffic Lights -->
+            <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="display:flex; gap:8px; margin-right:15px; cursor:default;">
+                <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+                <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+                <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+            </div>
+            
+            <img src="assets/img/logo_final.jpg" style="height:26px; width:auto; margin-right:12px; border-radius:4px; background:white; padding:2px;" alt="">
+            <span style="text-transform:uppercase; letter-spacing:1px; flex:1;">Gestione Logistica e Consegne</span>
+
+            <div id="userProfileWidget" style="display:flex; align-items:center; gap:8px; font-size:0.9rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px; margin-right:8px;">AUTENTICAZIONE...</div>
+        </div>
+
+        <!-- RIGA 0: CLASSIC MENU BAR -->
+        <nav class="classic-menu-bar" role="navigation" aria-label="Menu principale">
+            <div class="menu-item" onclick="toggleMenu(this, event)" role="menuitem" aria-haspopup="true">
+                <span><u>F</u>ile</span>
+                <div class="submenu">
+                    <div class="submenu-item" onclick="document.getElementById('cmdNuovo').click()"><span><u>N</u>uovo</span> <span class="shortcut">Ctrl+N</span></div>
+                    <div class="submenu-item" onclick="document.getElementById('cmdSalva').click()"><span><u>S</u>alva Info</span> <span class="shortcut">Ctrl+S</span></div>
+                    <div class="submenu-item" onclick="document.getElementById('cmdElimina').click()"><span><u>E</u>limina Record</span> <span class="shortcut">Ctrl+Canc</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="document.getElementById('cmdWhatsApp').click()"><span>Invia Messaggio <u>W</u>hatsApp</span></div>
+                    <div class="submenu-item" onclick="document.getElementById('cmdEmail').click()"><span>Invia <u>E</u>mail al Cliente</span></div>
+                    <div class="submenu-item" onclick="GestisciCartella(false)" oncontextmenu="GestisciCartella(true); return false;"><span>Apri <u>C</u>artella File Locali</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item has-submenu">
+                        <span><u>G</u>enera e Stampa</span>
+                        <span class="arrow">▶</span>
+                        <div class="nested-submenu">
+                            <div class="submenu-item" onclick="document.getElementById('cmdGeneraReport').click()"><span><u>R</u>apporto Mensile (Anteprima)</span></div>
+                            <div class="submenu-item" onclick="document.getElementById('cmdGeneraReportDiretto').click()"><span>Esporta <u>P</u>DF Rapido</span></div>
+                            <div class="submenu-item" onclick="document.getElementById('cmdPDF').click()"><span>Scheda Consegna (PDF)</span></div>
+                            <div class="submenu-divider"></div>
+                            <div class="submenu-item" onclick="ActionStampaSpecial('MENSILE')"><span>Re<u>g</u>istro Mensile Elenco</span></div>
+                            <div class="submenu-item" onclick="ActionStampaSpecial('ULTIMI5')"><span><u>U</u>ltime Consegne (5gg)</span></div>
+                            <div class="submenu-item" onclick="ActionStampaSpecial('PROSSIMI5')"><span><u>P</u>rossime Consegne (5gg)</span></div>
+                        </div>
+                    </div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="ActionEsci()"><span><u>C</u>hiudi Modulo e Esci</span> <span class="shortcut">Alt+F4</span></div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)">
+                <span><u>M</u>odifica</span>
+                <div class="submenu">
+                    <div class="submenu-item" onclick="ActionNuovo()"><span><u>A</u>nnulla Inserimento / Svuota Form</span></div>
+                    <div class="submenu-item" onclick="copyToClipboard(document.getElementById('txtNome').value)"><span>Copia Nome <u>D</u>estinatario</span></div>
+                    <div class="submenu-item" onclick="copyToClipboard(document.getElementById('txtResidenza').value + ', ' + document.getElementById('cmbLocalita').value)"><span>Copia <u>I</u>ndirizzo Consegna</span></div>
+                    <div class="submenu-item" onclick="ActionCopiaRiepilogo()"><span>Copia Riepilogo Consegna</span> <span class="shortcut">Ctrl+Shift+C</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="document.getElementById('txtNote').focus()"><span>Aggiungi <u>N</u>ota Operativa</span></div>
+                    <div class="submenu-item" onclick="ApriModalArticoli()"><span>Apri <u>C</u>atalogo Merce...</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="ActionPulisciDuplicati()" style="color:#e74c3c;"><span>Rimuovi <u>R</u>ecord Duplicati...</span></div>
+                    <div class="submenu-item" onclick="ActionRimuoviBozzeVuote()" style="color:#e74c3c;"><span>Rimuovi <u>B</u>ozze Vuote (0 KM)...</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="ActionGestisciStati()"><span><img src="https://img.icons8.com/material-rounded/24/settings.png" style="width:14px; margin-right:8px;"> <u>G</u>estisci Stati Operativi...</span></div>
+                    <div class="submenu-item" onclick="ActionGestisciEnti()"><span><img src="https://img.icons8.com/material-rounded/24/settings.png" style="width:14px; margin-right:8px;"> Gestisci <u>E</u>nti Riferimento...</span></div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)">
+                <span><u>V</u>isualizza</span>
+                <div class="submenu">
+                    <div class="submenu-item" onclick="CercaConsegne()"><span><u>A</u>ggiorna Dati e Griglia</span> <span class="shortcut">F5</span></div>
+                    <div class="submenu-item" onclick="document.getElementById('cmdConsegneImminenti').click()"><span>Lista Consegne <u>I</u>mminenti (5gg)</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item has-submenu">
+                        <span><u>F</u>iltra per Stato Operativo</span>
+                        <span class="arrow">▶</span>
+                        <div class="nested-submenu">
+                            <div class="submenu-item" onclick="document.getElementById('btnFiltroTutti').click()"><span><u>T</u>utti i Record</span></div>
+                            <div class="submenu-item" onclick="document.getElementById('btnFiltroSospesi').click()"><span>Solo <u>S</u>ospesi</span></div>
+                            <div class="submenu-item" onclick="document.getElementById('btnFiltroUrgenti').click()"><span>Solo <u>U</u>rgenti</span></div>
+                            <div class="submenu-item" onclick="document.getElementById('btnFiltroChiusi').click()"><span>Solo <u>C</u>hiusi</span></div>
+                        </div>
+                    </div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="document.getElementById('btnMappa').click()"><span>Cerca Indirizzo su <u>M</u>appe</span></div>
+                    <div class="submenu-item" onclick="document.getElementById('txtRicerca').focus()"><span>Vai alla Barra di <u>R</u>icerca</span></div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)">
+                <span><u>A</u>iuto</span>
+                <div class="submenu">
+                    <div class="submenu-item" onclick="document.getElementById('cmdHelp').click()"><span><u>G</u>uida Rapida all'Uso</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="alert('🛠 ASSISTENZA TECNICA E SUPPORTO\n--------------------------------------------\n\nIl gestionale è sviluppato per ottimizzare la logistica di C. Milella.\n\nPer segnalare:\n- Anomalie o bug di sistema\n- Richiesta di nuove funzionalità operative\n- Problemi con il database Access\n\nRivolgersi direttamente all\'Amministratore o allo Sviluppatore del sistema.')"><span><u>C</u>ontattare l'Assistenza</span></div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- RIGA 1: RIBBON BAR ENTERPRISE UNIVERSALE -->
+        <header class="danea-ribbon" role="toolbar" aria-label="Strumenti operativi" style="position: relative;">
+            
+            <!-- LOGO PREMIUM A DESTRA (OPZIONE 1) -->
+            <img src="assets/img/app_icon_premium.png" style="position: absolute; right: 25px; top: 15px; height: 75px; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); border: 2px solid rgba(14, 165, 233, 0.3); z-index: 10; pointer-events: none;" alt="C. Milella Logo" onerror="this.src='assets/img/app_icon.jpg'">
+
+            <div class="ribbon-tabs" role="tablist">
+                <div class="ribbon-tab active" onclick="switchUniversalTab('nav-operazioni', this)" role="tab" aria-selected="true">Console Consegne</div>
+                <div class="ribbon-tab" onclick="switchUniversalTab('nav-moduli', this)" role="tab" aria-selected="false">Navigazione Moduli</div>
+            </div>
+            
+            <!-- GRUPPO 1: AZIONI LOCALI (Default) -->
+            <div id="nav-operazioni" class="ribbon-items">
+                
+                <div class="ribbon-group">
+                    <div style="display:flex; gap:5px;">
+                        <button class="ribbon-item" id="btnTornaElenco_Ribbon" onclick="ActionChiudiEditor()" aria-label="Torna all'Elenco Consegne" style="border-color: rgba(249, 115, 22, 0.3);">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/left.png" alt=""></div>
+                            <span aria-hidden="true" style="color: #fb923c;">Chiudi Scheda</span>
+                        </button>
+                        <button class="ribbon-item" id="btnNuovo_Ribbon" onclick="document.getElementById('cmdNuovo').click()" aria-label="Nuova Consegna - Scorciatoia Ctrl+N">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/add-file.png" alt=""></div>
+                            <span aria-hidden="true">Nuovo</span>
+                        </button>
+                        <button class="ribbon-item" id="btnSalva_Ribbon" onclick="document.getElementById('cmdSalva').click()" aria-label="Salva Modifiche - Scorciatoia Ctrl+S">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/save-as.png" alt=""></div>
+                            <span aria-hidden="true">Salva Info</span>
+                        </button>
+                        <button class="ribbon-item danger" id="btnElimina_Ribbon" onclick="document.getElementById('cmdElimina').click()" aria-label="Elimina Consegna - Scorciatoia Ctrl+Canc">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/delete-forever.png" alt=""></div>
+                            <span aria-hidden="true">Elimina Voce</span>
+                        </button>
+                        <button class="ribbon-item" id="btnCopiaRiepilogo_Ribbon" onclick="ActionCopiaRiepilogo()" aria-label="Copia Riepilogo">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/copy.png" alt=""></div>
+                            <span aria-hidden="true">Copia Info</span>
+                        </button>
+                        <button class="ribbon-item" id="btnFirmaCliente" onclick="ActionApriFirma()" aria-label="Acquisisci Firma Cliente" style="border-color: rgba(6, 182, 212, 0.3);">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/signature.png" alt=""></div>
+                            <span aria-hidden="true" style="color: #06b6d4;">Firma</span>
+                        </button>
+                        <button class="ribbon-item" id="btnSpeseExtra" onclick="ApriModalSpese()" aria-label="Aggiungi Spese Extra" style="border-color: rgba(16, 185, 129, 0.3);">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/cash.png" alt=""></div>
+                            <span aria-hidden="true" style="color: #10b981;">Spese</span>
+                        </button>
+                    </div>
+                    <div class="ribbon-group-title">Azioni Record</div>
+                </div>
+
+                <div class="ribbon-group">
+                    <div style="display:flex; gap:5px;">
+                        <button class="ribbon-item" onclick="document.getElementById('cmdWhatsApp').click()" aria-label="Invia WhatsApp">
+                            <div class="icon-img"><img src="https://img.icons8.com/color/48/whatsapp--v1.png" alt=""></div>
+                            <span aria-hidden="true">WhatsApp</span>
+                        </button>
+                        <button class="ribbon-item" onclick="if(typeof GeneraQRCodePresaInCarico==='function') GeneraQRCodePresaInCarico();" aria-label="Genera QR Code Presa in Carico">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/qr-code.png" alt=""></div>
+                            <span aria-hidden="true">QR Presa</span>
+                        </button>
+                        <button class="ribbon-item" onclick="document.getElementById('cmdEmail').click()" aria-label="Invia Email">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/email.png" alt=""></div>
+                            <span aria-hidden="true">Invia Email</span>
+                        </button>
+                    </div>
+                    <div class="ribbon-group-title">Comunicazioni</div>
+                </div>
+
+                <div class="ribbon-group">
+                    <div style="display:flex; gap:5px;">
+                        <button class="ribbon-item" onclick="document.getElementById('cmdConsegneImminenti').click()" aria-label="Mostra consegne dei prossimi 5 giorni">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/calendar.png" alt=""></div>
+                            <span aria-hidden="true">Prossimi 5gg</span>
+                        </button>
+                        <button class="ribbon-item" onclick="document.getElementById('cmdGeneraReportDiretto').click()" aria-label="Esporta PDF Rapido">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/pdf-2.png" alt=""></div>
+                            <span aria-hidden="true">PDF Rapido</span>
+                        </button>
+                        <button class="ribbon-item" onclick="document.getElementById('cmdGeneraReport').click()" aria-label="Genera Rapporto Mensile con Anteprima">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/business-report.png" alt=""></div>
+                            <span aria-hidden="true">Rapp. Mensile</span>
+                        </button>
+                        <button class="ribbon-item" onclick="ApriStatsModal()" aria-label="Mostra Statistiche">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/analytics.png" alt=""></div>
+                            <span aria-hidden="true">Statistiche</span>
+                        </button>
+                        <button class="ribbon-item" onclick="ApriLinkEsterno('radar.html')" aria-label="Radar Flotta">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/map-marker.png" alt=""></div>
+                            <span aria-hidden="true">Radar GPS</span>
+                        </button>
+                    </div>
+                    <div class="ribbon-group-title">Report & Viste</div>
+                </div>
+
+                <div class="ribbon-group" style="border-right: none;">
+                    <div style="display:flex; gap:5px;">
+                        <button class="ribbon-item" onclick="GestisciCartella(false)" oncontextmenu="GestisciCartella(true); return false;" aria-label="Apri cartella file locali (Tasto destro per cambiare cartella)">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/opened-folder.png" alt="" title="Click per Aprire, Tasto Destro per Cambiare"></div>
+                            <span aria-hidden="true">Cartella</span>
+                        </button>
+                        <button class="ribbon-item danger" onclick="ActionEsci()" aria-label="Chiudi modulo">
+                            <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt=""></div>
+                            <span aria-hidden="true">Chiudi Modulo</span>
+                        </button>
+                    </div>
+                    <div class="ribbon-group-title">Sistema</div>
+                </div>
+
+            </div>
+
+            <!-- GRUPPO 2: MODULI (Universale) -->
+            <div id="nav-moduli" class="ribbon-items" style="display:none;">
+                <button class="ribbon-item" onclick="NavigaModulo('dashboard.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/home.png" alt="Start"></div>
+                    <span>Start</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('anagrafica.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/address-book.png" alt="Anagrafica"></div>
+                    <span>Anagrafica</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('articoli.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/box.png" alt="Articoli"></div>
+                    <span>Articoli</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('storico.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/time-machine.png" alt="Storico"></div>
+                    <span>Storico</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('presenze.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/stopwatch.png" alt="Presenze"></div>
+                    <span>Presenze</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('promemoria.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/calendar--v1.png" alt="Agenda"></div>
+                    <span>Agenda</span>
+                </button>
+                <div class="ribbon-separator"></div>
+                <button class="ribbon-item danger" onclick="ActionEsci()">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt="Chiudi"></div>
+                    <span>Spegni Sistema</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="danea-app-nav" role="status" style="display:none;">
+            <span id="lblTitolo" style="display:none;"></span>
+            <h1 style="display:none;">LOGIN MANAGER - CARICAMENTO...</h1>
+            <div class="header-widgets">
+            </div>
+        </div>
+
+        <!-- MAIN WRAPPER -->
+        <div class="main-wrapper">
+            
+            <!-- MINI DASHBOARD PREMIUM -->
+            <div id="miniDashboardPremium" style="display:flex; justify-content:space-between; align-items:center; background:rgba(15,23,42,0.6); border:1.5px solid #334155; border-radius:14px; padding:12px 20px; margin-bottom:15px; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:#1e293b; padding:10px; border-radius:10px; border:1px solid #334155; text-align:center; min-width:80px;">
+                        <div style="font-size:10px; color:#94a3b8; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Completate</div>
+                        <div id="dashCompleted" style="font-size:18px; color:#22c55e; font-weight:900;">0 / 0</div>
+                    </div>
+                    <div style="background:#1e293b; padding:10px; border-radius:10px; border:1px solid #334155; text-align:center; min-width:80px;">
+                        <div style="font-size:10px; color:#94a3b8; font-weight:800; text-transform:uppercase; margin-bottom:4px;">In Attesa</div>
+                        <div id="dashPending" style="font-size:18px; color:#facc15; font-weight:900;">0</div>
+                    </div>
+                    <div style="background:#1e293b; padding:10px; border-radius:10px; border:1px solid #334155; text-align:center; min-width:80px;">
+                        <div style="font-size:10px; color:#94a3b8; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Sospesi</div>
+                        <div id="dashIssues" style="font-size:18px; color:#ef4444; font-weight:900;">0</div>
+                    </div>
+                </div>
+                
+                <div style="display:flex; align-items:center; gap:25px;">
+                    <!-- ANALISI CARICO (Spostato qui e integrato nello stile) -->
+                    <div class="roadmap-widget" title="Analisi Carico: Giallo (Mattino) / Blu (Pomeriggio)" aria-label="Situazione carico giornaliero" style="border: 1px solid #334155; background: #1e293b; border-radius: 10px; margin-bottom: 0;">
+                        <div class="roadmap-title">CARICO <span id="lblRoadmapData" aria-live="polite">OGGI</span></div>
+                        <div class="roadmap-bars" aria-hidden="true">
+                            <div class="roadmap-bar mat" id="barMattina" style="width: 50%;"></div>
+                            <div class="roadmap-bar pom" id="barPomeriggio" style="width: 50%;"></div>
+                        </div>
+                        <div class="roadmap-labels" aria-live="polite">
+                            <span id="lblRoadmapMattina">MAT: 0</span>
+                            <span id="lblRoadmapPomeriggio">POM: 0</span>
+                        </div>
+                    </div>
+
+                    <!-- PROGRESSO GIORNALIERO -->
+                    <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                        <div style="font-size:11px; color:#94a3b8; font-weight:800; text-transform:uppercase; margin-bottom:5px;">Progresso Giornaliero</div>
+                        <div style="width:200px; height:8px; background:#1e293b; border-radius:4px; overflow:hidden;">
+                            <div id="dashProgressBar" style="width:0%; height:100%; background:linear-gradient(90deg, #0ea5e9, #22c55e); transition:width 0.5s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                        </div>
+                    </div>
+                    <div id="dashProgressText" style="font-size:22px; color:#f8fafc; font-weight:900;">0%</div>
+                </div>
+            </div>
+            <div class="archive-filters">
+                <div class="form-group" style="max-width:120px;">
+                    <label>MESE</label>
+                    <select id="cmbMese"></select>
+                </div>
+                <div class="form-group" style="max-width:100px;">
+                    <label>ANNO</label>
+                    <select id="cmbAnni"></select>
+                </div>
+                <div class="form-group">
+                    <label>FILTRA STATO</label>
+                    <div class="filters-status">
+                        <button class="btn-filter active" id="btnFiltroTutti">TUTTI</button>
+                        <button class="btn-filter" id="btnFiltroSospesi">SOSPESI</button>
+                        <button class="btn-filter" id="btnFiltroUrgenti">URGENTI</button>
+                        <button class="btn-filter" id="btnFiltroChiusi">CHIUSI</button>
+                        <button class="btn-filter" id="btnFiltroProssimeDaFare" style="background:rgba(234, 179, 8, 0.2); color:#fde047; border:1px solid #eab308; margin-left:15px;" title="Vedi tutte le consegne dei prossimi giorni non ancora fatte">⏳ PROSSIME DA FARE</button>
+                        <button class="btn-filter" id="btnFiltroOggiUrgenti" style="background:rgba(239, 68, 68, 0.1); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.3); margin-left:8px;" title="Vedi solo consegne di oggi o urgenti">🔥 OGGI & URGENTI</button>
+                    </div>
+                </div>
+                <div class="form-group flex-1">
+                    <label>CERCA NELL'ELENCO</label>
+                    <div style="position:relative; display:flex; align-items:center; width:100%;">
+                        <input type="text" id="txtRicerca" placeholder="Cerca... (Premi CTRL+F)" style="width:100%; padding-right: 30px;">
+                        <button type="button" onclick="document.getElementById('txtRicerca').value=''; if(typeof FilterData==='function') FilterData(); document.getElementById('txtRicerca').focus();" style="position:absolute; right:8px; background:none; border:none; color:#94a3b8; cursor:pointer; font-size:16px; font-weight:bold; display:flex; align-items:center; justify-content:center; transition: color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'" title="Svuota ricerca">&times;</button>
+                    </div>
+                </div>
+                <div class="form-group" style="flex:0 0 80px;">
+                    <label>MAPPA</label>
+                    <button class="btn-routing-special" id="btnToggleMappa" style="background:rgba(14,165,233,0.12); color:#38bdf8; border:1.5px solid rgba(14,165,233,0.4); padding:7px 12px; border-radius:8px; font-weight:800; font-size:11px; width:100%; cursor:pointer; transition:all 0.25s; text-transform:uppercase; letter-spacing:0.5px;" onclick="ToggleSplitViewMap()" title="Mostra/Nascondi Mappa">
+                        🗺️ MAPPA
+                    </button>
+                </div>
+                <div class="form-group" style="flex:0 0 80px; margin-left:10px;">
+                    <label>VISTA</label>
+                    <button class="btn-routing-special" id="btnToggleKanban" style="background:rgba(139,92,246,0.12); color:#a78bfa; border:1.5px solid rgba(139,92,246,0.4); padding:7px 12px; border-radius:8px; font-weight:800; font-size:11px; width:100%; cursor:pointer; transition:all 0.25s; text-transform:uppercase; letter-spacing:0.5px;" onclick="window.ToggleKanbanView()" title="Passa a vista Kanban a colonne">
+                        📋 KANBAN
+                    </button>
+                </div>
+                <div class="form-group" style="flex:0 0 80px; margin-left: 10px;">
+                    <label>ORDINE</label>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn-nav-mini" id="btnSpostaSu" title="Sposta su">▲</button>
+                        <button class="btn-nav-mini" id="btnSpostaGiu" title="Sposta giù">▼</button>
+                    </div>
+                </div>
+                <div class="form-group" style="flex:0 0 160px; margin-left: 10px;">
+                    <label style="color:#0ea5e9;">SMART ROUTING</label>
+                    <button class="btn-routing-special" id="btnOttimizzaPercorso" style="background:rgba(37,211,102,0.12); color:#25D366; border:1.5px solid rgba(37,211,102,0.4); padding:7px 12px; border-radius:8px; font-weight:800; font-size:11px; width:100%; cursor:pointer; transition:all 0.25s; text-transform:uppercase; letter-spacing:0.5px;" onclick="ActionOttimizzaPercorso()" title="Ottimizza l'ordine delle consegne visibili e crea percorso su Google Maps">
+                        📍 Ottimizza Percorso
+                    </button>
+                </div>
+                <div class="form-group" style="flex:0 0 150px; margin-left: 8px;">
+                    <label style="color:#fbbf24;">LOGISTICA CARICO</label>
+                    <button class="btn-routing-special" id="btnDistintaCarico" style="background:rgba(251,191,36,0.12); color:#fbbf24; border:1.5px solid rgba(251,191,36,0.4); padding:7px 12px; border-radius:8px; font-weight:800; font-size:11px; width:100%; cursor:pointer; transition:all 0.25s; text-transform:uppercase; letter-spacing:0.5px;" onclick="GeneraDistintaCarico()" title="Genera il manifesto degli articoli da caricare per le consegne visibili">
+                        📋 Distinta Carico
+                    </button>
+                </div>
+            </div>
+
+            <!-- [ZONA 1] ARCHIVIO (ORA IN CIMA) -->
+            <div class="archive-panel">
+                <div class="archive-header">
+                    <div><img src="https://img.icons8.com/fluency/24/list.png" style="vertical-align:middle; margin-right:8px;"> ARCHIVIO CONSEGNE OPERATIVE</div>
+                    <div id="lblMetadati" style="font-size:10px; color:#aaa; font-weight:normal;">
+                        <span id="lblInseritoIl">Inserito: -</span> | <span id="lblModificatoIl">Modificato: -</span>
+                    </div>
+                </div>
+
+                <!-- NUOVO CONTAINER PER GOLD CARDS & MAPPA -->
+                <div class="split-view-container" id="splitViewContainer">
+                    <div id="cardListContainer" class="card-list-container">
+                        <div style="text-align:center; padding:50px; color:#999; font-style:italic;">
+                            <i class="fa fa-spinner fa-spin"></i> Caricamento elenco in corso...
+                        </div>
+                    </div>
+                    <div id="mapPanel" class="map-panel">
+                        <iframe id="mapFrame" src="about:blank" style="width:100%; height:100%; border:none;"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BATCH ACTIONS PANEL (HIDDEN BY DEFAULT) -->
+            <div id="batchActionsPanel" class="batch-actions-panel">
+                <span style="color:#0ea5e9; font-weight:900; font-size:12px;"><span id="lblBatchCount">0</span> SELEZIONATI:</span>
+                <button onclick="BatchActionWhatsApp()"><i class="fa fa-whatsapp" style="color:#25d366;"></i> WhatsApp Multiplo</button>
+                <button onclick="BatchActionStatus()"><i class="fa fa-check" style="color:#22c55e;"></i> Segna Completati</button>
+                <button onclick="BatchActionClear()" style="background:transparent; border:none; color:#ef4444;"><i class="fa fa-times"></i> Annulla</button>
+            </div>
+
+            <!-- [ZONA 2] EDITOR PANEL (COLLASSABILE) -->
+            <div id="editorPanel" class="editor-panel-wrapper collapsed">
+                <div class="editor-header-bar" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                        <span>📝 SCHEDA DETTAGLIO CONSEGNA</span>
+                        <span id="lblNomeClienteHeader" style="color: #fde047; font-weight: 900; font-size: 13px; text-transform: uppercase; margin-left: 5px; text-shadow: 0 0 10px rgba(253, 224, 71, 0.4);"></span>
+                        <span id="lblPosizioneConsegna" style="background:rgba(6, 182, 212, 0.15); border:1px solid rgba(6, 182, 212, 0.35); color:#22d3ee; font-size:11px; font-weight:900; padding:4px 10px; border-radius:10px; letter-spacing:0.5px; display:none; vertical-align:middle; margin-left:12px;"></span>
+                        <button type="button" onclick="NavigaModulo('dashboard.html')" style="background:#ffab00; color:#000; border:none; padding:4px 12px; border-radius:6px; font-size:10px; font-weight:900; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow:0 2px 5px rgba(0,0,0,0.2); transition:all 0.1s;" onmouseover="this.style.backgroundColor='#e69a00'" onmouseout="this.style.backgroundColor='#ffab00'" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'" title="Esci da Consegne e torna all'Agenda Dashboard">
+                            ◀ TORNA ALLA DASHBOARD
+                        </button>
+                    </div>
+                    <button type="button" class="btn-close-editor" onclick="ActionChiudiEditor()" title="Chiudi scheda (Premi ESC)">&times;</button>
+                </div>
+
+                <!-- CARD 1: ANAGRAFICA -->
+                <div class="danea-card" id="cardAnagrafica" role="region" aria-label="Sezione Anagrafica e Recapiti">
+                    <div class="card-header" onclick="ToggleCard('cardAnagrafica')">
+                        <span>🆔 Anagrafica e Recapiti</span>
+                        <div class="btn-toggle-card" id="btnToggleAnagrafica">▲</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-row">
+                            <div class="photo-box" onclick="document.getElementById('fileFotoCliente').click()" title="Fai clic per caricare o modificare la foto del cliente" style="cursor:pointer;"><img id="imgFotoCliente" src="" alt=""><div id="lblNoFoto" class="no-photo-text">FOTO</div></div>
+                            <div class="form-group" style="flex: 1;"><label>COGNOME E NOME <span id="lblStatoDisabilita" class="badge-status-client"></span> <span id="lblSmartExcel" class="badge-smart-excel" style="display:none; cursor:pointer;" onclick="ActionCaricaMerceExcel()">📦 MERCE IN EXCEL</span></label>
+                                <div class="autocomplete-wrapper"><input type="text" id="txtNome" autocomplete="off" placeholder="Cerca o inserisci cliente..."><div id="suggerimenti" class="autocomplete-list" style="display:none;"></div></div>
+                            </div>
+                            <div class="form-group" style="flex: 0.8;"><label>PROVINCIA</label><select id="cmbProvincia"></select></div>
+                            <div class="form-group" style="flex: 1;"><label>LOCALIT&Agrave; <span style="font-size:9px; color:#06b6d4; cursor:pointer; margin-left:8px;" onclick="ActionGestisciLocalita()">⚙️ GESTISCI</span></label><input type="text" id="cmbLocalita" list="listLocalita" placeholder="Scegli o scrivi..."><div id="localita-buttons-bar" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:5px;"></div></div>
+                            <div class="form-group" style="flex: 1.5;"><label>INDIRIZZO</label>
+                                <div style="display:flex;"><input type="text" id="txtResidenza" style="border-radius:10px 0 0 10px !important;"><button id="btnMappa" title="Vedi Mappa" style="padding:0 8px; border:1.5px solid #334155; border-left:none; background:rgba(15,23,42,0.7); cursor:pointer; border-radius:0 10px 10px 0; display:flex; align-items:center; transition:all 0.2s;"><img src="https://img.icons8.com/color/20/google-maps-new.png" alt=""></button></div>
+                            </div>
+                        </div>
+                        <div class="form-row recapiti-row">
+                            <div class="form-group" style="flex: 1;"><label>EMAIL CONTATTO</label><input type="email" id="txtEmail" placeholder="esempio@mail.it"></div>
+                            <div class="form-group" style="flex: 1.5;">
+                                <label>TELEFONO RECAPITO (INVIO PER AGGIUNGERE)</label>
+                                <div class="phone-chips-wrapper" id="phoneContainer" onclick="document.getElementById('txtTelefono').focus()">
+                                    <div id="chipsArea" style="display:contents;"></div>
+                                    <input type="text" id="txtTelefono" class="phone-input-inline" placeholder="Scrivi numero..." oninput="if(typeof FormatSmartPhone==='function') this.value=FormatSmartPhone(this.value);">
+                                </div>
+                                <div class="phone-labels-bar" style="margin-top: 6px;">
+                                    <button type="button" class="label-btn" onclick="AddPhoneLabel('CELL. ')">CELL.</button>
+                                    <button type="button" class="label-btn" onclick="AddPhoneLabel('FISSO ')">FISSO</button>
+                                    <button type="button" class="label-btn wa" onclick="AddPhoneLabel('W.APP ')">W.APP</button>
+                                    <button type="button" class="label-btn" onclick="AddPhoneLabel('FIGLIO/A ')">FIGLIO/A</button>
+                                    <button type="button" class="label-btn" onclick="AddPhoneLabel('MOGLIE/MARITO ')">CONIUGE</button>
+                                    <button type="button" class="label-btn" onclick="AddPhoneLabel('ALTRO ')">ALTRO</button>
+                                </div>
+                            </div>
+                            <div class="form-group" style="flex: 1.5;"><label>ENTE Riferimento <span style="font-size:9px; color:#06b6d4; cursor:pointer; margin-left:8px;" onclick="ActionGestisciEnti()">⚙️ GESTISCI</span></label><input type="text" id="cmbEnte" list="listEnti" placeholder="Scegli o scrivi..."><datalist id="listEnti"></datalist><div id="ente-buttons-bar" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:5px;"></div></div>
+                        </div>
+                        <div class="form-row" style="margin-top: 15px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label style="color: #ffab00; font-weight: 800;">STATO INVALIDIT&Agrave; (CLICCA I TASTI O SCRIVI E PREMI INVIO)</label>
+                                <div class="invalidity-chips-wrapper" id="invContainer" onclick="document.getElementById('txtStatoInvalidita').focus()">
+                                    <div id="invChipsArea" style="display:contents;"></div>
+                                    <input type="text" id="txtStatoInvalidita" class="inv-input-inline" placeholder="Aggiungi stato...">
+                                </div>
+                                <div class="inv-labels-bar" style="margin-top: 8px;">
+                                    <button type="button" class="inv-label-btn" onclick="AddInvLabel('CIECO ASSOLUTO')">CIECO ASSOLUTO</button>
+                                    <button type="button" class="inv-label-btn" onclick="AddInvLabel('IPOVEDENTE')">IPOVEDENTE</button>
+                                    <button type="button" class="inv-label-btn" onclick="AddInvLabel('SORDOCIECO')">SORDOCIECO</button>
+                                    <button type="button" class="inv-label-btn" onclick="AddInvLabel('INVALIDO CIVILE')">INVALIDO CIVILE</button>
+                                    <button type="button" class="inv-label-btn" onclick="AddInvLabel('NON AUTO SUFFICIENTE')">NON AUTO SUFFICIENTE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2: LOGISTICA -->
+                <div class="danea-card" id="cardLogistica" style="margin-top:10px;" role="region">
+                    <div class="card-header" onclick="ToggleCard('cardLogistica')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                        <span>🚚 Dettagli Logistica e KM</span>
+                        <div class="btn-toggle-card" id="btnToggleLogistica">▲</div>
+                    </div>
+                    <div class="card-content">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 0.8;"><label>DATA</label><div style="display:flex;"><input type="text" id="txtDataConsegna" style="border-radius:10px 0 0 10px !important;" ondblclick="ApriCalendario(this.id)"><button type="button" onclick="ApriCalendario('txtDataConsegna')" title="Apri Calendario" style="padding:0 8px; border:1.5px solid #334155; border-left:none; background:rgba(14, 165, 233, 0.15); cursor:pointer; display:flex; align-items:center;"><i class="fa fa-calendar" style="color:#0ea5e9;"></i></button><button type="button" onclick="if(typeof ActionSalva==='function')ActionSalva(true);" title="Salva Modifica" style="padding:0 6px; border:1.5px solid #334155; border-left:none; background:rgba(16, 185, 129, 0.15); cursor:pointer; border-radius:0 10px 10px 0; display:flex; align-items:center;"><i class="fa fa-save" style="color:#10b981;"></i></button></div></div>
+                        <div class="form-group" style="flex: 0.5;"><label>ORA</label><div style="display:flex;"><input type="text" id="cmbOra" ondblclick="ApriTimePicker()" onkeyup="if(typeof FormatSmartTime==='function') this.value=FormatSmartTime(this.value);" style="border-radius:10px 0 0 10px !important; background:rgba(15,23,42,0.7) url('https://img.icons8.com/fluency/18/clock.png') no-repeat 90% center !important;"><button type="button" onclick="if(typeof ActionSalva==='function')ActionSalva(true);" title="Salva Modifica" style="padding:0 6px; border:1.5px solid #334155; border-left:none; background:rgba(16, 185, 129, 0.15); cursor:pointer; border-radius:0 10px 10px 0; display:flex; align-items:center;"><i class="fa fa-save" style="color:#10b981;"></i></button></div></div>
+                        <div class="form-group" style="flex: 0.8;"><label>N. ORDINE</label><div style="display:flex;"><input type="text" id="txtOrdine" style="border-radius:10px 0 0 10px !important;"><button type="button" onclick="if(typeof ActionSalva==='function')ActionSalva(true);" title="Salva Modifica" style="padding:0 6px; border:1.5px solid #334155; border-left:none; background:rgba(16, 185, 129, 0.15); cursor:pointer; border-radius:0 10px 10px 0; display:flex; align-items:center;"><i class="fa fa-save" style="color:#10b981;"></i></button></div></div>
+                        <div class="form-group" style="flex: 1.5;"><label>STATO OPERATIVO <span style="font-size:9px; color:#06b6d4; cursor:pointer; margin-left:8px;" onclick="ActionGestisciStati()">⚙️ GESTISCI</span></label><div style="display:flex;"><input type="text" id="cmbStato" list="listStati" placeholder="Scegli o scrivi..." style="border-radius:10px 0 0 10px !important;"><button type="button" onclick="if(typeof ActionSalva==='function')ActionSalva(true);" title="Salva Modifica" style="padding:0 6px; border:1.5px solid #334155; border-left:none; background:rgba(16, 185, 129, 0.15); cursor:pointer; border-radius:0 10px 10px 0; display:flex; align-items:center;"><i class="fa fa-save" style="color:#10b981;"></i></button></div><datalist id="listStati"></datalist><div id="stato-buttons-bar" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:5px;"></div></div>
+                        <div class="form-group" style="flex: 0.4;"><label>KM A.</label><div style="display:flex;"><input type="text" id="txtKmAndata" style="border-radius:10px 0 0 10px !important;"><button type="button" onclick="if(typeof ActionSalva==='function')ActionSalva(true);" title="Salva Modifica" style="padding:0 6px; border:1.5px solid #334155; border-left:none; background:rgba(16, 185, 129, 0.15); cursor:pointer; border-radius:0 10px 10px 0; display:flex; align-items:center;"><i class="fa fa-save" style="color:#10b981;"></i></button></div></div>
+                        <div class="form-group" style="flex: 0.4;"><label>KM R.</label><div style="display:flex;"><input type="text" id="txtKmRitorno" style="border-radius:10px 0 0 10px !important;"><button type="button" onclick="if(typeof ActionSalva==='function')ActionSalva(true);" title="Salva Modifica" style="padding:0 6px; border:1.5px solid #334155; border-left:none; background:rgba(16, 185, 129, 0.15); cursor:pointer; border-radius:0 10px 10px 0; display:flex; align-items:center;"><i class="fa fa-save" style="color:#10b981;"></i></button></div></div>
+                        <div class="form-group" style="flex: 0.4;"><label>TOT</label><input type="text" id="txtKmTotale" readonly class="locked"></div>
+                        <div class="form-group" style="flex: 0 0 100px; align-items:center; border-left: 1px solid #eee; padding-left: 15px;"><label id="lblChiusa">CHIUSA?</label><input type="checkbox" id="chkConsegnato" style="width:22px; height:22px;"></div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: NOTE E MERCE -->
+                <div class="danea-card" id="cardNote" style="margin-top:10px;">
+                    <div class="card-header" onclick="ToggleCard('cardNote')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                        <span>📝 Note e Descrizione Merce</span>
+                        <div class="btn-toggle-card" id="btnToggleNote">▲</div>
+                    </div>
+                    <div class="card-content">
+                    <div class="form-row" style="border-bottom:none">
+                        <div class="form-group flex-1"><label>NOTE OPERATIVE <button id="btnViewPOD" style="display:none; background:#22c55e; color:white; border:none; padding:3px 8px; border-radius:6px; font-size:10px; font-weight:bold; cursor:pointer; margin-left:10px; vertical-align:middle;" onclick="if(typeof ApriPOD === 'function') ApriPOD();">🖼️ Visualizza POD</button></label>
+                            <textarea id="txtNote" rows="1" style="overflow:hidden; min-height:38px; resize:none;" oninput="this.style.height='';this.style.height=this.scrollHeight+'px'"></textarea>
+                            <div id="note-chips-bar" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:6px;">
+                                <button type="button" onclick="document.getElementById('txtNote').value += (document.getElementById('txtNote').value ? ' - ' : '') + this.innerText; document.getElementById('txtNote').dispatchEvent(new Event('change')); this.style.transform='scale(0.9)'; setTimeout(()=>this.style.transform='none',150);" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; border-radius:12px; padding:3px 8px; font-size:9.5px; cursor:pointer; transition:all 0.2s; white-space:nowrap;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">Cliente Assente</button>
+                                <button type="button" onclick="document.getElementById('txtNote').value += (document.getElementById('txtNote').value ? ' - ' : '') + this.innerText; document.getElementById('txtNote').dispatchEvent(new Event('change')); this.style.transform='scale(0.9)'; setTimeout(()=>this.style.transform='none',150);" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; border-radius:12px; padding:3px 8px; font-size:9.5px; cursor:pointer; transition:all 0.2s; white-space:nowrap;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">Lasciare in portineria</button>
+                                <button type="button" onclick="document.getElementById('txtNote').value += (document.getElementById('txtNote').value ? ' - ' : '') + this.innerText; document.getElementById('txtNote').dispatchEvent(new Event('change')); this.style.transform='scale(0.9)'; setTimeout(()=>this.style.transform='none',150);" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; border-radius:12px; padding:3px 8px; font-size:9.5px; cursor:pointer; transition:all 0.2s; white-space:nowrap;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">Pacco Danneggiato</button>
+                                <button type="button" onclick="document.getElementById('txtNote').value += (document.getElementById('txtNote').value ? ' - ' : '') + this.innerText; document.getElementById('txtNote').dispatchEvent(new Event('change')); this.style.transform='scale(0.9)'; setTimeout(()=>this.style.transform='none',150);" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; border-radius:12px; padding:3px 8px; font-size:9.5px; cursor:pointer; transition:all 0.2s; white-space:nowrap;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">Consegnare mattina</button>
+                            </div>
+                        </div>
+                        <div class="form-group flex-2">
+                            <label>DESCRIZIONE MERCE <span id="lblConteggioMerce" class="label-info-merce">(0 ARTICOLI)</span> <span id="tagExcel" class="tag-auto-caricati" style="display:none;">✓ EXCEL UFFICIO</span></label>
+                            <textarea id="txtMerce" class="txt-merce-premium" rows="2" ondblclick="ApriModalArticoli()" placeholder="Elenco ausili e dispositivi..." style="overflow:hidden; min-height:50px; resize:none;" oninput="this.style.height='';this.style.height=this.scrollHeight+'px'"></textarea>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- STATUS BAR -->
+        <footer class="status-bar" role="contentinfo" style="display:flex; align-items:center;">
+            <div id="lblContatore" aria-live="polite">Record trovati: 0</div>
+            
+            <!-- PROGRESS BAR GAMIFICATION -->
+            <div style="margin-left: 20px; display:flex; align-items:center; gap:10px;" title="Stato completamento consegne per i record visibili">
+                <span style="font-size:10px; font-weight:800; color:#cbd5e1; letter-spacing:0.5px;">PROGRESSO:</span>
+                <div style="width: 150px; height: 14px; background: rgba(15,23,42,0.8); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; position: relative;">
+                    <div id="barProgresso" style="width: 0%; height: 100%; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(16,185,129,0.5);"></div>
+                </div>
+                <span id="lblProgresso" style="font-size:11px; font-weight:900; color:#10b981; width:35px;">0%</span>
+            </div>
+
+            <div style="cursor:help; padding:2px 8px; border:1px solid #334155; border-radius:12px; background:rgba(15,23,42,0.6); font-size:10px; color:#94a3b8; display:flex; align-items:center; margin-left:15px;" title="SCORCIATOIE TASTIERA:&#10;[CTRL + N] = Nuova Consegna&#10;[CTRL + S] = Salva Modifiche&#10;[CTRL + F] = Cerca nell'elenco&#10;[ESC] = Chiudi Scheda">⌨️ Scorciatoie</div>
+            <div id="lblAvvisoProtezione" style="color:#ffab00; display:none; margin-left:auto;" aria-live="assertive">⚠️ MODALITÀ STORICO</div>
+        </footer>
+
+        <!-- ELEMENTI NASCOSTI PER COMPATIBILITÀ JS -->
+        <div style="display:none">
+            <button id="cmdNuovo"></button>
+            <button id="cmdSalva"></button>
+            <button id="cmdElimina"></button>
+            <button id="cmdConsegneImminenti"></button>
+            <button id="cmdGeneraReport"></button>
+            <button id="cmdGeneraReportDiretto"></button>
+            <button id="cmdPDF"></button>
+            <button id="cmdEmail"></button>
+            <button id="cmdWhatsApp" onclick="ActionWhatsApp()"></button>
+            <button id="cmdMostraFile"></button>
+            <button id="cmdHelp"></button>
+            <button id="cmdChiudi"></button>
+            <input type="text" id="txtId" value="NEW">
+            <input type="hidden" id="lblClientID" value="">
+            <input type="hidden" id="txtFirmaBase64" value="">
+            <input type="file" id="fileFotoCliente" accept="image/*" style="display:none;" onchange="ActionAssociaFotoCliente(this.value)">
+            <button id="cmdPromemoria"></button>
+            <button id="cmdOreRecupero"></button>
+            <datalist id="listLocalita"></datalist>
+        </div>
+
+    </div>
+
+    <!-- GOLD CATALOG PICKER MODAL -->
+    <div id="modalArticoli" class="modal-overlay">
+        <div id="modalContentArticoli" class="modal-content">
+            <div class="modal-header">
+                <span style="font-weight:bold; font-size:12px;">📦 CATALOGO AUSILI</span>
+                <button type="button" onclick="ChiudiModalArticoli()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="modal-sidebar">
+                    <div class="form-group">
+                        <label style="color:#94a3b8; font-size:10px;">CATEGORIA</label>
+                        <select id="cmbArticoli" style="padding:8px 10px; border:1.5px solid #334155; border-radius:8px; font-size:12px; background:rgba(15,23,42,0.7); color:#fff;"></select>
+                    </div>
+                    
+                    <div class="form-group" style="flex:1;">
+                        <label style="color:#94a3b8; font-size:10px; display:flex; justify-content:space-between;">
+                            <span>PRODOTTI</span>
+                            <span id="lblArticoliContatore" style="font-weight:800; color:#0ea5e9;">0</span>
+                        </label>
+                        <select id="lstArticoli" size="10" class="list-articles"></select>
+                    </div>
+                </div>
+                
+                <div class="modal-preview">
+                    <div id="lblNoFotoArt" style="font-weight:900; color:#eee; font-size:1.5rem; text-align:center;">
+                        ANTEPRIMA
+                    </div>
+                    <img id="imgFotoArticolo" class="img-preview-box" style="display:none;">
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn-action danger" onclick="SvuotaMerce()">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAArklEQVR4nO2S0Q2DMBAEHzcl0AnpIO0kHaSdtAtpJ0mX8AmvS8gWCHLpSyI/6ZfVnr+7Y0mSKmY0mAHM7AG8AVOAzR7At79H4FzYmPZJArAAWnE8t97M7EAnjt88An0D+A9Q908HutA/A0H/DKAL/TNg9M9Y6WvXAnE8B659AtfAXpzn7Q1Y97clB8A9O8vO7C9U87eM9gC8Aov9U8atOf38Zp0DqZpRA2gAH89mN2MGo9BfYwUv9ALstVvTAAAAAElFTkSuQmCC"> SVUOTA
+                </button>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" class="btn-action" onclick="ChiudiModalArticoli()">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAyklEQVR4nO2S0Q3CMAxEHy0m6CR0kjZJJ6GTdAleYAlYIBYIBc7RSpUSfAn4VvH5O+ffnSVJqpgpYAoAm9kD+AB6ANscAXS/R+AsbLR7IAG4ADpX7XtvZp+g89XHz8C6A/wPUPVPhK76Z0JX/TOhq/6ZUfXPXOm77oE4X8DVPfAD7K153b4D++IuWfXnufobRXue0D2AnyG6f6zYldvPB+ucSdVMFMAH+E0WuxozmIX+Ght4AfU7X69V9A2yAAAAAElFTkSuQmCC"> CHIUDI
+                    </button>
+                    <button type="button" class="btn-action success" onclick="ConfermaSelezioneArticolo()">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA7ElEQVR4nO2S0Q2DMAxEHy2m6CRYgg3YpJuETRIn6SZpEmaJYH9IuYSPH9AmoR8SvkrP9tk+lyRJKlgpYA0Am1kD+AA6ANscAXS/R6AsbLR7IAG4ADpXndfezA7Vee7fPAJrA/gPUPVPhK76Z0JX/TOhq/6ZUfXPXOm77oE4X8DVPfAD7K153b4D++IuOat/06g9m+osf88F+Bmi+9vGrXz8uN7Sg5QCOsAJ+E0Wu6sxg1nor7GBeAC6B7U7X69Y6G6C/y8AAAAASUVORK5CYII="> INSERISCI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALI -->
+    <div id="calendarOverlay" class="calendar-overlay">
+        <div class="calendar-modal">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:10px;">
+                <button id="btnCalPrev" style="border:none; background:none; cursor:pointer; font-size:1.2rem; filter:invert(1);">◀️</button>
+                <h3 id="lblCalMeseAnno" style="margin:0; color:#0ea5e9; font-size:1.2rem; font-weight:900;">Mese Anno</h3>
+                <button id="btnCalNext" style="border:none; background:none; cursor:pointer; font-size:1.2rem; filter:invert(1);">▶️</button>
+            </div>
+            <div id="gridCalendario"></div>
+            <div class="calendar-footer">
+                <button id="btnCalOggi" class="btn-cal-action">OGGI</button>
+                <button id="btnCalChiudi" class="btn-cal-action danger">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tp-backdrop" class="time-picker-backdrop" onclick="ChiudiTimePicker()">
+        <div id="tp-modal" class="time-picker-modal" onclick="event.cancelBubble=true;">
+            <div class="time-picker-header">Selezione Orario</div>
+            <div class="time-picker-body">
+                <div class="time-picker-col">
+                    <div class="time-picker-label">ORE</div>
+                    <div id="tp-hour-grid" class="time-picker-grid"></div>
+                </div>
+                <div class="time-picker-col">
+                    <div class="time-picker-label">MINUTI</div>
+                    <div id="tp-minute-grid" class="time-picker-grid"></div>
+                </div>
+            </div>
+            <div class="time-picker-footer">
+                <button onclick="ChiudiTimePicker()" class="btn-tp-cancel">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY OTTIMIZZAZIONE PERCORSO -->
+    <div id="routingOverlay" class="calendar-overlay" style="z-index: 99999; flex-direction: column; color: white;">
+        <i class="fa fa-spinner fa-spin" style="font-size: 50px; color: #ffab00; margin-bottom: 20px;"></i>
+        <h2 id="lblRoutingStatus" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Calcolo percorso in corso...</h2>
+        <p id="lblRoutingDetails" style="font-size: 14px; opacity: 0.8;">Conversione indirizzi in corso (0/0)</p>
+    </div>
+
+    <!-- OVERLAY WHATSAPP TEMPLATES -->
+    <div id="whatsappOverlay" class="calendar-overlay" style="z-index: 99998; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="calendar-modal" style="padding:25px; width:430px; background:#0f172a; border:1.5px solid #334155; color:#cbd5e1; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+                <h3 style="margin:0; color:#0ea5e9; font-size:1.15rem; font-weight:900; text-transform:uppercase;">💬 Seleziona Messaggio WhatsApp</h3>
+                <button onclick="ChiudiWhatsAppModal()" style="border:none; background:none; cursor:pointer; font-size:1.5rem; color:#94a3b8;">&times;</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px; max-height:400px; overflow-y:auto;" id="waTemplateContainer">
+                <!-- Popolato dinamicamente da JS -->
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="ChiudiWhatsAppModal()" style="padding:10px 20px; border-radius:8px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; cursor:pointer; font-weight:800; font-size:11px; text-transform:uppercase;">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY GUIDA E AIUTO -->
+    <div id="helpOverlay" class="calendar-overlay" style="z-index: 99999; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="calendar-modal" style="padding:25px; width:580px; background:#0f172a; border:1.5px solid #334155; color:#cbd5e1; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+                <h3 style="margin:0; color:#38bdf8; font-size:1.2rem; font-weight:900; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
+                    <img src="https://img.icons8.com/fluency/32/help.png" style="width:22px; height:22px;" alt=""> Guida Rapida e Scorciatoie
+                </h3>
+                <button onclick="ChiudiHelpModal()" style="border:none; background:none; cursor:pointer; font-size:1.5rem; color:#94a3b8; padding:0; line-height:1; transition:color 0.2s;" onmouseover="this.style.color='#f43f5e'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:16px; max-height:450px; overflow-y:auto; padding-right:8px; font-size:12.5px; line-height:1.5; color:#cbd5e1;">
+                
+                <!-- SEZIONE SALVATAGGIO -->
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px;">
+                    <div style="font-weight:900; color:#38bdf8; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        💾 COME SALVARE VELOCEMENTE LE MODIFICHE
+                    </div>
+                    <ul style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+                        <li><strong>Scorciatoia Globale:</strong> Premi <span style="background:#0f172a; padding:2px 6px; border-radius:4px; border:1px solid #475569; font-family:monospace; color:#38bdf8;">Ctrl + S</span> o <span style="background:#0f172a; padding:2px 6px; border-radius:4px; border:1px solid #475569; font-family:monospace; color:#38bdf8;">Ctrl + Invio</span> in qualsiasi campo per salvare all'istante.</li>
+                        <li><strong>Salvataggio Auto-Invio:</strong> Premi semplicemente il tasto <span style="background:#0f172a; padding:2px 6px; border-radius:4px; border:1px solid #475569; font-family:monospace;">Invio</span> mentre digiti nei campi a riga singola (Indirizzo, Località, Data, Ora, KM, Stato, ecc.) per salvare senza dover cliccare.</li>
+                        <li><strong>Pulsante Salva (Mouse):</strong> Fai clic sull'icona col dischetto nel menu superiore (Ribbon).</li>
+                    </ul>
+                    <div style="margin-top:8px; font-size:11px; color:#94a3b8; font-style:italic; border-top: 1px solid #334155; padding-top:6px; margin-left:6px;">
+                        💡 Nota: Il salvataggio da tastiera/Invio è <strong>silenzioso</strong> (mostra solo una barra azzurra in alto senza fastidiosi popup).
+                    </div>
+                </div>
+
+                <!-- SEZIONE ELIMINAZIONE -->
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px;">
+                    <div style="font-weight:900; color:#f43f5e; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        ❌ COME ELIMINARE UNA CONSEGNA
+                    </div>
+                    <ul style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+                        <li><strong>Scorciatoia Rapida:</strong> Premi <span style="background:#0f172a; padding:2px 6px; border-radius:4px; border:1px solid #475569; font-family:monospace; color:#f43f5e;">Ctrl + Canc</span> (o <span style="background:#0f172a; padding:2px 6px; border-radius:4px; border:1px solid #475569; font-family:monospace; color:#f43f5e;">Ctrl + Delete</span>) per eliminare subito la consegna selezionata.</li>
+                        <li><strong>Barra Superiore:</strong> Clicca sul pulsante rosso <strong>'Elimina Voce'</strong> nel Ribbon.</li>
+                        <li><strong>Menu Classico:</strong> Seleziona <strong>File > Elimina Record</strong> dal menu in alto.</li>
+                    </ul>
+                    <div style="margin-top:8px; font-size:11px; color:#94a3b8; font-style:italic; border-top: 1px solid #334155; padding-top:6px; margin-left:6px;">
+                        ⚠️ Nota: Verrà sempre richiesta una conferma di sicurezza prima dell'eliminazione definitiva.
+                    </div>
+                </div>
+
+                <!-- COPIA ED ALTRE SCORCIATOIE -->
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px;">
+                    <div style="font-weight:900; color:#a855f7; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        📋 COPIA RAPIDA ED ALTRE SCORCIATOIE
+                    </div>
+                    <ul style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+                        <li><strong>Copia Riepilogo:</strong> Premi <span style="background:#0f172a; padding:2px 6px; border-radius:4px; border:1px solid #475569; font-family:monospace; color:#a855f7;">Ctrl + Shift + C</span> o fai clic su <strong>'Copia Info'</strong> nel Ribbon per copiare tutti i dettagli della consegna formattati negli appunti.</li>
+                        <li><strong>F5 (Aggiorna):</strong> Aggiorna al volo i dati della griglia e azzera i filtri di ricerca.</li>
+                        <li><strong>Alt + F4 (Esci):</strong> Chiude la schermata corrente e torna alla dashboard principale.</li>
+                    </ul>
+                </div>
+
+                <!-- ASSOCIAZIONE FOTO -->
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px;">
+                    <div style="font-weight:900; color:#10b981; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        📸 ASSOCIAZIONE FOTO CLIENTE
+                    </div>
+                    <div style="padding-left:6px; margin:0;">
+                        Fai clic direttamente sul riquadro grigio <strong>FOTO</strong> a sinistra del Cognome e Nome: potrai scegliere un file immagine dal computer che verrà automaticamente copiato nella cartella locale e associato al cliente nel database.
+                    </div>
+                </div>
+
+                <!-- WHATSAPP AUTOMATICO -->
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px;">
+                    <div style="font-weight:900; color:#22c55e; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        💬 INVIO WHATSAPP SMART
+                    </div>
+                    <div style="padding-left:6px; margin:0;">
+                        Cliccando sull'icona di WhatsApp, il sistema prenderà automaticamente la merce descritta nel campo <strong>'Descrizione Merce'</strong> per comporre messaggi già pronti con l'elenco dei dispositivi da consegnare.
+                    </div>
+                </div>
+
+                <!-- PROTEZIONE KM -->
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px;">
+                    <div style="font-weight:900; color:#e2e8f0; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                        🛡️ PROTEZIONE CHILOMETRAGGIO
+                    </div>
+                    <div style="padding-left:6px; margin:0;">
+                        Il sistema impedisce di sovrascrivere accidentalmente i chilometri già rilevati sul campo dal dispositivo mobile.
+                    </div>
+                </div>
+
+            </div>
+            
+            <div style="margin-top:20px; text-align:right; border-top:1px solid #1e293b; padding-top:15px;">
+                <button onclick="ChiudiHelpModal()" style="padding:10px 24px; border-radius:8px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; cursor:pointer; font-weight:800; font-size:11px; text-transform:uppercase; transition:all 0.2s;" onmouseover="this.style.background='#334155'; this.style.color='white';" onmouseout="this.style.background='#1e293b'; this.style.color='#cbd5e1';">CHIUDI GUIDA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY SCELTA DATA SMART ROUTING -->
+    <div id="dateRoutingModalOverlay" class="calendar-overlay" style="z-index: 99999; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="calendar-modal" style="padding:25px; width:400px; background:#0f172a; border:1.5px solid #334155; color:#cbd5e1; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+                <h3 style="margin:0; color:#0ea5e9; font-size:1.15rem; font-weight:900; text-transform:uppercase;">📅 Selezione Giorno Percorso</h3>
+                <button onclick="ChiudiDateRoutingModal()" style="border:none; background:none; cursor:pointer; font-size:1.5rem; color:#94a3b8;">&times;</button>
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 15px; font-weight: 600;">Sono state rilevate consegne in più date differenti. Scegli quale giorno desideri pianificare:</p>
+            <div style="display:flex; flex-direction:column; gap:10px; max-height:300px; overflow-y:auto;" id="dateRoutingContainer">
+                <!-- Popolato dinamicamente da JS -->
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="ChiudiDateRoutingModal()" style="padding:10px 20px; border-radius:8px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; cursor:pointer; font-weight:800; font-size:11px; text-transform:uppercase;">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY STATISTICHE -->
+    <div id="statsOverlay" class="calendar-overlay" style="z-index: 99997; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="calendar-modal" style="padding:25px; width:450px; background:#0f172a; border:1.5px solid #334155; color:#cbd5e1; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+                <h3 style="margin:0; color:#0ea5e9; font-size:1.15rem; font-weight:900; text-transform:uppercase;">📊 Cabina di Regia - Statistiche <span id="lblStatsMese" style="color: #eab308;"></span></h3>
+                <button onclick="ChiudiStatsModal()" style="border:none; background:none; cursor:pointer; font-size:1.5rem; color:#94a3b8;">&times;</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:15px;" id="statsContainer">
+                <!-- Popolato dinamicamente da JS -->
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="ChiudiStatsModal()" style="padding:10px 20px; border-radius:8px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; cursor:pointer; font-weight:800; font-size:11px; text-transform:uppercase;">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY DISTINTA DI CARICO (PIANO ENHANCEMENT) -->
+    <div id="distintaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.55); backdrop-filter:blur(12px); z-index:10600; justify-content:center; align-items:center;">
+        <div style="background:rgba(15, 23, 42, 0.97); width:650px; max-height:85%; border-radius:24px; box-shadow: 0 30px 70px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1); border:1.5px solid rgba(251,191,36,0.3); display:flex; flex-direction:column; overflow:hidden; animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER -->
+            <div class="no-print" style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding:20px 30px; border-bottom:2px solid #fbbf24; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(251,191,36,0.12); border:1.5px solid rgba(251,191,36,0.3); display:flex; align-items:center; justify-content:center;">
+                        <i class="fa fa-list-alt" style="color:#fbbf24; font-size:1.2rem;"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin:0; font-size:16px; font-weight:900; color:white; letter-spacing:0.5px; font-family:'Inter', sans-serif;">DISTINTA DI CARICO MAGAZZINO</h3>
+                        <div style="font-size:10.5px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;" id="lblDistintaSottotitolo">CONSEGNE PROGRAMMATE</div>
+                    </div>
+                </div>
+                <button onclick="ChiudiDistintaCarico()" style="background:rgba(255,255,255,0.06); border:none; color:#cbd5e1; border-radius:50%; width:32px; height:32px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; outline:none; transition:0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#ef4444';" onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.color='#cbd5e1';">×</button>
+            </div>
+            
+            <!-- BODY STAMPABILE -->
+            <div id="distintaPrintArea" style="flex:1; overflow-y:auto; padding:30px; background:#0f172a; color:#f8fafc; font-family:'Segoe UI', Arial, sans-serif;">
+                <!-- Intestazione per Stampa (Nascosta a video, visibile in Print) -->
+                <div class="only-print" style="display:none; border-bottom:2px solid #000; padding-bottom:15px; margin-bottom:20px; color:#000;">
+                    <h2 style="margin:0; text-transform:uppercase; letter-spacing:1px; font-size:20px;">C. MILELLA LOGISTICA</h2>
+                    <h3 style="margin:5px 0 0 0; color:#333; font-size:16px;">MANIFESTO DI CARICO ARTICOLI</h3>
+                    <div id="lblDistintaDataStampa" style="margin-top:10px; font-size:12px; font-weight:bold;">Data Stampa: --/--/----</div>
+                </div>
+
+                <!-- Content Grid -->
+                <div id="distintaItemsContainer" style="display:flex; flex-direction:column; gap:10px;">
+                    <!-- Riempito via JS -->
+                </div>
+                
+                <!-- Footer riassuntivo -->
+                <div id="distintaAggregati" style="margin-top:25px; padding-top:15px; border-top:1.5px dashed rgba(255,255,255,0.1); display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:#94a3b8;">
+                    <div id="lblDistintaPezziTot">TOTALE PEZZI DA CARICARE: 0</div>
+                    <div id="lblDistintaConsegneTot">CONSEGNE COINVOLTE: 0</div>
+                </div>
+            </div>
+            
+            <!-- FOOTER AZIONI -->
+            <div class="no-print" style="background:rgba(15,23,42,0.95); padding:18px 30px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="font-size:11px; color:#64748b; font-style:italic;"><i class="fa fa-info-circle"></i> Gli articoli sono stati raggruppati automaticamente.</div>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="ChiudiDistintaCarico()" style="background:#1e293b; border:1.5px solid #334155; color:#94a3b8; border-radius:8px; padding:10px 20px; font-size:11px; font-weight:800; cursor:pointer; text-transform:uppercase; transition:0.2s;" onmouseover="this.style.borderColor='#475569'; this.style.color='white';">CHIUDI</button>
+                    <button onclick="StampaDistintaCarico()" style="background:rgba(251,191,36,0.15); border:1.5px solid rgba(251,191,36,0.5); color:#fbbf24; border-radius:8px; padding:10px 24px; font-size:11px; font-weight:900; cursor:pointer; text-transform:uppercase; display:flex; align-items:center; gap:8px; outline:none; transition:0.25s;" onmouseover="this.style.background='rgba(251,191,36,0.25)';" onmouseout="this.style.background='rgba(251,191,36,0.15)';">🖨️ STAMPA DISTINTA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STILI PER LA STAMPA E LAYOUT DISTINTA -->
+    <style>
+        @media print {
+            body * { visibility: hidden !important; }
+            #distintaOverlay, #distintaOverlay * { visibility: visible !important; }
+            #distintaOverlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: white !important; backdrop-filter: none !important; z-index: 9999999 !important; display: block !important; }
+            #distintaOverlay > div { width: 100% !important; border: none !important; box-shadow: none !important; background: white !important; position: relative !important; animation: none !important; max-height: none !important; }
+            .no-print { display: none !important; }
+            .only-print { display: block !important; }
+            #distintaPrintArea { background: white !important; color: black !important; font-family: Arial, sans-serif !important; overflow: visible !important; padding: 20px !important; }
+            .distinta-row { border: 1.5px solid #000 !important; color: black !important; background: #f9f9f9 !important; box-shadow: none !important; margin-bottom: 6px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .distinta-qty { background: #000 !important; color: white !important; border: 1px solid #000 !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .distinta-label { color: black !important; font-weight: bold !important; }
+            #distintaAggregati { border-top: 2px solid #000 !important; color: #000 !important; margin-top: 40px !important; }
+        }
+        .distinta-row {
+            display:flex; align-items:center; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:12px 18px; border-radius:12px; gap:15px; transition:all 0.15s;
+        }
+        .distinta-row:hover {
+            background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.15); transform:translateX(4px);
+        }
+        .distinta-qty {
+            flex-shrink:0; width:38px; height:38px; background:rgba(251,191,36,0.12); border:1.5px solid rgba(251,191,36,0.4); color:#fbbf24; font-size:16px; font-weight:900; border-radius:8px; display:flex; align-items:center; justify-content:center;
+        }
+        .distinta-label {
+            font-size:13px; font-weight:800; letter-spacing:0.3px; text-transform:uppercase; flex:1; color:#f1f5f9;
+        }
+    </style>
+
+    <!-- OVERLAY MAPPA AL VOLO (FASE 3) -->
+    <div id="mappaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.4); backdrop-filter:blur(8px); z-index:10500; justify-content:center; align-items:center;">
+        <div style="background:#0f172a; width:85%; height:85%; max-width:1000px; border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); overflow:hidden; display:flex; flex-direction:column; border: 1.5px solid #334155; animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER -->
+            <div style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom:2.5px solid #0ea5e9; padding:15px 25px; color:white; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="https://img.icons8.com/fluency/48/google-maps-new.png" style="width:26px; height:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+                    <div>
+                        <h3 style="margin:0; font-size:15px; font-weight:900; letter-spacing:0.5px; color:#0ea5e9; font-family:'Inter', 'Segoe UI', Arial;">MAPPA AL VOLO</h3>
+                        <div id="lblMappaIndirizzo" style="font-size:11px; color:#94a3b8; font-weight:700; margin-top:2px; text-transform:uppercase; font-family:'Inter', 'Segoe UI', Arial;">Caricamento indirizzo...</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button id="btnApriMappaEsterna" style="background:rgba(14, 165, 233, 0.12); border:1.5px solid rgba(14, 165, 233, 0.4); color:#38bdf8; border-radius:8px; padding:8px 14px; font-size:11px; font-weight:800; cursor:pointer; font-family:'Inter', 'Segoe UI', Arial; transition:all 0.25s; text-transform:uppercase;" onmouseover="this.style.background='rgba(14, 165, 233, 0.2)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.12)'">APRI NEL BROWSER</button>
+                    <button onclick="ChiudiMappaInApp()" style="background:rgba(255,255,255,0.08); border:none; color:#cbd5e1; border-radius:50%; width:32px; height:32px; cursor:pointer; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; outline:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.5)'; this.style.color='white'; this.style.transform='rotate(90deg)';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#cbd5e1'; this.style.transform='none';">×</button>
+                </div>
+            </div>
+            <!-- CORPO CON IFRAME -->
+            <div style="flex:1; background:#0b1120; position:relative;">
+                <iframe id="iframeMappa" style="width:100%; height:100%; border:none; display:block; background:#0b1120;" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportStampaContainer" style="display:none;"></div>
+    <script src="assets/js/consegne_hta_v2.js?v=5.0" charset="utf-8"></script>
+    <script>
+    // Bypass Cache: Forza l'aggiornamento
+    if (typeof ActionOttimizzaPercorso === 'undefined') {
+        alert("Errore: Il motore JavaScript non e' stato aggiornato. Riavviare il PC o svuotare la cache di Internet Explorer.");
+    }
+        // --- HACKER MODE: SCORCIATOIE TASTIERA ---
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (typeof ActionChiudiEditor === 'function') ActionChiudiEditor();
+        }
+        // CTRL + F per cercare
+        if (e.ctrlKey && (e.key === 'f' || e.key === 'F')) {
+            e.preventDefault();
+            var searchBox = document.getElementById('txtRicerca');
+            if (searchBox) { searchBox.focus(); searchBox.select(); }
+        }
+        // CTRL + N per nuova consegna
+        if (e.ctrlKey && (e.key === 'n' || e.key === 'N')) {
+            e.preventDefault();
+            if (typeof ActionNuovo === 'function') ActionNuovo();
+        }
+    });
+    </script>
+    <!-- OVERLAY SCELTA DATA SMART ROUTING -->
+    <div id="dateRoutingModalOverlay" class="calendar-overlay" style="z-index: 99999; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="calendar-modal" style="padding:25px; width:400px; background:#0f172a; border:1.5px solid #334155; color:#cbd5e1; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+                <h3 style="margin:0; color:#0ea5e9; font-size:1.15rem; font-weight:900; text-transform:uppercase;">📅 Selezione Giorno Percorso</h3>
+                <button onclick="ChiudiDateRoutingModal()" style="border:none; background:none; cursor:pointer; font-size:1.5rem; color:#94a3b8;">&times;</button>
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 15px; font-weight: 600;">Sono state rilevate consegne in più date differenti. Scegli quale giorno desideri pianificare:</p>
+            <div style="display:flex; flex-direction:column; gap:10px; max-height:300px; overflow-y:auto;" id="dateRoutingContainer">
+                <!-- Popolato dinamicamente da JS -->
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="ChiudiDateRoutingModal()" style="padding:10px 20px; border-radius:8px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; cursor:pointer; font-weight:800; font-size:11px; text-transform:uppercase;">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY STATISTICHE -->
+    <div id="statsOverlay" class="calendar-overlay" style="z-index: 99997; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="calendar-modal" style="padding:25px; width:450px; background:#0f172a; border:1.5px solid #334155; color:#cbd5e1; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+                <h3 style="margin:0; color:#0ea5e9; font-size:1.15rem; font-weight:900; text-transform:uppercase;">📊 Cabina di Regia - Statistiche <span id="lblStatsMese" style="color: #eab308;"></span></h3>
+                <button onclick="ChiudiStatsModal()" style="border:none; background:none; cursor:pointer; font-size:1.5rem; color:#94a3b8;">&times;</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:15px;" id="statsContainer">
+                <!-- Popolato dinamicamente da JS -->
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="ChiudiStatsModal()" style="padding:10px 20px; border-radius:8px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; cursor:pointer; font-weight:800; font-size:11px; text-transform:uppercase;">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY SPESE EXTRA -->
+    <div id="speseExtraOverlay" class="calendar-overlay" style="z-index: 99998; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="calendar-modal" style="padding:25px; width:450px; background:#0f172a; border:1.5px solid #10b981; color:#cbd5e1; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+                <h3 style="margin:0; color:#10b981; font-size:1.15rem; font-weight:900; text-transform:uppercase;">💶 Dettaglio Spese Extra</h3>
+                <button onclick="ChiudiModalSpese()" style="border:none; background:none; cursor:pointer; font-size:1.5rem; color:#94a3b8;">&times;</button>
+            </div>
+            
+            <div style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 15px;">Inserisci le spese sostenute per questa consegna. Verranno sommate al calcolo ACI.</div>
+            
+            <div class="form-row" style="margin-bottom: 10px; display: flex; gap: 10px;">
+                <div class="form-group" style="width: 50%;">
+                    <label>Autostrada/Pedaggi (€)</label>
+                    <input type="text" id="txtModalRimborsoAutostrada" onkeyup="RicalcolaTotaleSpeseModal()" placeholder="0,00" style="width:100%; border-color: rgba(16, 185, 129, 0.3) !important; color: #10b981 !important;">
+                </div>
+                <div class="form-group" style="width: 50%;">
+                    <label>Parcheggio (€)</label>
+                    <input type="text" id="txtModalRimborsoParcheggio" onkeyup="RicalcolaTotaleSpeseModal()" placeholder="0,00" style="width:100%; border-color: rgba(16, 185, 129, 0.3) !important; color: #10b981 !important;">
+                </div>
+            </div>
+            
+            <div class="form-row" style="margin-bottom: 10px; display: flex; gap: 10px;">
+                <div class="form-group" style="width: 50%;">
+                    <label>Treno/Avaria (€)</label>
+                    <input type="text" id="txtModalRimborsoTrenoAvaria" onkeyup="RicalcolaTotaleSpeseModal()" placeholder="0,00" style="width:100%; border-color: rgba(16, 185, 129, 0.3) !important; color: #10b981 !important;">
+                </div>
+                <div class="form-group" style="width: 50%;">
+                    <label>Spese Varie (€)</label>
+                    <input type="text" id="txtModalRimborsoVarie" onkeyup="RicalcolaTotaleSpeseModal()" placeholder="0,00" style="width:100%; border-color: rgba(16, 185, 129, 0.3) !important; color: #10b981 !important;">
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Note Spese (Opzionale)</label>
+                <textarea id="txtModalRimborsoNote" placeholder="Es. ZTL, Ticket giornaliero..." style="height: 60px; resize:none; width:100%; border-color: rgba(16, 185, 129, 0.3) !important;"></textarea>
+            </div>
+            
+            <div style="background: rgba(15, 23, 42, 0.8); border-radius: 8px; padding: 12px; margin-bottom: 15px; border: 1px dashed rgba(16, 185, 129, 0.5); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">Totale Spese</span>
+                <span id="lblModalSpeseTotale" style="font-size: 16px; font-weight: 900; color: #10b981;">€ 0,00</span>
+            </div>
+
+            <div style="margin-top:20px; text-align:right; display:flex; gap:10px; justify-content: flex-end;">
+                <button onclick="ChiudiModalSpese()" style="padding:10px 20px; border-radius:8px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; cursor:pointer; font-weight:800; font-size:11px; text-transform:uppercase;">ANNULLA</button>
+                <button onclick="SalvaSpeseExtraModal()" style="padding:10px 20px; border-radius:8px; border:1.5px solid rgba(16, 185, 129, 0.5); background:rgba(16, 185, 129, 0.15); color:#10b981; cursor:pointer; font-weight:900; font-size:11px; text-transform:uppercase;">SALVA SPESE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY DISTINTA DI CARICO (PIANO ENHANCEMENT) -->
+    <div id="distintaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.55); backdrop-filter:blur(12px); z-index:10600; justify-content:center; align-items:center;">
+        <div style="background:rgba(15, 23, 42, 0.97); width:650px; max-height:85%; border-radius:24px; box-shadow: 0 30px 70px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1); border:1.5px solid rgba(251,191,36,0.3); display:flex; flex-direction:column; overflow:hidden; animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER -->
+            <div class="no-print" style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding:20px 30px; border-bottom:2px solid #fbbf24; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(251,191,36,0.12); border:1.5px solid rgba(251,191,36,0.3); display:flex; align-items:center; justify-content:center;">
+                        <i class="fa fa-list-alt" style="color:#fbbf24; font-size:1.2rem;"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin:0; font-size:16px; font-weight:900; color:white; letter-spacing:0.5px; font-family:'Inter', sans-serif;">DISTINTA DI CARICO MAGAZZINO</h3>
+                        <div style="font-size:10.5px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;" id="lblDistintaSottotitolo">CONSEGNE PROGRAMMATE</div>
+                    </div>
+                </div>
+                <button onclick="ChiudiDistintaCarico()" style="background:rgba(255,255,255,0.06); border:none; color:#cbd5e1; border-radius:50%; width:32px; height:32px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; outline:none; transition:0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#ef4444';" onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.color='#cbd5e1';">×</button>
+            </div>
+            
+            <!-- BODY STAMPABILE -->
+            <div id="distintaPrintArea" style="flex:1; overflow-y:auto; padding:30px; background:#0f172a; color:#f8fafc; font-family:'Segoe UI', Arial, sans-serif;">
+                <!-- Intestazione per Stampa (Nascosta a video, visibile in Print) -->
+                <div class="only-print" style="display:none; border-bottom:2px solid #000; padding-bottom:15px; margin-bottom:20px; color:#000;">
+                    <h2 style="margin:0; text-transform:uppercase; letter-spacing:1px; font-size:20px;">C. MILELLA LOGISTICA</h2>
+                    <h3 style="margin:5px 0 0 0; color:#333; font-size:16px;">MANIFESTO DI CARICO ARTICOLI</h3>
+                    <div id="lblDistintaDataStampa" style="margin-top:10px; font-size:12px; font-weight:bold;">Data Stampa: --/--/----</div>
+                </div>
+
+                <!-- Content Grid -->
+                <div id="distintaItemsContainer" style="display:flex; flex-direction:column; gap:10px;">
+                    <!-- Riempito via JS -->
+                </div>
+                
+                <!-- Footer riassuntivo -->
+                <div id="distintaAggregati" style="margin-top:25px; padding-top:15px; border-top:1.5px dashed rgba(255,255,255,0.1); display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:#94a3b8;">
+                    <div id="lblDistintaPezziTot">TOTALE PEZZI DA CARICARE: 0</div>
+                    <div id="lblDistintaConsegneTot">CONSEGNE COINVOLTE: 0</div>
+                </div>
+            </div>
+            
+            <!-- FOOTER AZIONI -->
+            <div class="no-print" style="background:rgba(15,23,42,0.95); padding:18px 30px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="font-size:11px; color:#64748b; font-style:italic;"><i class="fa fa-info-circle"></i> Gli articoli sono stati raggruppati automaticamente.</div>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="ChiudiDistintaCarico()" style="background:#1e293b; border:1.5px solid #334155; color:#94a3b8; border-radius:8px; padding:10px 20px; font-size:11px; font-weight:800; cursor:pointer; text-transform:uppercase; transition:0.2s;" onmouseover="this.style.borderColor='#475569'; this.style.color='white';">CHIUDI</button>
+                    <button onclick="StampaDistintaCarico()" style="background:rgba(251,191,36,0.15); border:1.5px solid rgba(251,191,36,0.5); color:#fbbf24; border-radius:8px; padding:10px 24px; font-size:11px; font-weight:900; cursor:pointer; text-transform:uppercase; display:flex; align-items:center; gap:8px; outline:none; transition:0.25s;" onmouseover="this.style.background='rgba(251,191,36,0.25)';" onmouseout="this.style.background='rgba(251,191,36,0.15)';">🖨️ STAMPA DISTINTA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STILI PER LA STAMPA E LAYOUT DISTINTA -->
+    <style>
+        @media print {
+            body * { visibility: hidden !important; }
+            #distintaOverlay, #distintaOverlay * { visibility: visible !important; }
+            #distintaOverlay { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: white !important; backdrop-filter: none !important; z-index: 9999999 !important; display: block !important; }
+            #distintaOverlay > div { width: 100% !important; border: none !important; box-shadow: none !important; background: white !important; position: relative !important; animation: none !important; max-height: none !important; }
+            .no-print { display: none !important; }
+            .only-print { display: block !important; }
+            #distintaPrintArea { background: white !important; color: black !important; font-family: Arial, sans-serif !important; overflow: visible !important; padding: 20px !important; }
+            .distinta-row { border: 1.5px solid #000 !important; color: black !important; background: #f9f9f9 !important; box-shadow: none !important; margin-bottom: 6px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .distinta-qty { background: #000 !important; color: white !important; border: 1px solid #000 !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .distinta-label { color: black !important; font-weight: bold !important; }
+            #distintaAggregati { border-top: 2px solid #000 !important; color: #000 !important; margin-top: 40px !important; }
+        }
+        .distinta-row {
+            display:flex; align-items:center; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:12px 18px; border-radius:12px; gap:15px; transition:all 0.15s;
+        }
+        .distinta-row:hover {
+            background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.15); transform:translateX(4px);
+        }
+        .distinta-qty {
+            flex-shrink:0; width:38px; height:38px; background:rgba(251,191,36,0.12); border:1.5px solid rgba(251,191,36,0.4); color:#fbbf24; font-size:16px; font-weight:900; border-radius:8px; display:flex; align-items:center; justify-content:center;
+        }
+        .distinta-label {
+            font-size:13px; font-weight:800; letter-spacing:0.3px; text-transform:uppercase; flex:1; color:#f1f5f9;
+        }
+    </style>
+
+    <!-- OVERLAY MAPPA AL VOLO (FASE 3) -->
+    <div id="mappaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.4); backdrop-filter:blur(8px); z-index:10500; justify-content:center; align-items:center;">
+        <div style="background:#0f172a; width:85%; height:85%; max-width:1000px; border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); overflow:hidden; display:flex; flex-direction:column; border: 1.5px solid #334155; animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER -->
+            <div style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom:2.5px solid #0ea5e9; padding:15px 25px; color:white; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="https://img.icons8.com/fluency/48/google-maps-new.png" style="width:26px; height:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+                    <div>
+                        <h3 style="margin:0; font-size:15px; font-weight:900; letter-spacing:0.5px; color:#0ea5e9; font-family:'Inter', 'Segoe UI', Arial;">MAPPA AL VOLO</h3>
+                        <div id="lblMappaIndirizzo" style="font-size:11px; color:#94a3b8; font-weight:700; margin-top:2px; text-transform:uppercase; font-family:'Inter', 'Segoe UI', Arial;">Caricamento indirizzo...</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button id="btnApriMappaEsterna" style="background:rgba(14, 165, 233, 0.12); border:1.5px solid rgba(14, 165, 233, 0.4); color:#38bdf8; border-radius:8px; padding:8px 14px; font-size:11px; font-weight:800; cursor:pointer; font-family:'Inter', 'Segoe UI', Arial; transition:all 0.25s; text-transform:uppercase;" onmouseover="this.style.background='rgba(14, 165, 233, 0.2)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.12)'">APRI NEL BROWSER</button>
+                    <button onclick="ChiudiMappaInApp()" style="background:rgba(255,255,255,0.08); border:none; color:#cbd5e1; border-radius:50%; width:32px; height:32px; cursor:pointer; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; outline:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.5)'; this.style.color='white'; this.style.transform='rotate(90deg)';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#cbd5e1'; this.style.transform='none';">×</button>
+                </div>
+            </div>
+            <!-- CORPO CON IFRAME -->
+            <div style="flex:1; background:#0b1120; position:relative;">
+                <iframe id="iframeMappa" style="width:100%; height:100%; border:none; display:block; background:#0b1120;" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportStampaContainer" style="display:none;"></div>
+    <script src="assets/js/consegne_hta_v2.js?v=5.0" charset="utf-8"></script>
+    <script>
+    // Bypass Cache: Forza l'aggiornamento
+    if (typeof ActionOttimizzaPercorso === 'undefined') {
+        alert("Errore: Il motore JavaScript non e' stato aggiornato. Riavviare il PC o svuotare la cache di Internet Explorer.");
+    }
+        // --- HACKER MODE: SCORCIATOIE TASTIERA ---
+    document.addEventListener('keydown', function(e) {
+        // ESC per chiudere il pannello
+        if (e.key === 'Escape') {
+            if (typeof ActionChiudiEditor === 'function') ActionChiudiEditor();
+        }
+        // CTRL + F per cercare
+        if (e.ctrlKey && (e.key === 'f' || e.key === 'F')) {
+            e.preventDefault();
+            var searchBox = document.getElementById('txtRicerca');
+            if (searchBox) { searchBox.focus(); searchBox.select(); }
+        }
+        // CTRL + N per nuova consegna
+        if (e.ctrlKey && (e.key === 'n' || e.key === 'N')) {
+            e.preventDefault();
+            if (typeof ActionNuovo === 'function') ActionNuovo();
+        }
+        // CTRL + S per salvare (previene il salvataggio pagina del browser)
+        if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+            e.preventDefault();
+            var btnSalva = document.getElementById('cmdSalva');
+            if(btnSalva) btnSalva.click();
+        }
+    });
+</script>
+
+    <!-- MODAL SELECT TEMPLATE WHATSAPP (DARK STYLE) -->
+    <div id="modalWhatsApp" class="calendar-overlay" style="display:none; align-items:center; justify-content:center;">
+        <div style="background:#0f172a; width:90%; max-width:550px; border-radius:18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); overflow:hidden; border: 1.5px solid #334155; display:flex; flex-direction:column; animation: popupIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="background:linear-gradient(135deg, #1e293b, #0f172a); border-bottom:2px solid #25D366; padding:15px 20px; color:white; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:900; font-size:13px; letter-spacing:0.5px; display:flex; align-items:center; gap:8px;"><i class="fa fa-whatsapp" style="color:#25D366; font-size:18px;"></i> SCEGLI MESSAGGIO WHATSAPP</span>
+                <button type="button" onclick="ChiudiModalWhatsApp()" style="background:none; border:none; color:#cbd5e1; font-size:1.5rem; cursor:pointer; font-weight:900;">&times;</button>
+            </div>
+            <div style="padding:20px; background:#0b1120; display:flex; flex-direction:column; gap:12px;">
+                <div style="font-size:11px; color:#94a3b8; font-weight:800; text-transform:uppercase;">Seleziona un modello di notifica rapida da inviare:</div>
+                
+                <button type="button" class="tp-item" onclick="SpedisciWhatsAppConMessaggio(1)" style="text-align:left; font-size:11.5px; font-weight:700; padding:12px; border-radius:10px; width:100%; border:1.5px solid #1e293b; background:#0f172a; color:#cbd5e1; cursor:pointer; margin:0;" onmouseover="this.style.borderColor='#25D366'; this.style.color='#25D366';" onmouseout="this.style.borderColor='#1e293b'; this.style.color='#cbd5e1';">
+                    <strong>🚚 In Arrivo (15 minuti)</strong><br>
+                    <span style="font-size:10px; color:#64748b; font-weight:normal; display:block; margin-top:4px;">Gentile Cliente [NOME], la informiamo che la consegna dei suoi articoli C. Milella è in programma per oggi. I nostri autisti sono in arrivo tra circa 15 minuti! A presto.</span>
+                </button>
+                
+                <button type="button" class="tp-item" onclick="SpedisciWhatsAppConMessaggio(2)" style="text-align:left; font-size:11.5px; font-weight:700; padding:12px; border-radius:10px; width:100%; border:1.5px solid #1e293b; background:#0f172a; color:#cbd5e1; cursor:pointer; margin:0;" onmouseover="this.style.borderColor='#25D366'; this.style.color='#25D366';" onmouseout="this.style.borderColor='#1e293b'; this.style.color='#cbd5e1';">
+                    <strong>📅 Orario Programmato (Oggi)</strong><br>
+                    <span style="font-size:10px; color:#64748b; font-weight:normal; display:block; margin-top:4px;">Gentile Cliente [NOME], la informiamo che la consegna dei suoi articoli C. Milella è programmata per oggi alle ore [ORA] circa in [LOCALITA]. A presto!</span>
+                </button>
+                
+                <button type="button" class="tp-item" onclick="SpedisciWhatsAppConMessaggio(3)" style="text-align:left; font-size:11.5px; font-weight:700; padding:12px; border-radius:10px; width:100%; border:1.5px solid #1e293b; background:#0f172a; color:#cbd5e1; cursor:pointer; margin:0;" onmouseover="this.style.borderColor='#25D366'; this.style.color='#25D366';" onmouseout="this.style.borderColor='#1e293b'; this.style.color='#cbd5e1';">
+                    <strong>⚠️ Destinatario Assente / Mancata Consegna</strong><br>
+                    <span style="font-size:10px; color:#64748b; font-weight:normal; display:block; margin-top:4px;">Gentile Cliente [NOME], i nostri autisti hanno tentato la consegna a [LOCALITA] ma non è stato possibile completarla per assenza del destinatario. Ci contatti per riprogrammare. Grazie.</span>
+                </button>
+                
+                <button type="button" class="tp-item" onclick="SpedisciWhatsAppConMessaggio(4)" style="text-align:left; font-size:11.5px; font-weight:700; padding:12px; border-radius:10px; width:100%; border:1.5px solid #1e293b; background:#0f172a; color:#cbd5e1; cursor:pointer; margin:0; border-style: dashed;" onmouseover="this.style.borderColor='#0ea5e9'; this.style.color='#0ea5e9';" onmouseout="this.style.borderColor='#1e293b'; this.style.color='#cbd5e1';">
+                    <strong>✏️ Crea Messaggio Personalizzato</strong><br>
+                    <span style="font-size:10px; color:#64748b; font-weight:normal; display:block; margin-top:4px;">Scrivi un messaggio di testo libero da inviare ai clienti selezionati.</span>
+                </button>
+            </div>
+            <div style="background:#0f172a; padding:12px 20px; text-align:right; border-top:1.5px solid #1e293b;">
+                <button type="button" class="btn-tp-cancel" onclick="ChiudiModalWhatsApp()" style="width:auto; padding:8px 20px; font-size:11px;">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL CUSTOM WHATSAPP TEXT -->
+    <div id="modalWhatsAppCustom" class="calendar-overlay" style="display:none; align-items:center; justify-content:center; z-index:99999;">
+        <div style="background:#0f172a; width:90%; max-width:550px; border-radius:18px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); overflow:hidden; border: 1.5px solid #334155; display:flex; flex-direction:column; animation: popupIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="background:linear-gradient(135deg, #1e293b, #0f172a); border-bottom:2px solid #0ea5e9; padding:15px 20px; color:white; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:900; font-size:13px; letter-spacing:0.5px; display:flex; align-items:center; gap:8px;"><i class="fa fa-pencil" style="color:#0ea5e9; font-size:18px;"></i> COMPONI MESSAGGIO LIBERO</span>
+                <button type="button" onclick="ChiudiModalWhatsAppCustom()" style="background:none; border:none; color:#cbd5e1; font-size:1.5rem; cursor:pointer; font-weight:900;">&times;</button>
+            </div>
+            <div style="padding:20px; background:#0b1120; display:flex; flex-direction:column; gap:12px;">
+                <div style="font-size:11px; color:#94a3b8; font-weight:800; text-transform:uppercase;">Scrivi il testo da inviare:</div>
+                <textarea id="txtWaCustomMessage" style="width:100%; height:120px; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#f8fafc; padding:12px; font-family:inherit; font-size:13px; resize:none; outline:none;" placeholder="Es: Gentile [NOME], stiamo arrivando a [LOCALITA] per le [ORA]..."></textarea>
+                <div style="font-size:10px; color:#64748b;">Segnaposti supportati: <strong style="color:#0ea5e9;">[NOME]</strong>, <strong style="color:#0ea5e9;">[LOCALITA]</strong>, <strong style="color:#0ea5e9;">[ORA]</strong></div>
+            </div>
+            <div style="background:#0f172a; padding:12px 20px; text-align:right; border-top:1.5px solid #1e293b; display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" onclick="ChiudiModalWhatsAppCustom()" style="width:auto; padding:8px 20px; font-size:11px; border:1.5px solid #334155; background:#1e293b; color:#cbd5e1; border-radius:8px; cursor:pointer; font-weight:800;">ANNULLA</button>
+                <button type="button" onclick="InviaWhatsAppCustom()" style="width:auto; padding:8px 20px; font-size:11px; border:1.5px solid #0284c7; background:#0ea5e9; color:white; border-radius:8px; cursor:pointer; font-weight:800; text-transform:uppercase;">INVIA MULTIPLO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP MODALE QR CODE NAVIGATORE -->
+    <div id="modalQR" class="modal-qr-overlay">
+        <div class="modal-qr-container">
+            <div class="modal-qr-header">
+                <img src="https://img.icons8.com/fluency/24/qr-code.png" style="vertical-align:middle;">
+                <span>QR CODE NAVIGATORE</span>
+            </div>
+            <div id="modalQRAddress" class="modal-qr-address">
+                Indirizzo di navigazione
+            </div>
+            <div class="modal-qr-body">
+                <img id="modalQRImage" src="" alt="QR Code Navigazione">
+            </div>
+            <div class="modal-qr-footer">
+                <button type="button" class="modal-qr-btn-close" onclick="ChiudiModalQR()">CHIUDI</button>
+            </div>
+        </div>
+    </div>   
+
+
+<script src="./assets/js/global_context.js"></script>
+<script>
+function ActionWhatsApp() {
+    var phones = [];
+    var chips = document.querySelectorAll('#chipsArea .phone-chip');
+    if (chips.length > 0) {
+        for (var i = 0; i < chips.length; i++) {
+            var clone = chips[i].cloneNode(true);
+            var removeBtn = clone.querySelector('.remove-chip');
+            if (removeBtn) clone.removeChild(removeBtn);
+            var icon = clone.querySelector('.chip-wa-icon');
+            if (icon) clone.removeChild(icon);
+            phones.push(clone.innerText.trim());
+        }
+    } else {
+        var t = document.getElementById('txtTelefono');
+        if (t && t.value.trim() !== '') phones.push(t.value.trim());
+    }
+
+    if (phones.length === 0) {
+        if(typeof showToast === 'function') showToast("Nessun numero di telefono valido inserito.", "error");
+        else alert("Nessun numero di telefono inserito.");
+        return;
+    }
+
+    var phone = phones[0].replace(/[^0-9+]/g, '');
+    if (!phone.startsWith('+')) {
+        phone = '+39' + phone; 
+    }
+
+    var clientName = "Cliente";
+    var txtNome = document.getElementById('txtNome');
+    if(txtNome && txtNome.value.trim() !== '') clientName = txtNome.value.trim();
+
+    var msg = "Gentile " + clientName + ",\nLa informiamo che la sua consegna è prevista a breve.\n\nCordiali saluti,\nC. Milella Logistica";
+    var url = "whatsapp://send?phone=" + phone + "&text=" + encodeURIComponent(msg);
+    
+    try {
+        var wsh = new ActiveXObject("WScript.Shell");
+        wsh.Run('cmd /c start "" "' + url + '"', 0, false);
+    } catch(e) {
+        window.location.href = url;
+    }
+}
+</script>
+<!-- MODAL FIRMA DIGITALE -->
+<div id="signatureModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.7); z-index:30000; justify-content:center; align-items:center; backdrop-filter: blur(4px);">
+    <div style="background:#1e293b; padding:25px; border-radius:18px; border:2px solid #06b6d4; box-shadow: 0 25px 60px rgba(0,0,0,0.6); width:500px; text-align:center;">
+        <h3 style="color:#0ea5e9; margin-top:0; font-family:'Inter', sans-serif;">Acquisizione Firma Cliente</h3>
+        <div style="background:#ffffff; border-radius:8px; margin: 15px 0; overflow:hidden;">
+            <canvas id="signatureCanvas" width="450" height="200" style="cursor:crosshair; touch-action:none; display:block; background:#fff;"></canvas>
+        </div>
+        <div style="display:flex; justify-content:space-between; gap:10px;">
+            <button onclick="ActionPulisciFirma()" style="padding:10px 20px; border-radius:8px; border:none; background:#475569; color:#fff; cursor:pointer; font-weight:bold;">Pulisci</button>
+            <div style="display:flex; gap:10px;">
+                <button onclick="document.getElementById('signatureModalOverlay').style.display='none'" style="padding:10px 20px; border-radius:8px; border:1px solid #ef4444; background:rgba(239, 68, 68, 0.1); color:#ef4444; cursor:pointer; font-weight:bold;">Annulla</button>
+                <button onclick="ActionSalvaFirma()" style="padding:10px 20px; border-radius:8px; border:none; background:#06b6d4; color:#0f172a; cursor:pointer; font-weight:bold;">Conferma</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var sigCanvas, sigCtx, drawing = false;
+
+function ActionApriFirma() {
+    document.getElementById('signatureModalOverlay').style.display = 'flex';
+    if (!sigCanvas) {
+        sigCanvas = document.getElementById('signatureCanvas');
+        sigCtx = sigCanvas.getContext('2d');
+        sigCtx.lineWidth = 3;
+        sigCtx.lineCap = 'round';
+        sigCtx.lineJoin = 'round';
+        sigCtx.strokeStyle = '#0f172a';
+
+        sigCanvas.addEventListener('mousedown', startDrawing);
+        sigCanvas.addEventListener('mousemove', draw);
+        sigCanvas.addEventListener('mouseup', stopDrawing);
+        sigCanvas.addEventListener('mouseout', stopDrawing);
+
+        sigCanvas.addEventListener('touchstart', function(e) { e.preventDefault(); startDrawing(e.touches[0]); }, {passive: false});
+        sigCanvas.addEventListener('touchmove', function(e) { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
+        sigCanvas.addEventListener('touchend', stopDrawing);
+    }
+}
+
+function getPos(e) {
+    var rect = sigCanvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+function startDrawing(e) {
+    drawing = true;
+    var pos = getPos(e);
+    sigCtx.beginPath();
+    sigCtx.moveTo(pos.x, pos.y);
+}
+
+function draw(e) {
+    if (!drawing) return;
+    var pos = getPos(e);
+    sigCtx.lineTo(pos.x, pos.y);
+    sigCtx.stroke();
+}
+
+function stopDrawing() { drawing = false; }
+
+function ActionPulisciFirma() {
+    if (sigCtx && sigCanvas) sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+}
+
+function ActionSalvaFirma() {
+    var base64 = sigCanvas.toDataURL("image/png");
+    document.getElementById('txtFirmaBase64').value = base64;
+    document.getElementById('signatureModalOverlay').style.display = 'none';
+    if(typeof showToast === 'function') showToast("Firma acquisita con successo!", "success");
+    else alert("Firma acquisita!");
+    
+    var id = document.getElementById('txtId').value;
+    if (id && id !== 'NEW' && typeof ActionSalva === 'function') {
+        ActionSalva(true);
+    }
+}
+</script>
+
+</body>
+</html>
+

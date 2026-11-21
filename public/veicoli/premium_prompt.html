@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Salvataggio Modifiche</title>
+    <style>
+        body { 
+            margin:0; padding:0; 
+            background-color: #0f172a;
+            color: #f8fafc; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow:hidden; 
+        }
+        .container {
+            padding: 20px 30px;
+            text-align: center;
+        }
+        .icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+        .message {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        .btn-group {
+            display: block;
+            text-align: center;
+        }
+        button {
+            border: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .btn-yes {
+            background-color: #0284c7;
+            color: white;
+            border: 1px solid #38bdf8;
+        }
+        .btn-no {
+            background-color: #b91c1c;
+            color: white;
+            border: 1px solid #f87171;
+        }
+        .btn-cancel {
+            background-color: #334155;
+            color: white;
+            border: 1px solid #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">&#128190;</div>
+        <div class="message" id="msgText">
+            Ci sono modifiche non salvate per la scheda corrente.<br><br>Vuoi salvare le modifiche prima di uscire?
+        </div>
+        <div class="btn-group">
+            <button class="btn-yes" onclick="chiudi(6)">SI, SALVA</button>
+            <button class="btn-no" onclick="chiudi(7)">NO, SCARTA</button>
+            <button class="btn-cancel" onclick="chiudi(2)">ANNULLA</button>
+        </div>
+    </div>
+    <script>
+        try {
+            var args = window.dialogArguments;
+            if(args && args.msg) {
+                var rawMsg = args.msg;
+                // Taglia via tutta la parte con "[SI]" o "[" per evitare testo ridondante
+                var splitIdx = rawMsg.indexOf("[");
+                if(splitIdx > -1) {
+                    rawMsg = rawMsg.substring(0, splitIdx);
+                }
+                document.getElementById('msgText').innerHTML = rawMsg.replace(/\n/g, "<br>");
+            }
+        } catch(e) {}
+        
+        function chiudi(valore) {
+            window.returnValue = valore;
+            window.close();
+        }
+        
+        document.onkeydown = function(e) {
+            e = e || window.event;
+            if(e.keyCode === 27) chiudi(2);
+        };
+    </script>
+</body>
+</html>

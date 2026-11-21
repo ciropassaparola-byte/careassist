@@ -1,0 +1,1400 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>AnyDesk Hub - C. Milella</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="AnyDeskHub"
+        ID="AppAnyDesk"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="yes"
+        SCROLL="no"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="maximize"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <script>
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e) {}
+    </script>
+    <style>
+        body { 
+            font-family: 'Inter', 'Segoe UI', sans-serif; 
+            background: #f8fafc; 
+            color: #0f172a; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden;
+            scrollbar-face-color: #ef443b;
+            scrollbar-track-color: #f1f5f9;
+            scrollbar-arrow-color: #ffffff;
+            scrollbar-shadow-color: #d32f2f;
+            scrollbar-highlight-color: #ffffff;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .window-frame { width: 100%; height: 100vh; display: flex; flex-direction: row; overflow: hidden; background: #f8fafc; }
+        
+        /* SIDEBAR (PREMIUM CRIMSION & CARBON GRADIENT) */
+        .sidebar { 
+            width: 260px; 
+            background: linear-gradient(180deg, #1e1e24 0%, #15151a 50%, #8a1a15 100%);
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            flex-shrink: 0; 
+            padding: 24px 0; 
+            border-right: 1px solid rgba(255, 255, 255, 0.05); 
+            z-index: 100; 
+            position: relative; 
+            box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .sidebar-header {
+            padding: 15px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 5px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            object-fit: contain;
+            background: #1a252f;
+        }
+        
+        .sidebar-title { 
+            color: #ffffff; 
+            text-align: center; 
+            font-size: 15px; 
+            font-weight: 700; 
+            margin-bottom: 0; 
+            letter-spacing: 0.5px; 
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .sidebar-menu { padding: 0 15px; margin-bottom: 30px; }
+        .sidebar-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 16px; 
+            margin-bottom: 12px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: all 0.25s ease; 
+            color: rgba(255, 255, 255, 0.7); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+        }
+        .sidebar-item:hover { 
+            background: rgba(255, 255, 255, 0.06); 
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+        .sidebar-icon { 
+            width: 32px; 
+            height: 32px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-right: 12px; 
+            flex-shrink: 0; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sidebar-icon img { width: 18px; height: 18px; }
+
+        /* NOTIFICHE */
+        .notif-section { 
+            margin: 0 16px 20px 16px; 
+            padding: 16px; 
+            background: rgba(255,255,255,0.03); 
+            border-radius: 16px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+        .notif-header { 
+            color: rgba(255,255,255,0.4); 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-bottom: 10px; 
+            letter-spacing: 0.8px;
+        }
+        .backup-btn { 
+            background: #ffffff; 
+            color: #1e1e24; 
+            padding: 10px; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .backup-btn:hover {
+            background: #ffab00;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* OROLOGIO ANALOGICO */
+        .clock-container { 
+            width: 110px; 
+            height: 110px; 
+            border-radius: 50%; 
+            border: 3px solid rgba(255, 255, 255, 0.08); 
+            position: relative; 
+            margin: 15px auto; 
+            background: #15151a; 
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 8px 20px rgba(0,0,0,0.4); 
+            flex-shrink: 0; 
+            box-sizing: border-box; 
+        }
+        .clock-center { 
+            position: absolute; 
+            width: 8px; 
+            height: 8px; 
+            background: #ef443b; 
+            border-radius: 50%; 
+            top: 50%; 
+            left: 50%; 
+            margin-top: -4px; 
+            margin-left: -4px; 
+            z-index: 10; 
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+        .clock-hand { position: absolute; transform-origin: bottom center; bottom: 50%; left: 50%; border-radius: 4px; }
+        .hour-hand { width: 4px; height: 28px; margin-left: -2px; background: #ffffff; }
+        .min-hand { width: 3px; height: 38px; margin-left: -1.5px; background: #a1a1aa; }
+        .sec-hand { width: 1.5px; height: 42px; margin-left: -0.75px; background: #ef443b; }
+
+        /* SESSION TIMER & CLOCK ICON */
+        @keyframes rotateHourglass { 
+            0% { transform: rotate(0deg); } 
+            50% { transform: rotate(180deg); } 
+            100% { transform: rotate(180deg); } 
+        }
+        .session-timer-box { 
+            margin: 0 16px 20px 16px; 
+            padding: 16px; 
+            background: rgba(0, 0, 0, 0.25); 
+            border-radius: 16px; 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            color: #ffffff; 
+        }
+        .hg-icon-container { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        .hg-icon { width: 24px; height: 24px; filter: brightness(0) invert(1); }
+        .hg-active { animation: rotateHourglass 2s infinite ease-in-out; }
+        .timer-info { flex: 1; }
+        .timer-label { font-size: 9px; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.8px; }
+        .timer-display { font-size: 20px; font-weight: 800; font-family: 'Courier New', Courier, monospace; letter-spacing: 1px; color: #ef443b; text-shadow: 0 0 8px rgba(239, 68, 59, 0.3); }
+
+        .sidebar-footer { margin-top: auto; padding: 0 16px; }
+        .exit-btn-sidebar { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1.5px solid rgba(255, 255, 255, 0.15); 
+            border-radius: 12px; 
+            padding: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 12px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            margin-bottom: 10px; 
+        }
+        .exit-btn-sidebar:hover { background: rgba(239, 68, 59, 0.1); border-color: #ef443b; }
+        .exit-icon-box { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+        .exit-text { color: #ffffff; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; }
+
+        /* MAIN CONTENT AREA */
+        .main-content { 
+            flex: 1 !important; 
+            display: flex !important; 
+            flex-direction: column !important; 
+            overflow: hidden !important; 
+            position: relative !important; 
+            min-width: 0 !important; 
+            max-width: calc(100% - 260px) !important; 
+            width: auto !important; 
+            height: 100% !important; 
+            background: #f8fafc;
+        }
+
+        /* PREMIUM TOP HEADER BAR */
+        .top-header-bar {
+            height: 48px;
+            background: #1e1e24;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .brand-logo {
+            width: 20px;
+            height: 20px;
+        }
+        .brand-text {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            margin-right: 12px;
+        }
+        .profile-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .user-profile {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .user-profile img {
+            width: 14px;
+            height: 14px;
+        }
+        .window-controls {
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+        }
+        
+        .signature { position: absolute; bottom: 8px; right: 24px; font-size: 11px; color: #94a3b8; font-weight: 700; font-style: italic; z-index: 100; pointer-events: none; }
+
+        /* INLINE MENU BAR */
+        .menu-bar {
+            display: flex;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            height: 100%;
+            align-items: center;
+        }
+        .menu-item {
+            display: inline-block;
+            position: relative;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #1e1e24;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1001;
+            padding: 6px 0;
+            margin-top: 0;
+        }
+        .dropdown-content::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: transparent;
+        }
+        .menu-item:hover .dropdown-content {
+            display: block;
+        }
+        .menu-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+        .menu-link:hover {
+            background: #ef443b;
+            color: white;
+        }
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.05);
+            margin: 6px 0;
+        }
+        .menu-shortcut {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* UNIFIED CONTROL & SEARCH BAR */
+        .control-panel-bar {
+            background: #ffffff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 16px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+        .search-box-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            min-width: 250px;
+        }
+        .search-input {
+            width: 100%;
+            height: 38px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 0 16px 0 40px;
+            color: #1e293b;
+            font-size: 13px;
+            transition: all 0.25s ease;
+            font-family: inherit;
+            font-weight: 500;
+        }
+        .search-input:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: #ef443b;
+            box-shadow: 0 0 0 3px rgba(239, 68, 59, 0.15);
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            margin-top: -8px;
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+        }
+        .console-actions {
+            display: block;
+            text-align: right;
+            flex: 1;
+            min-width: 280px;
+        }
+        .console-btn {
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 3px 2px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e293b;
+            transition: all 0.2s ease;
+            padding: 0 10px;
+            line-height: 32px;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            font-family: inherit;
+        }
+        .console-btn:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .console-btn img {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin-right: 4px;
+            position: relative;
+            top: -1px;
+        }
+        .console-btn.primary {
+            background: #ef443b;
+            color: white;
+            border-color: #d32f2f;
+        }
+        .console-btn.primary:hover {
+            background: #d32f2f;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
+        }
+        .console-btn.primary img {
+            filter: brightness(0) invert(1);
+        }
+        
+        .content { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 24px; 
+            background: #f8fafc; 
+        }
+
+        #usersList {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.02); 
+            border: 1px solid #e2e8f0; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .user-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        }
+        .user-name { 
+            font-weight: 700; 
+            font-size: 15px; 
+            color: #0f172a; 
+            margin-bottom: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: -0.3px; 
+            line-height: 1.2;
+        }
+        .user-info { font-size: 13px; color: #475569; margin-bottom: 6px; font-weight: 500; }
+        .user-info span { color: #0f172a; font-weight: 600; }
+        .btn-connetti { 
+            background: linear-gradient(135deg, #ef443b 0%, #c62828 100%); 
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 10px; 
+            width: 100%; 
+            font-weight: 700; 
+            font-size: 13px; 
+            cursor: pointer; 
+            margin-top: 16px; 
+            text-transform: uppercase; 
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(239, 68, 59, 0.2);
+            font-family: inherit;
+        }
+        .btn-connetti:hover { 
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); 
+            box-shadow: 0 6px 15px rgba(239, 68, 59, 0.3);
+        }
+
+        /* ACCORDION/BUTTONS PER RECORD MANUALI */
+        .btn-action { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: all 0.2s; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); 
+        }
+        .btn-action:hover { transform: scale(1.08); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .btn-action svg { width: 14px; height: 14px; fill: currentColor; }
+        
+        .btn-action.save { color: #2563eb; border-color: #cbd5e1; }
+        .btn-action.save:hover { background: #2563eb; color: white; }
+        
+        .btn-action.edit { color: #d97706; border-color: #cbd5e1; }
+        .btn-action.edit:hover { background: #d97706; color: white; }
+        
+        .btn-action.delete { color: #ef4444; border-color: #cbd5e1; }
+        .btn-action.delete:hover { background: #ef4444; color: white; }
+
+        .card-main-layout { display: flex; align-items: stretch; gap: 15px; width: 100%; }
+        .card-content-left { flex: 1; }
+        .card-actions-right { width: 40px; display: flex; flex-direction: column; gap: 6px; align-items: center; justify-content: center; border-left: 1px solid #f1f5f9; padding-left: 12px; }
+
+        /* MODALE OVERLAY */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-panel { background: #ffffff; width: 440px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; animation: modalSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid #e2e8f0; }
+        @keyframes modalSlideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header { background: #1e1e24; padding: 20px 24px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { margin: 0; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .modal-close { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 20px; cursor: pointer; transition: color 0.15s; }
+        .modal-close:hover { color: white; }
+
+        .modal-body { padding: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .form-input { width: 100%; height: 42px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 0 14px; box-sizing: border-box; font-size: 13px; color: #0f172a; transition: all 0.2s ease; font-family: inherit; font-weight: 500; }
+        .form-input:focus { border-color: #ef443b; outline: none; background: white; box-shadow: 0 0 0 3px rgba(239, 68, 59, 0.15); }
+
+        .modal-footer { padding: 8px 24px 24px 24px; display: flex; gap: 10px; }
+        .btn-modal { flex: 1; height: 44px; border-radius: 10px; font-weight: 700; text-transform: uppercase; font-size: 12px; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; letter-spacing: 0.5px; }
+        .btn-modal.cancel { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        .btn-modal.cancel:hover { background: #e2e8f0; }
+        .btn-modal.save { background: #ef443b; color: white; box-shadow: 0 4px 10px rgba(239, 68, 59, 0.2); }
+        .btn-modal.save:hover { background: #d32f2f; transform: translateY(-1px); }
+        
+        /* APPUNTI & COPIA RAPIDA */
+        .copy-badge {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 800;
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            vertical-align: middle;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .copy-badge.show {
+            opacity: 1;
+        }
+        .clickable-value {
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+        .clickable-value:hover {
+            color: #ef443b !important;
+            text-decoration: underline;
+        }
+        
+        /* FILTER BAR & TABS */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            padding: 8px 24px;
+            margin-top: 12px;
+            margin-bottom: 2px;
+            flex-shrink: 0;
+            background: #f8fafc;
+        }
+        .filter-tab {
+            font-size: 10px;
+            font-weight: 700;
+            color: #64748b;
+            background: #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+        }
+        .filter-tab span {
+            background: #cbd5e1;
+            color: #475569;
+            padding: 1px 5px;
+            border-radius: 10px;
+            margin-left: 5px;
+            font-size: 9px;
+            font-weight: 800;
+        }
+        .filter-tab:hover {
+            background: #cbd5e1;
+            color: #334155;
+        }
+        .filter-tab.active {
+            background: #ef443b;
+            color: white;
+        }
+        .filter-tab.active span {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        /* CARD HOVER GLOWS */
+        .user-card.source-excel:hover {
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+        .user-card.source-manual:hover {
+            box-shadow: 0 12px 25px rgba(239, 68, 59, 0.12);
+            border-color: rgba(239, 68, 59, 0.25);
+        }
+
+        /* Premium Switch Styling */
+        .switch-container {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 20px;
+        }
+        .switch-container input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: .3s;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: left .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input:checked + .switch-slider {
+            background-color: #ef443b;
+        }
+        input:checked + .switch-slider:before {
+            left: 20px;
+        }
+    </style>
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+<script>
+function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            var testoGuida = "========================================\n" +
+                             "   GUIDA ALL'USO - ZENITH LOGISTICA\n" +
+                             "========================================\n\n" +
+                             "1. RICERCA GLOBALE:\n" +
+                             "   Digita nella barra in alto per cercare clienti,\n" +
+                             "   citta, telefoni o qualsiasi articolo in tempo reale.\n\n" +
+                             "2. FILTRI SIDEBAR:\n" +
+                             "   Usa i pulsanti a sinistra per filtrare per Provincia\n" +
+                             "   (Bari, Foggia, Taranto) o Dispositivo (Orologio, Braille...).\n\n" +
+                             "3. COPIA DATI:\n" +
+                             "   Clicca sul tasto verde 'Copia' per salvare la scheda\n" +
+                             "   negli appunti e incollarla dove desideri.\n\n" +
+                             "4. SINCRONIZZAZIONE EXCEL:\n" +
+                             "   Dal menu File premi 'Sincronizza Excel Ora' per\n" +
+                             "   aggiornare i dati con gli ultimi file Danea.\n\n" +
+                             "========================================";
+            
+            alert(testoGuida);
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "block";
+                    m.style.visibility = "visible";
+                }
+            } catch(ex) {}
+        }
+
+        function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.cssText = "display:block !important; visibility:visible !important; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;";
+                }
+            } catch(ex) {}
+        }
+
+        function ChiudiGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "none";
+                    m.style.visibility = "hidden";
+                    m.style.cssText = "display:none !important; visibility:hidden !important;";
+                }
+            } catch(ex) {}
+        }
+
+        
+        function KeepMenuOpen(el) {
+            if (!el) return;
+            var current = el;
+            while (current && current.tagName !== 'BODY') {
+                if (current.className && current.className.indexOf('menu-item') > -1) {
+                    if (current._closeTimer) {
+                        clearTimeout(current._closeTimer);
+                        current._closeTimer = null;
+                    }
+                    break;
+                }
+                current = current.parentNode;
+            }
+        }
+
+        function OpenMenu(el) {
+            if (!el) return;
+            if (el._closeTimer) { clearTimeout(el._closeTimer); el._closeTimer = null; }
+            if (!el) return;
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1 && items[i] !== el) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+            el.style.background = 'rgba(56, 189, 248, 0.25)';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'block';
+                drop.style.visibility = 'visible';
+            }
+        }
+
+        function CloseMenu(el, e) {
+            if (!el) return;
+            e = e || window.event;
+            var target = e ? (e.toElement || e.relatedTarget) : null;
+            try {
+                while (target) {
+                    if (target === el) return;
+                    target = target.parentNode;
+                }
+            } catch(err) {}
+
+            if (el._closeTimer) clearTimeout(el._closeTimer);
+            el._closeTimer = setTimeout(function() {
+                el.style.background = 'transparent';
+                var drop = el.getElementsByTagName('ul')[0];
+                if (drop) {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                }
+            }, 350);
+        }
+
+        function ToggleMenu(el, e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                if (drop.style.display === 'block' && drop.style.visibility === 'visible') {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                    el.style.background = 'transparent';
+                } else {
+                    OpenMenu(el);
+                }
+            }
+        }
+
+        document.onclick = function(e) {
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+        };
+
+        var lastExecTime = 0;
+        function ExecAction(actionName, e) {
+            var now = new Date().getTime();
+            if (now - lastExecTime < 200) return;
+            lastExecTime = now;
+
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            // Close all dropdowns
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+        }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+</script>
+</head>
+<body>
+<div class="window-frame">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/img/app_icon_premium.png?v=2" class="sidebar-logo" alt="Logo" onerror="this.src='assets/img/app_icon.jpg'">
+            <div class="sidebar-title">C. Milella</div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="sidebar-item" tabindex="0" onclick="NavigateTo('dashboard.html')">
+                <div class="sidebar-icon"><img src="https://img.icons8.com/color/48/dashboard.png"></div>
+                PANNELLO COMANDI
+            </div>
+            <div class="sidebar-item" tabindex="0" onclick="NavigateTo('anagrafica.html')">
+                <div class="sidebar-icon"><img src="https://img.icons8.com/color/48/address-book.png"></div>
+                ANAGRAFICA
+            </div>
+            <div class="sidebar-item" tabindex="0" onclick="NavigateTo('consegne.html')">
+                <div class="sidebar-icon"><img src="https://img.icons8.com/color/48/truck.png"></div>
+                CONSEGNE
+            </div>
+            <div class="sidebar-item" tabindex="0" onclick="NavigateTo('storico.html')">
+                <div class="sidebar-icon"><img src="https://img.icons8.com/color/48/past-order.png"></div>
+                ANAGRAFICA STORICA
+            </div>
+        </div>
+        
+        <div class="notif-section">
+            <div class="notif-header">&#128276; CENTRO NOTIFICHE</div>
+            <button class="backup-btn" onclick="RunBackup()">
+                <img src="https://img.icons8.com/color/24/database-export.png">
+                Eseguire Backup
+            </button>
+        </div>
+        
+        <!-- IMPOSTAZIONI / ACCESSIBILITA -->
+        <div class="notif-section" style="margin-top: 10px;">
+            <div class="notif-header">&#9881; ACCESSIBILITÀ</div>
+            
+            <!-- Sintesi Vocale -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 600;">
+                <span>Sintesi Vocale</span>
+                <label class="switch-container">
+                    <input type="checkbox" id="chkSpeech" checked onchange="ToggleSpeech(this.checked)">
+                    <span class="switch-slider"></span>
+                </label>
+            </div>
+
+            <!-- Velocità Voce -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 600;">
+                <span>Velocità Voce</span>
+                <input type="range" id="rngRate" min="-10" max="10" value="0" step="1" onchange="SetSpeechRate(this.value)">
+            </div>
+            
+            <!-- Contrasto Elevato -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 600;">
+                <span>Contrasto Elevato</span>
+                <label class="switch-container">
+                    <input type="checkbox" id="chkContrast" onchange="ToggleHighContrast(this.checked)">
+                    <span class="switch-slider"></span>
+                </label>
+            </div>
+            
+            <!-- Dimensione Testo -->
+            <div style="display: flex; align-items: center; justify-content: space-between; color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 600;">
+                <span>Dimensione Testo</span>
+                <div style="display: flex; gap: 4px;">
+                    <button id="btnZoomStd" onclick="SetZoomLevel('std')" class="acc-zoom-btn">A</button>
+                    <button id="btnZoomLrg" onclick="SetZoomLevel('lrg')" class="acc-zoom-btn">A+</button>
+                    <button id="btnZoomXlrg" onclick="SetZoomLevel('xlrg')" class="acc-zoom-btn">A++</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- OROLOGIO ANALOGICO -->
+        <div class="clock-container">
+            <div class="clock-center"></div>
+            <div id="hour-h" class="clock-hand hour-hand"></div>
+            <div id="min-h" class="clock-hand min-hand"></div>
+            <div id="sec-h" class="clock-hand sec-hand"></div>
+        </div>
+
+        <!-- SESSION TRACKER -->
+        <div class="session-timer-box" style="display: flex; flex-direction: column; align-items: stretch; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                <div class="hg-icon-container">
+                    <img id="hgIcon" src="https://img.icons8.com/ios-filled/50/ffffff/hourglass-sand-top.png" class="hg-icon">
+                </div>
+                <div class="timer-info">
+                    <div class="timer-label">Durata Sessione</div>
+                    <div id="sessionTimerDisplay" class="timer-display">00:00:00</div>
+                </div>
+            </div>
+            <button id="btnStopSession" onclick="StopSession()" style="display: none; width: 100%; background: #ffffff; color: #ef443b; border: none; padding: 8px; border-radius: 6px; font-weight: 800; font-size: 11px; cursor: pointer; text-transform: uppercase; text-align: center; margin-top: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">Chiudi AnyDesk</button>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="exit-btn-sidebar" tabindex="0" onclick="GoToDashboard()">
+                <div class="exit-icon-box">
+                    <img src="https://img.icons8.com/color/24/delete-sign.png">
+                </div>
+                <div class="exit-text">ESCI</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <!-- TOP HEADER BAR -->
+        <div class="top-header-bar">
+            <div class="header-left">
+                <img src="https://img.icons8.com/color/48/anydesk.png" class="brand-logo">
+                <span class="brand-text">AnyDesk Hub</span>
+                
+                <!-- INLINE MENU BAR -->
+                <div class="menu-bar">
+                    <div class="menu-item">File
+                        <div class="dropdown-content">
+                            <a href="#" class="menu-link" onclick="RefreshData()">Salva Database <span class="menu-shortcut">Ctrl+S</span></a>
+                            <a href="#" class="menu-link" onclick="BrowseFile()">Sfoglia File Excel... <span class="menu-shortcut">Ctrl+O</span></a>
+                            <a href="#" class="menu-link" onclick="GeneratePDF()">Esporta Report PDF... <span class="menu-shortcut">Ctrl+P</span></a>
+                            <div class="menu-divider"></div>
+                            <a href="#" class="menu-link" onclick="SafeExit()">Esci dall'Applicazione <span class="menu-shortcut">Alt+F4</span></a>
+                        </div>
+                    </div>
+                    <div class="menu-item">Modifica
+                        <div class="dropdown-content">
+                            <a href="#" class="menu-link" onclick="OpenUserModal()">Aggiungi Nuovo Operatore <span class="menu-shortcut">Alt+N</span></a>
+                            <a href="#" class="menu-link" onclick="SyncWithExcel()">Sincronizza con Excel <span class="menu-shortcut">Alt+Y</span></a>
+                            <div class="menu-divider"></div>
+                            <a href="#" class="menu-link" onclick="document.getElementById('searchInput').focus()">Cerca Operatore... <span class="menu-shortcut">Ctrl+F</span></a>
+                            <a href="#" class="menu-link" onclick="document.getElementById('searchInput').value='';RefreshData()">Pulisci Ricerca</a>
+                        </div>
+                    </div>
+                    <div class="menu-item">Mostra
+                        <div class="dropdown-content">
+                            <a href="#" class="menu-link" onclick="RefreshData()">Aggiorna Lista <span class="menu-shortcut">F5</span></a>
+                            <a href="#" class="menu-link" onclick="WinMax()">Schermo Intero / Ripristina</a>
+                            <div class="menu-divider"></div>
+                            <a href="#" class="menu-link" onclick="GoToDashboard()">Vai al Pannello Comandi <span class="menu-shortcut">Esc</span></a>
+                        </div>
+                    </div>
+                    <div class="menu-item">Strumenti
+                        <div class="dropdown-content">
+                            <a href="#" class="menu-link" onclick="RunBackup()">Esegui Backup di Sicurezza</a>
+                            <div class="menu-divider"></div>
+                            <a href="#" class="menu-link" onclick="SendWhatsApp()">Condividi via WhatsApp</a>
+                            <a href="#" class="menu-link" onclick="SendEmail()">Invia per Email...</a>
+                            <div class="menu-divider"></div>
+                            <a href="#" class="menu-link" id="menuToggleSpeech" onclick="ToggleSpeechShortcut()">Disattiva Sintesi Vocale <span class="menu-shortcut">Ctrl+V</span></a>
+                            <a href="#" class="menu-link" id="menuToggleContrast" onclick="ToggleHighContrastShortcut()">Attiva Contrasto Elevato <span class="menu-shortcut">Ctrl+H</span></a>
+                        </div>
+                    </div>
+                    <div class="menu-item">Guida
+                        <div class="dropdown-content">
+                            <a href="#" class="menu-link" onclick="ShowAppGuide()">Guida all'utilizzo... <span class="menu-shortcut">F1</span></a>
+                            <a href="#" class="menu-link" onclick="AboutApp()">Informazioni su AnyDesk Hub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <span class="profile-name">Ciro Milella</span>
+                <div class="user-profile" title="Profilo Utente" onclick="alert('Profilo: Ciro Milella\nAccesso Autorizzato - Sistema Logistica')">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/user-male-circle.png">
+                </div>
+                <div class="window-controls">
+                    <div class="apple-controls">
+                        <div class="apple-btn close" onclick="GoToDashboard()" title="Chiudi"></div>
+                        <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+                        <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UNIFIED CONTROL & SEARCH BAR -->
+        <div class="control-panel-bar">
+            <div class="search-box-wrapper">
+                <img src="https://img.icons8.com/ios-glyphs/30/94a3b8/search--v1.png" class="search-icon">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cerca o inserisci l'indirizzo della postazione remota..." onkeyup="FilterUsers()">
+            </div>
+            
+            <div class="console-actions">
+                <button class="console-btn" onclick="BrowseFile()" title="Sfoglia file Excel">
+                    <img src="https://img.icons8.com/material-rounded/24/1e293b/opened-folder.png"> Sfoglia
+                </button>
+                <button class="console-btn" onclick="RefreshData()" title="Aggiorna i dati">
+                    <img src="https://img.icons8.com/material-rounded/24/1e293b/synchronize.png"> Aggiorna
+                </button>
+                <button class="console-btn" onclick="SyncWithExcel()" title="Sincronizza Excel con Database">
+                    <img src="https://img.icons8.com/material-rounded/24/1e293b/data-configuration.png"> Sincronizza
+                </button>
+                <button class="console-btn primary" onclick="OpenUserModal()" title="Aggiungi nuovo operatore">
+                    <img src="https://img.icons8.com/material-rounded/24/ffffff/plus.png"> Aggiungi
+                </button>
+                <button class="console-btn" onclick="GeneratePDF()" title="Genera Report PDF">
+                    <img src="https://img.icons8.com/material-rounded/24/1e293b/pdf.png"> PDF
+                </button>
+                <button class="console-btn" onclick="SendWhatsApp()" title="Condividi via WhatsApp">
+                    <img src="https://img.icons8.com/material-rounded/24/1e293b/whatsapp.png"> WhatsApp
+                </button>
+                <button class="console-btn primary" onclick="SendEmail()" title="Invia Report Email">
+                    <img src="https://img.icons8.com/material-rounded/24/ffffff/mail.png"> Invia Email
+                </button>
+            </div>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar">
+            <div class="filter-tab active" data-tab="all" onclick="ChangeFilterTab('all')">TUTTI <span id="countAll">0</span></div>
+            <div class="filter-tab" data-tab="excel" onclick="ChangeFilterTab('excel')">DA EXCEL <span id="countExcel">0</span></div>
+            <div class="filter-tab" data-tab="manual" onclick="ChangeFilterTab('manual')">MANUALI <span id="countManual">0</span></div>
+        </div>
+
+        <div id="usersList" class="content"><i>Inizializzazione...</i></div>
+        <div class="signature">Creato da C. Milella</div>
+    </div>
+</div>
+
+<!-- MODALE INSERIMENTO/MODIFICA MANUALE -->
+<div id="userModalOverlay" class="modal-overlay">
+    <div class="modal-panel">
+        <div class="modal-header">
+            <h3 id="modalTitle">NUOVO OPERATORE</h3>
+            <button class="modal-close" onclick="CloseUserModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Nome o Denominazione Postazione</label>
+                <input type="text" id="txtAddNome" class="form-input" placeholder="es. FRANCO FRANCCHI">
+            </div>
+            <div class="form-group">
+                <label>ID AnyDesk (9 cifre)</label>
+                <input type="text" id="txtAddID" class="form-input" placeholder="es. 123456789">
+            </div>
+            <div class="form-group">
+                <label>Password (Opzionale)</label>
+                <input type="text" id="txtAddPass" class="form-input" placeholder="Lascia vuoto se non necessaria">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal cancel" onclick="CloseUserModal()">Annulla</button>
+            <button class="btn-modal save" onclick="SaveUserManual()">Salva Operatore</button>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/accessibility.js"></script>
+<script src="assets/js/anydesk_hta.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+<!-- MODAL GUIDA ALL'USO (MSHTA REFLOW COMPATIBLE) -->
+<div id="helpModalOverlay" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;">
+    <div style="position:absolute; top:50%; left:50%; margin-top:-260px; margin-left:-320px; width:640px; background:#0f172a; border:2px solid #38bdf8; border-radius:16px; box-shadow:0 0 35px rgba(56, 189, 248, 0.4); padding:25px; color:#f8fafc; font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;">
+        <!-- Header Modal -->
+        <div style="border-bottom:1px solid #38bdf8; padding-bottom:12px; margin-bottom:15px; position:relative;">
+            <div style="font-family:'Outfit', sans-serif; font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.5px;">
+                &#128216; GUIDA ALL'USO - ZENITH MATERIALI
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Manuale Rapido Operativo &amp; Scorciatoie</div>
+            <div onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="cursor:pointer; position:absolute; top:0; right:0; width:30px; height:30px; background:#1e293b; border:1px solid #38bdf8; border-radius:50%; text-align:center; line-height:28px; color:#f8fafc; font-weight:bold; font-size:1.2rem; user-select:none;">&times;</div>
+        </div>
+
+        <!-- Content Modal -->
+        <div style="height:350px; overflow-y:auto; padding-right:5px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                <tr>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#fbbf24; font-size:0.88rem; margin-bottom:6px;">
+                                &#128269; 1. Ricerca Globale Istantanea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Digita nel campo in alto per filtrare in tempo reale clienti, città, telefoni o specifiche attrezzature assegnate.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#38bdf8; font-size:0.88rem; margin-bottom:6px;">
+                                &#128205; 2. Filtri Provincia &amp; Articolo
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Usa la barra laterale sinistra per isolare velocemente le province (Bari, Foggia, Taranto) o i dispositivi (Orologio, Sveglia, Braille).
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#34d399; font-size:0.88rem; margin-bottom:6px;">
+                                &#128203; 3. Pulsanti Copia Dati
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Clicca sul tasto verde <b>Copia</b> per salvare la scheda cliente negli appunti e trasferirla nei promemoria o report.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#a78bfa; font-size:0.88rem; margin-bottom:6px;">
+                                &#128259; 4. Sincronizzazione Danea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Dal menu <b>File</b> o <b>Strumenti</b> premi <i>Sincronizza Excel Ora</i> per ricaricare le anagrafiche aggiornate.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; padding:12px; border-radius:10px; font-size:0.8rem; color:#cbd5e1;">
+                <b style="color:#38bdf8;">&#9889; Suggerimento Rapido:</b> Per resettare tutti i filtri attivi e tornare alla vista completa, seleziona <b>TUTTE LE PROVINCE</b> ed <b>ELENCO COMPLETO</b> dalla sidebar a sinistra.
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); text-align:right;">
+            <span style="font-size:0.75rem; color:#94a3b8; float:left; margin-top:8px;">Sistema Zenith Materiali v1.0 &bull; C. Milella 2026</span>
+            <button onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="background:#0284c7; color:white; border:1px solid #38bdf8; padding:8px 24px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; font-family:'Outfit', sans-serif;">HO CAPITO</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

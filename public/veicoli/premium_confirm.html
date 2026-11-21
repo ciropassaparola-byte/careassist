@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Conferma Azione</title>
+    <style>
+        body { 
+            margin:0; padding:0; 
+            background-color: #0f172a;
+            color: #f8fafc; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow:hidden; 
+        }
+        .container {
+            padding: 25px 30px;
+            text-align: center;
+        }
+        .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #ef4444; /* Rosso per attenzione/eliminazione */
+        }
+        .message {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        .btn-group {
+            display: block;
+            text-align: center;
+        }
+        button {
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .btn-yes {
+            background-color: #ef4444;
+            color: white;
+            border: 1px solid #f87171;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+        .btn-yes:hover {
+            background-color: #dc2626;
+        }
+        .btn-no {
+            background-color: #334155;
+            color: white;
+            border: 1px solid #64748b;
+        }
+        .btn-no:hover {
+            background-color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon" id="iconBox">&#9888;</div> <!-- Default warning icon -->
+        <div class="message" id="msgText">
+            Sei sicuro di voler procedere?
+        </div>
+        <div class="btn-group">
+            <button class="btn-yes" id="btnYes" onclick="chiudi(true)">OK</button>
+            <button class="btn-no" id="btnNo" onclick="chiudi(false)">Annulla</button>
+        </div>
+    </div>
+    <script>
+        try {
+            var args = window.dialogArguments;
+            if(args) {
+                if(args.msg) {
+                    document.getElementById('msgText').innerHTML = args.msg.replace(/\n/g, "<br>");
+                }
+                if(args.icon) {
+                    document.getElementById('iconBox').innerHTML = args.icon;
+                }
+                if(args.btnYesText) {
+                    document.getElementById('btnYes').innerHTML = args.btnYesText;
+                }
+                if(args.btnNoText) {
+                    document.getElementById('btnNo').innerHTML = args.btnNoText;
+                }
+            }
+        } catch(e) {}
+        
+        function chiudi(valore) {
+            window.returnValue = valore;
+            window.close();
+        }
+        
+        document.onkeydown = function(e) {
+            e = e || window.event;
+            if(e.keyCode === 27) chiudi(false);
+            if(e.keyCode === 13) chiudi(true);
+        };
+    </script>
+</body>
+</html>

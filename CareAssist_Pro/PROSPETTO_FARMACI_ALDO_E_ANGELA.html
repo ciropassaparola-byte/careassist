@@ -1,0 +1,502 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>CareAssist Pro - Piano Terapeutico & Richiesta Farmaci al Medico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm 12mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 20px 10px;
+      font-size: 9pt;
+      line-height: 1.35;
+    }
+
+    .no-print-toolbar {
+      max-width: 900px;
+      margin: 0 auto 16px auto;
+      background: #ffffff;
+      padding: 14px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45);
+    }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .sheet-page {
+      max-width: 900px;
+      margin: 0 auto 24px auto;
+      background: #ffffff;
+      padding: 24px 28px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      page-break-after: always;
+      position: relative;
+      border: 1px solid #e2e8f0;
+    }
+    .sheet-page:last-child {
+      page-break-after: auto;
+      margin-bottom: 0;
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .brand-title {
+      font-size: 17pt;
+      font-weight: 900;
+      color: #0369a1;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand-sub {
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .doc-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 8.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: right;
+    }
+
+    .anagrafica-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: 1.4fr 1.3fr 1.3fr;
+      gap: 10px;
+      font-size: 8.5pt;
+    }
+    .anag-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .anag-col b {
+      color: #0f172a;
+    }
+    .anag-title {
+      font-weight: 800;
+      font-size: 7.5pt;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .med-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+      margin-bottom: 14px;
+    }
+    .med-table th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 7px 10px;
+      text-align: left;
+      font-weight: 800;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .med-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+    .med-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .badge-ora {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 8pt;
+    }
+    .pill-utilita {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 8pt;
+      font-weight: 600;
+    }
+    .chk-ricetta {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #64748b;
+      border-radius: 3px;
+      background: #ffffff;
+    }
+
+    .footer-note {
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 7.5pt;
+      color: #64748b;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA STRUMENTI SUPERIORE A SCHERMO -->
+  <div class="no-print-toolbar">
+    <div>
+      <div style="font-weight: 800; font-size: 15px; color: #0f172a;">📄 Prospetto Farmaci & Utilità Clinica (Kit di Presentazione)</div>
+      <div style="font-size: 12px; color: #64748b;">Pronto per la stampa cartacea ad alta definizione A4 o salvataggio in PDF</div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button type="button" class="btn-action" onclick="window.print()">🖨️ Stampa Documento A4</button>
+      <button type="button" class="btn-outline" onclick="window.close()">Chiudi</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGINA 1: PROSPETTO FARMACI PER Aldo Zamparino (ANNI 91)                  -->
+  <!-- ========================================================================= -->
+  <div class="sheet-page">
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">🩺 CareAssist Pro</div>
+        <div class="brand-sub">Sistema Informativo Integrato Assistenza Territoriale & Domiciliare</div>
+      </div>
+      <div class="doc-badge">
+        SCHEDA TERAPEUTICA & RICHIESTA RICETTE MMG
+      </div>
+    </div>
+
+    <!-- ANAGRAFICA ASSISTITO, MEDICO & FARMACIA -->
+    <div class="anagrafica-box">
+      <div class="anag-col">
+        <div class="anag-title">👤 Dati Assistito</div>
+        <div><b>Aldo Zamparino</b> (Anni 91)</div>
+        <div>Data Nascita: <b>06/01/1935</b></div>
+        <div>Residenza: <b>Via Giovanni Modugno, 25 - Bari</b></div>
+        <div>Condizione: <b>Paziente Allettato (Assistenza Domiciliare)</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🩺 Medico Curante (MMG)</div>
+        <div><b>Dott. Roberto Scarcia</b></div>
+        <div>Studio: <b>Via Muciaccia 11, Bari</b></div>
+        <div>Tel. Studio: <b>080 557 44 90</b></div>
+        <div>Email Ricette: <b>scarcia.roberto@alice.it</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🏥 Farmacia & Referente</div>
+        <div>Farmacia: <b>Farmacia Dott. MACARIO</b></div>
+        <div>Indirizzo: <b>Via G. Petroni, 69/b - Bari (080 542 8061)</b></div>
+        <div>Coniuge/Caregiver: <b>Mazzicone Angela</b></div>
+        <div>Recapito: <b>338 944 96 10 / 338 306 69 05</b></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 6px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="font-weight: 800; font-size: 10pt; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px;">
+        💊 Elenco Terapie Croniche con Rispettiva Utilità Clinica
+      </div>
+      <div style="font-size: 8pt; color: #64748b; font-style: italic;">
+        Quadri clinici: Cardiopatia/Aritmia • Epilessia/Neurologia • IPB • Ipotensione/Umore
+      </div>
+    </div>
+
+    <!-- TABELLA FARMACI CON RISPETTIVA UTILITÀ -->
+    <table class="med-table">
+      <thead>
+        <tr>
+          <th style="width: 14%;">Orario / Fascia</th>
+          <th style="width: 26%;">Farmaco & Dosaggio</th>
+          <th style="width: 18%;">Principio Attivo</th>
+          <th style="width: 34%;">Utilità Clinica & Finalità Terapeutica</th>
+          <th style="width: 8%; text-align: center;">Ricetta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-ora">07:30</span><br><small style="color:#64748b;">Digiuno (1 cpr)</small></td>
+          <td><b>Pantoprazolo 40 mg</b><br><small>1 cpr gastroresistente</small></td>
+          <td>Pantoprazolo sodico</td>
+          <td><span class="pill-utilita">🛡️ Gastroprotezione</span><br>Protegge la mucosa gastrica dall'azione lesiva delle politerapie orali a lungo termine.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">08:30</span><br><small style="color:#64748b;">Colazione (1 cpr)</small></td>
+          <td><b>Bisoprololo 1,25 mg</b><br><small>1 cpr rivestita</small></td>
+          <td>Bisoprololo fumarato</td>
+          <td><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">❤️ Cardio / Aritmie</span><br>Beta-bloccante: regolarizza la frequenza cardiaca ed evita picchi pressori e tachicardia.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td><span class="badge-ora" style="background:#f3e8ff; color:#6b21a8;">09:00</span><br><small style="color:#7e22ce; font-weight:700;">Mattina (1 cpr)</small></td>
+          <td><b>VIMPAT 100 mg (Lacosamide)</b><br><span style="font-size:7.5pt; font-weight:800; color:#6b21a8;">1ª Somministrazione (1 cpr)</span></td>
+          <td>Lacosamide</td>
+          <td><span class="pill-utilita" style="background:#f3e8ff; color:#7e22ce; border-color:#d8b4fe;">🧠 Antiepilettico / Neurologico</span><br>Posologia complessiva: <b>4 cpr/die (400 mg)</b>. Prevenzione crisi focali ed eccitabilità neuronale.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td><span class="badge-ora" style="background:#f3e8ff; color:#6b21a8;">13:30</span><br><small style="color:#7e22ce; font-weight:700;">Pranzo (1 cpr)</small></td>
+          <td><b>VIMPAT 100 mg (Lacosamide)</b><br><span style="font-size:7.5pt; font-weight:800; color:#6b21a8;">2ª Somministrazione (1 cpr)</span></td>
+          <td>Lacosamide</td>
+          <td><span class="pill-utilita" style="background:#f3e8ff; color:#7e22ce; border-color:#d8b4fe;">🧠 Mantenimento Costante</span><br>Dose intermedia del pranzo per mantenere costante la concentrazione plasmatica.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">20:00</span><br><small style="color:#c2410c; font-weight:700;">Cena (1 capsula)</small></td>
+          <td><b>SILODYX 8 mg (Silodosina)</b><br><small>1 capsula rigida</small></td>
+          <td>Silodosina</td>
+          <td><span class="pill-utilita" style="background:#ffedd5; color:#c2410c; border-color:#fdba74;">🧪 Urologia / IPB</span><br><b>Da assumere a stomaco pieno durante o al termine della cena</b> con acqua per favorire il flusso urinario notturno.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr style="background:#fdf2f8;">
+          <td><span class="badge-ora" style="background:#7e22ce; color:#ffffff;">20:30</span><br><small style="color:#6b21a8; font-weight:800;">Dopo Cena (2 cpr!)</small></td>
+          <td><b>VIMPAT 100 mg (Lacosamide)</b><br><span style="background:#dc2626; color:#ffffff; padding:1px 5px; border-radius:3px; font-size:7.5pt; font-weight:900;">⚠️ 3ª Somministrazione (2 cpr)</span></td>
+          <td>Lacosamide (200 mg)</td>
+          <td><span class="pill-utilita" style="background:#f3e8ff; color:#7e22ce; border-color:#d8b4fe;">🧠 Picco di Copertura Notturna</span><br><b>Dose serale rinforzata (2 cpr = 200 mg)</b> per la massima protezione neurologica durante il sonno.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">21:30</span><br><small style="color:#64748b;">Prima del riposo (1 cpr)</small></td>
+          <td><b>Quetiapina 25 mg</b><br><small>1 cpr rivestita</small></td>
+          <td>Quetiapina</td>
+          <td><span class="pill-utilita" style="background:#e0e7ff; color:#4338ca; border-color:#c7d2fe;">🌙 Modulatore del Sonno & Umore</span><br>Antipsicotico atipico a basso dosaggio: controlla l'agitazione notturna e favorisce un sonno continuo e ristoratore.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:8pt; color:#334155;">
+      <b>📋 Note di Gestione Assistenziale per i Colleghi & Familiari:</b>
+      Paziente allettato con protocollo di rotazione posturale obbligatoria q2h (ogni 2 ore) e monitoraggio parametri (Pressione, Frequenza, Saturazione SpO2). Terapie orali somministrate rigorosamente con paziente in posizione semi-seduta (Fowler 30°-45°) per prevenire rischi di disfagia e polmonite ab ingestis.
+    </div>
+
+    <div class="footer-note">
+      <div>Generato con <b>CareAssist Pro</b> • Fascicolo Sanitario Territoriale</div>
+      <div>Data Elaborazione: <b>16 Ottobre 2026</b> • Pagina 1 di 2</div>
+      <div>Firma Richiedente: ____________________________</div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- PAGINA 2: PROSPETTO FARMACI PER Angela Mazzicone (ANNI 88)                -->
+  <!-- ========================================================================= -->
+  <div class="sheet-page">
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">🩺 CareAssist Pro</div>
+        <div class="brand-sub">Sistema Informativo Integrato Assistenza Territoriale & Domiciliare</div>
+      </div>
+      <div class="doc-badge" style="background:#fef3c7; color:#b45309; border-color:#fde68a;">
+        SCHEDA TERAPEUTICA & RICHIESTA RICETTE MMG
+      </div>
+    </div>
+
+    <!-- ANAGRAFICA ASSISTITA, MEDICO & FARMACIA -->
+    <div class="anagrafica-box">
+      <div class="anag-col">
+        <div class="anag-title">👤 Dati Assistita</div>
+        <div><b>Angela Mazzicone</b> (Anni 88)</div>
+        <div>Data Nascita: <b>29/05/1938</b></div>
+        <div>Residenza: <b>Via Giovanni Modugno, 25 - Bari</b></div>
+        <div>Presidio: <b>Ausilio CPAP Notturno per OSAS</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🩺 Medico Curante (MMG)</div>
+        <div><b>Dott. Roberto Scarcia</b></div>
+        <div>Studio: <b>Via Muciaccia 11, Bari</b></div>
+        <div>Tel. Studio: <b>080 557 44 90</b></div>
+        <div>Email Ricette: <b>scarcia.roberto@alice.it</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🏥 Farmacia & Coniuge</div>
+        <div>Farmacia: <b>Farmacia Dott. MACARIO</b></div>
+        <div>Indirizzo: <b>Via G. Petroni, 69/b - Bari (080 542 8061)</b></div>
+        <div>Coniuge/Caregiver: <b>Aldo Zamparino</b></div>
+        <div>Recapito: <b>338 306 69 05 / 338 944 96 10</b></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 6px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="font-weight: 800; font-size: 10pt; color: #b45309; text-transform: uppercase; letter-spacing: 0.5px;">
+        💊 Elenco Terapie Croniche con Rispettiva Utilità Clinica
+      </div>
+      <div style="font-size: 8pt; color: #64748b; font-style: italic;">
+        Quadri clinici: Ipertensione • Dislipidemia • Cardioaspirina • Diuretico • Acido Urico • Vit. D3
+      </div>
+    </div>
+
+    <!-- TABELLA FARMACI CON RISPETTIVA UTILITÀ -->
+    <table class="med-table">
+      <thead>
+        <tr>
+          <th style="width: 14%;">Orario / Fascia</th>
+          <th style="width: 26%;">Farmaco & Dosaggio</th>
+          <th style="width: 18%;">Principio Attivo</th>
+          <th style="width: 34%;">Utilità Clinica & Finalità Terapeutica</th>
+          <th style="width: 8%; text-align: center;">Ricetta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">08:00</span><br><small style="color:#64748b;">Colazione</small></td>
+          <td><b>Bisoprololo 1,25 mg</b><br><small>1 compressa rivestita</small></td>
+          <td>Bisoprololo fumarato</td>
+          <td><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">❤️ Battito & Pressione</span><br>Beta-bloccante selettivo: controllo della frequenza e protezione cardiocircolatoria.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">08:30</span><br><small style="color:#64748b;">Colazione</small></td>
+          <td><b>Irbesartan/Idroclorotiazide</b><br><small>300 mg / 12,5 mg (1 cpr)</small></td>
+          <td>Irbesartan + HCTZ</td>
+          <td><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">🩸 Ipertensione Arteriosa</span><br>Associazione sartano + tiazidico: abbassamento efficace e continuo dei valori pressori nell'arco delle 24h.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">09:00</span><br><small style="color:#64748b;">Mattina</small></td>
+          <td><b>Lasix 25 mg (Furosemide)</b><br><small>1 compressa</small></td>
+          <td>Furosemide</td>
+          <td><span class="pill-utilita" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">💧 Diuretico dell'Ansa</span><br>Favorisce l'escrezione dei liquidi in eccesso e previene ristagni polmonari ed edemi declivi agli arti inferiori.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">13:00</span><br><small style="color:#64748b;">Pranzo</small></td>
+          <td><b>Cardioaspirin 100 mg</b><br><small>1 cpr gastroresistente</small></td>
+          <td>Acido acetilsalicilico</td>
+          <td><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">🩸 Antiaggregante Piastrinico</span><br>Fluidificante ematico: previene la formazione di trombi, ictus ed eventi ischemici cardiovascolari.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">13:30</span><br><small style="color:#64748b;">Dopo Pranzo</small></td>
+          <td><b>Allopurinolo 300 mg</b><br><small>1 compressa</small></td>
+          <td>Allopurinolo</td>
+          <td><span class="pill-utilita" style="background:#ecfdf5; color:#065f46; border-color:#a7f3d0;">🦴 Controllo Acido Urico</span><br>Inibitore dell'ossidasi xantinica: abbassa l'uricemia prevenendo attacchi dolorosi di gotta e calcoli renali.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">15:30</span><br><small style="color:#64748b;">Al bisogno</small></td>
+          <td><b>Riopan 80 mg/ml (Gel orale)</b><br><small>1 bustina / monodose</small></td>
+          <td>Magaldrato</td>
+          <td><span class="pill-utilita" style="background:#ecfdf5; color:#065f46; border-color:#a7f3d0;">🛡️ Antiacido & Reflusso</span><br>Tampone gastrico immediato: neutralizza l'iperacidità e contrasta bruciore epigastrico e pirosi.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">20:30</span><br><small style="color:#64748b;">Cena</small></td>
+          <td><b>Aplactin 40 mg (Pravastatina)</b><br><small>1 compressa</small></td>
+          <td>Pravastatina sale sodico</td>
+          <td><span class="pill-utilita" style="background:#fef3c7; color:#b45309; border-color:#fde68a;">🔬 Statina / Controllo Lipidi</span><br>Riduce la sintesi epatica di colesterolo LDL prevenendo l'aterosclerosi dei vasi sanguigni.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora" style="background:#fef3c7; color:#b45309;">Ciclico</span><br><small style="color:#64748b;">1 volta/mese</small></td>
+          <td><b>DIBASE 50.000 U.I. / 2,5 ml</b><br><small>1 flaconcino monodose orale</small></td>
+          <td>Colecalciferolo (Vit. D3)</td>
+          <td><span class="pill-utilita" style="background:#fef9c3; color:#854d0e; border-color:#fef08a;">🦴 Rimineralizzazione Ossea</span><br>Fissa il calcio nelle ossa contrastando osteoporosi senile e riducendo il rischio di fratture da fragilità.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:8pt; color:#92400e;">
+      <b>🫁 Presidio Respiratorio CPAP Notturno:</b>
+      La paziente è in trattamento con CPAP ventilatoria notturna a pressione positiva per OSAS (Sindrome delle Apnee Ostruttive nel Sonno). L'uso costante durante il sonno evita desaturazioni di ossigeno e sovraccarico cardiaco notturno.
+    </div>
+
+    <div class="footer-note">
+      <div>Generato con <b>CareAssist Pro</b> • Fascicolo Sanitario Territoriale</div>
+      <div>Data Elaborazione: <b>16 Ottobre 2026</b> • Pagina 2 di 2</div>
+      <div>Firma Richiedente: ____________________________</div>
+    </div>
+  </div>
+
+</body>
+</html>

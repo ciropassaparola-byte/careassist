@@ -1,0 +1,233 @@
+[
+  {
+    "id": 1790834757688,
+    "nome": "Valigia Corleto",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Valigia Corleto",
+    "foto": "uploads/ricetta_1790834757680-736505951.jpeg"
+  },
+  {
+    "id": 1790834686853,
+    "nome": "Spazzole",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Cassetta Rossa",
+    "foto": "uploads/ricetta_1790834686840-670637137.jpeg"
+  },
+  {
+    "id": 1790834600505,
+    "nome": "Scatola Arancione",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Altro",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Scatola Arancione completa",
+    "foto": "uploads/ricetta_1790834600498-625361508.jpeg"
+  },
+  {
+    "id": 1790834529795,
+    "nome": "Scatola Arancione",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Altro",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Scatola Arancione",
+    "foto": "uploads/ricetta_1790834529783-23561647.jpeg"
+  },
+  {
+    "id": 1790834463112,
+    "nome": "Punte da Muro",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Nella scatola Arancione",
+    "foto": "uploads/ricetta_1790834463102-168658727.jpeg"
+  },
+  {
+    "id": 1790604740902,
+    "nome": "Tasselli 3",
+    "posizione": "Garage",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "",
+    "foto": "uploads/ricetta_1790604740887-125151241.jpeg"
+  },
+  {
+    "id": 1790604658866,
+    "nome": "Tasselli 2",
+    "posizione": "Garage",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "",
+    "foto": "uploads/ricetta_1790604658856-486843480.jpeg"
+  },
+  {
+    "id": 1790604635908,
+    "nome": "tasselli 1",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "",
+    "foto": "uploads/ricetta_1790604635889-930489613.jpeg"
+  },
+  {
+    "id": 1790604574484,
+    "nome": "Lampada d'emergenza",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Elettroutensili",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "",
+    "foto": "uploads/ricetta_1790604574469-555923332.jpeg"
+  },
+  {
+    "id": 1790604526435,
+    "nome": "Pesa valigie",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "",
+    "foto": "uploads/ricetta_1790604526428-987908719.jpeg"
+  },
+  {
+    "id": 1790604499518,
+    "nome": "metro metallico",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "In armadio",
+    "foto": "uploads/ricetta_1790604499510-608408661.jpeg"
+  },
+  {
+    "id": 1790604183816,
+    "nome": "Spara chiodi",
+    "posizione": "Valigia Bianca",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Valigia bianca",
+    "foto": "uploads/ricetta_1790604183797-616226510.jpeg"
+  },
+  {
+    "id": 1790604117200,
+    "nome": "spela fili",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Elettroutensili",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Nella valigetta Corleto",
+    "foto": "uploads/ricetta_1790604117189-780598640.jpeg"
+  },
+  {
+    "id": 1790604081050,
+    "nome": "Pistola aria calda",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Elettroutensili",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "In Armadio Casa",
+    "foto": "uploads/ricetta_1790604081032-984097272.jpeg"
+  },
+  {
+    "id": 1790603867023,
+    "nome": "kit apri cell",
+    "posizione": "scrivania",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "kit set apri cell",
+    "foto": "uploads/ricetta_1790603867006-763524036.jpeg"
+  },
+  {
+    "id": 1790603083793,
+    "nome": "Pulitore ad aria Pc",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "",
+    "foto": "uploads/ricetta_1790603083785-28803561.jpeg"
+  },
+  {
+    "id": 1790602905946,
+    "nome": "TRAPANDO MINI ELETRIC",
+    "posizione": "In armadio",
+    "quantita": "1",
+    "categoria": "Manuali",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "TRAPANO con punte",
+    "foto": "uploads/ricetta_1790602905931-73389358.jpeg"
+  },
+  {
+    "id": 1790324433213,
+    "nome": "Trapano NASUM",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Elettroutensili",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "Trapano NASUM",
+    "foto": "Foto_Attrezzi/foto_1790324433200-892597049.jpeg"
+  },
+  {
+    "id": 1790313583164,
+    "nome": "Porta cellulare",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Altro",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "AUTO",
+    "foto": "Foto_Attrezzi/foto_1790313583155-256127591.jpeg"
+  },
+  {
+    "id": 1790312792071,
+    "nome": "Carica batteria universale",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Elettroutensili",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "",
+    "foto": "uploads/ricetta_1790831450203-254024340.jpeg"
+  },
+  {
+    "id": 1790312543839,
+    "nome": "levelpro3 laser",
+    "posizione": "Casa",
+    "quantita": "1",
+    "categoria": "Misurazione",
+    "stato": "Disponibile",
+    "prestato_a": "",
+    "note": "in armadio",
+    "foto": "Foto_Attrezzi/foto_1790312543830-252402445.jpeg"
+  }
+]

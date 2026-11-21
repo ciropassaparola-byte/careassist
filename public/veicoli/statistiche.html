@@ -1,0 +1,1017 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Centro di Analisi Avanzata e Archivio - Sistema Logistica</title>
+    <HTA:APPLICATION 
+        ID="oApp"
+        APPLICATIONNAME="SistemaLogisticaStatistiche"
+        BORDER="none"
+        BORDERSTYLE="none"
+        CAPTION="no"
+        ICON="https://img.icons8.com/fluency/48/combo-chart.png"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="yes"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="no"
+        WINDOWSTATE="maximize"
+        NAVIGABLE="yes"/>
+    
+    <link rel="stylesheet" href="assets/css/all.min.css"> <!-- FontAwesome local mirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- CDN fallback -->
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    
+    <!-- LEAFLET MAP ENGINE FOR HEATMAP (PHASE 6) -->
+    
+    
+    
+    
+    <!-- CORE WINDOW CONTROLS -->
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        // Forza Tutto Schermo all'avvio
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e){}
+    </script>
+
+    <style>
+        .refresh-logo-btn {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s !important;
+            cursor: pointer !important;
+        }
+        .refresh-logo-btn:hover {
+            transform: scale(1.18) rotate(15deg) !important;
+            filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.7)) !important;
+        }
+        .refresh-logo-btn:active {
+            transform: scale(0.9) rotate(360deg) !important;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            overflow: hidden; /* Ripristinato blocco poich� ora non serve pi� scorrere */
+        }
+
+        /* ======================================== */
+        /* DANEA CHROMIUM REPLICA HEADER SYSTEM     */
+        /* ======================================== */
+        .danea-top-black-bar {
+            height: 35px; background: #1a1a1a; color: white; display: flex; align-items: center; 
+            padding: 0 15px; font-size: 12px; font-weight: bold; cursor: move; user-select: none;
+            font-family: 'Segoe UI', sans-serif; border-bottom: 1px solid #000;
+        }
+        .apple-controls { display: flex; gap: 8px; margin-right: 15px; cursor: default; }
+        .apple-btn {
+            width: 12px; height: 12px; border-radius: 50%; cursor: pointer; position: relative;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.2); border: 0.5px solid rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        .apple-btn.close { background-color: #ff5f56; }
+        .apple-btn.minimize { background-color: #ffbd2e; }
+        .apple-btn.maximize { background-color: #27c93f; }
+        .apple-btn:hover { filter: brightness(1.1); transform: scale(1.1); }
+
+        .danea-menu-bar {
+            height: 32px; background: #2d221c; border-bottom: 1px solid #c5a059;
+            padding: 0 20px; z-index: 1000; font-family: 'Georgia', serif;
+            clear: both; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .menu-item {
+            float: left; height: 32px; line-height: 32px; padding: 0 18px;
+            font-size: 13px; color: #faf4eb; cursor: pointer; position: relative;
+            user-select: none; font-weight: 600; transition: 0.2s;
+        }
+        .menu-item u { text-decoration: underline; }
+        .menu-item:hover { background: rgba(197, 160, 89, 0.2); color: #c5a059; }
+        
+        .dropdown-content {
+            display: none; position: absolute; top: 32px; left: 0;
+            background: #ffffff; min-width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 9999; border: 1px solid #c5a059; border-top: none;
+            animation: dropdownFade 0.15s ease;
+        }
+        @keyframes dropdownFade { from{opacity:0; transform:translateY(-5px);} to{opacity:1; transform:translateY(0);} }
+        .menu-item:hover .dropdown-content { display: block; }
+        
+        .dropdown-item {
+            color: #334155; padding: 10px 15px; text-decoration: none; display: flex;
+            align-items: center; gap: 10px; font-family: 'Segoe UI', sans-serif; 
+            font-size: 12px; font-weight: 600; transition: 0.2s;
+        }
+        .dropdown-item i { width: 16px; text-align: center; color: #64748b; }
+        .dropdown-item:hover { background: #f8fafc; color: #b45309; }
+        .dropdown-item:hover i { color: #b45309; }
+        .dropdown-divider { border-bottom: 1px solid #e2e8f0; margin: 4px 0; }
+        
+        /* ======================================== */
+        
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 15px 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .header-title { display: flex; align-items: center; gap: 12px; }
+        .header-title h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .header-title span { font-size: 13px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* TABS SYSTEM */
+        .nav-tabs {
+            display: flex; gap: 2px;
+            background: #e2e8f0;
+            padding: 4px 4px 0 4px;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 14px;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .tab-btn:hover { background: #f1f5f9; color: #0f172a; }
+        .tab-btn.active {
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #cbd5e1;
+            border-bottom-color: #fff;
+            margin-bottom: -1px;
+        }
+
+        /* MAIN CONTENT */
+        .main-container {
+            background: white;
+            /* Rimosso ogni limite: la pagina ora scorre naturalmente verso il basso */
+            padding: 25px;
+            overflow: visible; 
+            border-top: 1px solid #e2e8f0;
+        }
+        .view-panel { display: none; animation: fadeIn 0.4s ease; }
+        .view-panel.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* DASHBOARD STATS */
+        .toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px;
+            background: #f8fafc; padding: 15px; border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .select-input {
+            padding: 8px 15px; border-radius: 8px;
+            border: 1px solid #cbd5e1; font-weight: bold; color: #0f172a;
+            outline: none; background: white;
+        }
+
+        .grid-stats {
+            display: flex;
+            flex-wrap: nowrap; /* Forza tutto su un'unica riga orizzontale */
+            margin: -10px;
+        }
+        
+        .card {
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 16px; padding: 15px; /* Leggera riduzione padding per guadagnare spazio */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin: 8px;
+            flex: 0 0 auto; 
+            min-height: 360px !important; /* Ridotto per far stare tutto in UNA sola schermata */
+        }
+        /* Definizione esatta proporzioni 3 colonne */
+        .card-col-bar { width: calc(45% - 16px); }
+        .card-col-line { width: calc(31% - 16px); }
+        .card-col-pie { width: calc(24% - 16px); }
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 15px;
+        }
+        .card-title { font-size: 16px; font-weight: 700; color: #334155; margin: 0; display: flex; align-items: center; gap: 8px; }
+        
+        .chart-container {
+            position: relative;
+            height: 280px !important; /* Altezza ottimizzata salva-spazio */
+            min-height: 280px !important;
+            width: 100%;
+            display: block;
+        }
+
+        .summary-pill {
+            background: #f0fdf4; color: #166534;
+            font-size: 12px; padding: 5px 12px; border-radius: 20px; font-weight: 700;
+        }
+        .summary-pill.red { background: #fef2f2; color: #991b1b; }
+
+        /* PHOTO GALLERY CSS */
+        .gallery-grid {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px -10px 0;
+        }
+        .photo-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            margin: 10px;
+            flex: 1 0 220px;
+        }
+        .photo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        .photo-thumb {
+            width: 100%; height: 150px;
+            background: #f1f5f9;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-thumb i { font-size: 48px; color: #94a3b8; }
+        
+        .photo-details { padding: 12px; }
+        .photo-date { font-size: 11px; color: #64748b; font-weight: bold; }
+        .photo-desc {
+            font-size: 13px; font-weight: 700; margin-top: 4px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            color: #1e293b;
+        }
+        .photo-tag {
+            display: inline-block; margin-top: 8px;
+            font-size: 10px; font-weight: 800;
+            padding: 2px 8px; border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .tag-spesa { background: #fee2e2; color: #991b1b; }
+        .tag-rifo { background: #fef9c3; color: #854d0e; }
+
+        /* OVERLAY VIEWER */
+        .overlay-viewer {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.95);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; flex-direction: column;
+        }
+        .viewer-img { max-width: 90%; max-height: 80%; border-radius: 8px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+        .viewer-close {
+            position: absolute; top: 20px; right: 30px;
+            color: white; font-size: 40px; cursor: pointer; font-weight: 100;
+        }
+        .viewer-caption { color: white; font-size: 18px; font-weight: 600; margin-top: 15px; }
+
+        .empty-state {
+            text-align: center; padding: 80px 0; color: #94a3b8;
+        }
+        .empty-state i { font-size: 64px; margin-bottom: 15px; opacity: 0.5; }
+
+        /* HELPER MODAL & FLOATING BUTTON (PHASE 6) */
+        .floating-help-btn {
+            position: fixed; bottom: 20px; right: 20px; z-index: 999;
+            width: 50px; height: 50px; border-radius: 25px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; border: none;
+            box-shadow: 0 10px 15px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .floating-help-btn:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 15px 20px rgba(37, 99, 235, 0.4); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);
+            z-index: 99999; display: none; align-items: center; justify-content: center;
+        }
+        .help-modal {
+            background: white; width: 700px; max-width: 90%; border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            overflow: hidden; animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown { from{opacity:0; transform:translateY(-30px);} to{opacity:1; transform:translateY(0);} }
+        
+        .help-header {
+            background: #0f172a; color: white; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .help-body { padding: 25px; max-height: 500px; overflow-y: auto; font-size: 14px; line-height: 1.6; color: #334155; }
+        
+        .help-section {
+            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 15px; margin-bottom: 15px; display: flex; gap: 15px;
+        }
+        .help-icon {
+            width: 40px; height: 40px; border-radius: 10px; background: #eff6ff;
+            display: flex; align-items: center; justify-content: center; font-size: 18px; color: #2563eb; flex-shrink: 0;
+        }
+        .help-title { font-weight: 800; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+        
+        .btn-close-modal {
+            background: #ef4444; color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer; font-weight: 700;
+            transition: 0.2s; width: 100%; margin-top: 10px;
+        }
+        .btn-close-modal:hover { background: #dc2626; }
+    </style>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+<script>
+function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            var testoGuida = "========================================\n" +
+                             "   GUIDA ALL'USO - ZENITH LOGISTICA\n" +
+                             "========================================\n\n" +
+                             "1. RICERCA GLOBALE:\n" +
+                             "   Digita nella barra in alto per cercare clienti,\n" +
+                             "   citta, telefoni o qualsiasi articolo in tempo reale.\n\n" +
+                             "2. FILTRI SIDEBAR:\n" +
+                             "   Usa i pulsanti a sinistra per filtrare per Provincia\n" +
+                             "   (Bari, Foggia, Taranto) o Dispositivo (Orologio, Braille...).\n\n" +
+                             "3. COPIA DATI:\n" +
+                             "   Clicca sul tasto verde 'Copia' per salvare la scheda\n" +
+                             "   negli appunti e incollarla dove desideri.\n\n" +
+                             "4. SINCRONIZZAZIONE EXCEL:\n" +
+                             "   Dal menu File premi 'Sincronizza Excel Ora' per\n" +
+                             "   aggiornare i dati con gli ultimi file Danea.\n\n" +
+                             "========================================";
+            
+            alert(testoGuida);
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "block";
+                    m.style.visibility = "visible";
+                }
+            } catch(ex) {}
+        }
+
+        function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.cssText = "display:block !important; visibility:visible !important; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;";
+                }
+            } catch(ex) {}
+        }
+
+        function ChiudiGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "none";
+                    m.style.visibility = "hidden";
+                    m.style.cssText = "display:none !important; visibility:hidden !important;";
+                }
+            } catch(ex) {}
+        }
+
+        
+        function KeepMenuOpen(el) {
+            if (!el) return;
+            var current = el;
+            while (current && current.tagName !== 'BODY') {
+                if (current.className && current.className.indexOf('menu-item') > -1) {
+                    if (current._closeTimer) {
+                        clearTimeout(current._closeTimer);
+                        current._closeTimer = null;
+                    }
+                    break;
+                }
+                current = current.parentNode;
+            }
+        }
+
+        function OpenMenu(el) {
+            if (!el) return;
+            if (el._closeTimer) { clearTimeout(el._closeTimer); el._closeTimer = null; }
+            if (!el) return;
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1 && items[i] !== el) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+            el.style.background = 'rgba(56, 189, 248, 0.25)';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'block';
+                drop.style.visibility = 'visible';
+            }
+        }
+
+        function CloseMenu(el, e) {
+            if (!el) return;
+            e = e || window.event;
+            var target = e ? (e.toElement || e.relatedTarget) : null;
+            try {
+                while (target) {
+                    if (target === el) return;
+                    target = target.parentNode;
+                }
+            } catch(err) {}
+
+            if (el._closeTimer) clearTimeout(el._closeTimer);
+            el._closeTimer = setTimeout(function() {
+                el.style.background = 'transparent';
+                var drop = el.getElementsByTagName('ul')[0];
+                if (drop) {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                }
+            }, 350);
+        }
+
+        function ToggleMenu(el, e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                if (drop.style.display === 'block' && drop.style.visibility === 'visible') {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                    el.style.background = 'transparent';
+                } else {
+                    OpenMenu(el);
+                }
+            }
+        }
+
+        document.onclick = function(e) {
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+        };
+
+        var lastExecTime = 0;
+        function ExecAction(actionName, e) {
+            var now = new Date().getTime();
+            if (now - lastExecTime < 200) return;
+            lastExecTime = now;
+
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            // Close all dropdowns
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+        }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+</script>
+<!-- Dynamic Async Leaflet Loader for MSHTA / Offline compatibility -->
+    <script>
+        setTimeout(function() {
+            try {
+                var lcss = document.createElement("link");
+                lcss.rel = "stylesheet";
+                lcss.href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css";
+                document.getElementsByTagName("head")[0].appendChild(lcss);
+
+                var ljs = document.createElement("script");
+                ljs.src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js";
+                document.getElementsByTagName("head")[0].appendChild(ljs);
+            } catch(e) {}
+        }, 100);
+    </script>
+</head>
+<body>
+
+    <!-- STRISCIA NERA SUPERIORE (TITOLO MODULO - APPLE STYLE) -->
+    <div class="danea-top-black-bar" onmousedown="StartDrag()">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;">
+            <div class="apple-btn close" onclick="window.close()" title="Chiudi"></div>
+            <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+            <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+        </div>
+        <img src="assets/img/app_icon_premium.png?v=2" class="refresh-logo-btn" style="height:26px; width:auto; margin-left:10px; margin-right:12px; border-radius:4px; vertical-align:middle;" alt="Refresh" onclick="location.reload();" title="Ricarica Maschera">
+        <span style="letter-spacing:0.5px;">Centro di Analisi Avanzata e Archivio - Sistema Logistica</span>
+    </div>
+
+    <!-- MENU BAR SUPERIORE (BROWSER STYLE) -->
+    <nav class="danea-menu-bar">
+        <div class="menu-item"><u>F</u>ile
+            <div class="dropdown-content">
+                <div class="dropdown-item" onclick="window.location.reload()"><i class="fa fa-refresh"></i> Aggiorna Dati</div>
+                <div class="dropdown-item" onclick="GeneraPacchettoFiscale()"><i class="fa fa-briefcase"></i> Prepara Pacchetto Fiscale</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="window.close()" style="color:#b91c1c;"><i class="fa fa-power-off"></i> Chiudi Modulo</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>V</u>isualizza
+            <div class="dropdown-content">
+                <div class="dropdown-item" onclick="SwitchView('grafici')"><i class="fa fa-bar-chart"></i> Analisi Finanziaria</div>
+                <div class="dropdown-item" onclick="SwitchView('foto')"><i class="fa fa-camera"></i> Archivio Fotografico</div>
+                <div class="dropdown-item" onclick="SwitchView('mappa')"><i class="fa fa-map-marker"></i> Heatmap Clienti</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>A</u>iuto
+            <div class="dropdown-content">
+                <div class="dropdown-item" onclick="OpenHelpModal()"><i class="fa fa-question-circle"></i> Guida all'uso</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="alert('Centro Comando Analitico v1.0\nPowered by Antigravity Quantum Core')"><i class="fa fa-info-circle"></i> Info Sistema</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header onmousedown="StartDrag()" style="cursor:move; user-select:none;">
+        <div class="header-title" onmousedown="event.cancelBubble=true;" style="cursor:default;">
+            <img src="https://img.icons8.com/fluency/48/combo-chart.png" width="36" height="36">
+            <div>
+                <h1 style="display:none;">CENTRO COMANDO ANALITICO</h1>
+
+                <span>Business Intelligence & Foto-Archivio</span>
+            </div>
+        </div>
+        <div onmousedown="event.cancelBubble=true;" style="cursor:default; display:flex; gap:10px;">
+            <button onclick="window.location.reload()" style="background: #334155; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                <i class="fa fa-refresh"></i> Aggiorna
+            </button>
+            <button onclick="window.close()" style="background: #dc2626; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 13px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3); transition: all 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
+                <i class="fa fa-power-off"></i> CHIUDI MODULO
+            </button>
+        </div>
+    </header>
+
+    <!-- NAV TABS -->
+    <nav class="nav-tabs">
+        <button id="btnTabGrafici" class="tab-btn active" onclick="SwitchView('grafici')">
+            <i class="fa fa-bar-chart"></i> ANALISI FINANZIARIA
+        </button>
+        <button id="btnTabFoto" class="tab-btn" onclick="SwitchView('foto')">
+            <i class="fa fa-camera"></i> ARCHIVIO FOTOGRAFICO
+        </button>
+        <button id="btnTabMappa" class="tab-btn" onclick="SwitchView('mappa')">
+            <i class="fa fa-map-marker"></i> HEATMAP CLIENTI
+        </button>
+    </nav>
+
+    <!-- CONTENT CONTAINER -->
+    <main class="main-container">
+        
+        <!-- PANNELLO 1: GRAFICI -->
+        <section id="panelGrafici" class="view-panel active">
+            <div class="toolbar">
+                <div>
+                    <span style="font-weight: bold; color: #64748b; margin-right: 10px;">ANNO DI RIFERIMENTO:</span>
+                    <select id="cmbAnnoReport" class="select-input" onchange="CaricaEElaboraGrafici()">
+                        <option value="2026" selected>2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                    <button onclick="GeneraPacchettoFiscale()" style="background: #059669; color: white; border: none; padding: 9px 16px; border-radius: 8px; cursor: pointer; font-weight: 800; margin-left: 15px; display:inline-flex; align-items:center; gap: 8px; vertical-align:middle; font-family:'Segoe UI', sans-serif; font-size:12px; transition: 0.2s; box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
+                        <i class="fa fa-briefcase"></i> PREPARA PACCHETTO FISCALE
+                    </button>
+                </div>
+                <div style="display: flex; gap: 15px; font-weight: bold;">
+                    <div style="color:#16a34a;"><i class="fa fa-arrow-circle-up"></i> Ricavo Tot: <span id="lblSummaryRicavo">0.00 �</span></div>
+                    <div style="color:#dc2626;"><i class="fa fa-arrow-circle-down"></i> Spesa Tot: <span id="lblSummarySpesa">0.00 �</span></div>
+                    <div style="color:#0f172a; border-left: 1px solid #cbd5e1; padding-left: 15px;">NETTO: <span id="lblSummaryNetto">0.00 �</span></div>
+                </div>
+            </div>
+
+            <div class="grid-stats">
+                <!-- GRAFICO A BARRE: RICAVI VS COSTI (45%) -->
+                <div class="card card-col-bar">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-balance-scale" style="color:#2563eb;"></i> Bilancio</h3>
+                        <span class="summary-pill">Mese</span>
+                    </div>
+                    <div class="chart-container" style="height: 280px;">
+                        <canvas id="chartBilancioMensile" height="280"></canvas>
+                    </div>
+                </div>
+
+                <!-- GRAFICO A LINEA: ANDAMENTO KM (31%) -->
+                <div class="card card-col-line">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-road" style="color:#0891b2;"></i> Km Percorsi</h3>
+                    </div>
+                    <div class="chart-container" style="height: 280px;">
+                        <canvas id="chartKmPercorsi" height="280"></canvas>
+                    </div>
+                </div>
+
+                <!-- GRAFICO A TORTA: COMPOSIZIONE SPESE (24%) -->
+                <div class="card card-col-pie">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-pie-chart" style="color:#d97706;"></i> Mix Spese</h3>
+                    </div>
+                    <div class="chart-container" style="height: 280px;">
+                        <canvas id="chartMixSpese" height="280"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANNELLO 2: ARCHIVIO FOTO -->
+        <section id="panelFoto" class="view-panel">
+            <div class="toolbar">
+                <div style="display:flex; gap:15px; align-items:center;">
+                    <h3 style="margin:0; color:#1e293b;"><i class="fa fa-folder-open" style="color:#eab308;"></i> Scanner Documentale Automantico</h3>
+                    <span id="lblConteggioFoto" style="font-size:12px; background:#e2e8f0; padding:3px 10px; border-radius:10px; font-weight:bold; color:#475569;">0 Elementi</span>
+                </div>
+                <div>
+                    <select id="cmbFiltroFoto" class="select-input" onchange="FiltraGalleria()">
+                        <option value="ALL">Tutti i Documenti</option>
+                        <option value="RIFO">Rifornimenti</option>
+                        <option value="SPESA">Manutenzioni</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="galleryContainer" class="gallery-grid">
+                <!-- Caricato Dinamicamente -->
+            </div>
+
+            <div id="galleryEmpty" class="empty-state" style="display:none;">
+                <i class="fa fa-file-image-o"></i>
+                <h2>Nessun allegato trovato</h2>
+                <p>Registra scontrini o fatture nella sezione Auto per vederli comparire qui automaticamente.</p>
+            </div>
+        </section>
+
+        <!-- PANNELLO 3: MAPPA HEATMAP -->
+        <section id="panelMappa" class="view-panel">
+            <div class="toolbar">
+                <div style="display:flex; gap:15px; align-items:center;">
+                    <h3 style="margin:0; color:#1e293b;"><i class="fa fa-globe" style="color:#3b82f6;"></i> Zone Calde Consegne</h3>
+                    <span style="font-size:12px; background:#dbeafe; padding:3px 10px; border-radius:10px; font-weight:bold; color:#1e40af;">Concentrazione Geografica</span>
+                </div>
+                <div>
+                    <button onclick="RenderMappaHeatmap()" class="select-input" style="cursor:pointer; background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;"><i class="fa fa-refresh"></i> Ricarica Mappa</button>
+                </div>
+            </div>
+            
+            <div class="card card-wide" style="padding: 10px;">
+                <div id="mapContainer" style="height: 600px; width:100%; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); z-index: 1;">
+                    <!-- Map will render here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- OVERLAY VIEWER -->
+    <div id="viewerOverlay" class="overlay-viewer" onclick="CloseViewer()">
+        <span class="viewer-close">&times;</span>
+        <img id="viewerFullImage" class="viewer-img" src="" alt="Anteprima Completa">
+        <div id="viewerCaption" class="viewer-caption">Dettaglio Documento</div>
+    </div>
+
+    <!-- FLOATING HELP TRIGGER -->
+    <button class="floating-help-btn" onclick="OpenHelpModal()" title="Guida Veloce">
+        <i class="fa fa-question"></i>
+    </button>
+
+    <!-- MODERN HELP MODAL OVERLAY -->
+    <!-- MODAL GUIDA ALL'USO (MSHTA REFLOW COMPATIBLE) -->
+<div id="helpModalOverlay" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;">
+    <div style="position:absolute; top:50%; left:50%; margin-top:-260px; margin-left:-320px; width:640px; background:#0f172a; border:2px solid #38bdf8; border-radius:16px; box-shadow:0 0 35px rgba(56, 189, 248, 0.4); padding:25px; color:#f8fafc; font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;">
+        <!-- Header Modal -->
+        <div style="border-bottom:1px solid #38bdf8; padding-bottom:12px; margin-bottom:15px; position:relative;">
+            <div style="font-family:'Outfit', sans-serif; font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.5px;">
+                &#128216; GUIDA ALL'USO - ZENITH MATERIALI
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Manuale Rapido Operativo &amp; Scorciatoie</div>
+            <div onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="cursor:pointer; position:absolute; top:0; right:0; width:30px; height:30px; background:#1e293b; border:1px solid #38bdf8; border-radius:50%; text-align:center; line-height:28px; color:#f8fafc; font-weight:bold; font-size:1.2rem; user-select:none;">&times;</div>
+        </div>
+
+        <!-- Content Modal -->
+        <div style="height:350px; overflow-y:auto; padding-right:5px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                <tr>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#fbbf24; font-size:0.88rem; margin-bottom:6px;">
+                                &#128269; 1. Ricerca Globale Istantanea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Digita nel campo in alto per filtrare in tempo reale clienti, città, telefoni o specifiche attrezzature assegnate.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#38bdf8; font-size:0.88rem; margin-bottom:6px;">
+                                &#128205; 2. Filtri Provincia &amp; Articolo
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Usa la barra laterale sinistra per isolare velocemente le province (Bari, Foggia, Taranto) o i dispositivi (Orologio, Sveglia, Braille).
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#34d399; font-size:0.88rem; margin-bottom:6px;">
+                                &#128203; 3. Pulsanti Copia Dati
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Clicca sul tasto verde <b>Copia</b> per salvare la scheda cliente negli appunti e trasferirla nei promemoria o report.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#a78bfa; font-size:0.88rem; margin-bottom:6px;">
+                                &#128259; 4. Sincronizzazione Danea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Dal menu <b>File</b> o <b>Strumenti</b> premi <i>Sincronizza Excel Ora</i> per ricaricare le anagrafiche aggiornate.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; padding:12px; border-radius:10px; font-size:0.8rem; color:#cbd5e1;">
+                <b style="color:#38bdf8;">&#9889; Suggerimento Rapido:</b> Per resettare tutti i filtri attivi e tornare alla vista completa, seleziona <b>TUTTE LE PROVINCE</b> ed <b>ELENCO COMPLETO</b> dalla sidebar a sinistra.
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); text-align:right;">
+            <span style="font-size:0.75rem; color:#94a3b8; float:left; margin-top:8px;">Sistema Zenith Materiali v1.0 &bull; C. Milella 2026</span>
+            <button onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="background:#0284c7; color:white; border:1px solid #38bdf8; padding:8px 24px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; font-family:'Outfit', sans-serif;">HO CAPITO</button>
+        </div>
+    </div>
+</div>
+
+                <div class="help-section">
+                    <div class="help-icon" style="background:#ecfdf5; color:#059669;"><i class="fa fa-briefcase"></i></div>
+                    <div>
+                        <div class="help-title" style="color:#065f46;">2. Il Ragioniere Automatico</div>
+                        Clicca il tastone verde <b>"Prepara Pacchetto Fiscale"</b>. Il sistema raccoglie da solo TUTTI gli scontrini salvati e genera un file Excel (CSV) riepilogativo, impacchettando tutto in una cartella ordinata direttamente sul tuo Desktop pronta da inviare.
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-icon" style="background:#fff7ed; color:#ea580c;"><i class="fa fa-camera"></i></div>
+                    <div>
+                        <div class="help-title">3. Archivio Fotografico (Tab 2)</div>
+                        Qui convergono automaticamente tutti gli allegati (Foto e PDF) delle spese auto. Usa il filtro in alto per isolare solo il carburante o le manutenzioni. Clicca su una foto per ingrandirla a schermo intero.
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-icon" style="background:#eff6ff; color:#2563eb;"><i class="fa fa-map-marker"></i></div>
+                    <div>
+                        <div class="help-title">4. Heatmap Clienti (Tab 3)</div>
+                        Ti mostra visivamente dove sono concentrate le tue attivit�. Pi� un'area sulla mappa tende al rosso, pi� consegne hai effettuato in quel comune nell'anno selezionato. Utile per studiare l'espansione del business.
+                    </div>
+                </div>
+
+                <button class="btn-close-modal" onclick="CloseHelpModal()">HO CAPITO, GRAZIE!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CORE LIBRARIES -->
+    <!-- Utilizziamo Chart.js Legacy che abbiamo trovato in Asset folder -->
+    <script src="assets/js/chart_legacy.js"></script>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        // Impostazione dinamica dell'anno corrente all'avvio
+        var d = new Date();
+        var currYr = d.getFullYear();
+        // Popola dropdown dinamicamente
+        var optHtml = "";
+        for(var y=currYr; y >= 2022; y--) {
+            optHtml += '<option value="' + y + '"' + (y===currYr?' selected':'') + '>' + y + '</option>';
+        }
+        document.getElementById("cmbAnnoReport").innerHTML = optHtml;
+    </script>
+    
+    <!-- INJECT LOGIC FILE -->
+    <script src="assets/js/statistiche_hta.js"></script>
+
+    <script src="assets/js/accessibility.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+
+

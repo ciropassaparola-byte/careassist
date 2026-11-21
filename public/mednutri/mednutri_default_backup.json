@@ -1,0 +1,8 @@
+{
+  "mednutri_doc_profile": "{\"avatar\":\"👨‍⚕️\",\"name\":\"Dott. Ciro Milella\",\"spec\":\"Medico Chirurgo Nutrizionista\",\"clinic\":\"Ambulatorio Medico\"}",
+  "mednutri_pat_ciro milella": "{\"name\":\"Ciro Milella\",\"gender\":\"M\",\"dob\":\"1967-12-16\",\"height\":\"160\",\"weight\":\"79.3\",\"wrist\":\"25\",\"lifestyle\":\"1.375\",\"start\":\"2026-10-06\",\"end\":\"2026-11-05\",\"mainPathology\":\"steatosi\",\"comorbidities\":[],\"lastSaved\":\"06/10/2026\"}",
+  "mednutri_cloud_vault_STUDIO-AA-890": "{\"appName\":\"MedNutri Pro Ambulatorio\",\"version\":\"2.0\",\"backupTimestamp\":\"2026-10-06T11:42:16.868Z\",\"studioId\":\"STUDIO-AA-890\",\"doctorProfile\":{\"avatar\":\"👨‍⚕️\",\"name\":\"Dott. Ciro Milella\",\"spec\":\"Medico Chirurgo Nutrizionista\",\"clinic\":\"Ambulatorio Medico\"},\"securityPinHash\":\"f53a8cc51204bdb35e8fd0ba841c1b8c2f238bd6f069410b0a44b97a3354dbf3\",\"customPathologies\":{\"items\":{},\"deleted\":[]},\"patients\":[{\"name\":\"Ciro Milella\",\"gender\":\"M\",\"dob\":\"1967-12-16\",\"height\":\"160\",\"weight\":\"79.3\",\"wrist\":\"25\",\"lifestyle\":\"1.375\",\"start\":\"2026-10-06\",\"end\":\"2026-11-05\",\"mainPathology\":\"steatosi\",\"comorbidities\":[],\"lastSaved\":\"06/10/2026\"}]}",
+  "mednutri_custom_pathologies": "{\"items\":{},\"deleted\":[]}",
+  "mednutri_last_cloud_sync": "06/10/2026 alle 13:42",
+  "mednutri_cloud_config": "{\"studioId\":\"STUDIO-AA-890\",\"autoSyncEnabled\":true,\"endpoint\":\"https://api.jsonbin.io/v3/b\"}"
+}

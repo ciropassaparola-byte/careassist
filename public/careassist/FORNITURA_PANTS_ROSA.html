@@ -1,0 +1,382 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>CareAssist Pro - Scheda Clinico-Gestionale Fornitura PANTS: Rosa Annunziata Cavalcante</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 16px 10px;
+      font-size: 8.5pt;
+      line-height: 1.35;
+    }
+
+    .no-print-toolbar {
+      max-width: 940px;
+      margin: 0 auto 14px auto;
+      background: #ffffff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+    }
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45);
+    }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid #cbd5e1;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sheet-page {
+      max-width: 940px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 22px 26px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2.5px solid #0284c7;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .brand-title {
+      font-size: 17pt;
+      font-weight: 900;
+      color: #0369a1;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand-sub {
+      font-size: 8pt;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .doc-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 9pt;
+      border: 1px solid #bae6fd;
+      text-align: right;
+    }
+
+    .anagrafica-box {
+      display: grid;
+      grid-template-columns: 1.2fr 1.3fr 1.1fr;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+    }
+    .anag-title {
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #475569;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 2px;
+    }
+
+    .focus-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .focus-card {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .focus-card.highlight {
+      border-color: #38bdf8;
+      background: #f0f9ff;
+    }
+
+    .clinical-alert-box {
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-left: 4px solid #f59e0b;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 8pt;
+      color: #92400e;
+      line-height: 1.4;
+    }
+
+    .table-presidi {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+    .table-presidi th {
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 8pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 7px 8px;
+      border: 1px solid #cbd5e1;
+      text-align: left;
+    }
+    .table-presidi td {
+      padding: 6px 8px;
+      border: 1px solid #e2e8f0;
+      font-size: 8pt;
+      vertical-align: middle;
+    }
+    .table-presidi tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .footer-note {
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 7.5pt;
+      color: #64748b;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA STRUMENTI A SCHERMO -->
+  <div class="no-print-toolbar">
+    <div>
+      <div style="font-weight: 800; font-size: 15px; color: #0284c7;">🩲 Scheda Ausilio PANTS: Rosa Annunziata Cavalcante (88 anni)</div>
+      <div style="font-size: 12px; color: #64748b;">Fornitura Protesica ASP Basilicata • Monitoraggio Scorte &amp; Prevenzione Lesioni I.A.D.</div>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button type="button" class="btn-action" onclick="window.print()">🖨️ Stampa Scheda Fornitura A4</button>
+      <a href="PROSPETTO_FARMACI_ROSA.html" class="btn-outline">💊 Farmaci Rosa</a>
+      <a href="DIARIO_GLICEMICO_ROSA.html" class="btn-outline">🩸 Diario Glicemie</a>
+      <a href="GRIGLIA_SETTIMANALE_ROSA.html" class="btn-outline">📅 Griglia Spunta</a>
+    </div>
+  </div>
+
+  <div class="sheet-page">
+
+    <!-- BANNER DI CONTROLLO IDENTITÀ ASSISTITA -->
+    <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 10px; padding: 10px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 28px;">🩲</span>
+        <div>
+          <div style="font-size: 15pt; font-weight: 900; color: #065f46; letter-spacing: -0.3px;">
+            SCHEDA AUSILI PROTESICI PANTS: Rosa Annunziata Cavalcante
+          </div>
+          <div style="font-size: 8.5pt; color: #047857; font-weight: 600;">
+            Nata il 16/06/1938 (88 anni) • Destinazione: Via Domenico Cirillo, 9 - 85012 Corleto Perticara (PZ) • MMG: Dr.ssa Carolina Potenza
+          </div>
+        </div>
+      </div>
+      <div style="text-align: right; background: #ffffff; border: 1.5px solid #a7f3d0; border-radius: 6px; padding: 4px 10px; font-size: 8pt; font-weight: 800; color: #047857;">
+        ✅ CONTROLLO IDENTITÀ ASSISTITA
+      </div>
+    </div>
+
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">🩺 CareAssist Pro • Gestione Ausili &amp; Dispositivi Medici</div>
+        <div class="brand-sub">Servizio Sanitario Regionale Basilicata • ASP Potenza • Distretto 02 02 Villa d'Agri • Codice Utente: 002713</div>
+      </div>
+      <div class="doc-badge">
+        PIANO PROTESICO • COD. ISO 09.30.24
+      </div>
+    </div>
+
+    <!-- ANAGRAFICA CLINICA E TERRITORIALE -->
+    <div class="anagrafica-box">
+      <div class="anag-col">
+        <div class="anag-title">👤 Assistita &amp; Condizione Motoria</div>
+        <div>Nome: <b>Rosa Annunziata Cavalcante</b> (88 anni)</div>
+        <div>Indirizzo Consegna: <b>Via Domenico Cirillo, 9 - Corleto Perticara</b></div>
+        <div>Deambulazione: <b>Autonoma con Rollator / Deambulatore</b></div>
+        <div>Recapito Consegne: <b>+39 338 379 76 71 (Maria Carmela)</b></div>
+        <div>Terapia associata: <b>Lasix 25 mg ore 08:30 (Diuresi rapida)</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">👨‍⚕️ Medico Prescrittore (MMG)</div>
+        <div>Medico: <b>Dr.ssa Carolina Potenza</b></div>
+        <div>Ambulatorio: <b>Sarconi / Moliterno (PZ)</b></div>
+        <div>Cellulare / WhatsApp: <b>338 379 05 64</b></div>
+        <div>Email: <b>carolina.potenza@aspbasilicata.it</b></div>
+        <div>Codice Utente ASP: <b>002713 (Distretto Villa d'Agri 02 02)</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🏥 Presidio e Ritiro Fornitura</div>
+        <div>Committente: <b>A.S.P. DI POTENZA (Via Torraca 2)</b></div>
+        <div>Fornitore Domiciliare: <b>Serenity S.p.A. (Ontex Group)</b></div>
+        <div>Ord. Committente: <b>0060448686 del 03.08.2026</b></div>
+        <div>Farmacia Territoriale: <b>Farmacia Girasole Picconi</b></div>
+        <div>Telefono Farmacia: <b>0971 963055</b></div>
+      </div>
+    </div>
+
+    <!-- FOCUS CARD SPECIFICHE PRESIDIO E FABBISOGNO -->
+    <div class="focus-grid">
+      <div class="focus-card highlight">
+        <div style="font-weight: 800; font-size: 10pt; color: #0369a1; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
+          <span>📦</span> Specifiche Tecniche Presidio PANTS (da DDT Serenity)
+        </div>
+        <div style="font-size: 8pt; color: #334155; line-height: 1.45;">
+          • <b>Articolo Prescritto:</b> <b>PANTS SD SENSITIVE BE FREE EXTRA L 8</b> (Cod. Mat. 00037212200021)<br>
+          • <b>Composizione:</b> 100% PEFC Cer. SGSCH-PEFC-COC-040007 • Delicato con Aloe e Vitamina E per cute fragile<br>
+          • <b>Tipologia:</b> Mutandina Elastica Assorbente Monouso (Pants / Pull-Up)<br>
+          • <b>Taglia & Livello:</b> <b>Taglia L (Large 110-150 cm) - Livello Extra (6-8 gocce)</b><br>
+          • <b>Perché i Pants:</b> La signora Rosa deambula con deambulatore rollator. La mutandina le consente l'uso autonomo del wc e preserva la dignità e la motricità.
+        </div>
+      </div>
+
+      <div class="focus-card">
+        <div style="font-weight: 800; font-size: 10pt; color: #0f172a; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
+          <span>📊</span> Fabbisogno &amp; Consegne ASP Basilicata / Serenity
+        </div>
+        <div style="font-size: 8pt; color: #334155; line-height: 1.45;">
+          • <b>Consegna Eseguita:</b> <b>10 confezioni = 140 pezzi</b> (DDT 2286626418 del 21/08/2026)<br>
+          • <b>Prossima Consegna Indicativa:</b> <b>24/11/2026</b> (previo appuntamento telefonico al 338 379 76 71)<br>
+          • <b>Ciclo di Fornitura:</b> <b>Ogni ~90 giorni</b> (consegna periodica domiciliare programmata)<br>
+          • <b>Scadenza Piano Terapeutico:</b> <b>18/02/2027</b> (rinnovo ricetta / collaudo MMG entro fine Gennaio 2027)<br>
+          • <b>Assistenza Clienti Serenity:</b> Numero Verde <b>800 078 595</b> (Rif. Ordine 2415633505)
+        </div>
+      </div>
+    </div>
+
+    <!-- AVVERTENZE CLINICHE PER IL CAREGIVER (PREVENZIONE I.A.D. & CUTE) -->
+    <div class="clinical-alert-box">
+      <b>⚠️ PROTOCOLLO PREVENZIONE DERMITE DA INCONTINENZA (I.A.D.) &amp; MACERAZIONE CUTANEA:</b><br>
+      1. <b>Attenzione post-Lasix (ore 09:00 - 13:00):</b> La diuresi è massiva nelle prime 4 ore dopo il Lasix. Verificare la mutandina a fine mattinata per evitare ristagno prolungato.<br>
+      2. <b>Igiene perineale delicata:</b> Utilizzare acqua tiepida e detergente a pH 5.5 auto-equilibrante. Asciugare tamponando delicatamente, senza sfregare la cute fragile dell'anziano.<br>
+      3. <b>Protezione barriera:</b> Applicare a ogni cambio uno strato sottile di pasta all'ossido di zinco o crema barriera idrorepellente sui punti di maggior contatto e pieghe inguinali.<br>
+      4. <b>Segni di allerta:</b> In presenza di arrossamenti intensi che non regrediscono, lesioni con perdita di sostanza o bruciore, contattare subito la Dr.ssa Carolina Potenza per valutare eventuale sovrainfezione micotica (Candida).
+    </div>
+
+    <!-- REGISTRO CONSEGNE E VERIFICA SCORTE PACCHI A CASA -->
+    <table class="table-presidi">
+      <thead>
+        <tr>
+          <th style="width: 100px;">Data Consegna</th>
+          <th style="width: 170px;">DDT / Fornitore Serenity</th>
+          <th style="width: 130px; text-align: center;">Quantità (Pacchi / Pezzi)</th>
+          <th style="width: 130px; text-align: center;">Prossima Consegna / Scadenza</th>
+          <th>Dettagli Fornitura &amp; Note Operative</th>
+          <th style="width: 75px; text-align: center;">Stato</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background: #f0fdf4;">
+          <td><b>21/08/2026</b></td>
+          <td><b>DDT N. 2286626418</b><br><span style="font-size:7.5pt; color:#475569;">Serenity S.p.A. • Ord. ASP 0060448686<br>Collo: 2286626418 • Tracking: 260000044363</span></td>
+          <td style="text-align: center;"><b>10 Confezioni</b><br><span style="font-size:8pt; color:#047857; font-weight:800;">140 Pezzi Totali</span><br><span style="font-size:7pt; color:#64748b;">(14 pz/conf. • Peso 9,5 kg)</span></td>
+          <td style="text-align: center; color: #047857; font-weight: 800;">24/11/2026<br><span style="font-size:7.5pt; color:#0284c7;">(~90 giorni)</span></td>
+          <td><b>PANTS SD SENSITIVE BE FREE EXTRA L 8</b> (Cod. 00037212200021)<br>Fornitura c/o domicilio Via Domenico Cirillo 9. Scadenza piano: <b>18/02/2027</b>.</td>
+          <td style="text-align: center; color: #16a34a; font-weight: 900;">CONSEGNATO<br><span style="font-size:7pt; font-weight:700; color:#047857;">IN USO</span></td>
+        </tr>
+        <tr style="background: #fefce8;">
+          <td style="color:#b45309;"><b>24/11/2026</b><br><span style="font-size:7pt; color:#92400e;">(Indicativa)</span></td>
+          <td><b>Serenity S.p.A. / ASP Potenza</b><br><span style="font-size:7.5pt; color:#64748b;">Consegna Periodica Trimestrale</span></td>
+          <td style="text-align: center; color:#b45309; font-weight:800;">10 Confezioni<br><span style="font-size:7.5pt;">(140 pz stimati)</span></td>
+          <td style="text-align: center; color:#b45309; font-weight:800;">Febbraio 2027<br><span style="font-size:7.5pt; color:#64748b;">(Fine Piano)</span></td>
+          <td style="color:#92400e;">⚠️ <b>Previo appuntamento telefonico</b> al numero <b>+39 338 379 76 71</b>. Fornitura 90 giorni.</td>
+          <td style="text-align: center; color:#b45309; font-weight:800;">IN ARRIVO<br><span style="font-size:7pt; font-weight:700; color:#b45309;">PROGRAMM.</span></td>
+        </tr>
+        <tr>
+          <td style="color:#64748b;"><b>18/02/2027</b></td>
+          <td style="color:#64748b;"><b>Scadenza Piano Terapeutico ASP</b><br><span style="font-size:7.5pt;">Distretto Villa d'Agri 02 02</span></td>
+          <td style="text-align: center; color:#64748b;">Rinnovo Annuale</td>
+          <td style="text-align: center; color:#dc2626; font-weight:800;">18/02/2027</td>
+          <td style="color:#b45309;">⚠️ <b>Rinnovo Piano Protesico:</b> Contattare la Dr.ssa Carolina Potenza entro inizio Febbraio 2027 per emissione nuovo piano protesico annuale.</td>
+          <td style="text-align: center; color:#dc2626; font-weight:800;">SCADENZA<br>PIANO</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer-note">
+      <div>CareAssist Pro Multi-Paziente Standalone • Piano Forniture Ausili e Presidi Assorbenti</div>
+      <div>Firma Caregiver / Operatore: _________________________________________</div>
+    </div>
+  </div>
+
+</body>
+</html>

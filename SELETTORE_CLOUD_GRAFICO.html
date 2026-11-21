@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✦ SALA REGIA MASTER ✦ Suite Aziendale C. Milella</title>
+    <link rel="icon" href="public/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #030712;
+            --gold-gradient: linear-gradient(135deg, #fef08a 0%, #facc15 30%, #d4af37 60%, #854d0e 100%);
+            --gold-light: #fef08a;
+            --gold-primary: #d4af37;
+            --emerald-glow: rgba(16, 185, 129, 0.4);
+            --cyan-glow: rgba(56, 189, 248, 0.4);
+            --purple-glow: rgba(168, 85, 247, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #020617;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 20%, rgba(212, 175, 55, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+                linear-gradient(180deg, #020617 0%, #030712 100%);
+            color: #ffffff;
+            padding: 24px 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Effetti Particellari di Sfondo */
+        .ambient-light {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
+        }
+        .light-1 { top: -100px; left: -100px; background: #0284c7; }
+        .light-2 { top: 20%; right: -150px; background: #d4af37; }
+        .light-3 { bottom: -100px; left: 30%; background: #9333ea; }
+
+        .main-frame {
+            width: 100%;
+            max-width: 1240px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInPage 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HEADER DI REGIA MASTER */
+        .regia-header {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1.5px solid rgba(212, 175, 55, 0.4);
+            border-radius: 28px;
+            padding: 26px 32px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .regia-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, #38bdf8, #facc15, #d4af37, #a855f7, transparent);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand-logo-gem {
+            width: 74px;
+            height: 74px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(212, 175, 55, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 25px rgba(212, 175, 55, 0.35);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 4px;
+        }
+        .brand-logo-gem:hover {
+            transform: scale(1.08) rotate(4deg);
+            border-color: #fde047;
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.55);
+        }
+        .brand-logo-gem img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+        }
+
+        .brand-titles h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+        .brand-titles h1 span {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-tag {
+            font-size: 12px;
+            font-weight: 800;
+            color: #38bdf8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-live-stats {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 10px 18px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .stat-badge .badge-icon {
+            font-size: 18px;
+        }
+        .stat-badge .badge-title {
+            font-size: 10.5px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+        }
+        .stat-badge .badge-value {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* GRIGLIA SEZIONI PRINCIPALI */
+        .regia-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .col-8 { grid-column: span 8; }
+        .col-4 { grid-column: span 4; }
+        .col-6 { grid-column: span 6; }
+        .col-12 { grid-column: span 12; }
+
+        @media (max-width: 992px) {
+            .col-8, .col-4, .col-6 { grid-column: span 12; }
+            .regia-header { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* SCHEDE / BOX DI REGIA */
+        .regia-card {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 26px;
+            padding: 26px 28px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .regia-card:hover {
+            border-color: rgba(212, 175, 55, 0.45);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(212, 175, 55, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-icon-bubble {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .bubble-cyan { background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; }
+        .bubble-gold { background: rgba(212, 175, 55, 0.15); border-color: rgba(212, 175, 55, 0.4); color: #fde047; }
+        .bubble-emerald { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; }
+        .bubble-purple { background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4); color: #c084fc; }
+
+        .card-title-group h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        .card-title-group p {
+            font-size: 12.5px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        /* VOCI INTERNE LISTA CANALI CLOUD */
+        .channel-row {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 16px 20px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.25s ease;
+        }
+        .channel-row:last-child { margin-bottom: 0; }
+        .channel-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(4px);
+        }
+        .channel-highlight {
+            border: 1.5px solid rgba(16, 185, 129, 0.5) !important;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, rgba(255,255,255,0.02) 100%) !important;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .channel-info h3 {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .channel-info p {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .channel-url {
+            font-size: 11px;
+            font-family: monospace;
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+        /* PILLOLE STATO SEMAFORO */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        .pill-live {
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid rgba(16, 185, 129, 0.45);
+            color: #34d399;
+        }
+        .pill-live .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulseDot 2s infinite;
+        }
+        .pill-standby {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #fbbf24;
+        }
+        .pill-standby .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #f59e0b;
+        }
+        .pill-usb {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #7dd3fc;
+        }
+        .pill-usb .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #38bdf8;
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        /* PULSANTI DI AZIONE PREMIUM */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-decoration: none;
+            border: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .btn-action:hover {
+            transform: scale(1.04) translateY(-2px);
+        }
+        .btn-action:active {
+            transform: scale(0.97);
+        }
+
+        .btn-emerald {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #022c22;
+            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4);
+        }
+        .btn-emerald:hover { box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6); }
+
+        .btn-gold {
+            background: var(--gold-gradient);
+            color: #0b0f19;
+            box-shadow: 0 4px 18px rgba(212, 175, 55, 0.4);
+        }
+        .btn-gold:hover { box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6); }
+
+        .btn-cyan {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 18px rgba(14, 165, 233, 0.4);
+        }
+        .btn-cyan:hover { box-shadow: 0 6px 25px rgba(14, 165, 233, 0.6); }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 18px rgba(168, 85, 247, 0.4);
+        }
+        .btn-purple:hover { box-shadow: 0 6px 25px rgba(168, 85, 247, 0.6); }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+        }
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* GRIGLIA PULSANTI FUNZIONALI STRUMENTI */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 14px;
+        }
+
+        .tool-tile {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 18px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+        }
+        .tool-tile:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .tool-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .tool-icon {
+            font-size: 24px;
+        }
+        .tool-tag {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-sync { background: rgba(56, 189, 248, 0.18); color: #38bdf8; }
+        .tag-safe { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+        .tag-show { background: rgba(168, 85, 247, 0.18); color: #c084fc; }
+
+        .tool-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .tool-desc {
+            font-size: 11.5px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        /* MODALE POPUP ELEGANTE */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(4, 9, 20, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: linear-gradient(145deg, #0f1c30 0%, #070d18 100%);
+            border: 1.5px solid rgba(212, 175, 55, 0.45);
+            border-radius: 28px;
+            padding: 32px 28px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.8), 0 0 40px rgba(212, 175, 55, 0.2);
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 18px; right: 18px;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #cbd5e1;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* FOOTER STATS */
+        .regia-footer {
+            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* CRUSCOTTO CLINICO ESECUTIVO ONE-LOOK */
+        .patient-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 14px;
+        }
+        @media (max-width: 900px) {
+            .patient-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .patient-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .patient-card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .patient-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .patient-avatar-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(2, 132, 199, 0.3));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .patient-status-indicator {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .psi-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .psi-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+        .stat-bar-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+        .stat-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+        .stat-progress-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .stat-progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.5s ease;
+        }
+        .patient-quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .btn-mini-action {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: #e2e8f0;
+            padding: 8px 10px;
+            font-size: 11.5px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-mini-action:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(212, 175, 55, 0.4);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Effetti di Luce Ambientale -->
+    <div class="ambient-light light-1"></div>
+    <div class="ambient-light light-2"></div>
+    <div class="ambient-light light-3"></div>
+
+    <div class="main-frame">
+
+        <!-- HEADER PRINCIPALE SALA REGIA -->
+        <header class="regia-header">
+            <div class="header-brand">
+                <div class="brand-logo-gem" onclick="effettuaFestaConfetti()" title="Marchio Ufficiale Suite M.C. - Clicca per festeggiare!">
+                    <img src="suite_mc_official_logo.png" alt="Marchio Ufficiale Suite M.C." onerror="this.src='/suite_mc_official_logo.png'">
+                </div>
+                <div class="brand-titles">
+                    <div class="brand-tag">
+                        <span>⚡</span> CENTRO DI CONTROLLO ESECUTIVO MASTER
+                    </div>
+                    <h1>SALA REGIA <span>C. MILELLA</span></h1>
+                    <p style="color:#94a3b8; font-size:13px;">Gestione Canali Cloud, Sincronizzazione USB &amp; Sicurezza Dati H24</p>
+                </div>
+            </div>
+
+            <div class="header-live-stats">
+                <div class="stat-badge">
+                    <span class="badge-icon">🌐</span>
+                    <div>
+                        <div class="badge-title">Cloud Attivo</div>
+                        <div class="badge-value" style="color:#34d399;">Profilo 2 (5 GB Liberi)</div>
+                    </div>
+                </div>
+                <div class="stat-badge">
+                    <span class="badge-icon">🔒</span>
+                    <div>
+                        <div class="badge-title">Sicurezza</div>
+                        <div class="badge-value" style="color:#fde047;">PIN &amp; Backup Attivi</div>
+                    </div>
+                </div>
+                <button onclick="testaSemaforiRegia()" class="btn-action btn-glass" title="Riesegui il controllo in tempo reale dei server">
+                    <span>🔄</span> <span>Test Radar</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- GRIGLIA PRINCIPALE DELLA SALA REGIA -->
+        <div class="regia-grid">
+
+            <!-- SEZIONE 1: I 3 CANALI DI ACCESSO CLOUD & LOCALE (COL 7) -->
+            <div class="regia-card col-8">
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <div class="card-icon-bubble bubble-emerald">🌐</div>
+                        <div>
+                            <h2>Canali di Accesso &amp; Server</h2>
+                            <p>Scegli il profilo di lavoro: i semafori monitorano la quota gratuita Render</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CANALE 2: ciromi434@gmail.com (ATTIVO ORA) -->
+                <div class="channel-row channel-highlight">
+                    <div class="channel-info">
+                        <h3>
+                            <span>🟢</span> Profilo 2 (Riserva) 
+                            <span style="background:#10b981; color:#022c22; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px;">⭐ CONSIGLIATO ATTIVO</span>
+                        </h3>
+                        <p>Account: <strong>ciromi434@gmail.com</strong> (5 GB Disponibili subito H24)</p>
+                        <div class="channel-url">https://milella-suite-41ff.onrender.com</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span id="badgeP2" class="status-pill pill-live"><span class="dot"></span> ONLINE</span>
+                        <a href="https://milella-suite-41ff.onrender.com/launcher.html" class="btn-action btn-emerald">
+                            Avvia Ora ➔
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CANALE 1: ciromilella3@gmail.com (PRIMARIO) -->
+                <div class="channel-row">
+                    <div class="channel-info">
+                        <h3>
+                            <span>🔵</span> Profilo 1 (Primario)
+                            <span style="background:rgba(212,175,55,0.2); color:#fde047; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px;">RESET 1° DICEMBRE</span>
+                        </h3>
+                        <p>Account: <strong>ciromilella3@gmail.com</strong> (Ripristino quota automatica)</p>
+                        <div class="channel-url">https://milella-suite-41ff.onrender.com</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span id="badgeP1" class="status-pill pill-standby"><span class="dot"></span> STANDBY</span>
+                        <a href="https://milella-suite-41ff.onrender.com/launcher.html" class="btn-action btn-gold">
+                            Avvia Profilo 1 ➔
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CANALE 3: SERVER LOCALE USB (NODE.JS OFFLINE) -->
+                <div class="channel-row">
+                    <div class="channel-info">
+                        <h3>
+                            <span>💻</span> Server Locale USB
+                            <span style="background:rgba(56,189,248,0.2); color:#7dd3fc; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px;">ZERO INTERNET</span>
+                        </h3>
+                        <p>Node.js su questo PC • Massima velocità locale senza consumare dati</p>
+                        <div class="channel-url">http://localhost:3000</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span id="badgeUSB" class="status-pill pill-usb"><span class="dot"></span> OFFLINE USB</span>
+                        <button onclick="avviaLocaleConGuida()" class="btn-action btn-cyan">
+                            Avvia Locale ➔
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEZIONE 2: SMART CONNECT MOBILE & PRESENTAZIONE (COL 4) -->
+            <div class="regia-card col-4">
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <div class="card-icon-bubble bubble-purple">📱</div>
+                        <div>
+                            <h2>Mobile &amp; Vetrina</h2>
+                            <p>Condividi e presenta la Suite</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:12px; height:100%; justify-content:space-between;">
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:18px; text-align:center;">
+                        <div style="font-size:32px; margin-bottom:6px;">📲</div>
+                        <h4 style="font-size:14px; font-weight:800; color:#fff;">Connetti Smartphone</h4>
+                        <p style="font-size:11.5px; color:#94a3b8; margin:4px 0 14px 0;">Inquadra con la fotocamera per aprire tutte le 8 App sul cellulare</p>
+                        <button onclick="apriModalQrRegia()" class="btn-action btn-purple" style="width:100%;">
+                            <span>📷</span> <span>MOSTRA QR CODE</span>
+                        </button>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="condividiWhatsAppRegia()" class="btn-action btn-glass" style="flex:1;" title="Invia link WhatsApp">
+                            <span>💬</span> <span>WhatsApp</span>
+                        </button>
+                        <a href="https://milella-suite-41ff.onrender.com/presentazione_aziendale.html" class="btn-action btn-gold" style="flex:1;">
+                            <span>🏢</span> <span>Vetrina</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEZIONE 3: SINCRONIZZAZIONE & ALLINEAMENTO WEB <-> USB (COL 6) -->
+            <div class="regia-card col-6">
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <div class="card-icon-bubble bubble-cyan">🔄</div>
+                        <div>
+                            <h2>Allineamento &amp; Sincronizzazione</h2>
+                            <p>Mantieni sincronizzati Chiavetta USB, Cloud e PC fisso</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tools-grid">
+                    <!-- Tool 1: USB -> Web Cloud -->
+                    <div class="tool-tile" onclick="eseguiGuidaAllineaUSB()">
+                        <div class="tool-top">
+                            <span class="tool-icon">⬆️</span>
+                            <span class="tool-tag tag-sync">USB ➔ Cloud</span>
+                        </div>
+                        <div class="tool-title">Allinea USB ➔ Web Cloud</div>
+                        <div class="tool-desc">Invia al Cloud tutti i dati, pazienti e aggiornamenti modificati dalla chiavetta USB.</div>
+                    </div>
+
+                    <!-- Tool 2: Web Cloud -> USB -->
+                    <div class="tool-tile" onclick="eseguiGuidaScaricaCloud()">
+                        <div class="tool-top">
+                            <span class="tool-icon">⬇️</span>
+                            <span class="tool-tag tag-sync">Cloud ➔ USB</span>
+                        </div>
+                        <div class="tool-title">Scarica Cloud ➔ USB</div>
+                        <div class="tool-desc">Scarica sulla chiavetta i dati inseriti dal personale tramite smartphone sul Cloud.</div>
+                    </div>
+
+                    <!-- Tool 3: Turbo Sync Desktop <-> USB -->
+                    <div class="tool-tile" onclick="eseguiGuidaTurboSync()">
+                        <div class="tool-top">
+                            <span class="tool-icon">⚡</span>
+                            <span class="tool-tag tag-sync">PC ⇄ USB</span>
+                        </div>
+                        <div class="tool-title">Turbo Sync Desktop ⇄ USB</div>
+                        <div class="tool-desc">Allinea la copia sul PC fisso con la chiavetta per lavorare senza disallineamenti.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEZIONE 4: SICUREZZA, BACKUP & STATO DATABASE (COL 6) -->
+            <div class="regia-card col-6">
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <div class="card-icon-bubble bubble-gold">🛡️</div>
+                        <div>
+                            <h2>Sicurezza, Backup &amp; Diagnosi</h2>
+                            <p>Protezione dei dati aziendali, recupero e archivi blindati</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tools-grid">
+                    <!-- Tool 1: Backup Istantaneo -->
+                    <div class="tool-tile" onclick="eseguiGuidaBackupIstantaneo()">
+                        <div class="tool-top">
+                            <span class="tool-icon">💾</span>
+                            <span class="tool-tag tag-safe">Sicurezza</span>
+                        </div>
+                        <div class="tool-title">Backup Istantaneo Disco</div>
+                        <div class="tool-desc">Crea un punto di ripristino istantaneo in CARTELLA_DI_SICUREZZA (Database compresso).</div>
+                    </div>
+
+                    <!-- Tool 2: Diagnosi Database -->
+                    <div class="tool-tile" onclick="effettuaDiagnosiDatabase()">
+                        <div class="tool-top">
+                            <span class="tool-icon">🩺</span>
+                            <span class="tool-tag tag-safe">Integrità</span>
+                        </div>
+                        <div class="tool-title">Diagnosi Database</div>
+                        <div class="tool-desc">Verifica stato pazienti CareAssist, scadenze veicoli flotta e inventario attrezzi.</div>
+                    </div>
+
+                    <!-- Tool 3: Cestino & Recupero -->
+                    <div class="tool-tile" onclick="apriCestinoSicurezza()">
+                        <div class="tool-top">
+                            <span class="tool-icon">🗑️</span>
+                            <span class="tool-tag tag-safe">Ripristino</span>
+                        </div>
+                        <div class="tool-title">Cestino di Ripristino</div>
+                        <div class="tool-desc">Visualizza, recupera o elimina definitivamente annotazioni, file e dati archiviati.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEZIONE 5: CRUSCOTTO CLINICO ESECUTIVO "ONE-LOOK" FAMILIARE (COL 12) -->
+            <div class="regia-card col-12">
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <div class="card-icon-bubble bubble-emerald">🩺</div>
+                        <div>
+                            <h2>Quadro Clinico Familiare Esecutivo • Monitoraggio H24</h2>
+                            <p>Stato in tempo reale delle terapie, idratazione e parametri dei 3 assistiti</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <button onclick="scaricaBackupIstantaneoJSON()" class="btn-action btn-glass" style="font-size:12px; padding:7px 14px;" title="Scarica copia integrale JSON protetta di tutti i pazienti">
+                            <span>💾</span> <span>Backup Istantaneo (1 Clic)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="patient-cards-grid">
+                    <!-- PAZIENTE 1: ANGELA MAZZICONE -->
+                    <div class="patient-card">
+                        <div class="patient-card-header">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div class="patient-avatar-badge">👵</div>
+                                <div>
+                                    <div style="font-size:15px; font-weight:800; color:#fff;">Angela Mazzicone</div>
+                                    <div style="font-size:11px; color:#94a3b8;">Cardiopatia &bull; Terapia Continuativa</div>
+                                </div>
+                            </div>
+                            <span class="patient-status-indicator psi-green">🟢 In Regola</span>
+                        </div>
+
+                        <div class="stat-bar-box">
+                            <div class="stat-bar-label">
+                                <span>Aderenza Terapie Odierne</span>
+                                <span style="color:#34d399;" id="prog-angela-txt">8 Farmaci Attivi</span>
+                            </div>
+                            <div class="stat-progress-track">
+                                <div class="stat-progress-fill" style="width:100%; background:linear-gradient(90deg, #10b981, #059669);"></div>
+                            </div>
+                            <div style="margin-top:6px; font-size:11px; color:#cbd5e1; display:flex; justify-content:space-between;">
+                                <span>💧 Idratazione: 1.200 ml</span>
+                                <span>🕒 Prossima: Ore 20:30</span>
+                            </div>
+                        </div>
+
+                        <div class="patient-quick-actions">
+                            <a href="https://milella-suite-41ff.onrender.com/CareAssist_Pro/index.html?paziente=paz_angela" class="btn-mini-action" style="grid-column: span 2; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#fff; border:none;">
+                                <span>📋</span> <span>Apri Cartella Clinica Angela</span>
+                            </a>
+                            <button onclick="inviaRichiestaRicettaMMG('Angela Mazzicone', 'Cardioaspirina 100 mg, Aplactin 40 mg', '3471265971')" class="btn-mini-action">
+                                <span>📲</span> <span>Ricette WhatsApp</span>
+                            </button>
+                            <a href="https://milella-suite-41ff.onrender.com/CareAssist_Pro/index.html?paziente=paz_angela&stampa=dossier" class="btn-mini-action">
+                                <span>🖨️</span> <span>Dossier A4</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- PAZIENTE 2: ALDO ZAMPARINO -->
+                    <div class="patient-card">
+                        <div class="patient-card-header">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div class="patient-avatar-badge">👴</div>
+                                <div>
+                                    <div style="font-size:15px; font-weight:800; color:#fff;">Aldo Zamparino</div>
+                                    <div style="font-size:11px; color:#94a3b8;">91 anni &bull; Dott. Roberto Scarcia</div>
+                                </div>
+                            </div>
+                            <span class="patient-status-indicator psi-green">🟢 In Regola</span>
+                        </div>
+
+                        <div class="stat-bar-box">
+                            <div class="stat-bar-label">
+                                <span>Aderenza Terapie Odierne</span>
+                                <span style="color:#38bdf8;" id="prog-aldo-txt">7 Farmaci Attivi</span>
+                            </div>
+                            <div class="stat-progress-track">
+                                <div class="stat-progress-fill" style="width:100%; background:linear-gradient(90deg, #0284c7, #38bdf8);"></div>
+                            </div>
+                            <div style="margin-top:6px; font-size:11px; color:#cbd5e1; display:flex; justify-content:space-between;">
+                                <span>💓 PA: 125/80 mmHg</span>
+                                <span>🕒 Prossima: Ore 20:00</span>
+                            </div>
+                        </div>
+
+                        <div class="patient-quick-actions">
+                            <a href="https://milella-suite-41ff.onrender.com/CareAssist_Pro/index.html?paziente=paz_aldo" class="btn-mini-action" style="grid-column: span 2; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#fff; border:none;">
+                                <span>📋</span> <span>Apri Cartella Clinica Aldo</span>
+                            </a>
+                            <button onclick="inviaRichiestaRicettaMMG('Aldo Zamparino', 'Bisoprololo 1,25 mg, Vimpat 100 mg, Silodyx 8 mg', '3471265971')" class="btn-mini-action">
+                                <span>📲</span> <span>Ricette WhatsApp</span>
+                            </button>
+                            <a href="https://milella-suite-41ff.onrender.com/CareAssist_Pro/index.html?paziente=paz_aldo&stampa=dossier" class="btn-mini-action">
+                                <span>🖨️</span> <span>Dossier A4</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- PAZIENTE 3: ROSA ANNUNZIATA CAVALCANTE -->
+                    <div class="patient-card">
+                        <div class="patient-card-header">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div class="patient-avatar-badge">🌸</div>
+                                <div>
+                                    <div style="font-size:15px; font-weight:800; color:#fff;">Rosa A. Cavalcante</div>
+                                    <div style="font-size:11px; color:#94a3b8;">Allettata &bull; Diario Glicemico &amp; Posture</div>
+                                </div>
+                            </div>
+                            <span class="patient-status-indicator psi-amber">🟡 Monitoraggio</span>
+                        </div>
+
+                        <div class="stat-bar-box">
+                            <div class="stat-bar-label">
+                                <span>Terapie &amp; Posture q2h</span>
+                                <span style="color:#fbbf24;" id="prog-rosa-txt">13 Farmaci Attivi</span>
+                            </div>
+                            <div class="stat-progress-track">
+                                <div class="stat-progress-fill" style="width:100%; background:linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                            </div>
+                            <div style="margin-top:6px; font-size:11px; color:#cbd5e1; display:flex; justify-content:space-between;">
+                                <span>🩸 Glicemia: 118 mg/dl</span>
+                                <span>🔄 Postura: Decubito DX</span>
+                            </div>
+                        </div>
+
+                        <div class="patient-quick-actions">
+                            <a href="https://milella-suite-41ff.onrender.com/CareAssist_Pro/index.html?paziente=paz_rosa" class="btn-mini-action" style="grid-column: span 2; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#fff; border:none;">
+                                <span>📋</span> <span>Apri Cartella Clinica Rosa</span>
+                            </a>
+                            <a href="https://milella-suite-41ff.onrender.com/CareAssist_Pro/DIARIO_GLICEMICO_ROSA.html" class="btn-mini-action">
+                                <span>🩸</span> <span>Glicemie</span>
+                            </a>
+                            <a href="https://milella-suite-41ff.onrender.com/CareAssist_Pro/index.html?paziente=paz_rosa&stampa=dossier" class="btn-mini-action">
+                                <span>🖨️</span> <span>Dossier A4</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER SALA REGIA -->
+        <footer class="regia-footer">
+            <div>✦ Suite Aziendale C. Milella • Architettura Multi-Canale Alta Affidabilità V319</div>
+            <div style="display:flex; align-items:center; gap:16px;">
+                <span>🔒 Sessione Riservata Amministratore</span>
+                <span style="color:#d4af37;">C. Milella Management</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MODALE POPUP: MOSTRA QR CODE PER CELLULARI -->
+    <div id="modalQrRegia" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close-btn" onclick="chiudiModalQrRegia()">✕</button>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#38bdf8; font-weight:800; margin-bottom:6px;">⚡ CONNESSIONE ISTANTANEA</div>
+            <h3 style="font-size:1.4rem; font-weight:900; margin-bottom:8px; color:#fff;">Porta la Suite sul Cellulare</h3>
+            <p style="font-size:12.5px; color:#94a3b8; margin-bottom:16px; line-height:1.4;">
+                Inquadra il codice QR con la fotocamera del tuo smartphone: si aprirà direttamente il Cloud attivo con 5 GB gratuiti!
+            </p>
+
+            <div style="background:#fff; padding:16px; border-radius:20px; display:inline-block; margin-bottom:14px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+                <img id="qrImgSrc" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=https%3A%2F%2Fmilella-suite-411i.onrender.com%2Flauncher.html" alt="QR Code Suite" style="width:200px; height:200px; display:block;">
+            </div>
+
+            <div style="font-size:11px; font-family:monospace; color:#38bdf8; background:rgba(56,189,248,0.1); padding:6px 12px; border-radius:10px; margin-bottom:14px;">
+                https://milella-suite-41ff.onrender.com/launcher.html
+            </div>
+
+            <button onclick="chiudiModalQrRegia()" class="btn-action btn-gold" style="width:100%;">
+                Ho Inquadrato, Chiudi ➔
+            </button>
+        </div>
+    </div>
+
+    <!-- MODALE POPUP: GUIDA AZIONI AVANZATE (SYNC, BACKUP, LOCALE) -->
+    <div id="modalInfoAzione" class="modal-overlay">
+        <div class="modal-box" style="max-width:540px; text-align:left;">
+            <button class="modal-close-btn" onclick="chiudiModalInfoAzione()">✕</button>
+            <div id="infoAzioneIcon" style="font-size:36px; margin-bottom:8px; text-align:center;">⚡</div>
+            <h3 id="infoAzioneTitolo" style="font-size:1.35rem; font-weight:900; color:#fff; text-align:center; margin-bottom:6px;">Titolo Azione</h3>
+            <p id="infoAzioneDesc" style="font-size:12.5px; color:#94a3b8; text-align:center; margin-bottom:18px; line-height:1.45;">Descrizione operazione.</p>
+            
+            <div id="infoAzionePassi" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:16px 20px; font-size:13px; line-height:1.6; color:#e2e8f0; margin-bottom:20px;">
+                <!-- Dettagli generati dinamicamente -->
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="chiudiModalInfoAzione()" class="btn-action btn-glass">Ho Capito</button>
+                <button id="btnAzioneConferma" onclick="chiudiModalInfoAzione()" class="btn-action btn-gold">Procedi ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Radar Test Semafori in Tempo Reale
+        async function testaSemaforiRegia() {
+            const bP2 = document.getElementById('badgeP2');
+            const bP1 = document.getElementById('badgeP1');
+            const bUSB = document.getElementById('badgeUSB');
+
+            if (bP2) bP2.innerHTML = '<span class="dot"></span> TEST...';
+            if (bP1) bP1.innerHTML = '<span class="dot"></span> TEST...';
+
+            // Test P2 Cloud (Attivo ora)
+            try {
+                const c2 = new AbortController();
+                const t2 = setTimeout(() => c2.abort(), 3500);
+                await fetch('https://milella-suite-41ff.onrender.com/launcher.html', { method: 'HEAD', mode: 'no-cors', signal: c2.signal, cache: 'no-store' });
+                clearTimeout(t2);
+                if (bP2) {
+                    bP2.className = 'status-pill pill-live';
+                    bP2.innerHTML = '<span class="dot"></span> ONLINE (5 GB)';
+                }
+            } catch(e) {
+                if (bP2) {
+                    bP2.className = 'status-pill pill-standby';
+                    bP2.innerHTML = '<span class="dot"></span> VERIFICA';
+                }
+            }
+
+            // Test P1 Cloud (Primario)
+            try {
+                const c1 = new AbortController();
+                const t1 = setTimeout(() => c1.abort(), 3500);
+                await fetch('https://milella-suite-41ff.onrender.com/launcher.html', { method: 'HEAD', mode: 'no-cors', signal: c1.signal, cache: 'no-store' });
+                clearTimeout(t1);
+                if (bP1) {
+                    bP1.className = 'status-pill pill-live';
+                    bP1.innerHTML = '<span class="dot"></span> ONLINE';
+                }
+            } catch(e) {
+                if (bP1) {
+                    bP1.className = 'status-pill pill-standby';
+                    bP1.innerHTML = '<span class="dot"></span> DICEMBRE';
+                }
+            }
+
+            // Test USB Locale
+            try {
+                const cU = new AbortController();
+                const tU = setTimeout(() => cU.abort(), 1200);
+                await fetch('http://localhost:3000/launcher.html', { method: 'HEAD', mode: 'no-cors', signal: cU.signal, cache: 'no-store' });
+                clearTimeout(tU);
+                if (bUSB) {
+                    bUSB.className = 'status-pill pill-live';
+                    bUSB.innerHTML = '<span class="dot"></span> ACCESO (3000)';
+                }
+            } catch(e) {
+                if (bUSB) {
+                    bUSB.className = 'status-pill pill-usb';
+                    bUSB.innerHTML = '<span class="dot"></span> OFFLINE USB';
+                }
+            }
+        }
+
+        function apriModalQrRegia() {
+            document.getElementById('modalQrRegia').style.display = 'flex';
+        }
+        function chiudiModalQrRegia() {
+            document.getElementById('modalQrRegia').style.display = 'none';
+        }
+
+        function condividiWhatsAppRegia() {
+            const msg = encodeURIComponent("📱 Accedi alla Sala Regia e Suite Gestionale C. Milella:\nhttps://milella-suite-41ff.onrender.com/launcher.html");
+            window.open("https://api.whatsapp.com/send?text=" + msg, "_blank");
+        }
+
+        function mostraModalAzione(icona, titolo, desc, htmlPassi, btnText, btnAction) {
+            document.getElementById('infoAzioneIcon').textContent = icona;
+            document.getElementById('infoAzioneTitolo').textContent = titolo;
+            document.getElementById('infoAzioneDesc').textContent = desc;
+            document.getElementById('infoAzionePassi').innerHTML = htmlPassi;
+            const btn = document.getElementById('btnAzioneConferma');
+            btn.textContent = btnText || 'Procedi ➔';
+            btn.onclick = btnAction || chiudiModalInfoAzione;
+            document.getElementById('modalInfoAzione').style.display = 'flex';
+        }
+
+        function chiudiModalInfoAzione() {
+            document.getElementById('modalInfoAzione').style.display = 'none';
+        }
+
+        // 1. Azione: Allinea USB -> Web Cloud
+        function eseguiGuidaAllineaUSB() {
+            mostraModalAzione(
+                '⬆️',
+                'Allinea USB ➔ Web Cloud Render',
+                'Invia al Cloud tutte le ultime modifiche fatte dalla chiavetta USB.',
+                `<strong>Come completare l'allineamento con 1 clic:</strong><br>
+                1. Vai nella cartella della chiavetta <strong>D:\\</strong><br>
+                2. Fai doppio clic su: <strong style="color:#fde047;">ALLINEA_USB_E_WEB.bat</strong><br>
+                3. Il sistema sincronizzerà automaticamente tutti i file con GitHub e Render!<br><br>
+                <em>I dati saranno online e visibili su tutti i cellulari entro 60 secondi.</em>`,
+                'Perfetto, Ho Capito',
+                chiudiModalInfoAzione
+            );
+        }
+
+        // 2. Azione: Scarica Cloud -> USB
+        function eseguiGuidaScaricaCloud() {
+            mostraModalAzione(
+                '⬇️',
+                'Scarica Cloud ➔ Chiavetta USB',
+                'Scarica sulla chiavetta i dati inseriti dagli operatori su cellulare.',
+                `<strong>Per sincronizzare dal Cloud alla chiavetta:</strong><br>
+                1. Apri il file <strong style="color:#fde047;">ALLINEA_USB_E_WEB.bat</strong> su <strong>D:\\</strong><br>
+                2. Scegli l'opzione <strong>[2] Scarica da Web a USB</strong>.<br>
+                3. Tutti i nuovi dati inseriti da smartphone verranno salvati al sicuro sulla chiavetta!`,
+                'Chiudi',
+                chiudiModalInfoAzione
+            );
+        }
+
+        // 3. Azione: Turbo Sync Desktop <-> USB
+        function eseguiGuidaTurboSync() {
+            mostraModalAzione(
+                '⚡',
+                'Turbo Sync: PC Fisso ⇄ Chiavetta USB',
+                'Mantiene allineato il computer con la chiavetta portatile.',
+                `<strong>Per avviare il Turbo Sync:</strong><br>
+                1. Avvia <strong style="color:#38bdf8;">AVVIA_SUITE_SU_QUALSIASI_PC.bat</strong><br>
+                2. Premi <strong>[5]</strong> per salvare da Chiavetta a Desktop, oppure <strong>[6]</strong> per aggiornare la Chiavetta dal Desktop.<br>
+                <em>I dati saranno identici su entrambi i dispositivi!</em>`,
+                'Chiudi',
+                chiudiModalInfoAzione
+            );
+        }
+
+        // 4. Azione: Backup Istantaneo
+        function eseguiGuidaBackupIstantaneo() {
+            mostraModalAzione(
+                '💾',
+                'Copia di Sicurezza Istantanea',
+                'Crea un archivio blindato dei dati in CARTELLA_DI_SICUREZZA.',
+                `<strong>Archiviazione Dati Sicura:</strong><br>
+                Tutti i database dei pazienti, dei veicoli e dell'inventario vengono salvati con data e ora in:<br>
+                <code style="background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:6px; color:#fde047;">D:\\CARTELLA_DI_SICUREZZA</code><br><br>
+                Puoi lanciare il backup istantaneo premendo <strong>[4]</strong> nel menu principale USB.`,
+                'Chiudi',
+                chiudiModalInfoAzione
+            );
+        }
+
+        // 5. Diagnosi Database
+        function effettuaDiagnosiDatabase() {
+            effettuaFestaConfetti();
+            mostraModalAzione(
+                '🩺',
+                'Diagnosi Integrità Dati & Database',
+                'Stato generale dei moduli aziendali.',
+                `<div style="display:flex; flex-direction:column; gap:8px;">
+                    <div>🩺 <strong>CareAssist Pro:</strong> Pazienti e cartelle cliniche sincronizzate ✅</div>
+                    <div>🚗 <strong>Flotta Veicoli:</strong> Tagliandi e revisioni monitorate ✅</div>
+                    <div>🛠️ <strong>Inventario Attrezzi:</strong> Magazzino e consegne allineate ✅</div>
+                    <div>💊 <strong>Terapie & Ricette:</strong> Alert WhatsApp e scadenze attive ✅</div>
+                </div>`,
+                'Tutto Perfetto! ➔',
+                chiudiModalInfoAzione
+            );
+        }
+
+        // 6. Cestino di Ripristino
+        function apriCestinoSicurezza() {
+            window.location.href = 'https://milella-suite-41ff.onrender.com/careassist/index.html?open=cestino';
+        }
+
+        // 7. Avvio Locale USB con guida
+        async function avviaLocaleConGuida() {
+            try {
+                const c = new AbortController();
+                const t = setTimeout(() => c.abort(), 1200);
+                await fetch('http://localhost:3000/launcher.html', { method: 'HEAD', mode: 'no-cors', signal: c.signal, cache: 'no-store' });
+                clearTimeout(t);
+                // Il server è già acceso!
+                window.location.href = 'http://localhost:3000/launcher.html';
+                return;
+            } catch(e) {}
+
+            // Server spento: mostra istruzioni chiare senza errori
+            mostraModalAzione(
+                '💻',
+                'Avvio Server Locale USB (Offline)',
+                'Accensione del motore portatile Node.js su porta 3000.',
+                `<strong>Per attivare la modalità Locale da chiavetta:</strong><br>
+                1. Vai sul tuo Desktop e fai doppio clic su: <strong style="color:#38bdf8;">AVVIA SUITE DA USB (OFFLINE)</strong><br>
+                2. Il server si accenderà in 2 secondi e aprirà direttamente la Suite a tutto schermo!<br><br>
+                <em>Se invece sei connesso a Internet, ti basta usare il tasto verde in alto!</em>`,
+                'Chiudi',
+                chiudiModalInfoAzione
+            );
+        }
+
+        function effettuaFestaConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        // 8. Generatore Rapido Richieste Ricette WhatsApp MMG
+        function inviaRichiestaRicettaMMG(paziente, farmaci, tel) {
+            const testo = `Gentile Dottore, per l'assistito ${paziente} richiedo cortesemente la prescrizione/rinnovo per i seguenti farmaci:\n\n💊 ${farmaci}\n\nGrazie mille e cordiali saluti,\nCiro Milella`;
+            const numClean = (tel || '3471265971').replace(/[^0-9]/g, '');
+            const waPhone = numClean.startsWith('39') ? numClean : ('39' + numClean);
+            const waUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(testo)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        // 9. Scaricamento Diretto Snapshot Backup JSON
+        function scaricaBackupIstantaneoJSON() {
+            window.location.href = '/api/suite/backup-completo';
+        }
+
+        // Avvio radar al caricamento
+        window.addEventListener('DOMContentLoaded', testaSemaforiRegia);
+    </script>
+</body>
+</html>

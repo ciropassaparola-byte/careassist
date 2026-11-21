@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Sync Master USB - Sistema Logistica</title>
+    <hta:application 
+        id="oSync"
+        applicationname="SyncMasterUSB"
+        border="none"
+        caption="no"
+        showintaskbar="yes"
+        singleinstance="yes"
+        sysmenu="no"
+        maximizebutton="no"
+        minimizebutton="no"
+        windowstate="maximize"
+        ICON="assets/img/app_icon.ico"
+        scroll="no"
+        trusted="yes"
+    />
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <style>
+        body {
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+            color: #f1f5f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sync-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .apple-title-bar {
+            height: 40px;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            cursor: move;
+            border-bottom: 1px solid #334155;
+            box-sizing: border-box;
+        }
+
+        /* --- USER BADGE (AMMINISTRATORE) --- */
+        .user-badge {
+            position: absolute;
+            top: 55px;
+            right: 30px;
+            display: inline-flex;
+            align-items: center;
+            background-color: #1e293b;
+            border-radius: 40px;
+            padding: 6px 20px 6px 6px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+            z-index: 100;
+        }
+        .user-badge-icon {
+            width: 36px;
+            height: 36px;
+            background-color: #38bdf8;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+        }
+        .user-badge-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .user-badge-role {
+            font-size: 9px;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .user-badge-name {
+            font-size: 13px;
+            font-weight: bold;
+            color: #f1f5f9;
+        }
+
+        .main-content {
+            flex: 1;
+            width: 100%;
+        }
+
+        .glass-card {
+            background: #0f172a;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            box-sizing: border-box;
+            
+            /* CENTRATURA ASSOLUTA GARANTITA */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin-top: 15px; /* Compensa l'altezza della barra del titolo */
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-section h1 {
+            font-size: 28px;
+            font-weight: 900;
+            margin: 0;
+            color: #38bdf8;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .header-section p {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        .drive-selector {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .drive-list {
+            margin-top: 15px;
+        }
+
+        .drive-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: block;
+            color: #e2e8f0;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .drive-item:hover {
+            background: #1e293b;
+            border-color: #38bdf8;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .drive-item.selected {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        .apple-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .sync-actions {
+            width: 100%;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 4%;
+        }
+
+        .btn-sync {
+            flex: 1;
+            padding: 25px 15px;
+            border-radius: 16px;
+            border: 1px solid #475569;
+            background: #334155;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-sync i {
+            font-size: 32px;
+            font-style: normal;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* PRIMARY EXPORT BUTTON */
+        #btnExport {
+            background: #0f172a;
+            border-color: #334155;
+        }
+        /* ANIMAZIONE PULSANTE ATTIVO */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(14, 165, 233, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+        }
+
+        #btnExport:not(:disabled) {
+            background: linear-gradient(145deg, #0284c7, #0ea5e9);
+            border-color: #38bdf8;
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+            animation: pulseGlow 2s infinite;
+        }
+        #btnExport:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(14, 165, 233, 0.6);
+            filter: brightness(1.15);
+        }
+
+        /* SECONDARY IMPORT BUTTON */
+        #btnImport {
+            background: #0f172a;
+            border-color: #334155;
+        }
+        #btnImport:not(:disabled) {
+            background: #1e293b;
+            border-color: #64748b;
+        }
+        #btnImport:hover:not(:disabled) {
+            background: #334155;
+            border-color: #94a3b8;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .btn-sync:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
+
+        .btn-sync .title {
+            font-weight: 800;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-sync .desc {
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
+            display: block;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .log-area {
+            clear: both;
+            height: 150px;
+            background: #020617;
+            border-radius: 12px;
+            padding: 15px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #10b981;
+            overflow-y: auto;
+            border: 1px solid #1e293b;
+            box-shadow: inset 0 4px 15px rgba(0,0,0,0.6);
+            line-height: 1.5;
+        }
+
+        .status-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 35px;
+            background: #0f172a;
+            padding: 8px 20px;
+            font-size: 11px;
+            color: #94a3b8;
+            box-sizing: border-box;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* --- COMPONENTI PREMIUM --- */
+        .storage-container {
+            width: 100%; height: 6px; background: #1e293b; border-radius: 3px; margin-top: 10px; overflow: hidden;
+        }
+        .storage-fill {
+            height: 100%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 3px; transition: width 0.5s;
+        }
+        .storage-text {
+            font-size: 10px; color: #94a3b8; margin-top: 4px; font-weight: 500; display:flex; justify-content:space-between;
+        }
+
+        .last-sync-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        /* SVG Icons */
+        .svg-icon {
+            width: 32px; height: 32px; margin-bottom: 12px; transition: transform 0.3s;
+        }
+        .btn-sync:hover:not(:disabled) .svg-icon {
+            transform: translateY(-4px);
+        }
+
+        /* --- EFFETTO BARRA CONTO ALLA ROVESCIA --- */
+        .countdown-bar-container {
+            display: none;
+            width: 100%;
+            height: 12px;
+            background: #000;
+            border: 1px solid #ef4444;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 5px rgba(239, 68, 68, 0.4);
+        }
+
+        .countdown-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff4d4d);
+            position: absolute;
+            top: 0;
+            right: 0; /* Avanza da destra */
+            width: 0%;
+            border-radius: 6px;
+            box-shadow: 0 0 15px 5px #ff0000, 0 0 30px 10px rgba(255, 0, 0, 0.6);
+            transition: width 1s linear;
+        }
+
+        .estimated-time {
+            display: none;
+            text-align: center;
+            color: #ef4444;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+            animation: pulseText 1.5s infinite;
+        }
+
+        @keyframes pulseText {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        /* --- NUOVI COMPONENTI ENTERPRISE --- */
+        .history-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.8); z-index: 100; justify-content: center; align-items: center;
+        }
+        .history-content {
+            background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155;
+            padding: 30px; border-radius: 20px; width: 80%; max-height: 80vh; overflow-y: auto;
+            color: #f1f5f9; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+        }
+        .history-btn {
+            background: transparent; border: 1px solid #38bdf8; color: #38bdf8;
+            padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 11px;
+            margin-left: 10px; transition: all 0.2s;
+        }
+        .history-btn:hover { background: #38bdf8; color: #0f172a; }
+        
+        .toggle-container {
+            display: flex; align-items: center; background: #1e293b; border-radius: 20px; padding: 3px; margin-bottom: 15px;
+        }
+        .toggle-btn {
+            flex: 1; text-align: center; font-size: 11px; font-weight: bold; padding: 6px;
+            border-radius: 15px; cursor: pointer; color: #94a3b8; transition: all 0.3s;
+        }
+        .toggle-btn.active {
+            background: #0ea5e9; color: white;
+        }
+
+        .success-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(16, 185, 129, 0.2); z-index: 90; justify-content: center; align-items: center;
+            flex-direction: column; animation: fadeIn 0.5s;
+        }
+        .success-icon {
+            font-size: 80px; color: #10b981; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+        }
+        @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+    </style>
+
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        var shell = new ActiveXObject("WScript.Shell");
+        var selectedDrive = "";
+        var isWorking = false;
+
+        // Recupera percorso della cartella madre "LOGISTICA_CONSEGNE_MC" (4 livelli sopra)
+        var appPath = "";
+        try {
+            var loc = window.location.pathname;
+            var fullPath = decodeURIComponent(loc).replace(/^file:\/\/\//, "").replace(/\//g, "\\");
+            if (fullPath.charAt(0) === "\\") fullPath = fullPath.substring(1);
+            
+            // Risaliamo 4 livelli: UTILITY -> File_Sistema -> Sistema_Logistica -> questa -> Radice Progetto
+            var p1 = fso.GetParentFolderName(fullPath);
+            var p2 = fso.GetParentFolderName(p1);
+            var p3 = fso.GetParentFolderName(p2);
+            appPath = fso.GetParentFolderName(p3); 
+        } catch(e) { 
+            appPath = "C:\\Users\\Utente\\Desktop\\LOGISTICA_CONSEGNE_MC1"; 
+        }
+
+        function StartCloudBackup() {
+            Log("Funzione di Backup in Cloud non ancora configurata.", "#f59e0b");
+            alert("Il backup in Cloud sará disponibile in una versione futura.");
+        }
+        
+        /* FUNZIONI ENTERPRISE (TTS, Eject, History) */
+        function SpeakText(text) {
+            try { var voice = new ActiveXObject("SAPI.SpVoice"); voice.Speak(text); } catch(e) {}
+        }
+
+        function EjectDrive(driveLetter) {
+            try {
+                var letter = driveLetter.replace(":", "");
+                var psCmd = '(New-Object -comObject Shell.Application).NameSpace(17).ParseName(\"' + letter + ':\").InvokeVerb(\"Eject\")';
+                shell.Run('powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -Command "' + psCmd + '"', 0, false);
+                Log("Disconnessione sicura inviata per " + letter + ":", "#fbbf24");
+            } catch(e) {}
+        }
+
+        var historyLogFile = appPath + "\\.sync_history.log";
+        function AppendHistory(msg) {
+            try {
+                var d = new Date();
+                var timeStr = d.toLocaleDateString() + " " + d.toLocaleTimeString();
+                var file = fso.OpenTextFile(historyLogFile, 8, true);
+                file.WriteLine("[" + timeStr + "] " + msg);
+                file.Close();
+            } catch(e) {}
+        }
+
+        function ShowHistory() {
+            try {
+                if (fso.FileExists(historyLogFile)) {
+                    var file = fso.OpenTextFile(historyLogFile, 1);
+                    document.getElementById("historyText").innerText = file.ReadAll();
+                    file.Close();
+                } else { document.getElementById("historyText").innerText = "Nessun backup trovato."; }
+            } catch(e) {}
+            document.getElementById("historyModal").style.display = "flex";
+        }
+
+        function CloseHistory() { document.getElementById("historyModal").style.display = "none"; }
+
+        /* FUNZIONI MEMORIA ULTIMO BACKUP */
+        var syncFile = appPath + "\\.last_sync.txt";
+        function LoadLastSyncTime() {
+            try {
+                if (fso.FileExists(syncFile)) {
+                    var file = fso.OpenTextFile(syncFile, 1);
+                    var timeStr = file.ReadAll();
+                    file.Close();
+                    document.getElementById("lastSyncBadge").style.display = "inline-block";
+                    document.getElementById("lastSyncBadge").innerText = "Ultimo Backup: " + timeStr;
+                }
+            } catch(e) {}
+        }
+        function SaveLastSyncTime() {
+            try {
+                var d = new Date();
+                var timeStr = d.toLocaleDateString() + " alle " + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                var file = fso.CreateTextFile(syncFile, true);
+                file.Write(timeStr);
+                file.Close();
+                LoadLastSyncTime();
+            } catch(e) {}
+        }
+        
+        window.onload = function() {
+            // window.resizeTo(700, 650);
+            // window.moveTo((screen.availWidth - 700) / 2, (screen.availHeight - 650) / 2);
+            LoadLastSyncTime();
+            RefreshDrives();
+        }
+
+        function RefreshDrives() {
+            var list = document.getElementById("driveList");
+            list.innerHTML = "";
+            selectedDrive = "";
+            UpdateUI();
+
+            Log("Ricerca unità rimovibili in corso...");
+
+            try {
+                var count = 0;
+                for (var charCode = 68; charCode <= 90; charCode++) { // Da D: a Z:
+                    var driveLetter = String.fromCharCode(charCode);
+                    var fullDrive = driveLetter + ":";
+                    if (fso.DriveExists(fullDrive)) {
+                        try {
+                            var d = fso.GetDrive(fullDrive);
+                            // 1 = Removable (Normal USB), 2 = Fixed (Allow C: only if we are running from another drive)
+                            if (d.DriveType == 1 || (d.DriveType == 2 && (driveLetter != "C" || appPath.toLowerCase().indexOf("c:") === -1))) {
+                                if (d.IsReady) {
+                                    var id = driveLetter + ":";
+                                    var label = d.VolumeName || "Unità Rimovibile";
+                                    
+                                    var totalGB = (d.TotalSize / 1073741824).toFixed(1);
+                                    var freeGB = (d.FreeSpace / 1073741824).toFixed(1);
+                                    var usedGB = (totalGB - freeGB).toFixed(1);
+                                    var percentUsed = ((usedGB / totalGB) * 100).toFixed(0);
+                                    var barColor = percentUsed > 90 ? "#ef4444" : (percentUsed > 75 ? "#f59e0b" : "#10b981");
+                                    
+                                    var div = document.createElement("div");
+                                    div.className = "drive-item";
+                                    div.id = "drive_" + driveLetter;
+                                    div.onclick = (function(letter) { return function() { SelectDrive(letter + ":"); }; })(driveLetter);
+                                    
+                                    var inner = "<div style='display:flex; align-items:center;'><span class='drive-icon' style='margin-right:10px;'>💾</span> <div><strong>" + id + "</strong> - " + label + "</div></div>";
+                                    inner += "<div class='storage-container'><div class='storage-fill' style='width:" + percentUsed + "%; background:" + barColor + ";'></div></div>";
+                                    inner += "<div class='storage-text'><span>" + usedGB + " GB usati</span><span>" + freeGB + " GB liberi di " + totalGB + " GB</span></div>";
+                                    
+                                    div.innerHTML = inner;
+                                    list.appendChild(div);
+                                    count++;
+                                    Log("Rilevata unità: " + id + " (" + label + ") [" + freeGB + " GB liberi]", "#38bdf8");
+                                }
+                            }
+                        } catch(driveErr) {}
+                    }
+                }
+
+                if (count === 0) {
+                    list.innerHTML = "<div style='color:#ef4444; font-size:12px; font-weight:bold; padding:10px;'>⚠ Nessuna chiavetta USB rilevata. Inseriscine una e aggiorna.</div>";
+                    Log("Nessuna unità compatibile trovata.", "#ef4444");
+                } else {
+                    Log("Ricerca completata. Seleziona un'unità per procedere.", "#22c55e");
+                }
+            } catch(e) {
+                list.innerHTML = "Errore nel rilevamento unità: " + e.message;
+                Log("ERRORE RILEVAMENTO: " + e.message, "#ef4444");
+            }
+        }
+
+        function SelectDrive(id) {
+            if (isWorking) return;
+            var items = document.getElementsByClassName("drive-item");
+            for (var i = 0; i < items.length; i++) items[i].className = "drive-item";
+            
+            document.getElementById("drive_" + id.charAt(0)).className = "drive-item selected";
+            selectedDrive = id;
+            UpdateUI();
+        }
+
+        function UpdateUI() {
+            document.getElementById("btnExport").disabled = (selectedDrive === "" || isWorking);
+            document.getElementById("btnImport").disabled = (selectedDrive === "" || isWorking);
+            if(document.getElementById("btnCloud")) document.getElementById("btnCloud").disabled = isWorking;
+        }
+
+        function Log(msg, color) {
+            var area = document.getElementById("logArea");
+            var span = document.createElement("div");
+            if (color) span.style.color = color;
+            span.innerHTML = "[" + new Date().toLocaleTimeString() + "] " + msg;
+            area.appendChild(span);
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function CloseAppQuietly() {
+            Log("Chiusura automatica moduli per sblocco database...", "#fbbf24");
+            try {
+                // Chiudiamo solo la Dashboard e gli altri moduli, evitando di chiudere questo (Sync Master Pro)
+                // Usiamo il filtro "ne" (not equal) sul titolo della finestra
+                shell.Run('taskkill /F /IM mshta.exe /FI "WINDOWTITLE ne Sync Master Pro - Protezione e Backup USB"', 0, true);
+            } catch(e) {
+                Log("Avviso: chiusura manuale suggerita se il database risulta bloccato.", "#fbbf24");
+            }
+        }
+
+        /* GESTIONE TOGGLE BACKUP VELOCE/COMPLETO */
+        var syncMode = "FULL";
+        function SetSyncMode(mode) {
+            syncMode = mode;
+            document.getElementById("btnModeFast").className = "toggle-btn" + (mode === "FAST" ? " active" : "");
+            document.getElementById("btnModeFull").className = "toggle-btn" + (mode === "FULL" ? " active" : "");
+            Log("Modalita' impostata su: " + (mode === "FAST" ? "VELOCE (Salta cartelle pesanti)" : "COMPLETA (Copia tutto)"), "#fbbf24");
+        }
+
+        var _confirmCallback = null;
+        function ShowCustomConfirm(title, msg, callback) {
+            document.getElementById("premiumConfirmTitle").innerText = title;
+            document.getElementById("premiumConfirmMsg").innerHTML = msg.replace(/\n/g, '<br>');
+            _confirmCallback = callback;
+            var modal = document.getElementById("premiumConfirmModal");
+            modal.style.display = "flex";
+            if(typeof UXPremium !== 'undefined') UXPremium.PlaySound.Click();
+        }
+        function CloseCustomConfirm(result) {
+            document.getElementById("premiumConfirmModal").style.display = "none";
+            if(result && _confirmCallback) {
+                if(typeof UXPremium !== 'undefined') UXPremium.PlaySound.Success();
+                _confirmCallback();
+            }
+            _confirmCallback = null;
+        }
+
+        function StartSync(direction) {
+            if (isWorking || !selectedDrive) return;
+            
+            ShowCustomConfirm(
+                "AVVIARE LA SINCRONIZZAZIONE?", 
+                "L'operazione chiuderà tutte le finestre del programma aperte per sbloccare i database e garantire una copia sicura.", 
+                function() { ExecuteSync(direction); }
+            );
+        }
+
+        function ExecuteSync(direction) {
+            isWorking = true;
+            UpdateUI();
+            document.getElementById("progBar").style.width = "10%";
+            
+            Log("Inizio operazione: " + (direction === 'TO_USB' ? "ESPORTA SU USB" : "IMPORTA DA PC"), "#38bdf8");
+            
+            CloseAppQuietly();
+            
+            // Iniezione Pre-Backup per Antigravity: Garantisce salvataggio snapshot prima del sync
+            try {
+                var pathEval = window.location.pathname;
+                var fullEval = decodeURIComponent(pathEval).replace(/^file:\/\/\//, "").replace(/\//g, "\\");
+                if (fullEval.charAt(0) === "\\") fullEval = fullEval.substring(1);
+                var currentDirLocal = fso.GetParentFolderName(fullEval);
+                var bkPath = fso.BuildPath(fso.BuildPath(currentDirLocal, "system"), "backup_manager.ps1");
+                if (fso.FileExists(bkPath)) {
+                    Log("Creazione Snapshot Database preventivo...", "#fbbf24");
+                    shell.Run('powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + bkPath + '"', 0, true); 
+                    Log("Salvataggio completato con successo.", "#22c55e");
+                }
+            } catch(exBk) {}
+
+            setTimeout(function() {
+                ExecuteRobocopy(direction);
+            }, 1500);
+        }
+
+        function ExecuteRobocopy(direction) {
+            var isRunningOnPC = (appPath.toLowerCase().indexOf("c:") === 0);
+            var fixedPath = "";
+            var src = "";
+            var dst = "";
+
+            if (isRunningOnPC) {
+                fixedPath = selectedDrive + "\\LOGISTICA_CONSEGNE_MC";
+                if (direction === 'TO_USB') {
+                    src = appPath;
+                    dst = fixedPath;
+                } else {
+                    src = fixedPath;
+                    dst = appPath;
+                }
+            } else {
+                var desktopPath = shell.SpecialFolders("Desktop");
+                fixedPath = fso.BuildPath(desktopPath, "LOGISTICA_CONSEGNE_MC");
+                if (direction === 'TO_USB') {
+                    src = fixedPath;
+                    dst = appPath;
+                } else {
+                    src = appPath;
+                    dst = fixedPath;
+                }
+            }
+
+            Log("Verifica percorsi...");
+            Log("Sorgente: " + src);
+            Log("Destinazione: " + dst);
+
+            if (!fso.FolderExists(src)) {
+                var errorMsg = "ERRORE: La cartella sorgente non esiste!\n" + src;
+                Log(errorMsg, "#ef4444");
+                alert(errorMsg);
+                isWorking = false;
+                UpdateUI();
+                return;
+            }
+
+            if (!fso.FolderExists(dst)) {
+                Log("Creazione cartella di destinazione...");
+                try { fso.CreateFolder(dst); } catch(e) { 
+                    Log("Avviso creazione: " + e.message, "#fbbf24"); 
+                }
+            }
+            
+            // Comando Robocopy:
+            // Aggiungiamo 'cmd /c' e mostriamo la finestra (1) per vedere progressi
+            var flagFile = fso.BuildPath(fso.GetSpecialFolder(2), "sync_done.txt");
+            if (fso.FileExists(flagFile)) { try { fso.DeleteFile(flagFile); } catch(e) {} }
+
+            // Escludiamo cartelle di base
+            var excludeList = "scratch backups copia_sicurezza COPIA_SICUREZZA_SISTEMA browser_profile \"System Volume Information\" $RECYCLE.BIN";
+            if (syncMode === "FAST") {
+                // In FAST mode escludiamo anche le cartelle utente pesanti
+                excludeList += " Sistema_Logistica_Ufficio";
+            }
+
+            var cmd = 'cmd /c robocopy "' + src + '" "' + dst + '" /MIR /R:1 /W:1 /FFT /XD ' + excludeList + ' & echo DONE > "' + flagFile + '"';
+            Log("AVVIO COPIA [" + syncMode + "]... (Guarda la finestra nera che si e' aperta)", "#fbbf24");
+            document.getElementById("progBar").style.width = "50%";
+            
+            // SHOW COUNTDOWN UI
+            document.getElementById("countdownBarContainer").style.display = "block";
+            document.getElementById("countdownTimeContainer").style.display = "block";
+            
+            var totalSeconds = 15;
+            var currentSeconds = totalSeconds;
+            document.getElementById("countdownTimeValue").innerText = currentSeconds;
+            document.getElementById("countdownBar").style.width = "0%";
+
+            try {
+                // Esecuzione ASINCRONA (false) per permettere l'aggiornamento dell'interfaccia
+                shell.Run(cmd, 1, false);
+            } catch(e) {
+                Log("ERRORE: " + e.message, "#ef4444");
+                isWorking = false; UpdateUI(); return;
+            }
+
+            // Timer per aggiornare il conto alla rovescia e controllare fine operazione
+            var syncTimer = setInterval(function() {
+                if (fso.FileExists(flagFile)) {
+                    // Copia completata
+                    clearInterval(syncTimer);
+                    try { fso.DeleteFile(flagFile); } catch(e) {}
+                    
+                    document.getElementById("countdownBar").style.width = "100%";
+                    setTimeout(function() {
+                        Log("OPERAZIONE COMPLETATA!", "#22c55e");
+                        AppendHistory("Sincronizzazione " + direction + " (" + syncMode + ") completata su " + selectedDrive);
+                        
+                        document.getElementById("progBar").style.width = "100%";
+                        document.getElementById("countdownBarContainer").style.display = "none";
+                        document.getElementById("countdownTimeContainer").style.display = "none";
+                        
+                        // EFFETTO SUCCESSO VISIVO E VOCALE
+                        document.getElementById("successOverlay").style.display = "flex";
+                        SpeakText("Backup completato con successo. Puoi rimuovere la chiavetta.");
+                        
+                        setTimeout(function() {
+                            document.getElementById("successOverlay").style.display = "none";
+                            // SAFE EJECT
+                            EjectDrive(selectedDrive);
+                            alert("Copia terminata!\nLa chiavetta e' stata espulsa e puo' essere rimossa.");
+                        }, 2500);
+
+                        isWorking = false;
+                        UpdateUI();
+                        Log("-------------------------------------------");
+                    }, 500);
+                } else {
+                    // Aggiorna il tempo e la barra
+                    currentSeconds--;
+                    if (currentSeconds < 1) currentSeconds = 1; // Si ferma a 1 se ci mette di più
+                    document.getElementById("countdownTimeValue").innerText = currentSeconds;
+                    
+                    var percent = ((totalSeconds - currentSeconds) / totalSeconds) * 100;
+                    if (percent > 95) percent = 95; // Non arriva al 100% fino a fine reale
+                    document.getElementById("countdownBar").style.width = percent + "%";
+                }
+            }, 1000);
+        }
+
+        function StartCloudBackup() {
+            if (isWorking) return;
+            isWorking = true;
+            UpdateUI();
+            Log("Avvio compressione e Backup in Cloud...", "#38bdf8");
+            document.getElementById("progBar").style.width = "50%";
+            
+            setTimeout(function() {
+                try {
+                    var pathEval = window.location.pathname;
+                    var fullEval = decodeURIComponent(pathEval).replace(/^file:\/\/\//, "").replace(/\//g, "\\");
+                    if (fullEval.charAt(0) === "\\") fullEval = fullEval.substring(1);
+                    var currentDirLocal = fso.GetParentFolderName(fullEval);
+                    var scriptPath = fso.BuildPath(currentDirLocal, "CloudBackup.ps1");
+                    
+                    if(fso.FileExists(scriptPath)) {
+                        shell.Run('powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + scriptPath + '"', 0, true);
+                        Log("Backup in Cloud completato con successo!", "#22c55e");
+                        document.getElementById("progBar").style.width = "100%";
+                        if(typeof UXPremium !== 'undefined') UXPremium.PlaySound.Success();
+                        alert("Il backup compresso è stato salvato nel tuo Cloud (o in C:\\Cloud_Backup_Logistica).");
+                    } else {
+                        Log("Errore: Script CloudBackup.ps1 non trovato.", "#ef4444");
+                        alert("Impossibile trovare lo script di backup.");
+                    }
+                } catch(e) {
+                    Log("Errore backup cloud: " + e.message, "#ef4444");
+                    alert("Errore: " + e.message);
+                }
+                isWorking = false;
+                UpdateUI();
+                Log("-------------------------------------------");
+            }, 500);
+        }
+    </script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <div class="sync-container">
+        <!-- BARRA TITOLO APPLE STYLE -->
+        <div class="apple-title-bar">
+            <div style="display:flex; align-items:center;">
+                <div class="apple-controls" onmousedown="event.cancelBubble=true;">
+                    <div class="apple-btn close" onclick="window.close()" title="Chiudi"></div>
+                    <div class="apple-btn minimize" style="opacity:0.3; cursor:default;"></div>
+                    <div class="apple-btn maximize" style="opacity:0.3; cursor:default;"></div>
+                </div>
+                <div style="margin-left:20px; font-size:11px; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:1px;">
+                    Sync Master Pro - Protezione e Backup USB
+                </div>
+            </div>
+        </div>
+
+        <!-- BADGE UTENTE SPOSTATO FUORI DALLA BARRA TITOLO -->
+        
+
+        <div class="main-content">
+            <div class="glass-card" style="position:relative; z-index:10;">
+                <div class="header-section">
+                    <h1>SYNC MASTER USB <button class="history-btn" onclick="ShowHistory()">Storico Backup</button></h1>
+                    <p>Sincronizza in sicurezza il tuo sistema tra PC e chiavetta USB</p>
+                    <div id="lastSyncBadge" class="last-sync-badge" style="display:none;">Ultimo Backup: Sconosciuto</div>
+                </div>
+
+                <div class="toggle-container">
+                    <div id="btnModeFast" class="toggle-btn" onclick="SetSyncMode('FAST')">⚡ BACKUP VELOCE</div>
+                    <div id="btnModeFull" class="toggle-btn active" onclick="SetSyncMode('FULL')">📦 BACKUP COMPLETO</div>
+                </div>
+
+                <div class="drive-selector">
+                    <div style="display:flex; justify-content:space-between; align-items:center; color:#38bdf8; font-size:11px; font-weight:bold; margin-bottom:10px;">
+                        <span>1. SELEZIONA CHIAVETTA USB</span>
+                        <span style="cursor:pointer;" onclick="RefreshDrives()">Aggiorna Lista</span>
+                    </div>
+                    <div id="driveList" class="drive-list">
+                        <!-- Drives injected here -->
+                    </div>
+                </div>
+
+                <div class="sync-actions">
+                    <button id="btnExport" class="btn-sync" onclick="StartSync('TO_USB')" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <div>
+                            <span class="title">Esporta su USB</span><br>
+                            <span class="desc">PC &rarr; CHIAVETTA USB</span>
+                        </div>
+                    </button>
+                    
+                    <button id="btnImport" class="btn-sync" onclick="StartSync('FROM_USB')" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <div>
+                            <span class="title">Importa da USB</span><br>
+                            <span class="desc">CHIAVETTA USB &rarr; PC</span>
+                        </div>
+                    </button>
+
+                    <button id="btnCloud" class="btn-sync" onclick="StartCloudBackup()" style="background:linear-gradient(145deg, #1e293b, #0f172a); border-color:#0ea5e9;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                        <div>
+                            <span class="title" style="color:#38bdf8;">Backup in Cloud</span><br>
+                            <span class="desc">SALVA ARCHIVIO ZIP ONLINE</span>
+                        </div>
+                    </button>
+                </div>
+
+                <div id="countdownTimeContainer" class="estimated-time">
+                    TEMPO RIMANENTE: <span id="countdownTimeValue">15</span> SECONDI
+                </div>
+                <div id="countdownBarContainer" class="countdown-bar-container">
+                    <div id="countdownBar" class="countdown-bar"></div>
+                </div>
+
+                <div id="logArea" class="log-area">
+                    Benvenuti in Sync Master USB. Inserisci una chiavetta per iniziare.
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span>Stato: <span id="lblStatus">Pronto</span></span>
+            <div id="progBar"></div>
+        </div>
+    </div>
+
+    <!-- MODAL STORICO LOG -->
+    <div id="historyModal" class="history-modal">
+        <div class="history-content">
+            <h2 style="margin-top:0; color:#38bdf8; font-size:18px;">Storico Operazioni</h2>
+            <pre id="historyText" style="font-family:Consolas, monospace; font-size:11px; white-space:pre-wrap; background:#020617; padding:10px; border-radius:10px; min-height:100px;"></pre>
+            <div style="text-align:right; margin-top:15px;">
+                <button onclick="CloseHistory()" style="background:#ef4444; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS OVERLAY -->
+    <div id="successOverlay" class="success-overlay">
+        <div class="success-icon">✓</div>
+        <h1 style="color:white; margin-top:20px;">BACKUP COMPLETATO!</h1>
+    </div>
+
+    <div class="custom-confirm" id="customConfirm"></div>
+        </div>
+        
+        <!-- PREMIUM CONFIRM MODAL -->
+        <style>
+            @keyframes modalFadeIn { to { transform:scale(1); opacity:1; } from { transform:scale(0.95); opacity:0; } }
+        </style>
+        <div id="premiumConfirmModal" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.85); backdrop-filter:blur(5px); z-index:9999; justify-content:center; align-items:center;">
+            <div style="background:#1e293b; border:1px solid rgba(56, 189, 248, 0.4); border-radius:16px; padding:30px; width:420px; box-shadow:0 25px 60px rgba(0,0,0,0.6); text-align:center; transform:scale(0.95); opacity:0; animation:modalFadeIn 0.3s forwards cubic-bezier(0.4, 0, 0.2, 1);">
+                <div style="font-size:48px; margin-bottom:15px; color:#38bdf8; text-shadow:0 0 20px rgba(56,189,248,0.5);">🔄</div>
+                <h3 id="premiumConfirmTitle" style="margin:0 0 12px 0; color:#f8fafc; font-size:18px; font-weight:900; letter-spacing:0.5px;"></h3>
+                <p id="premiumConfirmMsg" style="color:#94a3b8; font-size:13px; line-height:1.6; margin-bottom:25px;"></p>
+                <div style="display:flex; gap:12px; justify-content:center;">
+                    <button onclick="CloseCustomConfirm(false)" style="flex:1; padding:12px 20px; border-radius:10px; border:1px solid #475569; background:#334155; color:white; cursor:pointer; font-weight:bold; transition:all 0.2s;" onmouseover="this.style.background='#475569'" onmouseout="this.style.background='#334155'">Annulla</button>
+                    <button onclick="CloseCustomConfirm(true)" style="flex:1; padding:12px 20px; border-radius:10px; border:none; background:linear-gradient(145deg, #0284c7, #0ea5e9); color:white; cursor:pointer; font-weight:bold; box-shadow:0 6px 20px rgba(14,165,233,0.4); transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(14,165,233,0.6)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(14,165,233,0.4)'">Conferma Sincronizzazione</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+
+

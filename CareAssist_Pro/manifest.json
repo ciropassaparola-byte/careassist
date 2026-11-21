@@ -1,0 +1,19 @@
+{
+  "name": "CareAssist Pro - Diario Socio-Sanitario",
+  "short_name": "CareAssist Pro",
+  "description": "Diario clinico socio-sanitario per assistenza domiciliare",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "careassist_icon.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

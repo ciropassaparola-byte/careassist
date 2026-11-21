@@ -1,0 +1,2 @@
+[08:15:12] - NOTIZIE DA STRADA: CAMBIO AUTISTA: Nuovo autista attivo: Rossi
+[08:16:57] - NOTIZIE DA STRADA: FINE TURNO: L'autista Rossi ha terminato il turno e si è disconnesso.

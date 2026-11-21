@@ -1,0 +1,579 @@
+/* DANEA ENTERPRISE STYLE - PRESENZE & RECUPERO (HTA FIX) */
+
+/* --- CLASSIC MENU BAR (File, Modifica, Visualizza) --- */
+.classic-menu-bar {
+    background: #f1f5f9;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid #cbd5e1;
+    font-size: 13px;
+    color: #1e293b;
+    flex-shrink: 0;
+    z-index: 1000;
+}
+.classic-menu-bar u, .submenu-item u {
+    text-decoration: underline !important;
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.menu-item {
+    position: relative;
+    padding: 4px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s;
+    user-select: none;
+}
+
+.menu-item:hover, .menu-item.active {
+    background: #e2e8f0;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    min-width: 220px;
+    padding: 6px 0;
+    z-index: 2000;
+    border-radius: 8px;
+}
+
+.menu-item.is-open .submenu {
+    display: block;
+}
+
+.submenu-item {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #334155;
+    font-size: 12.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    gap: 12px;
+}
+
+.submenu-item > span:first-child,
+.submenu-item > div:first-child {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+    color: #334155;
+    font-size: 13px;
+    text-align: left;
+}
+
+.submenu-item:hover {
+    background: #f1f5f9;
+    color: #0078d7;
+}
+
+.submenu-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 5px 0;
+}
+
+.shortcut {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-left: 20px;
+}
+
+
+body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0f172a; color: #f8fafc;
+    height: 100vh; overflow: hidden;
+}
+
+.enterprise-container {
+    display: flex; flex-direction: column; height: 100vh;
+}
+
+/* STRISCIA NERA SUPERIORE */
+.danea-top-black-bar {
+    height: 30px;
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* RIBBON BAR STILE DANEA */
+.danea-ribbon {
+    background: #f3f3f3;
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+}
+
+.ribbon-tab-active {
+    display: inline-block;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    padding: 5px 20px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 10px;
+    border-radius: 4px 4px 0 0;
+}
+
+.ribbon-items {
+    background: #ffffff;
+    border-top: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    gap: 5px;
+}
+
+.ribbon-item {
+    display: flex; flex-direction: column; align-items: center; background: none; border: 1px solid transparent;
+    padding: 5px 10px; cursor: pointer; min-width: 65px; transition: all 0.2s;
+}
+
+.ribbon-item:hover { background: #f0f7fd; border-color: #0078d7; border-radius: 4px; }
+.ribbon-item.active { background: #e3f2fd; border-color: #0078d7; border-radius: 4px; }
+.ribbon-item span { font-size: 10px; font-weight: 600; color: #444; margin-top: 3px; }
+
+/* ICON FLUENCY (3D) */
+.icon-img {
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+}
+.icon-img img { 
+    width: 32px; height: 32px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+    transition: transform 0.2s;
+}
+.ribbon-item:hover .icon-img img { transform: scale(1.1); }
+
+.ribbon-separator { width: 1px; height: 40px; background: #ddd; margin: 0 10px; }
+
+/* NAVIGATION BAR (FASCIA BLU MODELLO AGENDA) */
+.danea-nav-bar {
+    height: 38px !important;
+    background: #005a9e !important;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+}
+
+.nav-breadcrumb {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* AREA CENTRALE */
+.enterprise-main { flex: 1; display: flex; overflow: hidden; }
+
+/* GRID SECTION */
+.grid-section { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #ffffff; position: relative; }
+.grid-wrapper { flex: 1; overflow: auto; min-height: 0; }
+
+.enterprise-grid { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+.enterprise-grid th { background: #f8fafc; color: #475569; font-weight: 700; text-align: left; padding: 12px 10px; border-bottom: 2px solid #e2e8f0; font-size: 11px; text-transform: uppercase; }
+.enterprise-grid td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; height: 35px; color: #0f172a !important; font-weight: 600; }
+.enterprise-grid tbody tr:nth-child(odd) { background: #ffffff; }
+.enterprise-grid tbody tr:nth-child(even) { background: #f4f6f9; }
+.enterprise-grid tbody tr { transition: background-color 0.2s ease, box-shadow 0.2s ease; }
+.enterprise-grid tbody tr:hover { background-color: #e0f2fe; cursor: pointer; }
+.enterprise-grid tbody tr.row-selected td { 
+    background-color: #bae6fd !important; /* Sfondo Sky-200: incredibilmente elegante e 100% visibile rispetto a righe bianche e festività */
+    border-top: 2px solid #0284c7 !important;
+    border-bottom: 2px solid #0284c7 !important;
+    color: #075985 !important; /* Testo Navy profondo ultra-leggibile */
+    font-weight: 800 !important; /* Extra-Bold per far emergere la riga selezionata */
+}
+/* Accent Bar premium con salvaguardia inset per impedire il "mangiamento" da parte di border-collapse */
+.enterprise-grid tbody tr.row-selected td:first-child {
+    border-left: 6px solid #0369a1 !important;
+    box-shadow: inset 3px 0 0 #0369a1 !important;
+}
+/* Chiusura box selezione sull'ultima cella */
+.enterprise-grid tbody tr.row-selected td:last-child {
+    border-right: 2px solid #0284c7 !important;
+}
+/* Mantiene colori verde/rosso ad alto contrasto per ore in dare/avere anche quando selezionati */
+.enterprise-grid tbody tr.row-selected td.cell-recupero, .cell-recupero { color: #15803d !important; font-weight: 900 !important; }
+.enterprise-grid tbody tr.row-selected td.cell-debito, .cell-debito { color: #b91c1c !important; font-weight: 900 !important; }
+
+/* RIGHE SPECIALI (Festività e Weekend) - MARCATE */
+.enterprise-grid tbody tr.is-holiday, .enterprise-grid tbody tr.is-holiday td { background-color: #ffe082 !important; color: #78350f !important; }
+.enterprise-grid tbody tr.is-holiday:hover, .enterprise-grid tbody tr.is-holiday:hover td { background-color: #ffd54f !important; }
+.enterprise-grid tbody tr.is-weekend, .enterprise-grid tbody tr.is-weekend td { background-color: #cbd5e1 !important; color: #1e293b !important; } /* Scurito ulteriormente il Sabato */
+.enterprise-grid tbody tr.is-weekend:hover, .enterprise-grid tbody tr.is-weekend:hover td { background-color: #b8c5d6 !important; }
+
+/* GIORNO CORRENTE - MASSIMA VISIBILITÀ */
+.enterprise-grid tbody tr.is-today { 
+    border-left: 6px solid #005a9e !important; 
+    background-color: #e0f2fe !important; 
+}
+.enterprise-grid tbody tr.is-today td { 
+    color: #004085 !important; 
+    font-weight: 900 !important; /* Extra-Bold */
+    font-size: 13px !important;  /* Carattere più grande */
+}
+
+/* CELLE SPECIALI */
+.cell-recupero { font-weight: bold; color: #2ecc71; }
+.cell-debito { font-weight: bold; color: #e74c3c; }
+/* La regola obsoleta che forzava il bianco è stata eliminata per favorire la leggibilità dinamica */
+
+/* SIDEBAR BLU (FILTRI) - SPOSTATA A SINISTRA */
+.danea-side-filters {
+    width: 250px; 
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important; /* Modern dark slate gradient */
+    color: #ffffff !important;
+    display: flex; flex-direction: column; padding: 20px 15px; border-right: 1px solid #334155; 
+    overflow-y: auto;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+    z-index: 20;
+}
+
+.filter-group {
+    flex-shrink: 0 !important; /* Previene il collasso ad altezza zero che causa sovrapposizione degli elementi */
+    margin-bottom: 20px;
+}
+
+.filter-group h3 { font-size: 10px; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 15px; color: #38bdf8; letter-spacing: 0.8px; text-transform: uppercase; }
+.filter-group select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #475569; font-size: 12px; font-weight: 600; margin-bottom: 20px; background: #1e293b; color: white; }
+
+.side-badge-stats { 
+    background: rgba(30, 41, 59, 0.7); 
+    padding: 16px; 
+    border-radius: 12px; 
+    margin-bottom: 15px; 
+    text-align: center; 
+    border: 1px solid rgba(255,255,255,0.08); 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: transform 0.2s ease;
+}
+.side-badge-stats:hover { transform: translateY(-2px); }
+.side-badge-stats div { font-size: 30px; font-weight: 900; line-height: 1; color: #ffffff; text-shadow: 0 2px 10px rgba(56, 189, 248, 0.2); }
+.side-badge-stats small { font-size: 9px; font-weight: 700; text-transform: uppercase; opacity: 0.8; color: #94a3b8; margin-top: 6px; display: block; letter-spacing: 0.5px; }
+
+/* CALENDARIO SIDEBAR */
+.cal-wrapper { background: #ffffff; border-radius: 6px; color: #333; overflow: hidden; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.cal-header { background: #f1f3f6; padding: 10px; display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; font-weight: 800; font-size: 12px; color: #003366; }
+.cal-table-grid { width: 100%; border-collapse: collapse; background: #fff; }
+.cal-table-grid th { font-size: 9px; padding: 5px; color: #999; }
+.cal-table-grid th.cal-th-weekend { color: #64748b; font-weight: 800; } /* Sabato header */
+.cal-table-grid th.cal-th-holiday { color: #ef4444; font-weight: 800; } /* Domenica header */
+.cal-table-grid td { padding: 2px; text-align: center; }
+.cal-day-cell { display: block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; position: relative; }
+.cal-day-cell:hover { background: #e3f2fd; color: #0078d7; }
+.cal-day-cell.is-weekend { color: #64748b !important; background: #f8fafc; } /* Sabato cell */
+.cal-day-cell.is-holiday { color: #ef4444 !important; font-weight: 700 !important; background: #fff5f5; } /* Domenica/Festa cell */
+.cal-day-cell.today { background: #0078d7 !important; color: #fff !important; }
+/* STATO ATTIVO CALENDARIO: Specchio cromatico della riga selezionata (Sky Cyan + Navy) */
+.cal-day-cell.active-selection {
+    background: #bae6fd !important; 
+    color: #0369a1 !important; 
+    font-weight: 800 !important;
+    border: 2px solid #0284c7 !important;
+    line-height: 20px !important; /* Corregge l'offset verticale causato dal bordo */
+}
+.cal-day-cell.today.active-selection {
+    background: #0078d7 !important;
+    color: #ffffff !important;
+    border: 2px solid #f59e0b !important; /* Bordo ambra dorato se si seleziona Oggi */
+    line-height: 20px !important;
+}
+/* SEGNALATORE ANALITICO DATI (Heatmap Dot) */
+.cal-dot {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    margin-left: -2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    z-index: 5;
+}
+
+/* GRID HEADER ACTIONS */
+.grid-header-actions { background: #f8fafc; padding: 10px 15px; border-bottom: 1px solid #e2e8f0; }
+.month-selector-box { display: flex; align-items: center; gap: 10px; }
+.month-selector-box label { font-size: 10px; font-weight: 800; color: #64748b; }
+.month-selector-box select { padding: 4px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 700; color: #1e293b; background: white; }
+
+/* PANNELLO EDIT ORIZZONTALE */
+.danea-editor-panel-horizontal {
+    background: #ffffff; 
+    border-top: 3px solid #0284c7; 
+    padding: 10px 20px; /* Ridotto padding per risparmiare spazio verticale */
+    box-shadow: 0 -8px 20px rgba(0,0,0,0.05);
+    flex-shrink: 0; /* Impedisce che il pannello venga spinto fuori dallo schermo */
+}
+
+.editor-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.editor-header-row h2 { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; border-left: 4px solid #0284c7; padding-left: 10px; letter-spacing: 0.5px; }
+
+.work-summary-box { font-size: 16px; font-weight: 900; color: #16a34a; display: flex; align-items: center; gap: 10px; }
+.mini-badge-rec { font-size: 11px; background: #f0fdf4; color: #16a34a; padding: 2px 10px; border-radius: 20px; border: 1px solid #bbf7d0; font-weight: 800; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.1); }
+
+.editor-controls-row { display: flex; align-items: flex-end; margin-bottom: 10px; flex-wrap: wrap; }
+.ctrl-group { display: flex; flex-direction: column; margin-right: 12px !important; }
+.ctrl-group label { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px !important; }
+.ctrl-group select, .ctrl-group input { 
+    height: 30px; /* Reso leggermente più basso */
+    border: 1px solid #cbd5e1; 
+    border-radius: 6px; 
+    font-size: 12px; 
+    font-weight: 700; 
+    color: #1e293b; 
+    padding: 0 10px; 
+    transition: all 0.2s ease;
+    outline: none;
+}
+.ctrl-group select:focus, .ctrl-group input:focus {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+.input-mini { width: 50px; text-align: center; }
+
+.ctrl-group-checks { display: flex; align-items: center; height: 32px; padding: 0 5px; margin-right: 12px !important; }
+.ctrl-group-checks label { font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; display: flex; align-items: center; margin-right: 18px !important; }
+.ctrl-group-checks label input { margin-right: 6px !important; }
+
+.ctrl-actions { display: flex; margin-left: auto; align-items: center; }
+.ctrl-actions > * { margin-left: 8px !important; }
+.btn-danea-success { background: linear-gradient(135deg, #10b981, #059669); border: none; color: white; height: 32px; padding: 0 16px; border-radius: 6px; font-weight: 800; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2); }
+.btn-danea-success img { filter: brightness(0) invert(1); width: 16px !important; }
+.btn-danea-success:hover { background: linear-gradient(135deg, #34d399, #059669); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+.btn-danea-danger { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; height: 32px; width: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+.btn-danea-danger:hover { background: #ef4444; border-color: #ef4444; color: white; transform: translateY(-1px); }
+.btn-danea-danger img { transition: filter 0.2s ease; }
+.btn-danea-danger:hover img { filter: brightness(0) invert(1); }
+
+
+.editor-notes-row { display: flex; flex-direction: row; }
+.editor-notes-row label { font-size: 9px; font-weight: 800; color: #64748b; margin-bottom: 4px !important; }
+.editor-notes-row input { height: 32px; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0 10px; background: #f8fafc; font-size: 12px; }
+
+/* AZIONI RIGA */
+.actions-cell { text-align: center; white-space: nowrap; padding: 2px !important; }
+.row-btn { width: 26px; height: 26px; border: 1px solid transparent; background: transparent; border-radius: 4px; margin: 0 2px; cursor: pointer; transition: 0.2s; }
+.row-btn img { width: 18px; height: 18px; vertical-align: middle; }
+.row-btn:hover { background: #f0f0f0; border-color: #ccc; transform: scale(1.1); }
+
+/* OROLOGIO ANALOGICO SIDEBAR */
+.analog-clock {
+    width: 100px; height: 100px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    position: relative;
+    background: rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.hand {
+    position: absolute;
+    bottom: 50%; left: 50%;
+    transform-origin: bottom;
+    background: #ffffff;
+    border-radius: 4px;
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.hour { width: 4px; height: 25%; z-index: 3; }
+.minute { width: 3px; height: 35%; z-index: 2; opacity: 0.9; }
+.second { width: 1.5px; height: 40%; background: #ff4757; z-index: 1; }
+
+.center-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px; height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* TIME PICKER MODAL (ENTERPRISE STYLE) */
+.tp-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center;
+    z-index: 9999;
+}
+.tp-modal {
+    width: 320px; background: white; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 1px solid #ddd;
+}
+.tp-header {
+    background: #ff8c00; color: white; padding: 15px; text-align: center;
+    font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+}
+.tp-body { display: flex; padding: 10px; gap: 10px; background: #f8f9fa; }
+.tp-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.tp-col-title { font-size: 10px; font-weight: 800; color: #ff8c00; margin-bottom: 8px; text-transform: uppercase; }
+.tp-scroll {
+    width: 100%; height: 250px; overflow-y: scroll; display: flex; flex-direction: column; gap: 4px;
+    padding: 5px; border: 1px solid #e0e0e0; border-radius: 6px; background: white;
+}
+.tp-item {
+    padding: 8px; text-align: center; font-size: 16px; font-weight: 700; color: #333;
+    border: 1px solid #f0f0f0; border-radius: 4px; cursor: pointer; transition: 0.2s;
+}
+.tp-item:hover { background: #fff3e0; border-color: #ffcc80; color: #ff8c00; transform: scale(1.02); }
+.tp-item.selected { background: #ff8c00; color: white; border-color: #e67e00; }
+
+.tp-footer { padding: 15px; border-top: 1px solid #eee; display: flex; justify-content: center; }
+.btn-tp-cancel {
+    background: transparent; border: 1px solid #ff8c00; color: #ff8c00;
+    padding: 8px 30px; border-radius: 6px; font-weight: 800; cursor: pointer; transition: 0.2s;
+}
+.btn-tp-cancel:hover { background: #fff3e0; }
+
+/* BADGE COLORATI PER LA GRIGLIA */
+.badge-grid {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 800;
+    margin-right: 5px;
+    text-transform: uppercase;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.b-ferie { background-color: #0078d7; color: #ffffff; }
+.b-malattia { background-color: #ef4444; color: #ffffff; }
+.b-104 { background-color: #8b5cf6; color: #ffffff; }
+
+/* STILE PULSANTI SELETTORE MESE PRO */
+.month-grid-container {
+    padding: 20px;
+    background: #f8fafc;
+}
+
+.month-btn-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.menu-month-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    width: 30%; /* Forza 3 colonne su base flex */
+    padding: 15px 5px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.menu-month-btn:hover {
+    background: #e0f2fe;
+    color: #005a9e;
+    border-color: #7dd3fc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.menu-month-btn.selected {
+    background: #005a9e !important;
+    color: #ffffff !important;
+    border-color: #004a87 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.year-nav-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.year-nav-btn:hover {
+    background: white;
+    color: #005a9e;
+}
+
+/* STILI FUNZIONALITÀ AVANZATE (MAGGIO 2026) */
+.btn-danea-purple {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    border: none;
+    color: white;
+    height: 32px;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 11px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);
+}
+.btn-danea-purple img { filter: brightness(0) invert(1); width: 16px !important; }
+.btn-danea-purple:hover { background: linear-gradient(135deg, #a78bfa, #6d28d9); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }
+
+.time-input-wrapper { position: relative; display: flex; align-items: center; }
+.time-input-wrapper input { padding-right: 28px !important; }
+.time-picker-trigger { 
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%); 
+    cursor: pointer; font-size: 11px; opacity: 0.5; transition: all 0.2s ease;
+    user-select: none;
+}
+.time-picker-trigger:hover { opacity: 1; transform: translateY(-50%) scale(1.2); filter: drop-shadow(0 0 3px rgba(14, 165, 233, 0.5)); }
+
+/* RILEVATORE INCOMPLETE */
+.enterprise-grid tbody tr.row-incomplete {
+    background-color: #fff1f2 !important; /* Delicato rosso pastello */
+    border-left: 4px solid #f43f5e !important;
+}
+.enterprise-grid tbody tr.row-incomplete:hover { background-color: #ffe4e6 !important; }
+
+/* STILE BOTTONE STAMPA RIEPILOGO */
+.btn-danea-cyan {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    border: none;
+    color: white;
+    height: 32px;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 11px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(8, 145, 178, 0.2);
+}
+.btn-danea-cyan img { filter: brightness(0) invert(1); width: 16px !important; }
+.btn-danea-cyan:hover { background: linear-gradient(135deg, #22d3ee, #0891b2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3); }

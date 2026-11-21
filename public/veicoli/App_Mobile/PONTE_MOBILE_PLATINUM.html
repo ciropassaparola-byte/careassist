@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <meta charset="UTF-8">
+    <title>MASTER BRIDGE - AURELIO NICOLODI Platinum</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="PonteMobileMaster"
+        ID="PonteMobileMaster"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        WINDOWSTATE="normal"
+        SINGLEINSTANCE="yes"
+        TRUSTED="yes"
+    />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #1a1c2c;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 500px;
+            height: 750px;
+            border: 2px solid #ff6b00;
+        }
+
+        .header {
+            background-color: #111322;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #ff6b00;
+        }
+
+        .logo-icon { font-size: 30pt; color: #ff6b00; }
+        h1 { margin: 5px 0; font-size: 16pt; font-weight: bold; text-transform: uppercase; color: #ffffff; }
+        .version { font-size: 9pt; color: #00d2ff; font-weight: bold; }
+
+        .container { padding: 20px; }
+
+        .status-table { width: 100%; border-collapse: separate; border-spacing: 10px; margin-bottom: 10px; }
+        .status-card {
+            background-color: #111322;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .status-title { font-size: 8pt; text-transform: uppercase; color: #bdc3c7; margin-bottom: 5px; }
+        .status-value { font-size: 14pt; font-weight: bold; }
+        .status-value.active { color: #27ae60; }
+        .status-value.waiting { color: #ff6b00; }
+
+        .url-box {
+            background-color: #000000;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #00d2ff;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .url-text { font-family: 'Courier New', Courier, monospace; color: #00d2ff; font-size: 10pt; word-break: break-all; }
+
+        .qr-container {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px auto;
+            text-align: center;
+        }
+        #qr-image { width: 200px; height: 200px; border: none; }
+
+        .log-area {
+            background-color: #000000;
+            height: 80px;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 8pt;
+            color: #bdc3c7;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+
+        .actions { text-align: center; }
+        .btn {
+            width: 120px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 5px;
+            font-size: 9pt;
+        }
+
+        .btn-primary { background-color: #ff6b00; color: #000000; }
+        .btn-secondary { background-color: #333; color: #ffffff; }
+        .btn-danger { background-color: #e74c3c; color: #ffffff; }
+
+        .apple-controls { position: absolute; top: 10px; right: 10px; }
+        .apple-btn { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-left: 5px; cursor: pointer; }
+    </style>
+    <script>
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        var shell = new ActiveXObject("WScript.Shell");
+        var currentDir = "";
+        var tunnelUrl = "";
+
+        window.onload = function() {
+            var path = document.location.pathname;
+            if (path.indexOf("/") === 0) path = path.substring(1);
+            path = decodeURIComponent(path).replace(/\//g, "\\");
+            currentDir = fso.GetParentFolderName(path);
+            
+            window.resizeTo(510, 780);
+            var l = (screen.availWidth - 510) / 2;
+            var t = (screen.availHeight - 780) / 2;
+            window.moveTo(l, t);
+
+            StartSystems();
+            setInterval(MonitorLog, 2000);
+        };
+
+        function StartSystems() {
+            Log("Avvio processi Platinum (Cartella Stabile)...");
+            try {
+                shell.Run("taskkill /f /im node.exe", 0, true);
+                shell.Run("taskkill /f /im cloudflared.exe", 0, true);
+            } catch(e) {}
+
+            var logPath = fso.BuildPath(currentDir, "tunnel_log_platinum.txt");
+            var cloudflaredPath = fso.BuildPath(currentDir, "cloudflared.exe");
+            var tunnelCmd = '"' + cloudflaredPath + '" tunnel --protocol http2 --url http://localhost:3002 > "' + logPath + '" 2>&1';
+            shell.Run('cmd /c taskkill /f /im cloudflared.exe & taskkill /f /im node.exe & ' + tunnelCmd, 0, false);
+
+            var serverPath = fso.BuildPath(fso.BuildPath(currentDir, "server"), "db_bridge.js");
+            shell.Run('cmd /c cd /d "' + fso.GetParentFolderName(serverPath) + '" && node db_bridge.js > server_platinum_log.txt 2>&1', 0, false);
+            
+            document.getElementById("status-server").innerText = "ATTIVO";
+            document.getElementById("status-server").className = "status-value active";
+        }
+
+        function MonitorLog() {
+            var logPath = fso.BuildPath(currentDir, "tunnel_log_platinum.txt");
+            if (!fso.FileExists(logPath)) return;
+            try {
+                var f = fso.OpenTextFile(logPath, 1);
+                var content = f.ReadAll();
+                f.Close();
+                var match = content.match(/https:\/\/[a-z0-9-]+\.trycloudflare\.com/i);
+                if (match && match[0] !== tunnelUrl) {
+                    tunnelUrl = match[0];
+                    document.getElementById("url-display").innerText = tunnelUrl;
+                    document.getElementById("status-tunnel").innerText = "APERTO";
+                    document.getElementById("status-tunnel").className = "status-value active";
+                    UpdateQRCode(tunnelUrl);
+                    Log("Nuovo indirizzo: " + tunnelUrl);
+                }
+            } catch(e) {}
+        }
+
+        function UpdateQRCode(url) {
+            var qrImg = document.getElementById("qr-image");
+            var qrUrl = "http://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(url) + "&size=200x200";
+            qrImg.src = qrUrl;
+        }
+
+        function Log(msg) {
+            var logArea = document.getElementById("log-area");
+            var time = new Date().toLocaleTimeString();
+            logArea.innerHTML += "<div>[" + time + "] " + msg + "</div>";
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function CopyUrl() {
+            if (!tunnelUrl) return;
+            window.clipboardData.setData("Text", tunnelUrl);
+            alert("Indirizzo copiato negli appunti!");
+        }
+
+        function Exit() {
+            if (confirm("Vuoi chiudere il Ponte Mobile?")) {
+                try {
+                    shell.Run("taskkill /f /im node.exe", 0, true);
+                    shell.Run("taskkill /f /im cloudflared.exe", 0, true);
+                } catch(e) {}
+                window.close();
+            }
+
+}
+</script>
+</head>
+<body>
+    <div class="header">
+        <div class="apple-controls">
+            <div class="apple-btn" style="background:#ff5f56;" onclick="Exit()"></div>
+        </div>
+        <div class="logo-icon">🔌</div>
+        <h1>MASTER BRIDGE</h1>
+        <div class="version">AURELIO NICOLODI ● by C. MILELLA</div>
+    </div>
+    <div class="container">
+        <table class="status-table">
+            <tr>
+                <td width="50%">
+                    <div class="status-card">
+                        <div class="status-title">Server Locale</div>
+                        <div id="status-server" class="status-value waiting">AVVIO...</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="status-card">
+                        <div class="status-title">Tunnel Internet</div>
+                        <div id="status-tunnel" class="status-value waiting">ATTESA...</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="url-box" onclick="CopyUrl()">
+            <div class="status-title">Indirizzo Web (Clicca per copiare)</div>
+            <div id="url-display" class="url-text">In attesa del tunnel...</div>
+        </div>
+        <div class="qr-container">
+            <img id="qr-image" src="http://api.qrserver.com/v1/create-qr-code/?data=WAIT&size=200x200" alt="QR Code">
+        </div>
+        <div id="log-area" class="log-area"></div>
+        <div class="actions">
+            <button class="btn btn-secondary" onclick="CopyUrl()">Copia URL</button>
+            <button class="btn btn-primary" onclick="location.reload()">Riavvia</button>
+            <button class="btn btn-danger" onclick="Exit()">Spegni</button>
+        </div>
+    </div>
+<script src="../assets/js/hacker_mode.js"></script>
+
+<script src="../assets/js/global_context.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Dettaglio Percorso Ottimizzato - Sistema Logistica</title>
+    <HTA:APPLICATION 
+        ID="oAppMap"
+        APPLICATIONNAME="SistemaLogisticaMappaPercorso"
+        BORDER="none"
+        BORDERSTYLE="none"
+        CAPTION="no"
+        ICON="https://img.icons8.com/fluency/48/map-pin.png"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="no"
+        WINDOWSTATE="maximize"
+        NAVIGABLE="yes"/>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- LEAFLET MAP ENGINE -->
+    
+    
+
+    <!-- SORTABLE JS FOR DRAG & DROP -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <!-- CORE WINDOW CONTROLS -->
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e){}
+    </script>
+
+    <style>
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; background: #f1f5f9; color: #1e293b; overflow: hidden; }
+
+        /* DANEA CHROMIUM REPLICA HEADER */
+        .danea-top-black-bar {
+            height: 35px; background: #1a1a1a; color: white; display: flex; align-items: center; 
+            padding: 0 15px; font-size: 12px; font-weight: bold; cursor: move; user-select: none;
+            border-bottom: 1px solid #000;
+        }
+        .apple-controls { display: flex; gap: 8px; margin-right: 15px; cursor: default; }
+        .apple-btn {
+            width: 12px; height: 12px; border-radius: 50%; cursor: pointer; position: relative;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.2); border: 0.5px solid rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        .apple-btn.close { background-color: #ff5f56; }
+        .apple-btn.minimize { background-color: #ffbd2e; }
+        .apple-btn.maximize { background-color: #27c93f; }
+
+        /* HEADER STYLING */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); flex-shrink: 0;
+        }
+        .header-title { display: flex; align-items: center; gap: 12px; }
+        .header-title h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+        .header-title span { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* LAYOUT COMPOSITION */
+        .layout-wrapper {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 35px - 70px); /* Subtracting black bar and header roughly */
+        }
+
+        /* SIDEBAR DETAILS */
+        .sidebar-panel {
+            width: 350px; background: #ffffff; border-right: 1px solid #e2e8f0;
+            display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.02);
+            z-index: 10;
+        }
+        .sidebar-header { padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .sidebar-header h2 { margin: 0; font-size: 16px; color: #0f172a; }
+        .sidebar-content { flex: 1; overflow-y: auto; padding: 15px; }
+
+        /* LIST ITEMS */
+        .stop-item {
+            border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 10px;
+            background: white; cursor: pointer; transition: 0.2s; position: relative;
+            display: flex; gap: 12px; align-items: flex-start;
+        }
+        .stop-item:hover { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1); background: #f0f9ff; }
+        .stop-number {
+            background: #3b82f6; color: white; font-weight: 900; width: 24px; height: 24px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; flex-shrink: 0;
+        }
+        .stop-info { flex: 1; min-width: 0; }
+        .stop-name { font-weight: 800; font-size: 13px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .stop-addr { font-size: 11px; color: #64748b; margin-top: 2px; }
+        
+        .stop-item.start-point { border-left: 4px solid #10b981; }
+        .stop-item.start-point .stop-number { background: #10b981; }
+
+        /* MAP CONTAINER */
+        .map-wrapper { flex: 1; position: relative; background: #e5e7eb; }
+        #mapMain { height: 100%; width: 100%; z-index: 1; }
+
+        /* BUTTONS */
+        .btn-action {
+            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; border: none; font-size: 13px;
+            display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-primary { background: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-success { background: #059669; color: white; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
+        .btn-success:hover { background: #047857; }
+
+        /* CUSTOM MARKERS LEAFLET */
+        .custom-div-icon {
+            background: none; border: none;
+        }
+        .marker-pin {
+            width: 30px; height: 30px; border-radius: 50% 50% 50% 0;
+            background: #2563eb; position: absolute; transform: rotate(-45deg);
+            left: 50%; top: 50%; margin: -15px 0 0 -15px;
+            box-shadow: -1px 1px 4px rgba(0,0,0,0.4);
+            border: 2px solid white;
+        }
+        .marker-pin::after {
+            content: ''; width: 24px; height: 24px; margin: 1px 0 0 1px;
+            background: #fff; position: absolute; border-radius: 50%;
+        }
+        .marker-text {
+            position: absolute; width: 30px; text-align: center; top: 5px; left: 0;
+            font-weight: 900; font-size: 11px; color: #2563eb; z-index: 2;
+        }
+        .marker-pin.start-pin { background: #10b981; }
+        .marker-pin.start-pin + .marker-text { color: #10b981; }
+        .marker-pin.approx-pin { background: #f59e0b; }
+        .marker-pin.approx-pin + .marker-text { color: #f59e0b; }
+
+        .tag-approx {
+            font-size: 9px; background: #fffbeb; color: #b45309; 
+            border: 1px solid #fde68a; border-radius: 4px;
+            padding: 1px 5px; font-weight: 800; margin-top: 4px; display: inline-block;
+        }
+
+        /* DARK MODE */
+        body.dark-mode { background: #0f172a; color: #f8fafc; }
+        body.dark-mode .sidebar-panel { background: #1e293b; border-color: #334155; }
+        body.dark-mode .sidebar-header { background: #0f172a; border-color: #334155; }
+        body.dark-mode .sidebar-header h2 { color: #f8fafc; }
+        body.dark-mode .stop-item { background: #334155; border-color: #475569; color: #f8fafc; }
+        body.dark-mode .stop-item:hover { background: #475569; border-color: #3b82f6; }
+        body.dark-mode .stop-name { color: #f8fafc; }
+        body.dark-mode .stop-addr { color: #cbd5e1; }
+        body.dark-mode .map-wrapper { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
+
+    </style>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+<!-- Dynamic Async Leaflet Loader for MSHTA / Offline compatibility -->
+    <script>
+        setTimeout(function() {
+            try {
+                var lcss = document.createElement("link");
+                lcss.rel = "stylesheet";
+                lcss.href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css";
+                document.getElementsByTagName("head")[0].appendChild(lcss);
+
+                var ljs = document.createElement("script");
+                ljs.src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js";
+                document.getElementsByTagName("head")[0].appendChild(ljs);
+            } catch(e) {}
+        }, 100);
+    </script>
+</head>
+<body style="display: flex; flex-direction: column;">
+
+    <!-- TOP BAR -->
+    <div class="danea-top-black-bar" onmousedown="StartDrag()">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;">
+            <div class="apple-btn close" onclick="window.close()" title="Chiudi"></div>
+            <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+            <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi"></div>
+        </div>
+        <img src="https://img.icons8.com/fluency/48/map-pin.png" style="height:20px; margin-right:10px; border-radius:3px; background:white; padding:1px;">
+        <span>Centro Navigazione Integrato - Sistema Logistica</span>
+    </div>
+
+    <!-- HEADER -->
+    <header onmousedown="StartDrag()" style="cursor:move;">
+        <div class="header-title" onmousedown="event.cancelBubble=true;" style="cursor:default;">
+            <img src="https://img.icons8.com/fluency/48/google-maps-new.png" width="32" height="32">
+            <div>
+                <h1 style="display:none;">PIANO DI ROTTA OTTIMIZZATO</h1>
+
+                <span id="lblSummaryInfo">Calcolo in corso...</span>
+            </div>
+        </div>
+        <div onmousedown="event.cancelBubble=true;" style="cursor:default; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+            <button onclick="ToggleDarkMode()" class="btn-action" style="background:#475569; color:white;" title="Modalit� Scura">
+                <i class="fa fa-moon-o"></i>
+            </button>
+            <button onclick="ActionOttimizzaIntelligente()" class="btn-action" style="background:#8b5cf6; color:white; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);" title="Riordina tappe automaticamente per minimizzare la distanza (Nearest Neighbor)">
+                <i class="fa fa-magic"></i> AUTO-ORDINA
+            </button>
+            <button onclick="StampaFoglioAttuale()" class="btn-action" style="background:#6366f1; color:white;" title="Stampa Foglio Viaggio">
+                <i class="fa fa-print"></i> STAMPA
+            </button>
+            <button onclick="CondividiWhatsApp()" class="btn-action" style="background:#22c55e; color:white;" title="Invia all'Autista">
+                <i class="fa fa-whatsapp"></i> INVIA
+            </button>
+            <button onclick="ApreGoogleMapsEsterno()" class="btn-action btn-success" title="Invia questo esatto percorso al browser per la navigazione finale">
+                <i class="fa fa-external-link"></i> GOOGLE MAPS
+            </button>
+            <button onclick="window.close()" style="background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                CHIUDI
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="layout-wrapper">
+        
+        <!-- SIDEBAR -->
+        <div class="sidebar-panel">
+            <div class="sidebar-header">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h2><i class="fa fa-list-ol" style="color:#64748b; margin-right:5px;"></i> Sequenza Tappe</h2>
+                    <span id="lblTappeCount" style="background:#e2e8f0; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px; color:#475569;">0</span>
+                </div>
+                <div style="display:flex; gap:10px; font-size:11px; font-weight:bold; color:#475569;">
+                    <div style="flex:1;">
+                        <label>Partenza:</label>
+                        <input type="time" id="timeStart" value="08:00" style="width:100%; border:1px solid #cbd5e1; border-radius:4px; padding:3px; font-family:inherit;" onchange="RicalcolaTempi()">
+                    </div>
+                    <div style="flex:1;">
+                        <label>Sosta (min):</label>
+                        <input type="number" id="timeStop" value="5" min="0" max="60" style="width:100%; border:1px solid #cbd5e1; border-radius:4px; padding:3px; font-family:inherit;" onchange="RicalcolaTempi()">
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-content" id="tappeList">
+                <!-- Dinamico -->
+            </div>
+        </div>
+
+        <!-- MAP VIEW -->
+        <div class="map-wrapper">
+            <div id="mapMain"></div>
+        </div>
+
+    </div>
+
+    <!-- INJECT LOGIC -->
+    <script src="assets/js/mappa_percorso_hta.js"></script>
+
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+
+

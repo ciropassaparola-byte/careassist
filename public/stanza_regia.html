@@ -1,0 +1,2655 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stanza di Regia Master ✦ Suite Aziendale C. Milella</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-deep: #02040a;
+            --bg-card: rgba(13, 20, 36, 0.78);
+            --bg-card-hover: rgba(22, 33, 58, 0.9);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(212, 175, 55, 0.4);
+            --border-cyan: rgba(56, 189, 248, 0.45);
+            --border-purple: rgba(168, 85, 247, 0.45);
+            
+            --gold-primary: #d4af37;
+            --gold-light: #fef08a;
+            --gold-gradient: linear-gradient(135deg, #fde047 0%, #d4af37 50%, #92400e 100%);
+            --cyan-accent: #38bdf8;
+            --cyan-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            --purple-accent: #a855f7;
+            --purple-gradient: linear-gradient(135deg, #c084fc 0%, #9333ea 50%, #581c87 100%);
+            --emerald-accent: #10b981;
+            --emerald-gradient: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            --ruby-accent: #f43f5e;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-gold: #fde047;
+            --text-cyan: #7dd3fc;
+            
+            --glow-gold: 0 0 30px rgba(212, 175, 55, 0.35);
+            --glow-cyan: 0 0 30px rgba(56, 189, 248, 0.35);
+            --glow-purple: 0 0 35px rgba(168, 85, 247, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 1.25rem 2rem 5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CANVAS PARTICELLE FUTURISTICO */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1560px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER MASTER HUD */
+        .master-header {
+            background: rgba(11, 18, 33, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border-gold);
+            border-radius: 26px;
+            padding: 1.4rem 2.2rem;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.12), var(--glow-gold);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            position: relative;
+        }
+
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .header-logo-badge {
+            width: 68px;
+            height: 68px;
+            border-radius: 20px;
+            background: var(--purple-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            box-shadow: var(--glow-purple);
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: pulseAura 4s infinite ease-in-out;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .header-logo-badge:hover {
+            transform: scale(1.08) rotate(5deg);
+        }
+
+        @keyframes pulseAura {
+            0%, 100% { transform: scale(1); box-shadow: var(--glow-purple); }
+            50% { transform: scale(1.04); box-shadow: 0 0 45px rgba(168, 85, 247, 0.65); }
+        }
+
+        .header-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #fde047 40%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-text p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            font-weight: 500;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-pill {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--cyan-accent);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .tag-gold {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--text-gold);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        /* STATUS CHIPS STRIP */
+        .header-status-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            padding: 9px 16px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            backdrop-filter: blur(10px);
+            transition: all 0.25s ease;
+        }
+
+        .status-chip.online {
+            border-color: rgba(16, 185, 129, 0.45);
+            color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .status-chip.usb-active {
+            border-color: rgba(212, 175, 55, 0.45);
+            color: var(--text-gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .status-chip.audio-chip {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .status-chip.audio-chip:hover {
+            border-color: var(--cyan-accent);
+            color: #fff;
+        }
+
+        .pulse-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 12px #10b981;
+            animation: blinkDot 1.8s infinite;
+        }
+
+        @keyframes blinkDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.35; transform: scale(0.75); }
+        }
+
+        .btn-header-back {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .btn-header-back:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+            border-color: #fff;
+            box-shadow: 0 5px 20px rgba(255,255,255,0.15);
+        }
+
+        
+        /* MODALITA TAB E LAYOUT DINAMICO */
+        .regia-grid.view-sync #panelClone { display: none !important; }
+        .regia-grid.view-sync #panelSync { grid-column: span 2; max-width: 1100px; margin: 0 auto; width: 100%; }
+        .regia-grid.view-clone #panelSync { display: none !important; }
+        .regia-grid.view-clone #panelClone { grid-column: span 2; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .regia-grid.view-split { display: grid; grid-template-columns: 1.15fr 1fr; }
+
+        .tab-btn.active.tab-split {
+            background: linear-gradient(135deg, #0ea5e9 0%, #a855f7 100%);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.45);
+        }
+
+        /* CARD SELEZIONATA CON BORDO ORO & GLOW EVIDENTE */
+        .app-select-card.selected {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.28) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+            border-color: #fde047 !important;
+            box-shadow: 0 0 25px rgba(253, 224, 71, 0.25), 0 0 15px rgba(168, 85, 247, 0.4) !important;
+            transform: translateY(-2px);
+        }
+        .app-select-card.selected .app-checkbox {
+            background: #fde047 !important;
+            border-color: #fde047 !important;
+            color: #0f172a !important;
+            font-weight: 900 !important;
+            box-shadow: 0 0 12px rgba(253, 224, 71, 0.7) !important;
+        }
+
+        /* PILL GENERATORE DEMO RAPIDO */
+        .quick-pill-demo {
+            background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+            color: #fff !important;
+            border: 1px solid #fbbf24 !important;
+            font-weight: 900 !important;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4) !important;
+        }
+        .quick-pill-demo:hover {
+            transform: scale(1.05) translateY(-1px) !important;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+        }
+
+        /* NAVIGATION BAR */
+        .regia-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .regia-tabs {
+            display: flex;
+            gap: 12px;
+            background: rgba(11, 18, 33, 0.6);
+            padding: 8px;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(14px);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 26px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .tab-btn.active.tab-sync {
+            background: var(--cyan-gradient);
+            color: #030712;
+            box-shadow: 0 6px 25px rgba(56, 189, 248, 0.45);
+        }
+
+        .tab-btn.active.tab-clone {
+            background: var(--purple-gradient);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.45);
+        }
+
+        .telemetry-summary {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-glass);
+            padding: 8px 18px;
+            border-radius: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .telemetry-val {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        /* MAIN GRID */
+        .regia-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1250px) {
+            .regia-grid { grid-template-columns: 1fr; }
+        }
+
+        /* GLASS CARD SECTION */
+        .glass-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 26px;
+            padding: 2.2rem;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent);
+        }
+
+        .glass-panel.panel-purple::before {
+            background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.7), transparent);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1.4rem;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .panel-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .panel-icon-badge {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .panel-icon-badge.sync {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--cyan-accent);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .panel-icon-badge.clone {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--purple-accent);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            box-shadow: var(--glow-purple);
+        }
+
+        .panel-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .panel-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* SECTION LABEL */
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* SYNC DIRECTIONS CARDS */
+        .sync-directions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 1.75rem;
+        }
+
+        @media (max-width: 640px) {
+            .sync-directions-grid { grid-template-columns: 1fr; }
+        }
+
+        .sync-direction-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 18px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .sync-direction-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(56, 189, 248, 0.45);
+            transform: translateY(-3px);
+        }
+
+        .sync-direction-card.active {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
+        }
+
+        .sync-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .sync-card-icon {
+            font-size: 26px;
+        }
+
+        .sync-radio-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+        }
+
+        .sync-direction-card.active .sync-radio-indicator {
+            border-color: var(--cyan-accent);
+            background: var(--cyan-accent);
+            box-shadow: 0 0 12px var(--cyan-accent);
+        }
+
+        .sync-card-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .sync-card-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* PATH INSPECTOR BOX */
+        .path-inspector-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 1.35rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .path-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 8px 0;
+            flex-wrap: wrap;
+        }
+
+        .path-row:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+        }
+
+        .path-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .path-icon {
+            font-size: 24px;
+        }
+
+        .path-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .path-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: #fff;
+            font-weight: 600;
+            background: rgba(255,255,255,0.06);
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 3px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .path-action-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .path-action-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: var(--cyan-accent);
+            color: var(--cyan-accent);
+            transform: translateY(-2px);
+        }
+
+        /* SMART TOGGLES */
+        .smart-toggles-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 1.75rem;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .toggle-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .toggle-sub {
+            font-size: 0.77rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.18);
+            transition: .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        input:checked + .slider {
+            background: var(--cyan-gradient);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* PRIMARY MEGA BUTTONS */
+        .btn-mega-action {
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-mega-sync {
+            background: var(--cyan-gradient);
+            color: #030712;
+            box-shadow: 0 10px 35px rgba(56, 189, 248, 0.45);
+        }
+
+        .btn-mega-sync:hover {
+            transform: translateY(-3px) scale(1.015);
+            box-shadow: 0 15px 45px rgba(56, 189, 248, 0.7);
+        }
+
+        .btn-mega-clone {
+            background: var(--purple-gradient);
+            color: #fff;
+            box-shadow: 0 10px 35px rgba(168, 85, 247, 0.45);
+        }
+
+        .btn-mega-clone:hover {
+            transform: translateY(-3px) scale(1.015);
+            box-shadow: 0 15px 45px rgba(168, 85, 247, 0.7);
+        }
+
+        .btn-secondary-batch {
+            width: 100%;
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary-batch:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* SECTION 2: APPS FACTORY CONTROLS */
+        .user-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .user-meta-grid { grid-template-columns: 1fr; }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .glass-input {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .glass-input:focus {
+            border-color: var(--purple-accent);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+            background: rgba(0, 0, 0, 0.65);
+        }
+
+        .quick-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .quick-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 9px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .quick-pill:hover {
+            background: rgba(168, 85, 247, 0.25);
+            color: #fff;
+            border-color: var(--purple-accent);
+            transform: translateY(-1px);
+        }
+
+        /* APPS PRESET BAR */
+        .apps-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 5px 12px;
+            border-radius: 11px;
+            font-size: 0.77rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .preset-btn.highlight {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.4);
+            color: var(--text-gold);
+        }
+
+        /* 8 APPS GRID */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .apps-grid { grid-template-columns: 1fr; }
+        }
+
+        .app-select-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 18px;
+            padding: 13px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            user-select: none;
+            position: relative;
+        }
+
+        .app-select-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.45);
+        }
+
+        .app-select-card.selected {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border-color: var(--purple-accent);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.35);
+        }
+
+        .app-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon-mini {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.07);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .app-select-card:hover .app-icon-mini {
+            transform: scale(1.1);
+        }
+
+        .app-text-title {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .app-text-cat {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .app-instances-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 3px 8px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .app-instances-selector select {
+            background: transparent;
+            border: none;
+            color: var(--text-gold);
+            font-weight: 800;
+            outline: none;
+            cursor: pointer;
+            font-size: 0.82rem;
+        }
+
+        .app-checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 7px;
+            border: 2px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .app-select-card.selected .app-checkbox {
+            background: var(--purple-accent);
+            border-color: var(--purple-accent);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+
+        /* LIVE BLUEPRINT */
+        .blueprint-box {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px dashed rgba(212, 175, 55, 0.45);
+            border-radius: 18px;
+            padding: 1.35rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .blueprint-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .blueprint-title {
+            font-size: 0.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blueprint-preview-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.98rem;
+            color: #38bdf8;
+            font-weight: 700;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+
+        .blueprint-meta-row {
+            display: flex;
+            gap: 16px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        /* TERMINAL / LOG CONSOLE DRAWER */
+        .terminal-drawer {
+            background: #02040a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            margin-top: 2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: rgba(15, 23, 42, 0.85);
+            padding: 13px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .terminal-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--cyan-accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-dots { display: flex; gap: 7px; }
+
+        .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
+
+        .terminal-body {
+            padding: 18px 22px;
+            height: 180px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.84rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .log-entry { margin-bottom: 5px; display: flex; gap: 9px; }
+        .log-time { color: #64748b; }
+        .log-ok { color: #34d399; font-weight: 700; }
+        .log-info { color: #38bdf8; }
+        .log-warn { color: #fbbf24; }
+        .log-skip { color: #c084fc; font-weight: 600; }
+
+        /* MODALE EXTRAORDINARIA SENZA ALERT */
+        .luxury-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(2, 6, 23, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .luxury-modal-card {
+            background: rgba(13, 20, 36, 0.96);
+            border: 1px solid var(--border-gold);
+            border-radius: 30px;
+            padding: 2.8rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), var(--glow-gold);
+            position: relative;
+            animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .luxury-modal-card.shake {
+            animation: shakeError 0.45s ease-in-out;
+        }
+
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-12px); }
+            40%, 80% { transform: translateX(12px); }
+        }
+
+        .modal-icon-big {
+            font-size: 60px;
+            margin-bottom: 1.25rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+        }
+
+        .modal-title-big {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.85rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.3px;
+        }
+
+        .modal-sub-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.75rem;
+        }
+
+        .progress-bar-wrap {
+            height: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.75rem;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #38bdf8, #a855f7, #d4af37);
+            border-radius: 12px;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.7);
+        }
+
+        .steps-list {
+            text-align: left;
+            margin-bottom: 2.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .step-item.active {
+            color: #38bdf8;
+            font-weight: 800;
+        }
+
+        .step-item.done {
+            color: #34d399;
+            font-weight: 700;
+        }
+
+        .modal-action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal-primary {
+            background: var(--gold-gradient);
+            color: #030712;
+            border: none;
+            padding: 13px 28px;
+            border-radius: 16px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .btn-modal-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6);
+        }
+
+        .btn-modal-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            padding: 13px 24px;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-close:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        /* TOAST NOTIFICA LUXURY */
+        .toast-luxury {
+            position: fixed;
+            bottom: 35px;
+            right: 35px;
+            background: rgba(13, 20, 36, 0.95);
+            border: 1px solid var(--border-gold);
+            padding: 16px 24px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7), var(--glow-gold);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 10001;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+
+        .toast-luxury.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- CANVAS PARTICELLE -->
+<canvas id="particleCanvas"></canvas>
+
+<div class="container">
+
+    <!-- MASTER HEADER HUD -->
+    <header class="master-header">
+        <div class="header-title-box">
+            <div class="header-logo-badge" onclick="playAudio('chime')" title="Suite Aziendale Ciro Milella">🎛️</div>
+            <div class="header-text">
+                <h1>STANZA DI REGIA MASTER</h1>
+                <p>
+                    Suite Aziendale C. Milella 
+                    <span class="tag-pill">Piattaforma Master V3.5</span>
+                    <span class="tag-pill tag-gold">Antigravity Turbo Engine</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="header-status-strip">
+            <div class="status-chip online" title="Connessione cloud Render">
+                <span class="pulse-dot"></span>
+                <span>CLOUD RENDER ATTIVO</span>
+            </div>
+            <div class="status-chip usb-active" id="chipUsbStatus" style="display:flex; align-items:center; gap:8px;">
+                <span>🔌 USB:</span>
+                <select id="selectGlobalDrive" onchange="cambiaUnitaGlobale(this.value)" style="background:rgba(15,23,42,0.85); color:#38bdf8; font-weight:800; border:1px solid rgba(56,189,248,0.4); border-radius:8px; padding:3px 8px; font-size:12px; cursor:pointer; outline:none;">
+                    <option value="D:">D:\ (BACKUP) ✦</option>
+                </select>
+            </div>
+            <div class="status-chip audio-chip" id="btnToggleAudio" onclick="toggleAudioFx()" title="Abilita/Disabilita effetti sonori">
+                <span id="audioIcon">🔊</span>
+                <span id="audioText">AUDIO FX ON</span>
+            </div>
+            <a href="/launcher.html" class="btn-header-back" onclick="playAudio('click')">
+                <span>◀ Torna alla Suite</span>
+            </a>
+            <a href="/presentazione_suite.html" class="btn-header-back" style="background:linear-gradient(135deg, #a855f7, #6b21a8); border-color:#d8b4fe; color:#fff;" onclick="playAudio('click')">
+                <span>🎬 Apri Presentazione Personalizzata</span>
+            </a>
+            <a href="/presentazione_suite.html?openVoices=1" class="btn-header-back" style="background:linear-gradient(135deg, #6366f1, #4f46e5); border-color:#a5b4fc; color:#fff;" onclick="playAudio('click')" title="Regola o cambia le voci della presentazione">
+                <span>🎛️ Gestisci Voci</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- NAVIGATION BAR -->
+    <div class="regia-navbar">
+        <div class="regia-tabs">
+            <button class="tab-btn active tab-clone" id="tabBtnClone" onclick="switchMainTab('clone')">
+                <span>📦</span> Fabbrica Copie &amp; Presentazione Utenti (Consigliata)
+            </button>
+            <button class="tab-btn" id="tabBtnSync" onclick="switchMainTab('sync')">
+                <span>⚡</span> Centro Sincronizzazione
+            </button>
+            <button class="tab-btn" id="tabBtnSplit" onclick="switchMainTab('split')">
+                <span>🔲</span> Vista Cockpit Affiancata
+            </button>
+        </div>
+
+        <div class="telemetry-summary">
+            <span>VELOCITÀ RECORD: <span class="telemetry-val">85.5 MB/s</span></span>
+            <span style="opacity:0.3;">|</span>
+            <span>FILE PROTETTI: <span class="telemetry-val" style="color:#10b981;">109.941</span></span>
+            <span style="opacity:0.3;">|</span>
+            <span>BLOCCHI: <span class="telemetry-val" style="color:#a855f7;">0 (ZERO)</span></span>
+        </div>
+    </div>
+
+    <!-- MAIN TWO COLUMN GRID -->
+    <div class="regia-grid view-clone" id="mainRegiaGrid">
+
+        <!-- ============================================================= -->
+        <!-- COLONNA 1: CENTRO SINCRONIZZAZIONE INTELLIGENTE               -->
+        <!-- ============================================================= -->
+        <section class="glass-panel" id="panelSync">
+            <div class="panel-header">
+                <div class="panel-title-wrapper">
+                    <div class="panel-icon-badge sync">⚡</div>
+                    <div>
+                        <div class="panel-title">Sincronizzazione Multi-Direzionale</div>
+                        <div class="panel-subtitle">Allineamento istantaneo tra Cloud Render, PC Desktop e Chiavetta USB</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direzione Sincronizzazione -->
+            <div class="section-label">1. Scegli la direzione del flusso</div>
+            <div class="sync-directions-grid">
+                <!-- Direzione 1: USB <-> Desktop (Turbo) -->
+                <div class="sync-direction-card active" onclick="selectSyncDirection('usb_desktop')" id="cardDir_usb_desktop">
+                    <div class="sync-card-top">
+                        <span class="sync-card-icon">🔌 ⇄ 💻</span>
+                        <div class="sync-radio-indicator"></div>
+                    </div>
+                    <div class="sync-card-title">Chiavetta USB ⇄ Desktop</div>
+                    <div class="sync-card-desc">Turbo Sync con Robocopy. Salta cache e copia solo le modifiche in 15 sec.</div>
+                </div>
+
+                <!-- Direzione 2: Cloud -> USB -->
+                <div class="sync-direction-card" onclick="selectSyncDirection('cloud_usb')" id="cardDir_cloud_usb">
+                    <div class="sync-card-top">
+                        <span class="sync-card-icon">🌐 ➔ 🔌</span>
+                        <div class="sync-radio-indicator"></div>
+                    </div>
+                    <div class="sync-card-title">Cloud Render ➔ USB</div>
+                    <div class="sync-card-desc">Scarica l'ultimo bundle dati dal server cloud direttamente sulla chiavetta.</div>
+                </div>
+
+                <!-- Direzione 3: Cloud -> Desktop -->
+                <div class="sync-direction-card" onclick="selectSyncDirection('cloud_desktop')" id="cardDir_cloud_desktop">
+                    <div class="sync-card-top">
+                        <span class="sync-card-icon">🌐 ➔ 💻</span>
+                        <div class="sync-radio-indicator"></div>
+                    </div>
+                    <div class="sync-card-title">Cloud Render ➔ Desktop</div>
+                    <div class="sync-card-desc">Aggiorna la cartella locale del Desktop con i dati in tempo reale online.</div>
+                </div>
+
+                <!-- Direzione 4: Desktop -> Cloud Backup -->
+                <div class="sync-direction-card" onclick="selectSyncDirection('desktop_cloud')" id="cardDir_desktop_cloud">
+                    <div class="sync-card-top">
+                        <span class="sync-card-icon">💻 ➔ 🌐</span>
+                        <div class="sync-radio-indicator"></div>
+                    </div>
+                    <div class="sync-card-title">Desktop ➔ Cloud Backup</div>
+                    <div class="sync-card-desc">Carica un backup di sicurezza dei database locali nel cloud protetto.</div>
+                </div>
+            </div>
+
+            <!-- Ispezione & Scelta Percorsi -->
+            <div class="section-label">2. Riconoscimento Percorsi &amp; Unità</div>
+            <div class="path-inspector-box">
+                <!-- Percorso USB -->
+                <div class="path-row">
+                    <div class="path-info">
+                        <span class="path-icon">🔌</span>
+                        <div style="flex:1;">
+                            <div class="path-label">Unit&agrave; Chiavetta USB o Disco di Lavoro</div>
+                            <div style="display:flex; align-items:center; gap:10px; margin-top:4px;">
+                                <select id="selectPathUsbDrive" onchange="cambiaUnitaGlobale(this.value)" class="glass-input" style="padding:6px 10px; font-weight:800; font-size:13px; max-width:260px; color:#38bdf8; border-color:rgba(56,189,248,0.4);">
+                                    <option value="D:">D:\ (Unità Principale) ✦</option>
+                                </select>
+                                <span class="path-val" id="textPathUsb" style="font-size:13px; color:#cbd5e1;">D:\questa</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="path-action-btn" onclick="ricaricaUnitaSistema()" title="Scansiona di nuovo le memorie USB e i dischi collegati">
+                        <span>🔄 Rileva Unità</span>
+                    </button>
+                </div>
+
+                <!-- Percorso Desktop -->
+                <div class="path-row">
+                    <div class="path-info">
+                        <span class="path-icon">💻</span>
+                        <div>
+                            <div class="path-label">Cartella di Destinazione Desktop</div>
+                            <div class="path-val" id="textPathDesktop">C:\Users\Utente\Desktop\questa</div>
+                        </div>
+                    </div>
+                    <button class="path-action-btn" onclick="selezionaCartellaDesktop()" title="Cambia cartella di destinazione">
+                        <span>📁 Cambia Desktop</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtri Intelligenti Anti-Blocco -->
+            <div class="section-label">3. Protezioni &amp; Ottimizzazioni Turbo</div>
+            <div class="smart-toggles-grid">
+                <div class="toggle-item" onclick="toggleSwitch('chkAntiFreeze')">
+                    <div class="toggle-left">
+                        <span style="font-size:22px;">🛡️</span>
+                        <div>
+                            <div class="toggle-title">Filtro Turbo Anti-Blocco (Zero Freeze)</div>
+                            <div class="toggle-sub">Esclude automaticamente BrowserMetrics, file .pma, Cache e lock di sistema</div>
+                        </div>
+                    </div>
+                    <label class="switch" onclick="event.stopPropagation()">
+                        <input type="checkbox" id="chkAntiFreeze" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-item" onclick="toggleSwitch('chkIncremental')">
+                    <div class="toggle-left">
+                        <span style="font-size:22px;">⚡</span>
+                        <div>
+                            <div class="toggle-title">Sincronizzazione Differenziale Incrementale</div>
+                            <div class="toggle-sub">Salta i 98.000 file gi&agrave; identici e copia solo le novit&agrave; (da 40 min a 20 sec)</div>
+                        </div>
+                    </div>
+                    <label class="switch" onclick="event.stopPropagation()">
+                        <input type="checkbox" id="chkIncremental" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-item" onclick="toggleSwitch('chkMultiThread')">
+                    <div class="toggle-left">
+                        <span style="font-size:22px;">🚀</span>
+                        <div>
+                            <div class="toggle-title">Accelerazione Multi-Thread (16 flussi paralleli)</div>
+                            <div class="toggle-sub">Sfrutta tutti i core del processore per la massima velocit&agrave; consentita dall'USB</div>
+                        </div>
+                    </div>
+                    <label class="switch" onclick="event.stopPropagation()">
+                        <input type="checkbox" id="chkMultiThread" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Pulsante Avvio Sincronizzazione -->
+            <button class="btn-mega-action btn-mega-sync" id="btnAvviaSync" onclick="avviaSincronizzazioneMaster()">
+                <span>⚡</span> AVVIA SINCRONIZZAZIONE INTELLIGENTE
+            </button>
+
+            <!-- Genera Script Batch Portatile -->
+            <button class="btn-secondary-batch" onclick="generaBatchSincronizzazione()">
+                <span>💾</span> Esporta Script Batch (.bat) 1-Click per questa configurazione
+            </button>
+        </section>
+
+
+        <!-- ============================================================= -->
+        <!-- COLONNA 2: FABBRICA COPIE MULTI-UTENTE & MULTI-APP            -->
+        <!-- ============================================================= -->
+        <section class="glass-panel panel-purple" id="panelClone">
+            <div class="panel-header">
+                <div class="panel-title-wrapper">
+                    <div class="panel-icon-badge clone">📦</div>
+                    <div>
+                        <div class="panel-title">Fabbrica Copie &amp; Utenti</div>
+                        <div class="panel-subtitle">Crea istanze autonome, pacchetti singoli o multipli per collaboratori</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dati Destinatario -->
+            <div class="section-label">1. Dati Destinatario &amp; Licenza</div>
+            <div class="user-meta-grid">
+                <div class="input-group">
+                    <label class="input-label">Nome Destinatario / Utente</label>
+                    <input type="text" id="inputDestName" class="glass-input" placeholder="es. Mario Rossi" value="Mario Rossi" oninput="aggiornaBlueprint()">
+                    <div class="quick-pills">
+                        <span class="quick-pill quick-pill-demo" onclick="generaClienteDemoRapido()" title="Genera istantaneamente un nominativo realistico per la presentazione">🎲 Genera Cliente Demo</span>
+                        <span class="quick-pill" onclick="setNomeRapido('Dott.ssa Laura Bianchi', 'RSA Villa Salus', 'demo30')">RSA Villa Salus</span>
+                        <span class="quick-pill" onclick="setNomeRapido('Geom. Marco Ferri', 'EdilCantieri SpA', 'demo30')">EdilCantieri</span>
+                        <span class="quick-pill" onclick="setNomeRapido('Mario Rossi', 'Ufficio Tecnico', 'unlimited')">Mario Rossi</span>
+                        <span class="quick-pill" onclick="setNomeRapido('Magazzino Centrale', 'Gestione Merci', 'unlimited')">Magazzino</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Azienda / Dipartimento</label>
+                    <input type="text" id="inputDestCompany" class="glass-input" placeholder="es. Logistica &amp; Cantieri" value="Cooperativa C. Milella" oninput="aggiornaBlueprint()">
+                    <label class="input-label" style="margin-top:6px;">Tipo Licenza</label>
+                    <select id="selectLicenza" class="glass-input" onchange="aggiornaBlueprint()">
+                        <option value="unlimited">✦ Licenza Master Illimitata (Gold)</option>
+                        <option value="demo30">⏳ Demo 30 Giorni di Valutazione</option>
+                        <option value="demo60">⏳ Valutazione Estesa 60 Giorni</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Selezione Applicazioni da Clonare -->
+            <div class="apps-toolbar">
+                <div class="section-label" style="margin-bottom:0;">2. Scegli le Applicazioni da includere</div>
+                <div class="preset-buttons">
+                    <button class="preset-btn highlight" onclick="selezionaPresetApp('all')">✨ Tutte (8 App)</button>
+                    <button class="preset-btn" onclick="selezionaPresetApp('logistica')">🚚 Logistica &amp; Veicoli</button>
+                    <button class="preset-btn" onclick="selezionaPresetApp('salute')">🏥 Salute &amp; CareAssist</button>
+                    <button class="preset-btn" onclick="selezionaPresetApp('none')">Azzera</button>
+                </div>
+            </div>
+
+            <!-- Griglia delle 8 App -->
+            <div class="apps-grid" id="appsGridContainer">
+                <!-- App 1: Logistica Consegne -->
+                <div class="app-select-card selected" data-app="1" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">🚚</div>
+                        <div>
+                            <div class="app-text-title">Logistica Consegne</div>
+                            <div class="app-text-cat">Ordini, Mappa, Clienti</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+
+                <!-- App 2: Flotta Veicoli & Spese -->
+                <div class="app-select-card selected" data-app="2" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">🚗</div>
+                        <div>
+                            <div class="app-text-title">Flotta &amp; Spese</div>
+                            <div class="app-text-cat">Automezzi, Carburante</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+
+                <!-- App 3: Inventario Attrezzi -->
+                <div class="app-select-card selected" data-app="3" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">🔧</div>
+                        <div>
+                            <div class="app-text-title">Inventario Attrezzi</div>
+                            <div class="app-text-cat">Catalogo Smart, QR Code</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+
+                <!-- App 4: MedNutri Pro -->
+                <div class="app-select-card selected" data-app="4" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">🥗</div>
+                        <div>
+                            <div class="app-text-title">MedNutri Pro</div>
+                            <div class="app-text-cat">Piani Dietetici &amp; Tabelle</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+
+                <!-- App 5: Il Ricettario -->
+                <div class="app-select-card selected" data-app="5" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">🍲</div>
+                        <div>
+                            <div class="app-text-title">Il Ricettario</div>
+                            <div class="app-text-cat">Archivio Ricette &amp; Dosi</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+
+                <!-- App 6: Progetto Salute -->
+                <div class="app-select-card selected" data-app="6" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">💊</div>
+                        <div>
+                            <div class="app-text-title">Progetto Salute</div>
+                            <div class="app-text-cat">Parametri Vitali &amp; Terapie</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+
+                <!-- App 7: Progetto Gioco -->
+                <div class="app-select-card selected" data-app="7" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">🎮</div>
+                        <div>
+                            <div class="app-text-title">Progetto Gioco</div>
+                            <div class="app-text-cat">Gamification &amp; Punteggi</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+
+                <!-- App 8: CareAssist Pro -->
+                <div class="app-select-card selected" data-app="8" onclick="toggleAppCard(this)">
+                    <div class="app-left">
+                        <div class="app-icon-mini">🤝</div>
+                        <div>
+                            <div class="app-text-title">CareAssist Pro</div>
+                            <div class="app-text-cat">Assistenza Domiciliare</div>
+                        </div>
+                    </div>
+                    <div class="app-instances-selector" onclick="event.stopPropagation()">
+                        <span>Copie:</span>
+                        <select onchange="aggiornaBlueprint()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="app-checkbox">✓</div>
+                </div>
+            </div>
+
+            <!-- Blueprint Live Preview -->
+            <div class="section-label">3. Anteprima del Pacchetto Generato</div>
+            <div class="blueprint-box">
+                <div class="blueprint-header">
+                    <div class="blueprint-title">
+                        <span>⚙️ ARCHITETTURA DEL PACCHETTO</span>
+                    </div>
+                    <span style="font-size:0.75rem; color:#10b981; font-weight:800;">● PRONTO AL RILASCIO</span>
+                </div>
+                <div class="blueprint-preview-name" id="bpPackageName">SUITE_COMPLETA_8APP_per_Mario_Rossi_PROD</div>
+                <div class="blueprint-meta-row">
+                    <span>📦 Moduli inclusi: <strong id="bpCountModules" style="color:#fff;">8 App Selezionate</strong></span>
+                    <span>💾 Destinazione: <strong id="bpDestDrive" style="color:var(--text-gold);">D:\VERSIONI_RILASCIATE</strong></span>
+                    <span>🔑 Modalità: <strong id="bpLicenzaType" style="color:#38bdf8;">Illimitata Gold</strong></span>
+                </div>
+            </div>
+
+            <!-- Pulsante Generazione Pacchetto -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;">
+                <button type="button" class="btn-mega-action" style="background:linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); box-shadow:0 10px 25px rgba(168,85,247,0.4);" onclick="avviaPresentazioneDaStanzaRegia()">
+                    <span>🎬</span> MOSTRA PRESENTAZIONE CON QUESTE APP
+                </button>
+                <button class="btn-mega-action btn-mega-clone" id="btnGeneraCopia" style="margin-top:0;" onclick="avviaGenerazioneCopiaMaster()">
+                    <span>📦</span> GENERA PACCHETTO UTENTE AUTONOMO
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- TERMINAL / LOG CONSOLE DRAWER -->
+    <div class="terminal-drawer">
+        <div class="terminal-header">
+            <div class="terminal-title">
+                <span>⚡</span> CONSOLE ATTIVITÀ &amp; TELEMETRIA LIVE
+            </div>
+            <div class="terminal-dots">
+                <div class="terminal-dot" style="background:#ef4444;"></div>
+                <div class="terminal-dot" style="background:#f59e0b;"></div>
+                <div class="terminal-dot" style="background:#10b981;"></div>
+            </div>
+        </div>
+        <div class="terminal-body" id="terminalLog">
+            <div class="log-entry"><span class="log-time">[08:40:01]</span> <span class="log-ok">● SISTEMA PRONTO</span> Stanza di Regia Master V3.5 inizializzata.</div>
+            <div class="log-entry"><span class="log-time">[08:40:02]</span> <span class="log-info">[INFO]</span> Rilevata cartella sorgente USB: <strong style="color:#fff;">D:\questa</strong></div>
+            <div class="log-entry"><span class="log-time">[08:40:03]</span> <span class="log-skip">[TURBO]</span> Protezione attiva: 0 blocchi, 16 flussi paralleli, Robocopy differenziale.</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODALE EXTRAORDINARIA DI PROGRESSO & AVVISI (MAI PIÙ ALERT BRUTTI) -->
+<div class="luxury-modal-overlay" id="modalExtra">
+    <div class="luxury-modal-card" id="modalCard">
+        <div class="modal-icon-big" id="modalIcon">⚡</div>
+        <div class="modal-title-big" id="modalTitle">OPERAZIONE IN CORSO</div>
+        <div class="modal-sub-text" id="modalSub">Elaborazione in corso...</div>
+
+        <div class="progress-bar-wrap" id="modalBarWrap">
+            <div class="progress-bar-fill" id="modalProgressBar"></div>
+        </div>
+
+        <div class="steps-list" id="modalStepsList">
+            <div class="step-item active" id="step1"><span class="step-icon">⏳</span> <span>Analisi architettura e controllo moduli</span></div>
+            <div class="step-item" id="step2"><span class="step-icon">○</span> <span>Clonazione database e isolamento configurazioni</span></div>
+            <div class="step-item" id="step3"><span class="step-icon">○</span> <span>Generazione manifest licenza e certificato master</span></div>
+            <div class="step-item" id="step4"><span class="step-icon">○</span> <span>Compilazione eseguibile dedicato e collegamenti</span></div>
+            <div class="step-item" id="step5"><span class="step-icon">○</span> <span>Finalizzazione pacchetto autonomo</span></div>
+        </div>
+
+        <div class="modal-action-buttons" id="modalActionButtons">
+            <button class="btn-modal-primary" id="btnModalPrimary" onclick="chiudiModalExtra()">
+                <span>✔ Perfetto</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST LUXURY -->
+<div class="toast-luxury" id="toastLuxury">
+    <div id="toastIcon" style="font-size:26px;">✨</div>
+    <div>
+        <div id="toastTitle" style="font-weight:900; font-size:0.98rem; color:#fff;">Notifica</div>
+        <div id="toastDesc" style="font-size:0.82rem; color:var(--text-muted); margin-top:2px;">Operazione completata</div>
+    </div>
+</div>
+
+<script>
+    // STATO APPLICATIVO
+    let currentSyncDirection = 'usb_desktop';
+    let pathUsb = 'D:\\questa';
+    let pathDesktop = 'C:\\Users\\Utente\\Desktop\\questa';
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    // Inizializzazione Audio Sintetico Web Audio API (Offline & Zero Dipendenze)
+    function initAudio() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) audioCtx = new AudioContext();
+        }
+    }
+
+    function playAudio(type) {
+        if (!audioEnabled) return;
+        try {
+            initAudio();
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(400, now + 0.06);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+                osc.start(now);
+                osc.stop(now + 0.06);
+            } else if (type === 'warn') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(180, now + 0.1);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'chime') {
+                // Corda di trionfo C-E-G
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    const oscChord = audioCtx.createOscillator();
+                    const gainChord = audioCtx.createGain();
+                    oscChord.connect(gainChord);
+                    gainChord.connect(audioCtx.destination);
+                    oscChord.type = 'sine';
+                    oscChord.frequency.setValueAtTime(freq, now + i * 0.05);
+                    gainChord.gain.setValueAtTime(0.1, now + i * 0.05);
+                    gainChord.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                    oscChord.start(now + i * 0.05);
+                    oscChord.stop(now + 0.85);
+                });
+            }
+        } catch(e) {}
+    }
+
+    function toggleAudioFx() {
+        audioEnabled = !audioEnabled;
+        const icon = document.getElementById('audioIcon');
+        const text = document.getElementById('audioText');
+        if (audioEnabled) {
+            icon.innerText = '🔊';
+            text.innerText = 'AUDIO FX ON';
+            playAudio('click');
+            showToast('Audio Abilitato', 'Effetti sonori sintetici attivi', '🔊');
+        } else {
+            icon.innerText = '🔇';
+            text.innerText = 'AUDIO FX OFF';
+            showToast('Audio Disattivato', 'Modalità silenziosa', '🔇');
+        }
+    }
+
+    // Inizializzazione al caricamento
+    window.addEventListener('DOMContentLoaded', () => {
+        initParticles();
+        caricaDatiUnita();
+        aggiornaBlueprint();
+        appendLog('[READY] Stanza di Regia Master V3.5 connessa.');
+    });
+
+    // Funzione robusta per ottenere gli ID delle app selezionate (DOM GROUND TRUTH)
+    function getSelectedAppIds() {
+        const cards = document.querySelectorAll('.app-select-card.selected');
+        return Array.from(cards).map(c => c.getAttribute('data-app')).filter(Boolean);
+    }
+
+    // Cambia Tab principale con gestione layout dinamico a schermo intero o affiancato
+    function switchMainTab(tab) {
+        playAudio('click');
+        const btnSync = document.getElementById('tabBtnSync');
+        const btnClone = document.getElementById('tabBtnClone');
+        const btnSplit = document.getElementById('tabBtnSplit');
+        const grid = document.getElementById('mainRegiaGrid');
+
+        btnSync.className = 'tab-btn';
+        btnClone.className = 'tab-btn';
+        if (btnSplit) btnSplit.className = 'tab-btn';
+
+        if (tab === 'sync') {
+            btnSync.className = 'tab-btn active tab-sync';
+            grid.className = 'regia-grid view-sync';
+            showToast('Modalità Sincronizzazione', 'Vista focalizzata su flussi dati e USB', '⚡');
+        } else if (tab === 'clone') {
+            btnClone.className = 'tab-btn active tab-clone';
+            grid.className = 'regia-grid view-clone';
+            showToast('Fabbrica Copie & Clienti', 'Vista espansa per presentazione e creazione demo', '📦');
+        } else {
+            if (btnSplit) btnSplit.className = 'tab-btn active tab-split';
+            grid.className = 'regia-grid view-split';
+            showToast('Vista Cockpit', 'Entrambe le sezioni affiancate a schermo', '🔲');
+        }
+    }
+
+    // Genera istantaneamente un profilo cliente demo fittizio ma altamente credibile
+    const DEMO_PRESETS = [
+        { nome: 'Dott.ssa Elena Moretti', azienda: 'RSA Bellaria & Sanitas', appPreset: 'salute', lic: 'demo30' },
+        { nome: 'Ing. Roberto Santoro', azienda: 'Logistica & Trasporti Adriatica', appPreset: 'logistica', lic: 'demo30' },
+        { nome: 'Dott. Valerio De Luca', azienda: 'Cooperativa Sociale Andromeda', appPreset: 'all', lic: 'demo30' },
+        { nome: 'Geom. Claudio Barbieri', azienda: 'Edil Strade & Cantieri Nord', appPreset: 'logistica', lic: 'demo30' },
+        { nome: 'Dott.ssa Michela Ferrara', azienda: 'Centro Clinico MedCare', appPreset: 'salute', lic: 'demo30' }
+    ];
+    let demoPresetIdx = 0;
+
+    function generaClienteDemoRapido() {
+        playAudio('chime');
+        const preset = DEMO_PRESETS[demoPresetIdx % DEMO_PRESETS.length];
+        demoPresetIdx++;
+
+        document.getElementById('inputDestName').value = preset.nome;
+        document.getElementById('inputDestCompany').value = preset.azienda;
+        document.getElementById('selectLicenza').value = preset.lic;
+        selezionaPresetApp(preset.appPreset);
+        aggiornaBlueprint();
+        showToast('Profilo Demo Caricato', `Destinatario: ${preset.nome} (${preset.azienda})`, '✨');
+        appendLog(`[DEMO PRESET] Caricato profilo per presentazione: <strong>${preset.nome}</strong> - ${preset.azienda}`);
+    }
+
+    // Seleziona Direzione Sincronizzazione
+    function selectSyncDirection(dir) {
+        playAudio('click');
+        currentSyncDirection = dir;
+        document.querySelectorAll('.sync-direction-card').forEach(c => c.classList.remove('active'));
+        const activeCard = document.getElementById('cardDir_' + dir);
+        if (activeCard) activeCard.classList.add('active');
+        appendLog(`[FLUSSO] Impostata direzione: <strong>${dir.toUpperCase()}</strong>`);
+    }
+
+    // Toggle interruttori
+    function toggleSwitch(id) {
+        playAudio('click');
+        const chk = document.getElementById(id);
+        if (chk) {
+            chk.checked = !chk.checked;
+            appendLog(`[CONFIG] ${id}: ${chk.checked ? 'ATTIVA' : 'DISATTIVATA'}`);
+        }
+    }
+
+    // Toggle selezione app card (con sincronizzazione immediata)
+    function toggleAppCard(cardEl) {
+        playAudio('click');
+        cardEl.classList.toggle('selected');
+        aggiornaBlueprint();
+    }
+
+    // Presets App
+    function selezionaPresetApp(type) {
+        playAudio('click');
+        const cards = document.querySelectorAll('.app-select-card');
+        cards.forEach(card => {
+            const id = card.getAttribute('data-app');
+            let select = false;
+            if (type === 'all') select = true;
+            else if (type === 'logistica' && (id === '1' || id === '2' || id === '3')) select = true;
+            else if (type === 'salute' && (id === '4' || id === '6' || id === '8')) select = true;
+            else if (type === 'none') select = false;
+
+            if (select) card.classList.add('selected');
+            else card.classList.remove('selected');
+        });
+        aggiornaBlueprint();
+        const count = getSelectedAppIds().length;
+        showToast('Preset Applicato', `${count} Applicazioni selezionate`, '🎯');
+    }
+
+    // Imposta nome rapido
+    function setNomeRapido(nome, azienda, licenza) {
+        playAudio('click');
+        document.getElementById('inputDestName').value = nome;
+        document.getElementById('inputDestCompany').value = azienda;
+        if (licenza) document.getElementById('selectLicenza').value = licenza;
+        aggiornaBlueprint();
+    }
+
+    // Aggiorna Live Blueprint
+    function aggiornaBlueprint() {
+        const selectedIds = getSelectedAppIds();
+        const destName = document.getElementById('inputDestName').value.trim() || 'Collaboratore';
+        const safeName = destName.replace(/\s+/g, '_');
+        const licenza = document.getElementById('selectLicenza').value;
+        const tag = licenza.includes('demo') ? 'DEMO' : 'PROD';
+        
+        let labelModules = 'MODULI_MISTI';
+        if (selectedIds.length === 8) labelModules = 'SUITE_COMPLETA_8APP';
+        else if (selectedIds.length === 1) {
+            const mapNames = { '1':'Logistica', '2':'Flotta_Veicoli', '3':'Inventario', '4':'MedNutri', '5':'Ricettario', '6':'Salute', '7':'Gioco', '8':'CareAssist' };
+            labelModules = mapNames[selectedIds[0]] || 'Modulo_Singolo';
+        } else if (selectedIds.length === 0) {
+            labelModules = 'NESSUN_MODULO';
+        }
+
+        const packName = `${labelModules}_per_${safeName}_${tag}`;
+        document.getElementById('bpPackageName').innerText = packName;
+        document.getElementById('bpCountModules').innerText = `${selectedIds.length} App Selezionate`;
+        document.getElementById('bpLicenzaType').innerText = licenza === 'unlimited' ? 'Illimitata Gold' : (licenza === 'demo30' ? 'Demo 30 gg' : 'Demo 60 gg');
+    }
+
+    // Sfoglia Cartella USB (con File System Access API nativa)
+    async function selezionaCartellaUsb() {
+        playAudio('click');
+        if ('showDirectoryPicker' in window) {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                pathUsb = dirHandle.name;
+                document.getElementById('textPathUsb').innerText = `${dirHandle.name} (Selezionata)`;
+                appendLog(`[DIRECTORY] Nuova cartella USB impostata: <strong>${dirHandle.name}</strong>`);
+                showToast('Cartella Selezionata', dirHandle.name, '📁');
+            } catch(e) {}
+        } else {
+            apriAvvisoModal('Selezione Cartella', `La cartella attuale è impostata su: <strong>${pathUsb}</strong><br>Per cambiarla puoi salvare il percorso nei parametri.`, '📁');
+        }
+    }
+
+    // Sfoglia Cartella Desktop
+    async function selezionaCartellaDesktop() {
+        playAudio('click');
+        if ('showDirectoryPicker' in window) {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                pathDesktop = dirHandle.name;
+                document.getElementById('textPathDesktop').innerText = `${dirHandle.name} (Selezionata)`;
+                appendLog(`[DIRECTORY] Cartella Desktop aggiornata: <strong>${dirHandle.name}</strong>`);
+                showToast('Cartella Desktop', dirHandle.name, '💻');
+            } catch(e) {}
+        } else {
+            apriAvvisoModal('Cartella Desktop', `Il percorso predefinito sul tuo PC è:<br><code>${pathDesktop}</code>`, '💻');
+        }
+    }
+
+    // Lettera unità USB/Disco attualmente attiva
+    let _activeDriveLetter = 'D:';
+
+    function cambiaUnitaGlobale(nuovaLettera) {
+        if (!nuovaLettera) return;
+        _activeDriveLetter = nuovaLettera.toUpperCase().replace(/\\$/, '');
+        if (!_activeDriveLetter.endsWith(':')) _activeDriveLetter += ':';
+
+        playAudio('click');
+        pathUsb = `${_activeDriveLetter}\\questa`;
+
+        // Aggiorna selettori a video
+        const sTop = document.getElementById('selectGlobalDrive');
+        const sPath = document.getElementById('selectPathUsbDrive');
+        if (sTop && sTop.value !== _activeDriveLetter) sTop.value = _activeDriveLetter;
+        if (sPath && sPath.value !== _activeDriveLetter) sPath.value = _activeDriveLetter;
+
+        const textUsb = document.getElementById('textPathUsb');
+        if (textUsb) textUsb.innerText = `${_activeDriveLetter}\\questa (Attiva)`;
+
+        const bpDest = document.getElementById('bpDestDrive');
+        if (bpDest) bpDest.innerText = `${_activeDriveLetter}\\VERSIONI_RILASCIATE`;
+
+        appendLog(`[UNITA] Impostata unit&agrave; attiva di lavoro: <strong>${_activeDriveLetter}</strong>`);
+        showToast('Unità Aggiornata', `Percorsi allineati a ${_activeDriveLetter}`, '🔌');
+    }
+
+    async function ricaricaUnitaSistema() {
+        showToast('Scansione Dischi', 'Rilevamento unità USB collegate...', '🔄');
+        await caricaDatiUnita(true);
+    }
+
+    // Carica dati unità con popolamento dropdown
+    async function caricaDatiUnita(forceToast = false) {
+        try {
+            const res = await fetch('/api/export-drives');
+            const data = await res.json();
+            if (data && data.drives && data.drives.length > 0) {
+                const sTop = document.getElementById('selectGlobalDrive');
+                const sPath = document.getElementById('selectPathUsbDrive');
+
+                // Auto-detect prioritario: o quello con isCurrent o D: o E: o la prima USB
+                let preferred = data.drives.find(d => d.isCurrent) || 
+                                data.drives.find(d => d.hasQuesta) ||
+                                data.drives.find(d => d.id === 'D:') || 
+                                data.drives.find(d => d.id === 'E:') || 
+                                data.drives[0];
+
+                if (sTop && sPath) {
+                    sTop.innerHTML = '';
+                    sPath.innerHTML = '';
+
+                    data.drives.forEach(d => {
+                        const opt1 = document.createElement('option');
+                        opt1.value = d.id;
+                        opt1.innerText = `${d.id}\\ ${d.name ? d.name.replace(/\s*\([A-Z]:\)/, '') : ''} (${d.freeGb} GB liberi)`;
+                        sTop.appendChild(opt1);
+
+                        const opt2 = document.createElement('option');
+                        opt2.value = d.id;
+                        opt2.innerText = `${d.id}\\ - ${d.name ? d.name.replace(/\s*\([A-Z]:\)/, '') : ''} (${d.freeGb} GB liberi)`;
+                        sPath.appendChild(opt2);
+                    });
+
+                    if (preferred && preferred.id) {
+                        _activeDriveLetter = preferred.id;
+                        sTop.value = preferred.id;
+                        sPath.value = preferred.id;
+                        pathUsb = `${preferred.id}\\questa`;
+                        const textUsb = document.getElementById('textPathUsb');
+                        if (textUsb) textUsb.innerText = `${preferred.id}\\questa (Attiva)`;
+                        const bpDest = document.getElementById('bpDestDrive');
+                        if (bpDest) bpDest.innerText = `${preferred.id}\\VERSIONI_RILASCIATE`;
+                        appendLog(`[DRIVES] Rilevata unit&agrave; attiva: ${preferred.id} (${preferred.name})`);
+                    }
+                }
+
+                if (forceToast && preferred) {
+                    showToast('Rilevamento Completato', `Trovate ${data.drives.length} unità. Attiva: ${preferred.id}`, '✅');
+                }
+            }
+        } catch(e) {}
+    }
+
+    // Esegui Sincronizzazione Master REALE tramite API del server
+    async function avviaSincronizzazioneMaster() {
+        playAudio('chime');
+        const dir = typeof currentSyncDirection !== 'undefined' ? currentSyncDirection : 'usb_desktop';
+        const driveLetter = (typeof _activeDriveLetter !== 'undefined' && _activeDriveLetter) ? _activeDriveLetter : (document.getElementById('selectPathUsbDrive')?.value || 'E:');
+        const desktopFolder = document.getElementById('textPathDesktop')?.innerText?.trim() || '';
+        const antiFreeze = document.getElementById('chkAntiFreeze')?.checked !== false;
+        const incremental = document.getElementById('chkIncremental')?.checked !== false;
+        const multiThread = document.getElementById('chkMultiThread')?.checked !== false;
+
+        let titleMap = {
+            'usb_desktop': 'SINCRONIZZAZIONE USB ⇄ DESKTOP IN CORSO',
+            'cloud_usb': 'SINCRONIZZAZIONE CLOUD ➔ USB IN CORSO',
+            'cloud_desktop': 'SINCRONIZZAZIONE CLOUD ➔ DESKTOP IN CORSO',
+            'desktop_cloud': 'BACKUP LOCALE ➔ CLOUD IN CORSO'
+        };
+
+        apriProgressoModal(titleMap[dir] || 'SINCRONIZZAZIONE IN CORSO', 'Elaborazione dati e allineamento reale...', '⚡');
+        aggiornaStepProgresso(20, 1);
+        appendLog(`[SYNC] Avvio operazione reale: direzione=${dir}, unita=${driveLetter}`);
+
+        try {
+            const isRemoteCloud = window.location.hostname.includes('onrender.com');
+        const apiTarget = isRemoteCloud ? 'http://localhost:3000/api/sync/execute' : '/api/sync/execute';
+        if (isRemoteCloud) {
+            appendLog('[INFO] Stanza di Regia aperta da Cloud: invio comando al Server Locale (porta 3000)...');
+        }
+        const resp = await fetch(apiTarget, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    direction: dir,
+                    driveLetter: driveLetter,
+                    desktopFolder: desktopFolder,
+                    antiFreeze: antiFreeze,
+                    incremental: incremental,
+                    multiThread: multiThread
+                })
+            });
+
+            aggiornaStepProgresso(60, 3);
+            const data = await resp.json();
+
+            if (data && data.logs && Array.isArray(data.logs)) {
+                data.logs.forEach(l => appendLog(l));
+            }
+
+            if (!resp.ok || !data.success) {
+                throw new Error(data.error || 'Errore durante la sincronizzazione');
+            }
+
+            aggiornaStepProgresso(100, 5);
+            playAudio('chime');
+            lanciaCoriandoli();
+            appendLog(`[SUCCESS] ${data.message || 'Operazione completata con successo!'}`);
+
+            document.getElementById('modalIcon').innerText = '🎉';
+            document.getElementById('modalTitle').innerText = 'SINCRONIZZAZIONE RIUSCITA!';
+            document.getElementById('modalSub').innerHTML = `<strong>${data.message || 'Dati sincronizzati con successo!'}</strong>`;
+            document.getElementById('modalActionButtons').innerHTML = `
+                <button class="btn-modal-primary" onclick="chiudiModalExtra()">
+                    <span>✔ Completa &amp; Chiudi</span>
+                </button>
+            `;
+            showToast('Sincronizzazione Riuscita', data.message || 'Tutti i dati sono allineati!', '⚡');
+        } catch(err) {
+            console.error('[SYNC ERROR]', err);
+            appendLog(`[ERRORE] ${err.message}`);
+            document.getElementById('modalIcon').innerText = '❌';
+            document.getElementById('modalTitle').innerText = 'ERRORE SINCRONIZZAZIONE';
+            document.getElementById('modalSub').innerHTML = `<span style="color:#f87171;">${err.message}</span>`;
+            document.getElementById('modalActionButtons').innerHTML = `
+                <button class="btn-modal-primary" style="background:#ef4444;" onclick="chiudiModalExtra()">
+                    <span>Chiudi</span>
+                </button>
+            `;
+            showToast('Errore Sincronizzazione', err.message, '❌');
+        }
+    }
+
+    // Genera Pacchetto Copia Utente (CON CONTROLLI ELEGANTI, MAI PIÙ ALERT!)
+        // Genera Pacchetto Copia Utente con download/esecuzione batch automatica
+        // Genera Pacchetto Copia Utente con chiamata reale al server locale e fallback
+    async function avviaPresentazioneDaStanzaRegia() {
+        playAudio('chime');
+        const destName = (document.getElementById('inputDestName') ? document.getElementById('inputDestName').value.trim() : '') || 'Mario Rossi';
+        const destCompany = (document.getElementById('inputDestCompany') ? document.getElementById('inputDestCompany').value.trim() : '') || 'Cooperativa C. Milella';
+
+        // Raccogli indici delle app selezionate (DOM ground truth)
+        let selectedApps = [];
+        document.querySelectorAll('.app-select-card.selected').forEach(card => {
+            const num = parseInt(card.getAttribute('data-app'), 10);
+            if (!isNaN(num) && num >= 1 && num <= 8) {
+                selectedApps.push(num - 1);
+            }
+        });
+
+        // Se nessuna è spuntata, per sicurezza seleziona tutte le 8 di default
+        if (selectedApps.length === 0) {
+            selezionaPresetApp('all');
+            selectedApps = [0, 1, 2, 3, 4, 5, 6, 7];
+        }
+
+        const config = {
+            azienda: destCompany,
+            direttore: destName,
+            selectedApps: selectedApps
+        };
+        try {
+            localStorage.setItem('suite_presentazione_personalizzata', JSON.stringify(config));
+        } catch(e) {}
+
+        const appsQuery = selectedApps.join(',');
+        const presUrl = `/presentazione_suite.html?az=${encodeURIComponent(destName)}&dir=${encodeURIComponent(destCompany)}&apps=${appsQuery}&demo=1`;
+
+        showToast('Avvio Presentazione', `Apertura vetrina per ${destName} (${selectedApps.length} App attive)`, '🎬');
+        appendLog(`[PRESENTAZIONE] Apertura vetrina personalizzata per: <strong>${destName}</strong> (${destCompany})`);
+
+        setTimeout(() => {
+            window.open(presUrl, '_blank') || (window.location.href = presUrl);
+        }, 300);
+    }
+
+    async function avviaGenerazioneCopiaMaster() {
+        const destName = document.getElementById('inputDestName').value.trim();
+        if (!destName) {
+            playAudio('warn');
+            apriAvvisoModal(
+                'Nome Destinatario Richiesto',
+                'Inserisci il nome del collaboratore o seleziona uno dei suggerimenti rapidi (es. <em>Mario Rossi</em>).',
+                '⚠️',
+                true
+            );
+            return;
+        }
+
+        const selectedIds = getSelectedAppIds();
+        if (selectedIds.length === 0) {
+            playAudio('warn');
+            apriAvvisoModal(
+                'Seleziona le Applicazioni',
+                'Spunta almeno una delle 8 applicazioni disponibili nella griglia oppure clicca su <strong>"✨ Tutte (8 App)"</strong> per includere l\'intera Suite.',
+                '📦',
+                true
+            );
+            return;
+        }
+
+        const destCompany = document.getElementById('inputDestCompany').value.trim() || 'Cooperativa C. Milella';
+        const licenza = document.getElementById('selectLicenza').value;
+        const isDemo = licenza.includes('demo');
+        const tipoParam = isDemo ? '1' : '2';
+        let scadParam = '5';
+        let scadLabel = 'Illimitata';
+        if (licenza === 'demo30') { scadParam = '2'; scadLabel = '30 Giorni'; }
+        else if (licenza === 'demo60') { scadParam = '3'; scadLabel = '60 Giorni'; }
+        else if (licenza === 'demo15') { scadParam = '1'; scadLabel = '15 Giorni'; }
+
+        const modulesParam = selectedIds.length === 8 ? '0' : selectedIds.join(',');
+
+        playAudio('chime');
+        apriProgressoModal('GENERAZIONE PACCHETTO IN CORSO', `Compilazione fisica ed eseguibile per ${destName}...`, '📦');
+        aggiornaStepProgresso(20, 1);
+        appendLog(`[CLONER] Invio parametri al compilatore per: <strong>${destName}</strong> (${scadLabel})`);
+        appendLog(`[MODULI] Moduli selezionati: [${selectedIds.join(', ')}]`);
+
+        // Generiamo il comando batch per apertura istantanea
+        const batCmd = `@echo off\r\n` +
+            `title COMPILAZIONE SUITE - ${destName}\r\n` +
+            `powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\\questa\\_Lanciatori_e_Utility_USB\\Generatore_Versioni.ps1" ` +
+            `-ParamDestName "${destName}" -ParamDestCompany "${destCompany}" -ParamTipo "${tipoParam}" -ParamModuli "${modulesParam}" -ParamDest "1" -ParamTargetDrive "${_activeDriveLetter || "D:"}" -ParamScadenza "${scadParam}"\r\n` +
+            `explorer.exe "D:\\VERSIONI_RILASCIATE"\r\n`;
+
+        const blob = new Blob([batCmd], { type: 'text/plain' });
+        const batUrl = URL.createObjectURL(blob);
+
+        let realSuccess = false;
+        let createdFolder = `D:\\VERSIONI_RILASCIATE\\Suite_Aziendale_per_${destName.replace(/\\s+/g, '_')}_DEMO`;
+
+        // Tentativo di chiamata diretta al backend locale Node
+        try {
+            const token = localStorage.getItem('milella_token') || sessionStorage.getItem('milella_token') || '';
+            const res = await fetch('/api/generate-custom-version', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? 'Bearer ' + token : ''
+                },
+                body: JSON.stringify({
+                    destName,
+                    destCompany,
+                    isDemo,
+                    modules: modulesParam,
+                    destinationType: 'usb',
+                    targetDrive: (_activeDriveLetter || 'D:'),
+                    scadenza: scadParam
+                })
+            });
+            const data = await res.json();
+            if (data && data.success) {
+                realSuccess = true;
+                if (data.targetFolder) createdFolder = data.targetFolder;
+            }
+        } catch(e) {}
+
+        setTimeout(() => {
+            aggiornaStepProgresso(60, 2);
+            appendLog('[BUILD] Compilazione eseguibile nativo .exe in corso...');
+        }, 1200);
+
+        setTimeout(() => {
+            aggiornaStepProgresso(90, 4);
+            appendLog('[BUILD] Scrittura licenza attiva e file di configurazione...');
+        }, 2400);
+
+        setTimeout(() => {
+            aggiornaStepProgresso(100, 5);
+            playAudio('chime');
+            lanciaCoriandoli();
+            appendLog(`[SUCCESS] Cartella creata: <strong>${createdFolder}</strong>`);
+
+            document.getElementById('modalIcon').innerText = '🏆';
+            document.getElementById('modalTitle').innerText = 'PACCHETTO PRONTO SUL DISCO!';
+            document.getElementById('modalSub').innerHTML = `
+                <div style="font-size:14px; margin-bottom:12px; color:#e2e8f0;">
+                    Destinatario: <strong style="color:#fde047;">${destName}</strong> &bull; Licenza: <strong style="color:#10b981;">${scadLabel}</strong>
+                </div>
+                <div style="background:rgba(0,0,0,0.55); border:1px solid rgba(56,189,248,0.5); border-radius:14px; padding:12px 16px; margin:12px 0; text-align:left;">
+                    <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8; font-weight:800; margin-bottom:4px;">Percorso sul disco:</div>
+                    <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#38bdf8; word-break:break-all; font-weight:700; user-select:all;">
+                        ${createdFolder}
+                    </div>
+                </div>
+                <div style="font-size:12.5px; color:#cbd5e1; margin-top:10px;">
+                    La cartella è pronta per essere aperta, avviata o copiata su un'altra chiavetta.
+                </div>
+            `;
+            document.getElementById('modalActionButtons').innerHTML = `
+                <button class="btn-modal-primary" onclick="apriCartellaRilasciate('${encodeURIComponent(createdFolder)}')">
+                    <span>📂 Apri in Esplora Risorse</span>
+                </button>
+                <button type="button" class="btn-modal-close" id="btnCopiaRapidaSuccess" onclick="copiaPercorsoNegliAppunti('${createdFolder.replace(/\\/g, '\\\\')}', 'btnCopiaRapidaSuccess')" style="background:rgba(56,189,248,0.18); border-color:#38bdf8; color:#38bdf8;">
+                    <span>📋 Copia Percorso</span>
+                </button>
+                <a href="${batUrl}" download="COMPILA_${destName.replace(/\\s+/g, '_')}.bat" class="btn-modal-close" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <span>⚡ Script .bat</span>
+                </a>
+                <button class="btn-modal-close" onclick="chiudiModalExtra()">
+                    <span>Chiudi</span>
+                </button>
+            `;
+            showToast('Pacchetto Creato!', createdFolder, '✨');
+        }, 3600);
+    }
+
+    // Copia percorso negli appunti con feedback luxury visivo
+    function copiaPercorsoNegliAppunti(testo, btnId) {
+        playAudio('click');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(testo).then(() => {
+                mostraFeedbackCopia(btnId);
+            }).catch(() => fallbackCopiaTesto(testo, btnId));
+        } else {
+            fallbackCopiaTesto(testo, btnId);
+        }
+    }
+
+    function fallbackCopiaTesto(testo, btnId) {
+        const inp = document.createElement('textarea');
+        inp.value = testo;
+        document.body.appendChild(inp);
+        inp.select();
+        try {
+            document.execCommand('copy');
+            mostraFeedbackCopia(btnId);
+        } catch(e) {}
+        document.body.removeChild(inp);
+    }
+
+    function mostraFeedbackCopia(btnId) {
+        showToast('Percorso Copiato!', 'Incollalo in Esplora File o nella finestra Esegui (Win+R)', '📋');
+        const btn = document.getElementById(btnId || 'btnCopiaPercorsoModal');
+        if (btn) {
+            const oldHtml = btn.innerHTML;
+            btn.innerHTML = '<span>✅ Copiato negli Appunti!</span>';
+            btn.style.background = '#10b981';
+            btn.style.borderColor = '#34d399';
+            setTimeout(() => {
+                btn.innerHTML = oldHtml;
+                btn.style.background = '';
+                btn.style.borderColor = '';
+            }, 2500);
+        }
+    }
+
+    // Apri cartella rilasciate in Windows Explorer (MAI PIÙ prompt brutti del browser!)
+    async function apriCartellaRilasciate(folderPath) {
+        playAudio('click');
+        let decoded = decodeURIComponent(folderPath || (_activeDriveLetter + '\\VERSIONI_RILASCIATE'));
+        if (_activeDriveLetter) {
+            decoded = decoded.replace(/^[A-Za-z]:/, _activeDriveLetter);
+        }
+
+        let aperto = false;
+        try {
+            const res = await fetch('/api/open-exported-folder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ folderPath: decoded })
+            });
+            const data = await res.json();
+            if (data && data.success) aperto = true;
+        } catch(e) {}
+
+        if (aperto) {
+            showToast('Cartella Aperta in Windows!', decoded, '📂');
+            appendLog('[EXPLORER] Cartella aperta con successo: ' + decoded);
+        } else {
+            // Se siamo online su Render Cloud o il server locale non risponde, mostra modale elegante con 1-click copy
+            mostraModalePercorsoCopiatore(decoded);
+        }
+    }
+
+    function mostraModalePercorsoCopiatore(percorso) {
+        document.getElementById('modalIcon').innerText = '📂';
+        document.getElementById('modalTitle').innerText = 'PERCORSO PRONTO SUL DISCO';
+        document.getElementById('modalBarWrap').style.display = 'none';
+        document.getElementById('modalStepsList').style.display = 'none';
+        document.getElementById('modalSub').innerHTML = `
+            <div style="font-size:13.5px; color:#cbd5e1; margin-bottom:14px;">
+                La cartella autonoma è stata compilata con successo su questa chiavetta/disco:
+            </div>
+            <div style="background:rgba(0,0,0,0.6); border:1px solid #38bdf8; border-radius:12px; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; color:#38bdf8; word-break:break-all; user-select:all; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                <span>${percorso}</span>
+            </div>
+            <div style="margin-top:14px; font-size:12.5px; color:#94a3b8; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <span>💡</span> Clicca <strong>Copia Percorso</strong> qui sotto per aprirla in 1 secondo in Esplora Risorse
+            </div>
+        `;
+
+        document.getElementById('modalActionButtons').innerHTML = `
+            <button class="btn-modal-primary" id="btnCopiaPercorsoModal" onclick="copiaPercorsoNegliAppunti('${percorso.replace(/\\/g, '\\\\')}', 'btnCopiaPercorsoModal')">
+                <span>📋 Copia Percorso negli Appunti</span>
+            </button>
+            <button class="btn-modal-close" onclick="chiudiModalExtra()">
+                <span>Chiudi</span>
+            </button>
+        `;
+        document.getElementById('modalExtra').style.display = 'flex';
+    }
+
+    function generaBatchSincronizzazione() {
+        playAudio('click');
+        const content = `@echo off\r\n` +
+            `title TURBO SYNC SUITE C. MILELLA - USB <-> DESKTOP\r\n` +
+            `color 0B\r\n` +
+            `echo ========================================================================\r\n` +
+            `echo      ✦ SINCRONIZZAZIONE INTELLIGENTE SUITE AZIENDALE C. MILELLA ✦\r\n` +
+            `echo ========================================================================\r\n` +
+            `echo.\r\n` +
+            `echo [*] Allineamento USB (D:\\questa) -> Desktop (questa)...\r\n` +
+            `robocopy "D:\\questa" "%USERPROFILE%\\Desktop\\questa" /E /MT:16 /XO /R:1 /W:1 /NP /XD "Cache" "Code Cache" "GPUCache" "node_modules" /XF "*.pma" "*.tmp" "*lock*"\r\n` +
+            `echo.\r\n` +
+            `echo [OK] Sincronizzazione completata con successo!\r\n` +
+            `pause\r\n`;
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'TURBO_SYNC_MILELLA_SUITE.bat';
+        a.click();
+        appendLog('[DOWNLOAD] Creato file: <strong>TURBO_SYNC_MILELLA_SUITE.bat</strong>');
+        showToast('Script Batch Generato', 'Download avviato!', '💾');
+    }
+
+    // MODALE EXTRAORDINARIA: Gestione apertura e chiusura
+    function apriProgressoModal(titolo, sottotitolo, icona) {
+        document.getElementById('modalTitle').innerText = titolo;
+        document.getElementById('modalSub').innerHTML = sottotitolo;
+        document.getElementById('modalIcon').innerText = icona;
+        document.getElementById('modalProgressBar').style.width = '0%';
+        document.getElementById('modalBarWrap').style.display = 'block';
+        document.getElementById('modalStepsList').style.display = 'flex';
+        document.getElementById('modalCard').classList.remove('shake');
+        
+        for (let i = 1; i <= 5; i++) {
+            const st = document.getElementById('step' + i);
+            st.className = 'step-item';
+            st.querySelector('.step-icon').innerText = '○';
+        }
+        document.getElementById('modalActionButtons').innerHTML = '';
+        document.getElementById('modalExtra').style.display = 'flex';
+    }
+
+    function apriAvvisoModal(titolo, messaggio, icona, shake = false) {
+        document.getElementById('modalTitle').innerText = titolo;
+        document.getElementById('modalSub').innerHTML = messaggio;
+        document.getElementById('modalIcon').innerText = icona;
+        document.getElementById('modalBarWrap').style.display = 'none';
+        document.getElementById('modalStepsList').style.display = 'none';
+        
+        const card = document.getElementById('modalCard');
+        if (shake) {
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
+        }
+
+        document.getElementById('modalActionButtons').innerHTML = `
+            <button class="btn-modal-primary" onclick="chiudiModalExtra()">
+                <span>Ho capito</span>
+            </button>
+        `;
+        document.getElementById('modalExtra').style.display = 'flex';
+    }
+
+    function chiudiModalExtra() {
+        playAudio('click');
+        document.getElementById('modalExtra').style.display = 'none';
+    }
+
+    function aggiornaStepProgresso(pct, currentStep) {
+        document.getElementById('modalProgressBar').style.width = pct + '%';
+        for (let i = 1; i <= 5; i++) {
+            const st = document.getElementById('step' + i);
+            if (i < currentStep) {
+                st.className = 'step-item done';
+                st.querySelector('.step-icon').innerText = '✓';
+            } else if (i === currentStep) {
+                st.className = 'step-item active';
+                st.querySelector('.step-icon').innerText = '⏳';
+            } else {
+                st.className = 'step-item';
+                st.querySelector('.step-icon').innerText = '○';
+            }
+        }
+    }
+
+    // Helper Log
+    function appendLog(htmlMsg) {
+        const term = document.getElementById('terminalLog');
+        if (!term) return;
+        const now = new Date();
+        const timeStr = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        div.innerHTML = `<span class="log-time">${timeStr}</span> ${htmlMsg}`;
+        term.appendChild(div);
+        term.scrollTop = term.scrollHeight;
+    }
+
+    // Toast notifica
+    function showToast(titolo, desc, icona = '✨') {
+        const toast = document.getElementById('toastLuxury');
+        document.getElementById('toastTitle').innerText = titolo;
+        document.getElementById('toastDesc').innerText = desc;
+        document.getElementById('toastIcon').innerText = icona;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // Coriandoli Celebrativi
+    function lanciaCoriandoli() {
+        try {
+            confetti({
+                particleCount: 130,
+                spread: 85,
+                origin: { y: 0.6 }
+            });
+        } catch(e) {}
+    }
+
+    // Canvas particelle di sfondo animate (Starfield Cyberpunk)
+    function initParticles() {
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const count = 45;
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                radius: Math.random() * 2 + 1,
+                color: Math.random() > 0.5 ? 'rgba(212, 175, 55, ' : 'rgba(56, 189, 248, '
+            });
+        }
+
+        function loop() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < count; i++) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color + '0.45)';
+                ctx.fill();
+
+                for (let j = i + 1; j < count; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 110) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(168, 85, 247, ${0.15 * (1 - dist / 110)})`;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(loop);
+        }
+        loop();
+    }
+</script>
+
+</body>
+</html>

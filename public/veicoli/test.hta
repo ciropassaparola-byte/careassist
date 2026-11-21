@@ -1,0 +1,836 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Enterprise Admin - Gestione Utenti</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="AdminUtenti"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        WINDOWSTATE="maximize"
+        ICON="assets/img/app_icon.ico"
+        NAVIGABLE="no"
+    />
+    <script>
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e) {}
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <link rel="stylesheet" href="assets/css/admin_utenti.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+<script>
+function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            var testoGuida = "========================================\n" +
+                             "   GUIDA ALL'USO - ZENITH LOGISTICA\n" +
+                             "========================================\n\n" +
+                             "1. RICERCA GLOBALE:\n" +
+                             "   Digita nella barra in alto per cercare clienti,\n" +
+                             "   citta, telefoni o qualsiasi articolo in tempo reale.\n\n" +
+                             "2. FILTRI SIDEBAR:\n" +
+                             "   Usa i pulsanti a sinistra per filtrare per Provincia\n" +
+                             "   (Bari, Foggia, Taranto) o Dispositivo (Orologio, Braille...).\n\n" +
+                             "3. COPIA DATI:\n" +
+                             "   Clicca sul tasto verde 'Copia' per salvare la scheda\n" +
+                             "   negli appunti e incollarla dove desideri.\n\n" +
+                             "4. SINCRONIZZAZIONE EXCEL:\n" +
+                             "   Dal menu File premi 'Sincronizza Excel Ora' per\n" +
+                             "   aggiornare i dati con gli ultimi file Danea.\n\n" +
+                             "========================================";
+            
+            alert(testoGuida);
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "block";
+                    m.style.visibility = "visible";
+                }
+            } catch(ex) {}
+        }
+
+        function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.cssText = "display:block !important; visibility:visible !important; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;";
+                }
+            } catch(ex) {}
+        }
+
+        function ChiudiGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "none";
+                    m.style.visibility = "hidden";
+                    m.style.cssText = "display:none !important; visibility:hidden !important;";
+                }
+            } catch(ex) {}
+        }
+
+        function OpenMenu(el) {
+            if (!el) return;
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1 && items[i] !== el) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+            el.style.background = 'rgba(56, 189, 248, 0.25)';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'block';
+                drop.style.visibility = 'visible';
+            }
+        }
+
+        function CloseMenu(el, e) {
+            if (!el) return;
+            e = e || window.event;
+            var target = e ? (e.toElement || e.relatedTarget) : null;
+            try {
+                while (target) {
+                    if (target === el) return;
+                    target = target.parentNode;
+                }
+            } catch(err) {}
+
+            el.style.background = 'transparent';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'none';
+                drop.style.visibility = 'hidden';
+            }
+        }
+
+        function ToggleMenu(el, e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                if (drop.style.display === 'block' && drop.style.visibility === 'visible') {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                    el.style.background = 'transparent';
+                } else {
+                    OpenMenu(el);
+                }
+            }
+        }
+
+        document.onclick = function(e) {
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+        };
+
+        var lastExecTime = 0;
+        function ExecAction(actionName, e) {
+            var now = new Date().getTime();
+            if (now - lastExecTime < 200) return;
+            lastExecTime = now;
+
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            // Close all dropdowns
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+        }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+</script>
+</head>
+<body>
+    <div class="admin-header" onmousedown="StartDrag()" style="cursor:move;">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:15px; margin-right:15px; cursor:default;">
+            <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+            <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+            <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+        </div>
+        <div class="admin-header-title">
+            <img src="https://img.icons8.com/color/96/van-pool.png" class="admin-logo-img" title="Gestionale C. Milella" onclick="TornaDashboard()">
+            <div>
+                <h1>USER MANAGEMENT</h1>
+                <p>Amministrazione profili, sicurezza dati e permessi logistici d'accesso <span style="opacity:0.2; font-size:11px; font-weight:normal; cursor:help;" title="Prova a digitare la parola 'hack' sulla tastiera...">[?]</span></p>
+            </div>
+        </div>
+        <button class="btn btn-primary" style="background:#f0f9ff; color:#0284c7; border: 2px solid #bae6fd; font-size:18px; padding:15px 30px;" onclick="ApriManuale()">
+            <img src="https://img.icons8.com/color/48/info.png" style="width:24px; margin-right:8px;"> ISTRUZIONI
+        </button>
+    </div>
+
+    <!-- BARRA DEI MENU CLASSICA -->
+    <div class="menu-bar">
+        <div class="menu-item"><u>F</u>ile
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="NuovoUtente()"><img src="https://img.icons8.com/material-rounded/24/new-view.png" style="width:16px;"> <u>N</u>uovo Account</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="EsportaExcel()"><img src="https://img.icons8.com/material-rounded/24/export.png" style="width:16px;"> <u>E</u>sporta Excel</div>
+                <div class="dropdown-item" onclick="ImportaExcel()"><img src="https://img.icons8.com/material-rounded/24/import.png" style="width:16px;"> <u>I</u>mporta Excel</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="window.close()"><img src="https://img.icons8.com/material-rounded/24/exit.png" style="width:16px;"> <u>E</u>sci</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>M</u>odifica
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="SalvaUtente()"><img src="https://img.icons8.com/material-rounded/24/save.png" style="width:16px;"> <u>S</u>alva Modifiche</div>
+                <div class="dropdown-item" onclick="EliminaUtente()"><img src="https://img.icons8.com/material-rounded/24/trash.png" style="width:16px;"> <u>E</u>limina Utente</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="ClearField('txtPassword')">Pulisci <u>P</u>assword</div>
+                <div class="dropdown-item" onclick="ClearField('txtMail')">Pulisci <u>E</u>mail</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>V</u>isualizza
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="CaricaUtenti()"><img src="https://img.icons8.com/material-rounded/24/refresh.png" style="width:16px;"> <u>A</u>ggiorna Elenco</div>
+                <div class="dropdown-item" onclick="AggiornaStats()">Ricalcola <u>S</u>tatistiche</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>A</u>iuto
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="HelpIstruzioni()"><img src="https://img.icons8.com/material-rounded/24/help.png" style="width:16px;"> <u>M</u>anuale Online</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="InviaSOS()" style="color:#ef4444; font-weight:bold;"><img src="https://img.icons8.com/material-rounded/24/error.png" style="width:16px;"> Invia Segnalazione <u>S</u>.O.S.</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="ApriGuidaDistribuzione()"><img src="https://img.icons8.com/material-rounded/24/workflow.png" style="width:16px;"> <u>G</u>uida alla Distribuzione</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="alert('Sistema Logistica C. Milella\nVersione Cockpit 2026.4\nModernized by Antigravity')"><u>I</u>nformazioni su...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-dashboard-wrap">
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #005a9e, #003d6b);">👥</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statTotale">-</div>
+                    <div class="stat-label">Utenti Registrati</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">✔️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statAttivi">-</div>
+                    <div class="stat-label">Account Attivi</div>
+                </div>
+            </div>
+            <div class="stat-card" id="cardStatMail">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📧</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statMailMancanti">-</div>
+                    <div class="stat-label">Email Mancanti</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #64748b, #334155);">💾</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statDbInfo" style="font-size:16px;">Calcolo...</div>
+                    <div class="stat-label">Salute Database</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-body">
+            <!-- LIST CARD -->
+            <div class="card list-card">
+                <div class="card-header">
+                    <img src="https://img.icons8.com/fluency/64/conference-call.png" style="width:36px;">
+                    <h2>ELENCO ACCOUNT GESTIONALI</h2>
+                    <div style="position:relative; display:flex; align-items:center;">
+                        <img src="https://img.icons8.com/fluency/48/search.png" style="width:20px; position:absolute; left:12px; opacity:0.7;">
+                        <input type="text" id="txtSearch" placeholder="Cerca..." onkeyup="FiltraUtenti()" 
+                               style="padding: 10px 12px 10px 40px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; width: 180px; outline: none; background:#f8fafc;">
+                    </div>
+                </div>
+                <div id="insightBox" class="insight-box">
+                    <span>🕵️</span> 
+                    <span id="lblLastLogin">Analisi accessi in corso...</span>
+                </div>
+                <div id="userGrid" class="user-grid" style="padding-top:10px;"></div>
+            </div>
+
+            <!-- DETAILS CARD -->
+            <div class="card details-card">
+                <div class="card-header">
+                    <img src="https://img.icons8.com/fluency/64/settings.png" style="width:36px;">
+                    <h2>CONFIGURAZIONE</h2>
+                </div>
+                <div class="details-body">
+                    <div class="form-group">
+                        <label for="txtNome">👤 NOME UTENTE / LOGIN</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <input type="text" id="txtNome" placeholder="Username">
+                            </div>
+                            <div class="row-actions">
+                                <button class="row-btn btn-save" title="Salva Utente" onclick="SalvaUtente()"><img src="https://img.icons8.com/fluency/48/save.png"></button>
+                                <button class="row-btn" title="Focus Campo" onclick="FocusField('txtNome')"><img src="https://img.icons8.com/fluency/48/pencil.png"></button>
+                                <button class="row-btn btn-clear" title="Pulisci Campo" onclick="ClearField('txtNome')"><img src="https://img.icons8.com/fluency/48/broom.png"></button>
+                                <div style="width:10px;"></div>
+                                <button class="row-btn" style="border-color:var(--cl-success);" title="Nuovo Utente" onclick="NuovoUtente()"><img src="https://img.icons8.com/fluency/48/plus.png"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtPassword">🔑 CHIAVE DI ACCESSO (TEXT)</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <input type="text" id="txtPassword" placeholder="Inserisci password" onkeyup="AnalizzaPassword(this.value)">
+                            </div>
+                            <div class="row-actions">
+                                <button class="row-btn" id="btnTogglePass" title="Mostra/Nascondi Password" onclick="TogglePasswordVisibility()"><img id="imgTogglePass" src="https://img.icons8.com/fluency/48/visible.png"></button>
+                                <button class="row-btn" title="Genera Password Sicura" onclick="GeneraPasswordSicura()"><img src="https://img.icons8.com/fluency/48/dice.png"></button>
+                                <button class="row-btn btn-save" title="Salva Utente" onclick="SalvaUtente()"><img src="https://img.icons8.com/fluency/48/save.png"></button>
+                                <button class="row-btn btn-clear" title="Pulisci Campo" onclick="ClearField('txtPassword')"><img src="https://img.icons8.com/fluency/48/broom.png"></button>
+                            </div>
+                        </div>
+                        <div class="strength-container">
+                            <div id="strengthBar" class="strength-bar"></div>
+                        </div>
+                        <div id="strengthText" class="strength-text">Nessuna Password</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtMail">📧 EMAIL DI SICUREZZA</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <input type="text" id="txtMail" placeholder="Indirizzo e-mail">
+                            </div>
+                            <div class="row-actions">
+                                <button class="row-btn btn-save" title="Salva Utente" onclick="SalvaUtente()"><img src="https://img.icons8.com/fluency/48/save.png"></button>
+                                <button class="row-btn" title="Focus Campo" onclick="FocusField('txtMail')"><img src="https://img.icons8.com/fluency/48/pencil.png"></button>
+                                <button class="row-btn btn-clear" title="Pulisci Campo" onclick="ClearField('txtMail')"><img src="https://img.icons8.com/fluency/48/broom.png"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label for="cmbRuolo">🛡️ RUOLO E PERMESSI</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <select id="cmbRuolo" style="width:100%; padding:10px 14px; border-radius:12px; border:1.5px solid #e2e8f0; font-weight:bold; color:#1e293b; outline:none; background:#f8fafc;">
+                                    <option value="Amministratore">👑 Amministratore (Accesso Totale)</option>
+                                    <option value="Operatore" selected>💻 Operatore Logistica (Ufficio)</option>
+                                    <option value="Autista">🚚 Autista / Driver (Solo Mobile)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; margin-top:10px; margin-bottom:15px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; flex:none;">
+                        <label class="checkbox-group" for="chkAbilitato" style="margin:0 0 10px 0;">
+                            <input type="checkbox" id="chkAbilitato" checked> 
+                            <span style="font-weight:bold; color:#0f172a;">Account Abilitato al login</span>
+                        </label>
+                        <label class="checkbox-group" for="chkForzaCambio" style="margin:0;">
+                            <input type="checkbox" id="chkForzaCambio"> 
+                            <span style="font-weight:bold; color:#b91c1c;">Forza cambio password al prossimo accesso</span>
+                        </label>
+                    </div>
+
+                    <div style="display:flex; margin-bottom:15px; flex:none;">
+                        <button class="btn btn-primary" style="flex:1; background:#25d366; border-color:#25d366; margin-right:10px;" onclick="CondividiCredenziali('whatsapp')" title="Invia su WhatsApp">
+                            <i class="fa fa-whatsapp" style="font-size:18px;"></i> INVIA CREDENZIALI
+                        </button>
+                        <button class="btn btn-primary" style="flex:1; background:#005a9e; color:white; border-color:#005a9e;" onclick="GeneraQRLogin()" title="Genera QR per App Mobile">
+                            <i class="fa fa-qrcode" style="font-size:18px;"></i> MOSTRA QR LOGIN
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                            <label style="color: #005a9e; font-weight: 800; font-size: 11px; letter-spacing: 0.5px; margin:0;">🌟 MODELLO ORARIO STANDARD</label>
+                            <div id="badgeTotalOre" style="font-size: 10px; background:#f1f5f9; color:#64748b; border: 1px solid #cbd5e1; padding: 3px 10px; border-radius: 20px; font-weight:800; transition: all 0.2s;">⏱️ TOTALE: 0h 00m</div>
+                        </div>
+                        <div style="display:flex; gap:8px; margin-top:5px;">
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">ENTRATA 1</label>
+                                <input type="text" id="txtStdE1" placeholder="09:00" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">USCITA 1</label>
+                                <input type="text" id="txtStdU1" placeholder="13:30" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">ENTRATA 2</label>
+                                <input type="text" id="txtStdE2" placeholder="14:30" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">USCITA 2</label>
+                                <input type="text" id="txtStdU2" placeholder="17:30" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                        </div>
+                        <p style="font-size:9px; color:#64748b; margin-top:5px; font-style:italic; margin-bottom:0;">Caricati automaticamente nel registro presenze.</p>
+                    </div>
+
+                    <div style="display:flex; margin-top:20px;">
+                        <button class="btn btn-success" style="flex:1; height:46px; font-size:15px; padding:0; margin-right:15px;" onclick="SalvaUtente()">
+                            <img src="https://img.icons8.com/fluency/48/checked-user-male.png" style="width:24px;"> SALVA
+                        </button>
+                        <button class="btn btn-danger" style="flex:1; height:46px; font-size:15px; padding:0;" onclick="EliminaUtente()">
+                            <img src="https://img.icons8.com/fluency/48/trash.png" style="width:24px;"> ELIMINA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-audit">
+            <div class="audit-header">
+                <div><span>📁</span> SYSTEM AUDIT TRAIL (STORICO VERSIONAMENTO)</div>
+                <div class="audit-actions">
+                    <button class="audit-btn" onclick="ApriLogCompleto()" title="Apri file log completo con Notepad">
+                        <img src="https://img.icons8.com/color/48/external-link.png" style="width:16px;"> VEDI TUTTO
+                    </button>
+                    <button class="audit-btn btn-clear-log" onclick="SvuotaLog()" title="Cancella tutto lo storico log">
+                        <img src="https://img.icons8.com/color/48/delete-forever.png" style="width:16px;"> SVUOTA LOG
+                    </button>
+                </div>
+            </div>
+            <div id="logContainer" class="log-container"></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+        <div class="bottom-actions">
+            <button class="btn btn-primary" onclick="EsportaExcel()">
+                <img src="https://img.icons8.com/fluency/48/microsoft-excel-2019.png" style="width:24px;">
+                ESPORTA
+            </button>
+            <button class="btn btn-primary" onclick="ImportaExcel()">
+                <img src="https://img.icons8.com/fluency/48/import.png" style="width:24px;">
+                IMPORTA
+            </button>
+            <div style="width:15px;"></div>
+            <button class="btn btn-primary" style="color:#b73e35; border-color:#b73e35;" onclick="VerificaEmail()">
+                 <img src="https://img.icons8.com/fluency/48/mail-error.png" style="width:20px;">
+                 EMAIL MANCANTI
+            </button>
+            <button class="btn btn-primary" onclick="AggiornaVersione()">
+                <img src="https://img.icons8.com/fluency/48/checkmark-release.png" style="width:20px;">
+                SYSTEM LOG
+            </button>
+        </div>
+        
+        <div class="hint-text" id="lblHint">Seleziona un utente dal listino per visualizzare i dettagli.</div>
+        
+        <button class="btn btn-primary" style="background:#f1f5f9; color:#334155; border-color:#cbd5e1;" onclick="TornaDashboard()">
+            <img src="https://img.icons8.com/fluency/48/exit.png" style="width:24px;">
+            CHIUDI ADMIN
+        </button>
+    </div>
+
+    <!-- CONTEXT MENU (Glass Style) -->
+    <div id="ctxMenu" class="context-menu" style="display:none;">
+        <div class="ctx-item" onclick="StampaSchedaDalContext()">
+            <img src="https://img.icons8.com/material-rounded/24/print.png">
+            STAMPA SCHEDA UTENTE
+        </div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-item danger" onclick="EliminaDalContext()">
+            <img src="https://img.icons8.com/material-rounded/24/trash.png">
+            ELIMINA UTENTE
+        </div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-item" onclick="HideContextMenu()">
+            <img src="https://img.icons8.com/material-rounded/24/cancel.png">
+            ANNULLA
+        </div>
+    </div>
+
+    <!-- TIME PICKER OVERLAY (MASCHERA ORARI) -->
+    <div id="tpOverlay" class="tp-overlay">
+        <div class="tp-modal">
+            <div class="tp-header">SELEZIONE ORARIO STANDARD</div>
+            <div class="tp-body">
+                <div class="tp-col">
+                    <div class="tp-col-title">ORE</div>
+                    <div class="tp-scroll" id="tp-hours"></div>
+                </div>
+                <div class="tp-col">
+                    <div class="tp-col-title">MINUTI</div>
+                    <div class="tp-scroll" id="tp-minutes"></div>
+                </div>
+            </div>
+            <div class="tp-footer">
+                <button class="btn-tp-cancel" onclick="CloseTimePicker()">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- MODALE QR CODE LOGIN -->
+    <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); backdrop-filter:blur(5px); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:white; padding:30px; border-radius:24px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); max-width:400px; animation: modalContentSlide 0.3s ease-out;">
+            <h2 style="margin-top:0; color:#0f172a; font-weight:900;"><i class="fa fa-mobile" style="font-size:24px; color:#3b82f6;"></i> Login Rapido App</h2>
+            <p style="color:#64748b; font-size:13px; margin-bottom:20px;">L'autista può scansionare questo QR con l'App Mobile per accedere immediatamente senza digitare la password.</p>
+            <div style="background:#f8fafc; padding:20px; border-radius:16px; border:2px dashed #cbd5e1; display:inline-block; margin-bottom:20px;">
+                <img id="imgQrCode" src="" alt="QR Code" style="width:200px; height:200px;">
+            </div>
+            <div>
+                <button class="btn btn-primary" style="width:100%; font-size:15px; padding:12px; border-radius:12px; background:#005a9e;" onclick="document.getElementById('qrModal').style.display='none'">CHIUDI E TORNA ALLA SCHEDA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE WHATSAPP -->
+    <div id="waModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); backdrop-filter:blur(5px); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:white; padding:30px; border-radius:24px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); width:380px; animation: modalContentSlide 0.3s ease-out;">
+            <h2 style="margin-top:0; color:#0f172a; font-weight:900;"><i class="fa fa-whatsapp" style="font-size:28px; color:#25d366;"></i> Numero WhatsApp</h2>
+            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Inserisci il numero di telefono a cui inviare le credenziali (compreso di prefisso es. 39...)</p>
+            <div style="margin-bottom:20px;">
+                <input type="text" id="txtWaPhone" placeholder="393331234567" style="width:100%; padding:15px; border:3px solid #e2e8f0; border-radius:12px; font-size:20px; font-weight:900; color:#0f172a; outline:none; text-align:center; box-sizing:border-box;">
+            </div>
+            <div style="display:flex;">
+                <button class="btn btn-primary" style="flex:1; background:#f1f5f9; color:#64748b; border:2px solid #cbd5e1; padding:12px; border-radius:12px; font-size:14px; margin-right:10px;" onclick="document.getElementById('waModal').style.display='none'">ANNULLA</button>
+                <button class="btn btn-primary" style="flex:1; background:#25d366; color:white; border:2px solid #25d366; padding:12px; border-radius:12px; font-size:14px;" onclick="ConfermaWaInvio()"><i class="fa fa-paper-plane"></i> INVIA ORA</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var pendingWaMsg = "";
+        
+        function CondividiCredenziali(metodo) {
+            var utente = document.getElementById('txtNome').value;
+            var pass = document.getElementById('txtPassword').value;
+            if (!utente) { alert('Seleziona o crea un utente prima di condividere le credenziali.'); return; }
+            
+            pendingWaMsg = "Ciao! Ecco le tue credenziali di accesso per il Gestionale C. Milella:\n\nUtente: " + utente + "\nPassword: " + (pass ? pass : "[La tua password attuale]") + "\n\nRaccomandiamo di non conservare o condividere questi dati.";
+            
+            if (metodo === 'whatsapp') {
+                var phoneInput = document.getElementById('txtWaPhone');
+                phoneInput.value = "39";
+                document.getElementById('waModal').style.display = 'flex';
+                setTimeout(function(){ phoneInput.focus(); }, 200);
+            }
+        }
+
+        function ConfermaWaInvio() {
+            var phone = document.getElementById('txtWaPhone').value;
+            if (phone && phone.length > 5) {
+                var waNum = phone.replace(/[^0-9]/g, '');
+                var waText = encodeURIComponent(pendingWaMsg);
+                
+                try {
+                    // Tenta di aprire l'App Desktop in modo nativo su Windows senza passare dal browser
+                    var shell = new ActiveXObject("WScript.Shell");
+                    shell.Run('cmd.exe /c start "" "whatsapp://send?phone=' + waNum + '&text=' + waText + '"', 0, false);
+                } catch(e) {
+                    // Fallback di sicurezza: se ActiveX è bloccato, apri tramite link Web standard
+                    window.open("https://api.whatsapp.com/send?phone=" + waNum + "&text=" + waText, "_blank");
+                }
+                
+                document.getElementById('waModal').style.display = 'none';
+            } else {
+                alert("Inserisci un numero di telefono valido.");
+            }
+        }
+
+        function GeneraQRLogin() {
+            var utente = document.getElementById('txtNome').value;
+            var pass = document.getElementById('txtPassword').value;
+            if (!utente || !pass) { alert('ATTENZIONE: Occorre avere un Utente e una Password visibile per generare il QR Code di Login.'); return; }
+            
+            // Utilizziamo l'API di goqr.me per generare il QR (molto affidabile per vecchi browser)
+            var qrData = "LOGIN:" + utente + "|" + pass;
+            var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(qrData);
+            
+            document.getElementById('imgQrCode').src = qrUrl;
+            document.getElementById('qrModal').style.display = 'flex';
+        }
+    </script>
+    <script src="assets/js/admin_utenti_hta.js"></script>
+    <script src="assets/js/accessibility.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+<!-- MODAL GUIDA ALL'USO (MSHTA REFLOW COMPATIBLE) -->
+<div id="helpModalOverlay" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;">
+    <div style="position:absolute; top:50%; left:50%; margin-top:-260px; margin-left:-320px; width:640px; background:#0f172a; border:2px solid #38bdf8; border-radius:16px; box-shadow:0 0 35px rgba(56, 189, 248, 0.4); padding:25px; color:#f8fafc; font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;">
+        <!-- Header Modal -->
+        <div style="border-bottom:1px solid #38bdf8; padding-bottom:12px; margin-bottom:15px; position:relative;">
+            <div style="font-family:'Outfit', sans-serif; font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.5px;">
+                &#128216; GUIDA ALL'USO - ZENITH MATERIALI
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Manuale Rapido Operativo &amp; Scorciatoie</div>
+            <div onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="cursor:pointer; position:absolute; top:0; right:0; width:30px; height:30px; background:#1e293b; border:1px solid #38bdf8; border-radius:50%; text-align:center; line-height:28px; color:#f8fafc; font-weight:bold; font-size:1.2rem; user-select:none;">&times;</div>
+        </div>
+
+        <!-- Content Modal -->
+        <div style="height:350px; overflow-y:auto; padding-right:5px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                <tr>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#fbbf24; font-size:0.88rem; margin-bottom:6px;">
+                                &#128269; 1. Ricerca Globale Istantanea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Digita nel campo in alto per filtrare in tempo reale clienti, città, telefoni o specifiche attrezzature assegnate.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#38bdf8; font-size:0.88rem; margin-bottom:6px;">
+                                &#128205; 2. Filtri Provincia &amp; Articolo
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Usa la barra laterale sinistra per isolare velocemente le province (Bari, Foggia, Taranto) o i dispositivi (Orologio, Sveglia, Braille).
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#34d399; font-size:0.88rem; margin-bottom:6px;">
+                                &#128203; 3. Pulsanti Copia Dati
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Clicca sul tasto verde <b>Copia</b> per salvare la scheda cliente negli appunti e trasferirla nei promemoria o report.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#a78bfa; font-size:0.88rem; margin-bottom:6px;">
+                                &#128259; 4. Sincronizzazione Danea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Dal menu <b>File</b> o <b>Strumenti</b> premi <i>Sincronizza Excel Ora</i> per ricaricare le anagrafiche aggiornate.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; padding:12px; border-radius:10px; font-size:0.8rem; color:#cbd5e1;">
+                <b style="color:#38bdf8;">&#9889; Suggerimento Rapido:</b> Per resettare tutti i filtri attivi e tornare alla vista completa, seleziona <b>TUTTE LE PROVINCE</b> ed <b>ELENCO COMPLETO</b> dalla sidebar a sinistra.
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); text-align:right;">
+            <span style="font-size:0.75rem; color:#94a3b8; float:left; margin-top:8px;">Sistema Zenith Materiali v1.0 &bull; C. Milella 2026</span>
+            <button onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="background:#0284c7; color:white; border:1px solid #38bdf8; padding:8px 24px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; font-family:'Outfit', sans-serif;">HO CAPITO</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

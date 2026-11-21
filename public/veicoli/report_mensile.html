@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>REPORT MENSILE - C.Milella</title>
+    <hta:application 
+        id="oReport"
+        applicationname="ReportMensile"
+        border="none"
+        caption="no"
+        showintaskbar="yes"
+        singleinstance="yes"
+        sysmenu="no"
+        maximizebutton="no"
+        minimizebutton="no"
+        windowstate="maximize"
+        ICON="assets/img/app_icon.ico"
+        scroll="yes"
+        trusted="yes"
+        navigable="yes"
+    />
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/report_mensile.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        var shell = new ActiveXObject("WScript.Shell");
+        
+        var pathEval = document.location.pathname;
+        if(pathEval.indexOf("/") === 0) pathEval = pathEval.substring(1);
+        pathEval = decodeURIComponent(pathEval).replace(/\//g, "\\");
+        var currentDir = fso.GetParentFolderName(pathEval);
+        var DB_PATH = fso.BuildPath(currentDir, "ConsegneDB.accdb");
+
+        var selectedMese = 0;
+        var selectedAnno = 0;
+        var selectedGiorno = 0;
+        var mesiNomi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+
+        function CaricaParametri() {
+            try {
+                if (typeof fso !== "undefined" && fso && currentDir) {
+                    var pFile = fso.BuildPath(fso.BuildPath(currentDir, "system"), "report_params.tmp");
+                    if (fso.FileExists(pFile)) {
+                        var f = fso.OpenTextFile(pFile, 1);
+                        var m = f.ReadLine();
+                        var y = f.ReadLine();
+                        if (m) selectedMese = parseInt(m, 10);
+                        if (y) selectedAnno = parseInt(y, 10);
+                        f.Close();
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function FormatDate(isoStr) {
+            if (!isoStr) return "";
+            try {
+                var d = new Date(isoStr);
+                if (isNaN(d.getTime())) {
+                    var parts = isoStr.split(" ")[0].split("-");
+                    if (parts.length === 3) return parts[2] + "/" + parts[1] + "/" + parts[0];
+                    return isoStr;
+                }
+                var dd = String(d.getDate()).padStart(2, '0');
+                var mm = String(d.getMonth() + 1).padStart(2, '0');
+                return dd + "/" + mm + "/" + d.getFullYear();
+            } catch(e) { return isoStr; }
+        }
+
+        function QueryDB(sql) {
+            try {
+                var conn = new ActiveXObject("ADODB.Connection");
+                conn.Open("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + DB_PATH + ";");
+                var rs = new ActiveXObject("ADODB.Recordset");
+                rs.Open(sql, conn, 1, 1);
+                var arr = [];
+                if (!rs.EOF) {
+                    rs.MoveFirst();
+                    while (!rs.EOF) {
+                        var obj = {};
+                        for (var i = 0; i < rs.Fields.Count; i++) {
+                            obj[rs.Fields.Item(i).Name] = rs.Fields.Item(i).Value;
+                        }
+                        arr.push(obj);
+                        rs.MoveNext();
+                    }
+                }
+                rs.Close();
+                conn.Close();
+                return arr;
+            } catch(e) {
+                try {
+                    var http = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                    http.Open("POST", "http://127.0.0.1:3002/query", false);
+                    http.SetRequestHeader("Content-Type", "application/json");
+                    http.Send('{"sql":' + JSON.stringify(sql) + '}');
+                    var res = JSON.parse(http.ResponseText);
+                    if(res.success) return res.data;
+                } catch(err2) {}
+            }
+            return [];
+        }
+
+        function EseguiStampa() {
+            try {
+                var tempFile = fso.BuildPath(currentDir, "report_stampa.html");
+                var htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+                htmlContent = htmlContent.replace(/<hta:application[^>]*>/gi, "");
+                var autoPrintScript = '<script>window.onload=function(){window.print();};<\/script>';
+                htmlContent = htmlContent.replace("</body>", autoPrintScript + "</body>");
+                var stream = new ActiveXObject("ADODB.Stream");
+                stream.Type = 2;
+                stream.Charset = "utf-8";
+                stream.Open();
+                stream.WriteText(htmlContent);
+                stream.SaveToFile(tempFile, 2);
+                stream.Close();
+                shell.Run('mshta.exe "' + tempFile + '"', 1, false);
+            } catch(e) {
+                window.print();
+            }
+        }
+
+        window.onload = function() {
+            try {
+                CaricaParametri();
+                if (!selectedMese) { alert("Data non ricevuta!"); return; }
+
+                var sql = "";
+                if (selectedGiorno) {
+                    document.getElementById("lblTitoloMese").innerText = "Giorno " + selectedGiorno + " " + mesiNomi[selectedMese - 1] + " " + selectedAnno;
+                    sql = "SELECT * FROM tblConsegne WHERE " +
+                          "(Day(DataConsegna) = " + selectedGiorno + " AND Month(DataConsegna) = " + selectedMese + " AND Year(DataConsegna) = " + selectedAnno + ") " +
+                          "ORDER BY Priorita ASC, OraConsegna ASC";
+                } else {
+                    document.getElementById("lblTitoloMese").innerText = mesiNomi[selectedMese - 1] + " " + selectedAnno;
+                    sql = "SELECT * FROM tblConsegne WHERE " +
+                          "([MeseRiferimento] = " + selectedMese + " AND [AnnoRiferimento] = " + selectedAnno + ") " +
+                          "OR ([MeseRiferimento] IS NULL AND Month([DataConsegna]) = " + selectedMese + " AND Year([DataConsegna]) = " + selectedAnno + ") " +
+                          "ORDER BY DataConsegna ASC, NumeroOrdine ASC, Priorita ASC";
+                }
+                
+                var dati = QueryDB(sql);
+                
+                var RIGHE_PER_PAGINA = 14;
+                var numPagine = Math.ceil(dati.length / RIGHE_PER_PAGINA);
+                if(numPagine === 0) numPagine = 1;
+                
+                var totalKmGenerale = 0; var totalSpeseGenerale = 0;
+                var prevDate = "";
+                var isAlt = false;
+                
+                var originalPage = document.querySelector(".page");
+                if(originalPage) originalPage.style.display = "none";
+                
+                var headerHtml = originalPage ? originalPage.innerHTML.split(/<table/i)[0] : "";
+                
+                for (var p = 0; p < numPagine; p++) {
+                    var startIdx = p * RIGHE_PER_PAGINA;
+                    var endIdx = Math.min(startIdx + RIGHE_PER_PAGINA, dati.length);
+                    var chunk = dati.slice(startIdx, endIdx);
+                    
+                    var pageDiv = document.createElement("div");
+                    pageDiv.className = "page";
+                    if (p < numPagine - 1) {
+                        pageDiv.style.pageBreakAfter = "always";
+                    }
+                    
+                    var html = headerHtml;
+                    
+                    html += "<table class='report-table'><thead><tr><th width='30'>N°</th><th width='60'>Mese</th><th>Cognome Nome</th><th width='100'>Località</th><th>Indirizzo Residenza</th><th width='90'>Giorno</th><th width='50'>O.C.</th><th width='50'>Km A.</th><th width='50'>Km R.</th><th width='60'>Km Tot.</th><th width='110'>Spese e Desc.</th></tr></thead><tbody>";
+                    
+                    for (var i = 0; i < chunk.length; i++) {
+                        var r = chunk[i];
+                        var globalIdx = startIdx + i + 1;
+                        var dStr = FormatDate(r.DataConsegna);
+                        if (dStr !== prevDate) { isAlt = !isAlt; prevDate = dStr; }
+                        var kmA = parseFloat(r.KmAndata) || 0;
+                        var kmR = parseFloat(r.KmRitorno) || 0;
+                        var kmTot = parseFloat((kmA + kmR).toFixed(2));
+                        totalKmGenerale += kmTot;
+                        
+                        html += "<tr class='" + (isAlt ? "bg-alt" : "") + "'>";
+                        html += "<td>" + globalIdx + "</td>";
+                        html += "<td>" + mesiNomi[selectedMese - 1].substring(0, 4) + "</td>";
+                        html += "<td><b>" + (r.ClienteNome || "") + "</b></td>";
+                        html += "<td>" + (r.LocalitaConsegna || "") + "</td>";
+                        html += "<td>" + (r.IndirizzoConsegna || "") + "</td>";
+                        html += "<td align='center'>" + dStr + "</td>";
+                        html += "<td align='center'>" + (r.NumeroOrdine || "") + "</td>";
+                        html += "<td align='right'>" + (kmA || "") + "</td>";
+                        html += "<td align='right'>" + (kmR || "") + "</td>";
+                        html += "<td align='right'><b>" + (kmTot || "") + "</b></td>";
+                        var spese = parseFloat(String(r.SpeseExtra || 0).replace(",", ".")) || 0;
+                        totalSpeseGenerale += spese;
+                        var desc = String(r.DescrizioneSpese || "").trim();
+                        html += "<td align='right'><b>€ " + spese.toFixed(2).replace(".", ",") + "</b>" + (desc ? "<br><span style='font-size:10px;font-weight:normal;color:#64748b;'>" + desc + "</span>" : "") + "</td>";
+                        html += "</tr>";
+                    }
+                    html += "</tbody></table>";
+                    
+                    if (p === numPagine - 1) {
+                        html += "<div style='display:flex; justify-content:space-between; align-items:flex-end; margin-top:20px; clear:both;'>";
+                        html += "<div class='emission-date'>Data di emissione: " + FormatDate(new Date()) + "</div>";
+                        html += "<div class='summary-box'>";
+                        html += "<div class='summary-title'>CHILOMETRAGGIO TOTALE COMPLESSIVO</div>";
+                        html += "<div class='summary-value'>" + totalKmGenerale.toLocaleString("it-IT", {minimumFractionDigits: 1}) + " KM</div>";
+                        html += "<div class='page-number'>" + (p + 1) + " di " + numPagine + "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "<div class='signatures'><div class='sig-line'>Firma per Ricevuta</div><div class='sig-line'>Firma per Visione</div></div>";
+                    } else {
+                        html += "<div class='page-number' style='margin-top:20px;'>" + (p + 1) + " di " + numPagine + "</div>";
+                    }
+                    
+                    pageDiv.innerHTML = html;
+                    document.body.appendChild(pageDiv);
+                }
+                
+                window.resizeTo(1200, 800);
+            } catch(err) {
+                alert("FATAL ERROR in Ufficio/report_mensile.html:\n" + err.message + "\nLine: " + err.lineNumber);
+            }
+        };
+    </script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+</head>
+<body style="margin:0; padding:0; background: white;">
+    <div class="danea-top-black-bar no-print" onmousedown="StartDrag()" style="height:35px; background:#1a1a1a; color:white; display:flex; align-items:center; padding:0 15px; font-size:11px; font-weight:bold; cursor:move;">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:5px; cursor:default;">
+            <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+            <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+            <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+        </div>
+        <img src="assets/img/app_icon.ico" style="height:24px; margin-left:10px; margin-right:12px; border-radius:3px;">
+        <span>Stampa Report Prospetto Mensile - C. Milella</span>
+    </div>
+
+    <button class="print-btn no-print" onclick="EseguiStampa();" style="margin:20px;">STAMPA / SALVA PDF</button>
+
+    <div class="page">
+        <div class="header-coop" style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Logistica Aziendale</div>
+            <div style="font-size: 14px; color: #64748b;">Servizi di Logistica Consegne e Configurazione Ausili</div>
+        </div>
+        <div class="header-divider" style="border-bottom: 2px solid #1e293b; margin-bottom: 20px;"></div>
+        
+        <div class="report-title" style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px;">
+            REGISTRO MENSILE CONSEGNE - <span id="lblTitoloMese">Mese Anno</span>
+        </div>
+        <table class="report-table"></table>
+    </div>
+
+    <script src="assets/js/hacker_mode.js"></script>
+    <script src="./assets/js/global_context.js"></script>
+</body>
+</html>

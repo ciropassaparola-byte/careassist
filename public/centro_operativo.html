@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Centro Operativo Suite - Notifiche, Fatturazione, Agenda & Documenti</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --bg-dark: #0f172a;
+    --card-dark: #1e293b;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-dark);
+    color: #f8fafc;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-bottom: 1.5px solid var(--border-color);
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-icon {
+    font-size: 28px;
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+  }
+  .header-title h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+  .header-title p {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  .btn-back {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-color);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .btn-back:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 10px;
+    padding: 20px 24px 0 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+  .tab-pill {
+    background: #1e293b;
+    border: 1px solid var(--border-color);
+    color: #94a3b8;
+    padding: 10px 20px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .tab-pill.active {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #38bdf8;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  }
+  .main-content {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 24px;
+  }
+  .tab-pane {
+    display: none;
+  }
+  .tab-pane.active {
+    display: block;
+    animation: fadeIn 0.25s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .panel-box {
+    background: var(--card-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  .panel-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #38bdf8;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .form-group {
+    margin-bottom: 14px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .form-control {
+    width: 100%;
+    background: #0f172a;
+    border: 1.5px solid #334155;
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    font-family: inherit;
+    transition: border 0.2s;
+  }
+  .form-control:focus {
+    border-color: #38bdf8;
+  }
+  .btn-action {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    transition: all 0.2s;
+  }
+  .btn-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+  }
+  .btn-whatsapp {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+  }
+  .btn-whatsapp:hover {
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.45);
+  }
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+    max-height: 380px;
+    overflow-y: auto;
+  }
+  .list-card {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .badge-tag {
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+  }
+  .badge-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+  .badge-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+  .badge-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+  .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <div class="header-icon">🏛️</div>
+    <div class="header-title">
+      <h1>Centro Operativo &amp; Servizi Avanzati</h1>
+      <p>Suite Aziendale C. Milella &bull; Coordinamento Sanitario &bull; ASL Puglia</p>
+    </div>
+  </div>
+  <div class="header-right" style="display:flex; align-items:center; gap:10px;">
+    <button id="btn-privacy-toggle" onclick="togglePrivacyModeGlobal()" class="btn-back" style="background:rgba(239, 68, 68, 0.15); border:1px solid #ef4444; color:#fca5a5;">
+      <span id="privacy-icon">🛡️</span>
+      <span id="privacy-text">Privacy Demo: OFF</span>
+    </button>
+    <a href="/launcher.html" class="btn-back">
+      <span>🏠 Torna al Portale</span>
+    </a>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <button class="tab-pill active" onclick="switchTab('tab-notifiche')">🔔 Notifiche &amp; SOS WhatsApp</button>
+  <button class="tab-pill" onclick="switchTab('tab-fascicolo')">📄 Fascicolo Clinico A4 Unificato</button>
+  <button class="tab-pill" onclick="switchTab('tab-fatturazione')">📑 Fatturazione &amp; Ricevute 730</button>
+  <button class="tab-pill" onclick="switchTab('tab-agenda')">📅 Agenda &amp; Visite Specialistiche</button>
+  <button class="tab-pill" onclick="switchTab('tab-documenti')">📇 Cartella Referti &amp; Analisi</button>
+</div>
+
+<main class="main-content">
+
+  <!-- TAB 1: NOTIFICHE E SOS CAREGIVER -->
+  <div id="tab-notifiche" class="tab-pane active">
+    <div class="card-grid">
+      <div class="panel-box">
+        <div class="panel-title"><span>🔔</span> Invia Notifica / Bollettino Familiare</div>
+        <form onsubmit="inviaNotificaFamiliare(event)">
+          <div class="form-group">
+            <label>Seleziona Assistito / Paziente</label>
+            <select id="notif-paziente" class="form-control" onchange="aggiornaCaregiverDaPaziente(this.value)">
+              <option value="Aldo Zamparino">Aldo Zamparino (Via Modugno, 25)</option>
+              <option value="Rosa Annunziata">Rosa Annunziata Cavalcante</option>
+              <option value="Angela Mazzicone">Angela Mazzicone</option>
+              <option value="Ciro Milella">Ciro Milella</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Caregiver / Familiare Referente</label>
+            <input type="text" id="notif-contatto" class="form-control" value="Famigliare Referente (+39 366 460 7396)">
+          </div>
+          <div class="form-group">
+            <label>Tipologia Comunicazione</label>
+            <select id="notif-tipo" class="form-control">
+              <option value="terapia">✅ Conferma Terapia Somministrata Regolarmente</option>
+              <option value="parametri">🩺 Rilevazione Parametri Vitali (Pressione &amp; Glicemia)</option>
+              <option value="visita">👨‍⚕️ Report Visita Specialistica / Controllo</option>
+              <option value="sos">⚠️ Alert Prioritario / Comunicazione Urgente</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Messaggio Clinico / Note</label>
+            <textarea id="notif-testo" class="form-control" rows="3">Terapia mattutina somministrata con successo dall'operatore. Il paziente è tranquillo, collaborativo e ha assunto regolarmente la colazione.</textarea>
+          </div>
+          <button type="submit" class="btn-action btn-whatsapp">
+            <span>📱 Invia Notifica Istantanea via WhatsApp</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-title"><span>📡</span> Registro Notifiche Inviate Oggi</div>
+        <div class="item-list" id="registro-notifiche">
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Aldo Zamparino &bull; Terapia Ore 08:30</div>
+              <div style="font-size:12px; color:#94a3b8;">Bisoprololo 1.25mg &bull; Pantoprazolo 40mg confermati</div>
+            </div>
+            <span class="badge-tag badge-green">Inviato WhatsApp</span>
+          </div>
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Ciro Milella &bull; Aggiornamento Piano Dieta</div>
+              <div style="font-size:12px; color:#94a3b8;">Nuovo target calorico ~1850 kcal/die registrato</div>
+            </div>
+            <span class="badge-tag badge-blue">Consegnato</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB FASCICOLO CLINICO INTEGRATO A4 UNIFICATO -->
+  <div id="tab-fascicolo" class="tab-pane">
+    <div class="panel-box" style="margin-bottom:20px;">
+      <div class="panel-title"><span>📄</span> Generatore Fascicolo Sanitario Unificato A4 (CareAssist + MedNutri + Progetto Salute)</div>
+      <p style="color:#94a3b8; font-size:13px; margin-bottom:16px;">
+        Sintetizza in tempo reale le terapie farmacologiche attive, il piano nutrizionale e il trend ponderale/idratazione in un unico documento stampabile A4 di livello ospedaliero.
+      </p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+        <select id="sel-paziente-fascicolo" class="form-control" style="max-width:320px;" onchange="renderizzaFascicoloPreview()">
+          <option value="Aldo Zamparino">Aldo Zamparino (CareAssist • Paziente Geriatrico)</option>
+          <option value="Angela Mazzicone">Angela Mazzicone (CareAssist • Ipertensione &amp; Cardiopatia)</option>
+          <option value="Rosa Annunziata">Rosa Annunziata Cavalcante (CareAssist • Terapia Cronica)</option>
+          <option value="Ciro Milella" selected>Ciro Milella (Suite Master • Steatosi &amp; Dieta Attiva)</option>
+        </select>
+        <button onclick="stampaFascicoloA4()" class="btn-action" style="max-width:240px; margin-top:0; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+          <span>🖨️ Stampa Dossier A4 (PDF)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ANTEPRIMA FASCICOLO CLINICO A4 -->
+    <div id="fascicolo-print-container" style="background:#ffffff; color:#0f172a; border-radius:12px; padding:32px 36px; box-shadow:0 8px 30px rgba(0,0,0,0.3); max-width:850px; margin:0 auto; font-family:'Segoe UI', Arial, sans-serif;">
+      <!-- Intestazione ASL e Medico -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #0284c7; padding-bottom:14px; margin-bottom:20px;">
+        <div>
+          <h2 style="margin:0; font-size:20px; font-weight:800; color:#0369a1; text-transform:uppercase; letter-spacing:0.5px;">Fascicolo Sanitario &amp; Nutrizionale Integrato</h2>
+          <div style="font-size:11px; color:#64748b; font-weight:600; margin-top:2px;">REGIONE PUGLIA &bull; ASL BARI &bull; PIATTAFORMA SUITE MILELLA</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:13px; font-weight:800; color:#0f172a;">Dott. Ciro Milella</div>
+          <div style="font-size:11px; color:#64748b;">Coordinamento Sanitario &amp; Nutrizionale</div>
+          <div style="font-size:10px; color:#94a3b8; margin-top:3px;">Data Emissione: <span id="fasc-data-oggi">05/11/2026</span></div>
+        </div>
+      </div>
+
+      <!-- Anagrafica Paziente -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px; margin-bottom:18px; display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;">
+        <div>
+          <span style="display:block; font-size:10px; color:#64748b; text-transform:uppercase; font-weight:700;">Paziente</span>
+          <strong id="fasc-nome" style="font-size:14px; color:#0f172a;">Ciro Milella</strong>
+        </div>
+        <div>
+          <span style="display:block; font-size:10px; color:#64748b; text-transform:uppercase; font-weight:700;">Data di Nascita</span>
+          <strong id="fasc-nascita" style="font-size:13px; color:#0f172a;">16/12/1967</strong>
+        </div>
+        <div>
+          <span style="display:block; font-size:10px; color:#64748b; text-transform:uppercase; font-weight:700;">Sesso / Status</span>
+          <strong id="fasc-sesso" style="font-size:13px; color:#0f172a;">Uomo • Deambulante</strong>
+        </div>
+        <div>
+          <span style="display:block; font-size:10px; color:#64748b; text-transform:uppercase; font-weight:700;">Recapito Presidio</span>
+          <strong id="fasc-recapito" style="font-size:13px; color:#0f172a;">Via Roma, 10 - Bari</strong>
+        </div>
+      </div>
+
+      <!-- Griglia Sezioni 1 & 2: Terapie CareAssist & Linee Guida MedNutri -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px;">
+        <!-- Sezione 1: Terapie Farmacologiche Attive -->
+        <div style="border:1px solid #cbd5e1; border-radius:8px; padding:14px;">
+          <div style="font-size:12px; font-weight:800; color:#0284c7; text-transform:uppercase; margin-bottom:8px; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">
+            💊 CareAssist Pro &bull; Terapie Somministrate
+          </div>
+          <div id="fasc-terapie-list" style="font-size:11.5px; color:#334155; line-height:1.45;">
+            <!-- Caricate dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Sezione 2: Parametri Antropometrici & Nutrizionali -->
+        <div style="border:1px solid #cbd5e1; border-radius:8px; padding:14px;">
+          <div style="font-size:12px; font-weight:800; color:#16a34a; text-transform:uppercase; margin-bottom:8px; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">
+            🥗 MedNutri Pro &bull; Fabbisogno &amp; Linee Guida
+          </div>
+          <div id="fasc-nutri-dettagli" style="font-size:11.5px; color:#334155; line-height:1.45;">
+            <!-- Caricate dinamicamente -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Sezione 3: Registro Progetto Salute (Trend Peso & Obiettivi) -->
+      <div style="border:1px solid #cbd5e1; border-radius:8px; padding:14px; margin-bottom:16px;">
+        <div style="font-size:12px; font-weight:800; color:#9333ea; text-transform:uppercase; margin-bottom:8px; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">
+          ⚖️ Progetto Salute &bull; Monitoraggio Clinico &amp; Stile di Vita
+        </div>
+        <div id="fasc-salute-trend" style="font-size:11.5px; color:#334155; line-height:1.45;">
+          <!-- Caricate dinamicamente -->
+        </div>
+      </div>
+
+      <!-- Note del Medico e Firma -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top:1px dashed #cbd5e1; padding-top:14px;">
+        <div style="font-size:10px; color:#64748b; max-width:450px;">
+          Nota Legale: Documento clinico generato tramite il Fascicolo Sanitario Unificato della Suite Milella. Tutte le raccomandazioni e le interazioni farmaco-nutriente sono state validate secondo le linee guida nazionali ed europee di riferimento.
+        </div>
+        <div style="text-align:center; min-width:180px;">
+          <div style="font-size:10px; color:#94a3b8; margin-bottom:32px;">Timbro e Firma del Medico Coordinatore</div>
+          <div style="border-top:1px solid #334155; font-size:11px; font-weight:700; color:#0f172a; padding-top:4px;">Dott. Ciro Milella</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: FATTURAZIONE E RICEVUTE FISCALI 730 -->
+  <div id="tab-fatturazione" class="tab-pane">
+    <div class="card-grid">
+      <div class="panel-box">
+        <div class="panel-title"><span>📑</span> Generatore Ricevuta Sanitaria / 730</div>
+        <form onsubmit="generaRicevutaFiscale(event)">
+          <div class="form-group">
+            <label>Intestatario Fattura / Paziente</label>
+            <input type="text" id="fat-paziente" class="form-control" value="Aldo Zamparino" required>
+          </div>
+          <div class="form-group">
+            <label>Codice Fiscale Intestatario</label>
+            <input type="text" id="fat-cf" class="form-control" value="ZMPLDA35D18A662X" required>
+          </div>
+          <div class="form-group">
+            <label>Tipo Prestazione Sanitaria</label>
+            <select id="fat-prestazione" class="form-control">
+              <option value="assistenza">Assistenza Socio-Sanitaria Domiciliare (Detraibile 730)</option>
+              <option value="nutrizione">Consulenza e Piano Nutrizionale Clinico Specialistico</option>
+              <option value="infermieristica">Prestazione Sanitaria Infermieristica &bull; Medicazione</option>
+            </select>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label>Ore / Sedute</label>
+              <input type="number" id="fat-ore" class="form-control" value="20" min="1">
+            </div>
+            <div class="form-group">
+              <label>Importo Totale (€)</label>
+              <input type="number" id="fat-totale" class="form-control" value="350.00" step="0.50">
+            </div>
+          </div>
+          <button type="submit" class="btn-action">
+            <span>🖨️ Genera Ricevuta Ufficiale PDF A4</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-title"><span>💶</span> Riepilogo Prestazioni &amp; Fatturato</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+          <div style="background:#0f172a; padding:12px; border-radius:12px; text-align:center;">
+            <div style="font-size:11px; color:#94a3b8; font-weight:700;">PRESTAZIONI MESE</div>
+            <div style="font-size:22px; font-weight:800; color:#38bdf8;">38 Ore</div>
+          </div>
+          <div style="background:#0f172a; padding:12px; border-radius:12px; text-align:center;">
+            <div style="font-size:11px; color:#94a3b8; font-weight:700;">TOTALE FATTURATO</div>
+            <div style="font-size:22px; font-weight:800; color:#4ade80;">€ 680,00</div>
+          </div>
+        </div>
+        <div class="item-list">
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Ricevuta N° 12/2026 &bull; Aldo Zamparino</div>
+              <div style="font-size:12px; color:#94a3b8;">Assistenza Domiciliare &bull; 20 ore</div>
+            </div>
+            <span style="font-weight:800; color:#4ade80;">€ 350,00</span>
+          </div>
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Ricevuta N° 11/2026 &bull; Ciro Milella</div>
+              <div style="font-size:12px; color:#94a3b8;">Piano Dietoterapico Completo</div>
+            </div>
+            <span style="font-weight:800; color:#4ade80;">€ 120,00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: AGENDA E VISITE SPECIALISTICHE -->
+  <div id="tab-agenda" class="tab-pane">
+    <div class="card-grid">
+      <div class="panel-box">
+        <div class="panel-title"><span>📅</span> Pianifica Visita o Appuntamento</div>
+        <form onsubmit="aggiungiAppuntamento(event)">
+          <div class="form-group">
+            <label>Titolo / Tipo Evento</label>
+            <input type="text" id="age-titolo" class="form-control" placeholder="Es. Controllo Nutrizionale / Medicazione" required>
+          </div>
+          <div class="form-group">
+            <label>Paziente / Assistito</label>
+            <input type="text" id="age-paziente" class="form-control" placeholder="Es. Aldo Zamparino" required>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label>Data</label>
+              <input type="date" id="age-data" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Ora</label>
+              <input type="time" id="age-ora" class="form-control" value="10:00" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Medico / Operatore Assegnato</label>
+            <input type="text" id="age-operatore" class="form-control" value="Dott. Ciro Milella">
+          </div>
+          <button type="submit" class="btn-action">
+            <span>💾 Registra in Agenda Sanitaria</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-title"><span>⏰</span> Prossimi Appuntamenti in Calendario</div>
+        <div class="item-list" id="lista-appuntamenti">
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Controllo Nutrizionale Iniziale</div>
+              <div style="font-size:12px; color:#94a3b8;">Ciro Milella &bull; 06/11/2026 ore 10:30</div>
+            </div>
+            <span class="badge-tag badge-purple">Nutrizione</span>
+          </div>
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Visita Cardiologica &bull; ECG Domiciliare</div>
+              <div style="font-size:12px; color:#94a3b8;">Aldo Zamparino &bull; 08/11/2026 ore 16:00</div>
+            </div>
+            <span class="badge-tag badge-blue">Specialistica</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: CARTELLA DOCUMENTALE E REFERTI ALLEGATI -->
+  <div id="tab-documenti" class="tab-pane">
+    <div class="card-grid">
+      <div class="panel-box">
+        <div class="panel-title"><span>📎</span> Allega Referto o Esami del Sangue</div>
+        <form onsubmit="allegaDocumentoReferto(event)">
+          <div class="form-group">
+            <label>Paziente di Riferimento</label>
+            <select id="doc-paziente" class="form-control">
+              <option value="Aldo Zamparino">Aldo Zamparino</option>
+              <option value="Rosa Annunziata">Rosa Annunziata Cavalcante</option>
+              <option value="Ciro Milella">Ciro Milella</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Titolo Documento</label>
+            <input type="text" id="doc-titolo" class="form-control" placeholder="Es. Analisi del sangue - Emocromo e Quadro Epatocitario" required>
+          </div>
+          <div class="form-group">
+            <label>Categoria Clinica</label>
+            <select id="doc-cat" class="form-control">
+              <option value="Laboratorio">🩸 Esami di Laboratorio / Sangue</option>
+              <option value="Specialistica">🩺 Referto Medico Specialistico</option>
+              <option value="Ospedaliero">🏥 Lettera di Dimissione Ospedaliera</option>
+              <option value="Prescrizione">💊 Piano Terapeutico Farmaceutico</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Carica File (Foto / PDF)</label>
+            <input type="file" id="doc-file" class="form-control" accept="image/*,application/pdf">
+          </div>
+          <button type="submit" class="btn-action">
+            <span>📇 Archivia Documento nel Fascicolo Paziente</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-title"><span>🗂️</span> Archivio Documenti Digitali</div>
+        <div class="item-list" id="lista-documenti">
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Esami Ematochimici &bull; Quadro Epatocitario</div>
+              <div style="font-size:12px; color:#94a3b8;">Ciro Milella &bull; 04/11/2026 &bull; PDF 1.2 MB</div>
+            </div>
+            <button onclick="alert('Apertura visualizzatore referto...')" style="background:#0284c7; border:none; color:#fff; padding:6px 12px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">Visualizza</button>
+          </div>
+          <div class="list-card">
+            <div>
+              <div style="font-weight:700;">Dimissione Reparto &bull; Ospedale San Paolo</div>
+              <div style="font-size:12px; color:#94a3b8;">Aldo Zamparino &bull; 28/10/2026 &bull; Scansione</div>
+            </div>
+            <button onclick="alert('Apertura visualizzatore referto...')" style="background:#0284c7; border:none; color:#fff; padding:6px 12px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">Visualizza</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+  }
+
+  function inviaNotificaFamiliare(e) {
+    e.preventDefault();
+    const paz = document.getElementById('notif-paziente').value;
+    const tipo = document.getElementById('notif-tipo').value;
+    const txt = document.getElementById('notif-testo').value;
+
+    let msg = `*COMUNICAZIONE SANITARIA SUITE MILELLA*\n`;
+    msg += `*Assistito:* ${paz}\n`;
+    msg += `*Coordinamento Sanitario:* Dott. Ciro Milella\n`;
+    msg += `------------------------------------\n`;
+    msg += `${txt}\n\n`;
+    msg += `_Messaggio generato automaticamente dal Fascicolo Sanitario Elettronico._`;
+
+    const encoded = encodeURI(msg);
+    window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+  }
+
+  function generaRicevutaFiscale(e) {
+    e.preventDefault();
+    const paz = document.getElementById('fat-paziente').value;
+    const cf = document.getElementById('fat-cf').value;
+    const tot = document.getElementById('fat-totale').value;
+    const ore = document.getElementById('fat-ore').value;
+    
+    alert(`📑 Ricevuta Sanitaria N° ${Math.floor(100+Math.random()*900)}/2026 Generata con successo!\n\nIntestatario: ${paz} (CF: ${cf})\nOre Prestate: ${ore}\nImporto Totale: € ${tot}\n\nDocumento valido ai fini della detrazione fiscale 730.`);
+    window.print();
+  }
+
+  function aggiungiAppuntamento(e) {
+    e.preventDefault();
+    const tit = document.getElementById('age-titolo').value;
+    const paz = document.getElementById('age-paziente').value;
+    const data = document.getElementById('age-data').value;
+    const ora = document.getElementById('age-ora').value;
+
+    const list = document.getElementById('lista-appuntamenti');
+    const item = document.createElement('div');
+    item.className = 'list-card';
+    item.innerHTML = `
+      <div>
+        <div style="font-weight:700;">${tit}</div>
+        <div style="font-size:12px; color:#94a3b8;">${paz} &bull; ${data} ore ${ora}</div>
+      </div>
+      <span class="badge-tag badge-green">Pianificato</span>
+    `;
+    list.prepend(item);
+    alert('✅ Appuntamento aggiunto con successo al calendario condiviso!');
+    e.target.reset();
+  }
+
+  function allegaDocumentoReferto(e) {
+    e.preventDefault();
+    const paz = document.getElementById('doc-paziente').value;
+    const tit = document.getElementById('doc-titolo').value;
+    const cat = document.getElementById('doc-cat').value;
+
+    const list = document.getElementById('lista-documenti');
+    const item = document.createElement('div');
+    item.className = 'list-card';
+    item.innerHTML = `
+      <div>
+        <div style="font-weight:700;">${tit}</div>
+        <div style="font-size:12px; color:#94a3b8;">${paz} &bull; Oggi &bull; ${cat}</div>
+      </div>
+      <button onclick="alert('Documento aperto correttamente nel lettore protetto!')" style="background:#0284c7; border:none; color:#fff; padding:6px 12px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">Visualizza</button>
+    `;
+    list.prepend(item);
+    alert('📇 Documento clinico archiviato con successo nel Fascicolo Sanitario del paziente!');
+    e.target.reset();
+  }
+
+  // ==========================================
+  // MODALITÀ PRESENTAZIONE / PRIVACY DEMO ON/OFF
+  // ==========================================
+  function isPrivacyModeActive() {
+    return localStorage.getItem('milella_privacy_demo_mode') === 'true';
+  }
+
+  function togglePrivacyModeGlobal() {
+    const current = isPrivacyModeActive();
+    const next = !current;
+    localStorage.setItem('milella_privacy_demo_mode', next ? 'true' : 'false');
+    aggiornaStatoPrivacyUI();
+    renderizzaFascicoloPreview();
+  }
+
+  function aggiornaStatoPrivacyUI() {
+    const active = isPrivacyModeActive();
+    const btn = document.getElementById('btn-privacy-toggle');
+    const txt = document.getElementById('privacy-text');
+    if (!btn || !txt) return;
+
+    if (active) {
+      btn.style.background = 'rgba(34, 197, 94, 0.2)';
+      btn.style.borderColor = '#22c55e';
+      btn.style.color = '#86efac';
+      txt.textContent = 'Privacy Demo: ON (Attiva)';
+    } else {
+      btn.style.background = 'rgba(239, 68, 68, 0.15)';
+      btn.style.borderColor = '#ef4444';
+      btn.style.color = '#fca5a5';
+      txt.textContent = 'Privacy Demo: OFF';
+    }
+  }
+
+  // ==========================================
+  // RENDERING FASCICOLO CLINICO UNIFICATO A4
+  // ==========================================
+  const DB_FASCICOLO = {
+    "Ciro Milella": {
+      nome: "Ciro Milella",
+      aliasDemo: "Paziente Alpha (Demo)",
+      nascita: "16/12/1967",
+      sesso: "Uomo • Deambulante",
+      indirizzo: "Via Roma, 10 - Bari",
+      indirizzoDemo: "Via Demo, *** - Bari",
+      terapie: [
+        { ora: "Mattina", farmaco: "Entecavir 0.5 mg", note: "Antivirale HBV • Assumere rigorosamente a digiuno" },
+        { ora: "Pranzo", farmaco: "Integrazione Omega-3 & Silimarina", note: "Supporto epatico e metabolismo lipidico" }
+      ],
+      nutri: {
+        diagnosi: "Steatosi Epatica (NAFLD/MASLD)",
+        lineeGuida: "EASL / AISF: Dieta mediterranea a ridotto indice glicemico. Zero alcolici e zero bevande zuccherate con fruttosio industriale.",
+        target: "Calorie: 1850 kcal/die • Proteine: 1.2 g/kg • Acqua: 2.5 L/die",
+        alimentiConsigliati: "Carciofi, radicchio, pesce azzurro, olio extravergine d'oliva crudo."
+      },
+      salute: {
+        pesoAttuale: "79.3 kg",
+        pesoIniziale: "84.5 kg",
+        trend: "Riduzione costante (-5.2 kg in 6 settimane)",
+        idratazione: "Media 8 bicchieri/die (2.0 L/2.5 L)",
+        attivita: "Camminata veloce 45 min x 4 gg/settimana"
+      }
+    },
+    "Aldo Zamparino": {
+      nome: "Aldo Zamparino",
+      aliasDemo: "Paziente Beta (Geriatrico)",
+      nascita: "18/04/1935",
+      sesso: "Uomo • Paziente Allettato (Rischio Braden)",
+      indirizzo: "Via Roma, 10 - Bari",
+      indirizzoDemo: "Via Demo, *** - Bari",
+      terapie: [
+        { ora: "07:30", farmaco: "Pantoprazolo 40 mg", note: "Digiuno 30 min prima di colazione" },
+        { ora: "08:30", farmaco: "Bisoprololo 1,25 mg", note: "Monitoraggio frequenza cardiaca" },
+        { ora: "08:30", farmaco: "VIMPAT (Lacosamide) 100 mg", note: "Controllo crisi neurologiche" },
+        { ora: "20:00", farmaco: "SILODYX (Silodosina) 8 mg", note: "Terapia IPB e svuotamento vescicale" },
+        { ora: "21:30", farmaco: "Quetiapina 25 mg", note: "Sedazione e controllo sonno notturno" }
+      ],
+      nutri: {
+        diagnosi: "Allettamento cronico • Cardiopatia",
+        lineeGuida: "SINU / SINPE: Cibi morbidi/omogeneizzati ad elevata digeribilità. Frazionamento dei pasti per prevenire reflusso e stasi.",
+        target: "Calorie: 1450 kcal/die • Idratazione assistita: 1.5 L/die",
+        alimentiConsigliati: "Creme di verdure, vellutate, purea di patate con parmigiano, passati di carne bianca."
+      },
+      salute: {
+        pesoAttuale: "68.5 kg",
+        pesoIniziale: "70.0 kg",
+        trend: "Peso stabilizzato",
+        idratazione: "Regolare tramite sondino/caregiver",
+        attivita: "Mobilizzazione passiva a letto quotidiana"
+      }
+    },
+    "Angela Mazzicone": {
+      nome: "Angela Mazzicone",
+      aliasDemo: "Paziente Gamma (Cardiopatico)",
+      nascita: "29/05/1938",
+      sesso: "Donna • Deambulazione assistita",
+      indirizzo: "Via Roma, 10 - Bari",
+      indirizzoDemo: "Via Demo, *** - Bari",
+      terapie: [
+        { ora: "08:00", farmaco: "Atenololo 50 mg", note: "Regolazione PA ed extrasistolia" },
+        { ora: "12:30", farmaco: "Cardioaspirina 100 mg", note: "Post-prandiale" }
+      ],
+      nutri: {
+        diagnosi: "Ipertensione Arteriosa Essenziale",
+        lineeGuida: "ESC / ESH: Protocollo iposodico DASH (<2g sale al giorno). Esclusione liquirizia ed esaltatori di sapidità.",
+        target: "Calorie: 1550 kcal/die • Acqua oligominerale iposodica: 2.0 L/die",
+        alimentiConsigliati: "Spezie ed erbe aromatiche in sostituzione del sale da cucina, cereali integrali, legumi."
+      },
+      salute: {
+        pesoAttuale: "62.0 kg",
+        pesoIniziale: "64.0 kg",
+        trend: "Controllo glicemia e PA ottimale",
+        idratazione: "Buona adesione al diario",
+        attivita: "Ginnastica dolce 20 min/die"
+      }
+    },
+    "Rosa Annunziata": {
+      nome: "Rosa Annunziata Cavalcante",
+      aliasDemo: "Paziente Delta (Cronico)",
+      nascita: "16/06/1938",
+      sesso: "Donna • Deambulante",
+      indirizzo: "Via Roma, 10 - Bari",
+      indirizzoDemo: "Via Demo, *** - Bari",
+      terapie: [
+        { ora: "08:30", farmaco: "Eutirox 75 mcg", note: "A digiuno con acqua" },
+        { ora: "13:00", farmaco: "Calcifediolo (Vitamina D)", note: "Assunzione con pasto contenente lipidi" }
+      ],
+      nutri: {
+        diagnosi: "Osteopenia & Ipotiroidismo",
+        lineeGuida: "SIOMMMS / AACE: Adeguato apporto calcico e proteico con distanziamento di caffè ed integratori di soia dall'Eutirox.",
+        target: "Calorie: 1600 kcal/die • Calcio: 1200 mg/die",
+        alimentiConsigliati: "Yogurt bianco naturale, mandorle, acque calciche a basso residuo, verdure a foglia verde."
+      },
+      salute: {
+        pesoAttuale: "59.0 kg",
+        pesoIniziale: "59.5 kg",
+        trend: "Mantenimento ottimale",
+        idratazione: "7 bicchieri al giorno",
+        attivita: "Passeggiata pomeridiana"
+      }
+    }
+  };
+
+  function renderizzaFascicoloPreview() {
+    const sel = document.getElementById('sel-paziente-fascicolo')?.value || "Ciro Milella";
+    const data = DB_FASCICOLO[sel] || DB_FASCICOLO["Ciro Milella"];
+    const privacy = isPrivacyModeActive();
+
+    // Data Odierna
+    const dToday = new Date().toLocaleDateString('it-IT');
+    const dEl = document.getElementById('fasc-data-oggi');
+    if (dEl) dEl.textContent = dToday;
+
+    // Header Paziente
+    const nomeEl = document.getElementById('fasc-nome');
+    if (nomeEl) nomeEl.textContent = privacy ? data.aliasDemo : data.nome;
+
+    const nasEl = document.getElementById('fasc-nascita');
+    if (nasEl) nasEl.textContent = privacy ? '**/**/****' : data.nascita;
+
+    const sessoEl = document.getElementById('fasc-sesso');
+    if (sessoEl) sessoEl.textContent = data.sesso;
+
+    const recEl = document.getElementById('fasc-recapito');
+    if (recEl) recEl.textContent = privacy ? data.indirizzoDemo : data.indirizzo;
+
+    // Terapie CareAssist
+    const tBox = document.getElementById('fasc-terapie-list');
+    if (tBox) {
+      tBox.innerHTML = data.terapie.map(t => `
+        <div style="margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid #f1f5f9;">
+          <strong style="color:#0284c7;">[${t.ora}] ${t.farmaco}</strong><br>
+          <span style="font-size:10.5px; color:#64748b;">${t.note}</span>
+        </div>
+      `).join('');
+    }
+
+    // MedNutri Pro
+    const nBox = document.getElementById('fasc-nutri-dettagli');
+    if (nBox) {
+      nBox.innerHTML = `
+        <div style="margin-bottom:6px;"><strong>Diagnosi Primaria:</strong> <span style="color:#16a34a; font-weight:700;">${data.nutri.diagnosi}</span></div>
+        <div style="margin-bottom:6px; font-size:11px; color:#475569;"><strong>LG Ufficiali:</strong> ${data.nutri.lineeGuida}</div>
+        <div style="margin-bottom:6px; background:#f0fdf4; padding:6px 8px; border-radius:6px; font-weight:600; font-size:11px; color:#166534;">🎯 ${data.nutri.target}</div>
+        <div style="font-size:11px; color:#334155;"><strong>Alimenti Chiave:</strong> ${data.nutri.alimentiConsigliati}</div>
+      `;
+    }
+
+    // Progetto Salute
+    const sBox = document.getElementById('fasc-salute-trend');
+    if (sBox) {
+      sBox.innerHTML = `
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:8px;">
+          <div style="background:#faf5ff; padding:8px; border-radius:6px; border:1px solid #f3e8ff;">
+            <span style="font-size:10px; color:#7e22ce; font-weight:700; display:block;">PESO ATTUALE</span>
+            <strong style="font-size:15px; color:#581c87;">${data.salute.pesoAttuale}</strong>
+          </div>
+          <div style="background:#faf5ff; padding:8px; border-radius:6px; border:1px solid #f3e8ff;">
+            <span style="font-size:10px; color:#7e22ce; font-weight:700; display:block;">TREND PONDERALE</span>
+            <strong style="font-size:12px; color:#581c87;">${data.salute.trend}</strong>
+          </div>
+          <div style="background:#faf5ff; padding:8px; border-radius:6px; border:1px solid #f3e8ff;">
+            <span style="font-size:10px; color:#7e22ce; font-weight:700; display:block;">IDRATAZIONE & MOTO</span>
+            <strong style="font-size:12px; color:#581c87;">${data.salute.idratazione}</strong>
+          </div>
+        </div>
+        <div style="font-size:11px; color:#475569;"><strong>Attività Fisica Registrata:</strong> ${data.salute.attivita}</div>
+      `;
+    }
+  }
+
+  function stampaFascicoloA4() {
+    window.print();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    aggiornaStatoPrivacyUI();
+    renderizzaFascicoloPreview();
+  });
+</script>
+
+</body>
+</html>

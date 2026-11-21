@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <title>RADAR FLOTTA - Sistema Logistica</title>
+    <HTA:APPLICATION 
+        ID="oAppRadar"
+        APPLICATIONNAME="SistemaLogisticaRadar"
+        BORDER="none"
+        CAPTION="yes"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="no"
+        SYSMENU="yes"
+        WINDOWSTATE="maximize"
+        SCROLL="no"
+        ICON="magnify.exe"
+    />
+    
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #0f172a; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
+        #header { position: absolute; top: 0; left: 0; width: 100%; height: 60px; background: rgba(15, 23, 42, 0.9); z-index: 9999; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; border-bottom: 1px solid #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h1 { color: #38bdf8; margin: 0; font-size: 20px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+        .pulse-dot { display: inline-block; width: 12px; height: 12px; background: #22c55e; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #22c55e; }
+        #map { position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); z-index: 1; }
+        .btn-close { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-close:hover { background: #dc2626; }
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out, .leaflet-control-attribution { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="header">
+        <div style="display: flex; align-items: center;">
+            <div class="pulse-dot"></div>
+            <h1 style="display:none;">RADAR FLOTTA GPS IN TEMPO REALE</h1>
+
+        </div>
+        <button class="btn-close" onclick="window.close()">CHIUDI RADAR</button>
+    </div>
+    
+    <div id="map"></div>
+
+    
+    <script>
+        var map;
+        var markers = {};
+        var fallbackLocation = [41.9028, 12.4964];
+        
+        function InitMap() {
+            if (typeof L === 'undefined') {
+                setTimeout(InitMap, 100);
+                return;
+            }
+            try {
+                if (!map) {
+                    map = L.map("map", { zoomControl: false }).setView(fallbackLocation, 6);
+                    L.control.zoom({ position: "bottomright" }).addTo(map);
+                    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "&copy; OpenStreetMap" }).addTo(map);
+                    FetchGPSData();
+                    setInterval(FetchGPSData, 5000);
+                }
+            } catch(e) { console.error("Errore: " + e.message); }
+        }
+
+        function FetchGPSData() {
+            try {
+                var xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                xhr.open("GET", "http://localhost:3002/api/fleet_locations?t=" + new Date().getTime(), true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        try {
+                            var data = JSON.parse(xhr.responseText);
+                            UpdateMarkers(data);
+                        } catch(e) {}
+                    }
+                };
+                xhr.send();
+            } catch(e) {}
+        }
+
+        function UpdateMarkers(fleetData) {
+            var bounds = [];
+            for (var driver in fleetData) {
+                var loc = fleetData[driver];
+                var lat = loc.lat;
+                var lon = loc.lon;
+                var time = new Date(loc.timestamp).toLocaleTimeString();
+                
+                var markerHtml = "<div style=\"background:#38bdf8; color:#0f172a; padding:4px 8px; border-radius:12px; font-weight:bold; font-size:12px; border:2px solid #fff; box-shadow: 0 0 10px rgba(56,189,248,0.8); text-align:center;\">" + driver.toUpperCase() + "<br><span style=\"font-size:10px; font-weight:normal;\">" + time + "</span></div>";
+                var customIcon = L.divIcon({ className: "custom-fleet-marker", html: markerHtml, iconSize: [100, 40], iconAnchor: [50, 20] });
+
+                if (markers[driver]) {
+                    markers[driver].setLatLng([lat, lon]);
+                    markers[driver].setIcon(customIcon);
+                } else {
+                    markers[driver] = L.marker([lat, lon], {icon: customIcon}).addTo(map);
+                }
+                bounds.push([lat, lon]);
+            }
+            if (bounds.length > 0 && !window.hasFittedBounds) {
+                map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+                window.hasFittedBounds = true;
+            }
+        }
+        window.onload = InitMap;
+    </script>
+</body>
+</html>

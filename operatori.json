@@ -1,0 +1,22 @@
+[
+  {
+    "id": "op_master",
+    "nome": "Ciro Milella (Admin)",
+    "ruolo": "admin",
+    "codice": "SOS999",
+    "attivo": true
+  },
+  {
+    "id": "op_stoppelli",
+    "nome": "M.C. Stoppelli",
+    "ruolo": "operatore",
+    "codice": ".002",
+    "appAbilitate": [
+      "app_careassist"
+    ],
+    "pazAbilitati": [
+      "paz_rosa"
+    ],
+    "attivo": true
+  }
+]

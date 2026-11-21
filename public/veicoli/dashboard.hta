@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="DashboardMaster"
+        ID="DashboardMaster"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        WINDOWSTATE="maximize"
+        ICON="assets/img/app_icon.ico"
+        TRUSTED="yes"
+        NAVIGABLE="yes"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <script src="assets/js/hta_polyfills.js"></script>
+    <title>AGENDA - Pannello di Controllo</title>
+    <script>
+        function HandleIconError(img, emoji) {
+            try {
+                var parent = img.parentNode;
+                var span = document.createElement("span");
+                span.className = "emoji-fallback";
+                span.innerText = emoji;
+                img.style.display = "none";
+                parent.insertBefore(span, img);
+            } catch(e) {}
+        }
+
+        try {
+            // Ottimizzazione automatica per ogni PC (High DPI / Multi-Risoluzione)
+            var w = screen.availWidth;
+            var h = screen.availHeight;
+            window.moveTo(0, 0);
+            window.resizeTo(w, h);
+            
+            // Forza il riallineamento dopo il caricamento degli asset
+            setTimeout(function() {
+                window.moveTo(0, 0);
+                window.resizeTo(screen.availWidth, screen.availHeight);
+            }, 300);
+        } catch(e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/report_mensile.css">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <style>
+        .refresh-logo-btn {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s !important;
+            cursor: pointer !important;
+        }
+        .refresh-logo-btn:hover {
+            transform: scale(1.18) rotate(15deg) !important;
+            filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.7)) !important;
+        }
+        .refresh-logo-btn:active {
+            transform: scale(0.9) rotate(360deg) !important;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        /* Posizionamento personalizzato del pannello accessibilità a lato della sidebar */
+        .acc-widget-container {
+            left: 250px !important;
+            right: auto !important;
+            bottom: 20px !important;
+        }
+        /* Nasconde il pulsante fluttuante duplicato */
+        #accWidgetBtn {
+            display: none !important;
+        }
+        .acc-widget-panel {
+            left: 0 !important;
+            right: auto !important;
+            bottom: 0 !important;
+        }
+
+        .calendar-modal { 
+            background:white; padding:20px; border-radius:16px; 
+            border:1px solid #005a9e; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.05); 
+            width:360px;
+        }
+        .calendar-header h3 { margin:0; font-size:1.2rem; color:#005a9e; font-family:'Inter', sans-serif; font-weight: 800; }
+        
+        .calendar-footer { margin-top:20px; display:flex; justify-content:space-between; border-top:1px solid #eee; padding-top:15px; }
+        
+        .btn-cal-action {
+            padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:0.9rem;
+            transition: all 0.2s; border: 1px solid transparent;
+        }
+        #btnCalOggi { background:#f8f9fa; color:#333; border-color:#ddd; }
+        #btnCalOggi:hover { background:#e9ecef; border-color:#ccc; transform: translateY(-1px); }
+        
+        #btnCalChiudi { background:#e74c3c; color:white; }
+        #btnCalChiudi:hover { background:#c0392b; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(231,76,60,0.3); }
+
+        .cal-table { width:100%; border-collapse:separate; border-spacing: 2px; table-layout: fixed; }
+        .cal-table th { padding:8px 0; color:#666; font-weight:bold; text-align:center; font-size: 0.85rem; }
+        .cal-table td { padding:2px; text-align:center; vertical-align: middle; }
+        
+        .calendar-day-btn { 
+            width:38px; height:38px; border:none; background:none; cursor:pointer; 
+            font-size:1.05rem; border-radius:50%; font-weight:600; transition: all 0.2s;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .calendar-day-btn:hover { background:#005a9e; color:white; transform: scale(1.1); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        
+        /* Weekend e Festivi */
+        .calendar-day-btn.sat { color: #005a9e; background: #f0f7ff; }
+        .calendar-day-btn.sun { color: #e74c3c; font-weight: 800; }
+        
+        .calendar-day-btn.today { 
+            background:#ffab00 !important; color:white !important; 
+            box-shadow: 0 4px 12px rgba(255,171,0,0.5);
+            transform: scale(1.05);
+        }
+        
+        .cal-btn { cursor:pointer; padding:5px 12px; border-radius:6px; background:#fff; border:1px solid #ddd; font-size:1rem; transition: background 0.2s; }
+        .cal-btn:hover { background:#f5f5f5; border-color:#bbb; }
+        
+        /* EFFETTO NEON PULSE PER URGENZE (UX-6) */
+        @keyframes neonPulseUrgent {
+            0% { background-color: rgba(255, 235, 235, 0.5); }
+            50% { background-color: rgba(255, 185, 185, 0.4); }
+            100% { background-color: rgba(255, 235, 235, 0.5); }
+        }
+        .row-urgent {
+            background-color: rgba(255, 235, 235, 0.5) !important;
+            animation: neonPulseUrgent 2.5s infinite ease-in-out;
+        }
+        .badge-urgent-table {
+            background: #e74c3c !important;
+            color: white !important;
+            font-weight: 800 !important;
+            font-size: 8px !important;
+            padding: 2px 6px !important;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
+            text-transform: uppercase;
+            margin-right: 5px;
+        }
+        .led-pulse {
+            width: 6px;
+            height: 6px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px 2px #fff;
+            display: inline-block;
+            animation: ledFlash 0.8s infinite;
+        }
+        @keyframes ledFlash {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* ANIMAZIONE WIGGLE CAMPANELLA PROMEMORIA (UX-8) */
+        @keyframes bellWiggle {
+            0%, 85%, 100% { transform: rotate(0); }
+            87% { transform: rotate(15deg); }
+            89% { transform: rotate(-12deg); }
+            91% { transform: rotate(10deg); }
+            93% { transform: rotate(-8deg); }
+            95% { transform: rotate(5deg); }
+            97% { transform: rotate(0); }
+        }
+        .wiggle-active img {
+            animation: bellWiggle 7s infinite cubic-bezier(0.36, 0.07, 0.19, 0.97);
+            transform-origin: top center;
+        }
+
+        /* EFFETTO 3D E SOFT GLOW SUI BOTTONI (UX-11) */
+        .action-btn {
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+        .action-btn:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 15px 30px rgba(0, 90, 158, 0.12) !important;
+        }
+        #btnAnyDesk:hover {
+            background: rgba(239, 68, 49, 0.08) !important;
+            border-color: rgb(239, 68, 49) !important;
+            box-shadow: 0 15px 30px rgba(239, 68, 49, 0.2) !important;
+        }
+        #btnGestioneMateriale:hover, #btnCambiaFileExcel:hover {
+            background: rgba(255, 171, 0, 0.08) !important;
+            border-color: rgb(255, 171, 0) !important;
+            box-shadow: 0 15px 30px rgba(255, 171, 0, 0.2) !important;
+        }
+        #btnReportPresenze:hover {
+            background: rgba(6, 182, 212, 0.08) !important;
+            border-color: rgb(6, 182, 212) !important;
+            box-shadow: 0 15px 30px rgba(6, 182, 212, 0.2) !important;
+        }
+
+        /* SIDEBAR ALERTS "RESPIRAZIONE DI LUCE" (UX-12) */
+        @keyframes sidebarPulseUrgent {
+            0%, 100% { background: rgba(231, 76, 60, 0.12); box-shadow: inset 3.5px 0 0 #e74c3c; }
+            50% { background: rgba(231, 76, 60, 0.28); box-shadow: inset 3.5px 0 12px rgba(231, 76, 60, 0.4); }
+        }
+        @keyframes sidebarPulseWarning {
+            0%, 100% { background: rgba(255, 171, 0, 0.12); box-shadow: inset 3.5px 0 0 #ffab00; }
+            50% { background: rgba(255, 171, 0, 0.28); box-shadow: inset 3.5px 0 12px rgba(255, 171, 0, 0.4); }
+        }
+        .alert-item.urgent {
+            border-left: none !important;
+            animation: sidebarPulseUrgent 2s infinite ease-in-out !important;
+        }
+        .alert-item.warning {
+            border-left: none !important;
+            animation: sidebarPulseWarning 2.5s infinite ease-in-out !important;
+        }
+
+        /* ANIMAZIONE MODALE ANTEPRIMA (UX-10) */
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ANIMAZIONE COMPLETAMENTO RIGA AGENDA (UX-13) */
+        @keyframes rowCompletedFadeSlide {
+            0% { transform: translateX(0); background-color: rgba(46, 204, 113, 0.08) !important; opacity: 1; }
+            100% { transform: translateX(50px); background-color: rgba(46, 204, 113, 0.3) !important; opacity: 0; }
+        }
+        .row-completed-anim {
+            animation: rowCompletedFadeSlide 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+        }
+
+        /* 🚀 MICRO-ANIMAZIONI PREMIUM PER LE SCORCIATOIE RAPIDE IN TABELLA (UX-14) */
+        .quick-action-animate {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+            outline: none;
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        .quick-action-animate img {
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+            transform-origin: center bottom;
+        }
+        .quick-action-animate:hover {
+            transform: scale(1.4) translateY(-3px) !important;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            z-index: 50;
+        }
+        .quick-action-animate:active {
+            transform: scale(0.9) translateY(0px) !important;
+            transition: all 0.1s !important;
+        }
+
+        /* Animazioni specifiche all'hover */
+        /* 📞 Telefono/Skype: Wiggle/Trillo vivace */
+        .quick-action-phone:hover img {
+            animation: trilloPhone 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes trilloPhone {
+            0% { transform: rotate(-12deg); }
+            100% { transform: rotate(12deg); }
+        }
+
+        /* 📋 Copia Appunti: Rimbalzo verticale (elastico) */
+        .quick-action-copy:hover img {
+            animation: bounceElastic 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite alternate;
+        }
+        @keyframes bounceElastic {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px) scaleY(1.05); }
+        }
+
+        /* 💬 WhatsApp: Pulse soft e bagliore verde */
+        .quick-action-wa:hover img {
+            animation: waSoftPulse 0.9s ease-in-out infinite;
+        }
+        @keyframes waSoftPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(34,197,94,0)); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(34,197,94,0.6)); }
+        }
+
+        /* 📍 Google Maps: Salto del Pin standard */
+        .quick-action-maps:hover img {
+            animation: mapPinDrop 0.6s ease-in-out infinite alternate;
+        }
+        @keyframes mapPinDrop {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-6px); }
+        }
+
+        /* ✔️ Checkmark Spunta Rapida: Rotazione a scatto soddisfacente */
+        .quick-action-check:hover img {
+            animation: checkSuccessClick 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes checkSuccessClick {
+            0% { transform: scale(1) rotate(0deg); }
+            45% { transform: scale(1.3) rotate(15deg); }
+            70% { transform: scale(1.2) rotate(-5deg); }
+            100% { transform: scale(1.2) rotate(0deg); }
+        }
+
+        /* 🌙 PAUSA SCHERMO (SCREENSAVER) */
+        .screensaver-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, #081024 0%, #000000 100%);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            cursor: none;
+            overflow: hidden;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        .ss-aurora {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.08;
+            filter: blur(100px);
+        }
+        
+        .ss-aurora-1 {
+            background: #0077c2; /* Soft deep blue */
+            top: 15%;
+            left: 15%;
+            animation: auroraMove1 22s infinite alternate ease-in-out;
+        }
+        
+        .ss-aurora-2 {
+            background: #d4af37; /* Soft gold */
+            bottom: 15%;
+            right: 15%;
+            animation: auroraMove2 28s infinite alternate ease-in-out;
+        }
+        
+        @keyframes auroraMove1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(150px, 80px) scale(1.3); }
+        }
+        
+        @keyframes auroraMove2 {
+            0% { transform: translate(0, 0) scale(1.3); }
+            100% { transform: translate(-150px, -80px) scale(0.9); }
+        }
+
+        .screensaver-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .ss-clock {
+            font-size: 150px;
+            font-weight: 800;
+            color: #e2c054;
+            text-shadow: 0 0 45px rgba(212, 175, 55, 0.45);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            letter-spacing: -5px;
+            line-height: 1;
+            animation: clockGlowPulse 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes clockGlowPulse {
+            0% { text-shadow: 0 0 30px rgba(212, 175, 55, 0.3); }
+            100% { text-shadow: 0 0 60px rgba(212, 175, 55, 0.8); }
+        }
+
+        .ss-date { font-size: 24px; color: #cbd5e1; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; }
+
+        /* Glassmorphism Stats Cards */
+        .ss-cards-container {
+            display: flex;
+            gap: 24px;
+            margin-top: 45px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ss-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 12px 24px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #cbd5e1;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            min-width: 190px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .ss-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+        
+        .ss-card-icon {
+            font-size: 22px;
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Inter', sans-serif;
+        }
+        
+        .ss-card-label {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            gap: 2px;
+        }
+        
+        .ss-card-title {
+            font-size: 9px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        
+        .ss-card-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 🚀 EFFETTO LENTE INGRANDIMENTO/ZOOM SULLE CARD KPI (INTERATTIVITÀ PREMIUM) */
+        .kpi-card {
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, z-index 0.1s ease !important;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+        .kpi-card:hover {
+            transform: scale(1.25) translateY(-6px) !important;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25) !important;
+            z-index: 99 !important;
+        }
+        
+        /* Animazione vivace del camioncino 3D all'hover sulla card */
+        .kpi-card-veicolo.fullscreen-active #btnApriAutoModule {
+            display: block !important;
+            align-self: center !important;
+            margin-top: 15px !important;
+        }
+        
+        /* Modifica proporzionale degli elementi interni in modalità fullscreen */
+        .kpi-card-veicolo.fullscreen-active h3 {
+            font-size: 16px !important;
+            color: #475569 !important;
+            margin-bottom: 10px !important;
+        }
+        .kpi-card-veicolo.fullscreen-active #lblDashModel {
+            font-size: 24px !important;
+            color: #0f172a !important;
+            margin: 15px 0 !important;
+        }
+        .kpi-card-veicolo.fullscreen-active #lblDashKm {
+            font-size: 38px !important;
+            color: #0f172a !important;
+        }
+        .kpi-card-veicolo.fullscreen-active div[style*="font-size:10px"] {
+            font-size: 14px !important;
+        }
+        .kpi-card-veicolo.fullscreen-active #lblDashPrevisione,
+        .kpi-card-veicolo.fullscreen-active #lblDashAutonomia {
+            font-size: 15px !important;
+            padding: 18px 24px !important;
+            border-radius: 12px !important;
+            gap: 8px !important;
+        }
+        .kpi-card-veicolo.fullscreen-active #lblDashPrevisioneVal,
+        .kpi-card-veicolo.fullscreen-active #lblDashAutonomiaVal {
+            font-size: 22px !important;
+        }
+        .kpi-card-veicolo.fullscreen-active #lblDashScadenze {
+            font-size: 15px !important;
+            gap: 12px !important;
+            margin-top: 25px !important;
+            padding-top: 18px !important;
+        }
+        .kpi-card-veicolo.fullscreen-active #lblDashScadenze span {
+            font-size: 15px !important;
+        }
+        .kpi-card-veicolo.fullscreen-active .close-fs-btn:hover {
+            background: rgba(0,0,0,0.2) !important;
+        }
+
+        /* 🎨 ARROTONDAMENTO E INTERATTIVITÀ DELLA TABELLA AGENDA */
+        .home-agenda-table {
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+        }
+        .home-agenda-table tbody tr {
+            transition: background-color 0.2s ease !important;
+        }
+        .home-agenda-table tbody tr:hover td {
+            background-color: rgba(14, 165, 233, 0.08) !important;
+            cursor: pointer;
+        }
+    </style>
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        // Funzione di refresh morbido per evitare il freeze di IE11 HTA
+        function HardRefresh() {
+            try {
+                var btn = document.getElementById("btnRefresh");
+                if (btn) btn.click();
+                if (typeof LoadData === 'function') LoadData();
+                if (typeof DisegnaPostit === 'function') DisegnaPostit();
+            } catch(e) {}
+            try { document.body.style.opacity = "1"; } catch(e) {}
+        }
+
+        var lastExecTime = 0;
+        function ExecAction(actionName, e) {
+            var now = new Date().getTime();
+            if (now - lastExecTime < 200) return;
+            lastExecTime = now;
+
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            // Close all dropdowns
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+        }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+</script>
+</head>
+<body style="opacity:1 !important;" style="margin:0; padding:0; overflow:hidden;">
+
+    <!-- CUSTOM TITLE BAR (APPLE STYLE) -->
+    <div id="custom-titlebar" class="custom-titlebar" onmousedown="StartDrag()" style="cursor:move;">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:5px; cursor:default;">
+            <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+            <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+            <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+        </div>
+        <img src="assets/img/app_icon_premium.png?v=2" class="refresh-logo-btn" style="height:22px; width:auto; margin-left:10px; margin-right:10px; border-radius:4px; vertical-align:middle; background:white; padding:2px;" alt="Refresh" onclick="HardRefresh();" title="Ricarica Maschera">
+        
+        <span class="title-text" style="display:inline-block; margin-left:10px; font-weight:bold; color:#cbd5e1;">AGENDA - Pannello di Controllo</span>
+        
+        <!-- BARRA RICERCA GLOBALE -->
+        <div style="flex: 1; max-width: 350px; margin-left: 25px; position: relative;" onmousedown="event.cancelBubble=true;" style="cursor:default;">
+            <input type="text" id="txtGlobalSearch" placeholder="🔍 Ricerca Globale... (Premi Invio per aprire la scheda)" style="width:100%; border-radius:20px; border:1px solid rgba(255,255,255,0.25); background:rgba(0,0,0,0.3); color:white; padding:4px 15px; font-size:12px; outline:none; transition:0.3s; font-weight:bold;" onfocus="this.style.background='rgba(0,0,0,0.6)'; this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 10px rgba(6,182,212,0.4)';" onblur="this.style.background='rgba(0,0,0,0.3)'; this.style.borderColor='rgba(255,255,255,0.25)'; this.style.boxShadow='none';" onkeyup="ActionGlobalSearch(event, this)">
+        </div>
+
+        <button id="btnDarkMode" onclick="ToggleDarkMode()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:50%; color:white; font-size:14px; width:28px; height:28px; cursor:pointer; margin-left:15px; transition:0.3s;" title="Modalità Notte" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">🌙</button>
+        <div class="title-spacer"><span id="titleDate" class="title-date"></span></div>
+        <!-- Top profile widget per homogeneity request -->
+        <div id="userProfileWidget" style="display:flex; align-items:center; gap:8px; font-size:0.9rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px; margin-right:8px;">AUTENTICAZIONE...</div>
+        <div id="titleTime" class="title-time">--:--</div>
+    </div>
+
+    <!-- WRAPPER GLOBALE DASHBOARD -->
+    <div id="mainDashboardContainer" style="display: flex; width: 100%; height: 100vh;">
+        
+        <!-- SIDEBAR -->
+        <nav class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <img src="assets/img/app_icon_premium.png?v=2" class="sidebar-logo" alt="Logo" style="width:110px; height:auto; max-width:90%; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4)); margin-bottom:10px; pointer-events: none;">
+                <h2>C. Milella</h2>
+                
+            </div>
+            <div class="sidebar-menu">
+                <button class="nav-btn" id="btnNavAnagrafica" data-hint="Accedi alla SCHEDA ANAGRAFICA.">
+                    <span style="width:44px; height:44px; background:white; border-radius:12px; padding:3px; margin-right:14px; box-shadow:0 4px 12px rgba(0,0,0,0.25); display:inline-block; vertical-align:middle; text-align:center; box-sizing:border-box; flex-shrink:0;">
+                        <img src="assets/img/icona_anagrafica_3d.png" onerror="HandleIconError(this, '👤')" alt="Icon" style="width:38px; height:38px; border:none; display:inline-block; vertical-align:middle; margin:0;">
+                    </span> ANAGRAFICA
+                </button>
+                <button class="nav-btn" id="btnNavConsegne" data-hint="Accedi alla scheda CONSEGNE per un consulto o inserimento.">
+                    <span style="width:44px; height:44px; background:white; border-radius:12px; padding:3px; margin-right:14px; box-shadow:0 4px 12px rgba(0,0,0,0.25); display:inline-block; vertical-align:middle; text-align:center; box-sizing:border-box; flex-shrink:0;">
+                        <img src="assets/img/icona_consegne_3d.png" onerror="HandleIconError(this, '🚚')" alt="Icon" style="width:38px; height:38px; border:none; display:inline-block; vertical-align:middle; margin:0;">
+                    </span> CONSEGNE
+                </button>
+                <button class="nav-btn" id="btnNavRicerca" data-hint="Accedi all'archivio STORICO e ricerca tra tutte le anagrafiche passate.">
+                    <span style="width:44px; height:44px; background:white; border-radius:12px; padding:3px; margin-right:14px; box-shadow:0 4px 12px rgba(0,0,0,0.25); display:inline-block; vertical-align:middle; text-align:center; box-sizing:border-box; flex-shrink:0;">
+                        <img src="assets/img/icona_storico_3d.png" onerror="HandleIconError(this, '🔍')" alt="Icon" style="width:38px; height:38px; border:none; display:inline-block; vertical-align:middle; margin:0;">
+                    </span> ANAGRAFICA STORICA
+                </button>
+                
+                <!-- TOGGLE CALENDARIO -->
+                <div class="sidebar-toggle-container" style="padding: 10px 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <label class="switch-label" style="display:flex; align-items:center; gap:10px; cursor:pointer; color:#bdc3c7; font-size:10px; font-weight:bold; text-transform:uppercase; margin-bottom:15px;">
+                        <input type="checkbox" id="chkShowCalendar" style="cursor:pointer;"> MOSTRA CALENDARIO
+                    </label>
+                    
+                    <button onclick="ApriLinkEsterno('system\\ottimizza_db.vbs')" style="width:100%; padding:8px; background:rgba(16, 185, 129, 0.15); border:1px solid #10b981; color:#10b981; border-radius:6px; cursor:pointer; font-weight:bold; font-size:10px; text-transform:uppercase; transition:0.2s;" onmouseover="this.style.background='#10b981'; this.style.color='#fff';" onmouseout="this.style.background='rgba(16, 185, 129, 0.15)'; this.style.color='#10b981';" title="Esegui pulizia profonda e deframmentazione del database">
+                        🚀 Ottimizza Database
+                    </button>
+                </div>
+            </div>
+
+            <!-- CENTRO NOTIFICHE -->
+            <div class="sidebar-alerts" style="cursor:pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);" onclick="ToggleNotifDrawer(true)" data-hint="Apri Centro Notifiche Flyout per i dettagli delle ultime attività.">
+                <div class="alerts-title">
+                    <img src="https://img.icons8.com/fluency/48/bell.png" style="width:16px; height:16px; margin-right:5px; vertical-align:middle;"> CENTRO NOTIFICHE
+                </div>
+                <div id="alertUrgenze" class="alert-item urgent">
+                    <img src="https://img.icons8.com/color/48/high-priority.png" alt="Icon" style="width:20px; height:20px;"> <span id="valUrg">0</span> Urgenze in attesa
+                </div>
+                <div id="alertBackup" class="alert-item info">
+                    <img src="https://img.icons8.com/color/48/data-backup.png" alt="Icon" style="width:20px; height:20px;"> Eseguire Backup
+                </div>
+                <div id="alertCompletate" class="alert-item">
+                    ✅ Consegne ultimate!
+                </div>
+                <div id="alertVeicoli" class="alert-item warning" style="display:none; cursor:pointer;" onclick="LaunchModule('auto.hta')">
+                    <img src="https://img.icons8.com/color/48/car.png" alt="Icon" style="width:20px; height:20px;"> <span id="valVeicoliAlert" style="font-weight:700;">Scadenza Mezzi!</span>
+                </div>
+            </div>
+
+            <!-- VOICE ASSISTANT WIDGET -->
+            <div id="aiAssistantWidget" onclick="ParlaAssistente()" style="margin: 15px 10px 10px 10px; padding: 12px; background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 12px; cursor: pointer; text-align: center; position: relative; overflow: hidden; transition: all 0.3s;" title="Clicca per ascoltare il report vocale di oggi">
+                <div style="font-size: 9px; font-weight: 800; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                    🗣️ &#128483;&#65039; ASSISTENTE VOCALE
+                </div>
+                <!-- Waveform vertical bars -->
+                <div class="voice-waveform" style="display: flex; justify-content: center; align-items: center; gap: 4px; height: 25px; margin-bottom: 2px;">
+                    <div class="wv-bar" style="width: 3px; height: 8px; background: #ffe066; border-radius: 2px; transition: height 0.15s ease-in-out;"></div>
+                    <div class="wv-bar" style="width: 3px; height: 15px; background: #d4af37; border-radius: 2px; transition: height 0.15s ease-in-out;"></div>
+                    <div class="wv-bar" style="width: 3px; height: 6px; background: #ffe066; border-radius: 2px; transition: height 0.15s ease-in-out;"></div>
+                    <div class="wv-bar" style="width: 3px; height: 18px; background: #d4af37; border-radius: 2px; transition: height 0.15s ease-in-out;"></div>
+                    <div class="wv-bar" style="width: 3px; height: 12px; background: #ffe066; border-radius: 2px; transition: height 0.15s ease-in-out;"></div>
+                    <div class="wv-bar" style="width: 3px; height: 6px; background: #d4af37; border-radius: 2px; transition: height 0.15s ease-in-out;"></div>
+                </div>
+                <div id="aiAssistantStatus" style="font-size: 8px; font-weight: bold; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">PRONTO (Clicca per Avviare)</div>
+                <div style="display: flex; justify-content: center; gap: 8px;">
+                    <button onclick="if(typeof voiceEnabled !== 'undefined' && !voiceEnabled) { ToggleVoiceAudio(); }; event.cancelBubble=true;" style="background: rgba(74, 222, 128, 0.15); border: 1px solid #4ade80; color: #4ade80; border-radius: 4px; padding: 2px 10px; font-size: 9px; font-weight: bold; cursor: pointer;" title="Attiva Sintesi">ON</button>
+                    <button onclick="if(typeof voiceEnabled !== 'undefined' && voiceEnabled) { ToggleVoiceAudio(); }; event.cancelBubble=true;" style="background: rgba(248, 113, 113, 0.15); border: 1px solid #f87171; color: #f87171; border-radius: 4px; padding: 2px 10px; font-size: 9px; font-weight: bold; cursor: pointer;" title="Disattiva Sintesi">OFF</button>
+                </div>
+            </div>
+
+            <!-- ANALOG CLOCK -->
+            <div class="sidebar-clock-container">
+                <div class="analog-clock">
+                    <div class="clock-face">
+                        <div class="hand hour-hand" id="clock-hour"></div>
+                        <div class="hand min-hand" id="clock-min"></div>
+                        <div class="hand second-hand" id="clock-sec"></div>
+                        <div class="clock-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MINI CALENDARIO SIDEBAR (Nascosto di default) -->
+            <div id="sidebarCalendarWrapper" style="display:none; padding: 5px 10px; background: rgba(0,0,0,0.1); margin: 15px 10px 20px 10px; border-radius: 8px;">
+                <div id="sidebarCalendarTitle" style="text-align:center; color:#ffab00; font-size:11px; font-weight:bold; margin-bottom:5px;"></div>
+                <div id="sidebarCalendarGrid"></div>
+            </div>
+            
+            <!-- MENU SISTEMA NELLA SIDEBAR (TRASLOCATO) -->
+            <div class="sidebar-menu" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                <div style="font-size: 10px; font-weight: 900; color: #ffab00; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; padding-left: 15px;">🛠️ Sistema</div>
+                
+                <button class="nav-btn" id="cmdAdminSidebar" onclick="LaunchModule('admin_utenti.hta')" style="margin-bottom:5px;">
+                    <img src="https://img.icons8.com/color/48/admin-settings-male.png" onerror="HandleIconError(this, '🛡️')" style="width:28px; height:28px; background:white; border-radius:6px; padding:3px; margin-right:10px;"> ADMIN
+                </button>
+                <button class="nav-btn" id="cmdAnnoNuovo" style="margin-bottom:5px;">
+                    <img src="https://img.icons8.com/color/48/archive.png" onerror="HandleIconError(this, '📦')" style="width:28px; height:28px; background:white; border-radius:6px; padding:3px; margin-right:10px;"> ARCHIVIA DB
+                </button>
+                <button class="nav-btn" id="cmdSyncUSB" style="margin-bottom:5px;">
+                    <img src="https://img.icons8.com/color/48/usb-connector.png" onerror="HandleIconError(this, '🔌')" style="width:28px; height:28px; background:white; border-radius:6px; padding:3px; margin-right:10px;"> SYNC USB
+                </button>
+                <button class="nav-btn" onclick="LaunchModule('statistiche.hta')" style="margin-bottom:5px; background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0));">
+                    <img src="https://img.icons8.com/fluency/48/combo-chart.png" onerror="HandleIconError(this, '📊')" style="width:28px; height:28px; background:white; border-radius:6px; padding:3px; margin-right:10px;"> <span style="color:#22c55e;">STATISTICHE</span>
+                </button>
+                <button class="nav-btn" id="cmdManuali" style="margin-bottom:5px;">
+                    <img src="https://img.icons8.com/color/48/book.png" onerror="HandleIconError(this, '📖')" style="width:28px; height:28px; background:white; border-radius:6px; padding:3px; margin-right:10px;"> MANUALI
+                </button>
+                <div style="display:flex; justify-content:center; margin-top:15px; margin-bottom:5px;">
+                    <button type="button" onclick="ApriMenuAccessibilita()" id="accSidebarBtn" title="Accessibilità (Sintesi Vocale, Contrasto, Ingrandimento)" aria-label="Accessibilità" style="width: 48px; height: 48px; border-radius: 50%; background: #1e1e24; border: 2px solid #ffffff; color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); transition: all 0.2s ease; outline: none;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='#ef443b'; this.style.borderColor='#ffffff';" onmouseout="this.style.transform='scale(1)'; this.style.background='#1e1e24'; this.style.borderColor='#ffffff';">♿</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer" style="display:flex; flex-direction:column; gap:10px;">
+                <button class="nav-btn" id="cmdCambiaUtente" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
+                    <img src="https://img.icons8.com/color/48/shutdown.png" onerror="HandleIconError(this, '👤')" style="width:34px; height:34px; background:white; border-radius:6px; padding:4px; margin-right:12px;"> LOGOUT
+                </button>
+                <button type="button" class="nav-btn btn-exit btn-outline-danger" id="btnNavEsci" data-hint="ESCI & SALVA.">
+                    <img src="https://img.icons8.com/color/48/close-window.png" onerror="HandleIconError(this, '🚪')" alt="Icon" style="width:38px; height:38px; background:white; border-radius:6px; padding:4px; margin-right:12px;"> ESCI
+                </button>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" style="flex:1; overflow-y:auto; padding-bottom:20px;">
+            
+            <!-- HEADER -->
+            <header class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center;">
+                    <img src="assets/img/logo_final.jpg" class="header-logo-mini" alt="Logo" style="height:65px; width:auto; margin-right:20px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                    <div>
+                        <h1 id="lblTitolo" data-hint="Aggiorna i dati della dashboard cliccando qui.">Pannello Riepilogativo</h1>
+                        <div id="greetingHub" class="greeting-hub"></div>
+                        <p id="lblSottotitolo" class="subtitle">GESTIONALE INTEGRATO C. MILELLA</p>
+                    </div>
+                </div>
+                
+                <!-- NUOVO BOTTONE GUIDA INTERATTIVA PREMIUM -->
+                <button id="btnApriGuidaNovita" style="background: linear-gradient(135deg, #ffab00 0%, #ff8c00 100%); color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 800; font-size: 11px; letter-spacing: 0.8px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 15px rgba(255, 171, 0, 0.3); outline:none;" onmouseover="this.style.transform='scale(1.05) translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(255, 171, 0, 0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(255, 171, 0, 0.3)';" data-hint="🌟 Clicca qui per la Guida Interattiva alle incredibili novità di questo cruscotto!">
+                    <span style="font-size:15px; animation: rotateWiggle 3s infinite;">✨</span> SCOPRI LE NOVITÀ
+                </button>
+            </header>
+
+            <!-- KPI CARDS -->
+            <section class="kpi-section">
+                <div class="kpi-card" id="cardProgresso" style="position:relative; overflow:hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <h3 style="position:relative; z-index:2;">Progresso Oggi</h3>
+                    <div class="kpi-value" id="lblStat1" style="position:relative; z-index:2;">...</div>
+                    <canvas id="uxChartProgresso" width="350" height="60" style="position:absolute; bottom:6px; left:0; width:100%; height:60px; opacity:0.8; pointer-events:none; z-index:1;"></canvas>
+                    <!-- BARRA DI PROGRESSO ORIZZONTALE LIVE (UX-7) -->
+                    <div style="position:absolute; bottom:0; left:0; width:100%; height:6px; background:rgba(0,0,0,0.05); z-index:3;">
+                        <div id="progressoOggiBar" style="width:0%; height:100%; background:linear-gradient(90deg, #005a9e, #10b981); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                    </div>
+                </div>
+                
+                <div class="kpi-card urgency-card" id="cardUrgenze" style="display: none;">
+                    <h3>Urgenze</h3>
+                    <div class="kpi-value warning" id="lblStat2">0</div>
+                </div>
+
+                <div class="kpi-card" id="cardInArrivo" style="cursor:pointer; display:flex; flex-direction:column; justify-content:space-between;" onclick="ApriAnteprimaInArrivo()" data-hint="Consegne in arrivo nei prossimi 7 giorni. Clicca per un'anteprima volante!">
+                    <h3 style="margin:0; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#64748b;"><svg viewBox="0 0 448 512" width="12" height="12" style="fill:#0ea5e9; margin-right:4px; vertical-align:middle;"><path d="M12 192h424v272c0 26.51-21.49 48-48 48H60c-26.51 0-48-21.49-48-48V192zm400-96v-32c0-8.837-7.163-16-16-16h-32c-8.837 0-16 7.163-16 16v32H112v-32c0-8.837-7.163-16-16-16H64c-8.837 0-16 7.163-16 16v32H16C7.163 96 0 103.163 0 112v48h448v-48c0-8.837-7.163-16-16-16h-16z"/></svg> In Arrivo (7gg)</h3>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin: 6px 0;">
+                        <div class="kpi-value primary" id="lblStat3" style="font-size:30px; font-weight:900; line-height:1; color:#0ea5e9; text-shadow:0 0 10px rgba(14,165,233,0.15); font-family:'Outfit', sans-serif;">...</div>
+                        <img src="assets/img/icona_consegne_3d.png" onerror="HandleIconError(this, '🚚')" alt="Truck" class="kpi-truck-icon" style="width:38px; height:38px; margin-left:4px; vertical-align:middle; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                    </div>
+                    <div style="font-size: 8px; color: #64748b; font-weight: bold; text-transform: uppercase; text-align:center; letter-spacing: 0.5px; margin-top:2px;">Consegne programmate</div>
+                </div>
+                
+                <!-- AGGIORNAMENTO FASE 2: VEICOLO LIVE -->
+                <div class="kpi-card kpi-card-veicolo" id="cardVeicoloDashboard" onclick="ToggleVeicoloFullscreen(event)" data-hint="Stato Veicolo: Clicca per ingrandire a schermo intero.">
+                    <!-- Pulsante per Chiudere la Modalità Fullscreen (visibile solo quando attivo) -->
+                    <button class="close-fs-btn" onclick="ToggleVeicoloFullscreen(event)" style="display:none; position:absolute; top:20px; right:20px; background:rgba(15,23,42,0.1); border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; font-weight:900; font-size:20px; color:#475569; align-items:center; justify-content:center; outline:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(15,23,42,0.2)'" onmouseout="this.style.background='rgba(15,23,42,0.1)'">&times;</button>
+
+                    <h3 style="color:#64748b; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; margin:0;"><svg viewBox="0 0 512 512" width="12" height="12" style="fill:#64748b; margin-right:4px; vertical-align:middle;"><path d="M499.78 244c-5.83-11.28-17.29-18-29.78-18H42c-12.5 0-23.95 6.72-29.78 18L.63 266.38C.21 267.19 0 268.08 0 269v127c0 14.9 12.1 27 27 27h21.4c6.4 0 12.3-3.6 15.1-9.3l20.6-41.2c7-14.1 21.5-23 37.3-23h181.1c15.8 0 30.3 8.9 37.3 23l20.6 41.2c2.8 5.7 8.7 9.3 15.1 9.3H485c14.9 0 27-12.1 27-27V269c0-.92-.21-1.81-.63-2.62L499.78 244zM90 326c-16.6 0-30-13.4-30-30s13.4-30 30-30 30 13.4 30 30-13.4 30-30 30zm332 0c-16.6 0-30-13.4-30-30s13.4-30 30-30 30 13.4 30 30-13.4 30-30 30zM256 90c-44.2 0-80 35.8-80 80h160c0-44.2-35.8-80-80-80z"/></svg> STATO VEICOLO</h3>
+                    
+                    <!-- Modello e Targa del Veicolo -->
+                    <div id="lblDashModel" style="font-size:11.5px; font-weight:800; color:#1e293b; margin: 6px 0 4px 0; text-transform:uppercase; text-align:center; letter-spacing:0.2px;">CARICAMENTO VEICOLO...</div>
+                    
+                    <div style="display:flex; align-items:center; gap:10px; justify-content:center; margin: 6px 0 8px 0; width:100%;">
+                         <!-- SVG GAUGE RE-STYLED (Larger & Cleaner) with Clear Label -->
+                         <div style="display:flex; flex-direction:column; align-items:center; width:65px; flex-shrink:0;">
+                             <div style="position:relative; width:65px; height:38px; overflow:hidden;">
+                                 <svg width="65" height="65" viewBox="0 0 100 100">
+                                     <path d="M 10 80 A 40 40 0 0 1 90 80" fill="none" stroke="#f1f5f9" stroke-width="12" stroke-linecap="round"/>
+                                     <path d="M 10 80 A 40 40 0 0 1 50 40" fill="none" stroke="#10b981" stroke-width="12"/>
+                                     <path d="M 50 40 A 40 40 0 0 1 90 80" fill="none" stroke="#ef4444" stroke-width="12" stroke-linecap="round"/>
+                                     <circle cx="50" cy="80" r="6" fill="#0f172a"/>
+                                     <path id="gaugeNeedle" d="M 50 80 L 50 40" stroke="#0f172a" stroke-width="4" stroke-linecap="round" style="transform-origin: 50px 80px; transition: transform 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: rotate(-90deg);"/>
+                                 </svg>
+                             </div>
+                             <div style="font-size:8px; color:#64748b; font-weight:bold; margin-top:-2px; text-transform:uppercase; letter-spacing:0.3px; text-align:center; white-space:nowrap; pointer-events:none;">Usura Olio</div>
+                         </div>
+                         
+                         <div style="text-align:center; flex-grow:1; min-width:0;">
+                              <div id="lblDashKm" style="font-size:18px; font-weight:900; color:#0f172a; letter-spacing:-0.5px; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">---</div>
+                              <div style="font-size:10px; color:#64748b; font-weight:700; text-transform:uppercase; margin-top:4px; letter-spacing:0.2px;">Chilometri Attuali</div>
+                          </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:6px; width:100%; box-sizing:border-box;">
+                        <!-- Predizione Tagliando Row -->
+                        <div id="lblDashPrevisione" style="font-size:10px; font-weight:700; background:#e0f2fe; color:#034b75; border:1px solid #7dd3fc; padding:6px 8px; border-radius:8px; display:none; flex-direction:column; align-items:center; gap:2px; width:100%; box-sizing:border-box;">
+                            <div style="display:flex; align-items:center; gap:4px; opacity:0.9;">
+                                <svg viewBox="0 0 512 512" width="10" height="10" style="fill:#0284c7; margin-right:4px; vertical-align:middle;"><path d="M507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.58-6.58 3.52-17.88-5.51-20.12-32.1-7.96-67.26.12-92.92 25.78-29.35 29.35-37.1 72.18-23.23 108.97L13.29 412.01c-17.71 17.71-17.71 46.42 0 64.13l16.97 16.97c17.71 17.71 46.42 17.71 64.13 0l272.98-272.98c36.79 13.87 79.62 6.12 108.97-23.23 25.66-25.66 33.74-60.82 25.78-92.92z"/></svg> <span style="text-transform:uppercase; font-size:9px;">Prossimo Tagliando</span>
+                            </div>
+                            <span id="lblDashPrevisioneVal" style="font-weight:900; color:#0369a1; font-size:12px; letter-spacing:0.5px;">~ --/--/----</span>
+                        </div>
+
+                        <!-- Autonomia Row -->
+                        <div id="lblDashAutonomia" style="font-size:10px; font-weight:700; background:#dcfce7; color:#14532d; border:1px solid #86efac; padding:6px 8px; border-radius:8px; display:none; flex-direction:column; align-items:center; gap:2px; width:100%; box-sizing:border-box;">
+                            <div style="display:flex; align-items:center; gap:4px; opacity:0.9;">
+                                <i class="fa fa-tint" style="font-size:11px; color:#16a34a;"></i> <span style="text-transform:uppercase; font-size:9px;">Autonomia</span>
+                            </div>
+                            <span id="lblDashAutonomiaVal" style="font-weight:900; color:#15803d; font-size:12px; letter-spacing:0.5px; white-space:nowrap;">~ -- Km</span>
+                            <div style="width:100%; height:4px; background:rgba(0,0,0,0.05); border-radius:2px; overflow:hidden; margin-top:2px;">
+                                <div id="barDashAutonomia" style="width:0%; height:100%; background:linear-gradient(90deg, #22c55e, #16a34a); transition: width 0.6s ease;"></div>
+                            </div>
+                            <div id="lblDashUltimoRif" style="font-size:7.5px; color:#166534; font-weight:800; margin-top:3px; text-transform:uppercase; text-align:center; opacity:0.85; display:none; pointer-events:none; letter-spacing:0.2px;">Ultimo rifornimento: --</div>
+                        </div>
+                    </div>
+
+                    <!-- Scadenze Legali/Amministrative Veicolo -->
+                    <div id="lblDashScadenze" style="font-size:10px; font-weight:700; color:#475569; display:flex; flex-direction:column; gap:5px; width:100%; border-top:1px solid #cbd5e1; padding-top:8px; margin-top:8px; text-align:left; box-sizing:border-box;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#475569;">🛡️ Assicurazione:</span>
+                            <span id="lblDashAssicVal" style="font-weight:800; color:#0f172a;">--/--/----</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#475569;">🚗 Revisione:</span>
+                            <span id="lblDashRevisVal" style="font-weight:800; color:#0f172a;">--/--/----</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#475569;">💰 Bollo:</span>
+                            <span id="lblDashBolloVal" style="font-weight:800; color:#0f172a;">--/--/----</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Pulsante per aprire il registro spese effettivo (solo in modalità fullscreen) -->
+                    <button id="btnApriAutoModule" onclick="LaunchModule('auto.hta')" style="display:none; margin-top:20px; background:#0ea5e9; color:white; border:none; padding:12px 24px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:13px; text-transform:uppercase; box-shadow:0 4px 10px rgba(14,165,233,0.35); transition:all 0.2s; outline:none; font-family:'Outfit', sans-serif;" onmouseover="this.style.background='#0284c7'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#0ea5e9'; this.style.transform='none';">Apri Registro Spese Completo</button>
+                </div>
+                
+                <!-- AGGIORNAMENTO: WIDGET PRESENZE LIVE -->
+                <div class="kpi-card kpi-card-presenze" id="cardPresenzeDashboard" onclick="LaunchModule('presenze.hta')" data-hint="Registro Presenze: Ore lavorate questo mese. Clicca per aprire!">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                        <h3 style="color:#7e22ce; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; margin:0; display:flex; align-items:center; gap:6px;">
+                            <img src="https://img.icons8.com/fluency/48/timetable.png" style="width:16px; height:16px; margin-top:-2px;"> PRESENZE MENSILI
+                        </h3>
+                        <span id="lblDashPresenzeWarning" style="display:none; background:#ef4444; color:white; font-size:8px; font-weight:900; padding:3px 6px; border-radius:12px; box-shadow:0 2px 6px rgba(239,68,68,0.3);">⚠️ OUT?</span>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex-grow:1; gap:6px; margin-top:8px; margin-bottom:8px;">
+                        <div id="lblDashPresenzeOre" style="font-size:32px; font-weight:900; color:#1e1b4b; letter-spacing:-1px; line-height:1;">0h 0m</div>
+                        <div id="lblDashPresenzeInfo" style="font-size:9px; color:#6d28d9; font-weight:800; background:#f3e8ff; padding:4px 10px; border-radius:12px; text-transform:uppercase; border:1px solid #e9d5ff;">0% DI 160 ORE (TARGET)</div>
+                    </div>
+                    
+                    <!-- Mini ProgressBar -->
+                    <div style="width:100%; height:6px; background:#ede9fe; border-radius:4px; overflow:hidden;">
+                        <div id="pbDashPresenze" style="width:0%; height:100%; background:linear-gradient(90deg, #a855f7, #6d28d9); transition: width 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                    </div>
+                </div>
+                
+                <!-- SISTEMA (RIPRISTINATO nella KPI row come originale) -->
+                <div class="kpi-card system-card" id="cardSistema" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-top-color: #64748b; flex: 0.9;">
+                    <h3 style="color:#64748b;">Sistema</h3>
+                    <div class="system-actions" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+                        <button class="sys-btn" id="cmdAdminKpi" data-hint="Accedi alla gestione utenti e permessi.">
+                            <img src="https://img.icons8.com/color/48/admin-settings-male.png" onerror="HandleIconError(this,'🛡️')" class="sys-icon">
+                            <span class="sys-text">ADMIN</span>
+                        </button>
+                        <button class="sys-btn" id="cmdAnnoNuovoKpi" data-hint="Archivia l'anno corrente e crea nuovo database.">
+                            <img src="https://img.icons8.com/color/48/archive.png" onerror="HandleIconError(this,'📦')" class="sys-icon">
+                            <span class="sys-text">ARCHIVIA</span>
+                        </button>
+                        <button class="sys-btn" id="cmdSyncUSBKpi" data-hint="Sincronizza i dati su chiavetta USB di backup.">
+                            <img src="https://img.icons8.com/color/48/usb-connector.png" onerror="HandleIconError(this,'🔌')" class="sys-icon">
+                            <span class="sys-text">USB SYNC</span>
+                        </button>
+                        <button class="sys-btn" id="cmdStatisticheKpi" data-hint="Visualizza le statistiche e i report aziendali.">
+                            <img src="https://img.icons8.com/fluency/48/combo-chart.png" onerror="HandleIconError(this,'📊')" class="sys-icon">
+                            <span class="sys-text">STATISTICHE</span>
+                        </button>
+                        <button class="sys-btn" id="cmdManualiKpi" data-hint="Apri i manuali operativi del sistema.">
+                            <img src="https://img.icons8.com/color/48/book.png" onerror="HandleIconError(this,'📖')" class="sys-icon">
+                            <span class="sys-text">MANUALI</span>
+                        </button>
+                        <button class="sys-btn" id="cmdCambiaUtenteKpi" data-hint="Esci dall'account corrente." style="border-color:#fee2e2;" onmouseover="this.style.borderColor='#ef4444';" onmouseout="this.style.borderColor='#fee2e2';">
+                            <img src="https://img.icons8.com/color/48/shutdown.png" onerror="HandleIconError(this,'⏻')" class="sys-icon">
+                            <span class="sys-text" style="color:#ef4444;">LOGOUT</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- WIDGET METEO LIVE -->
+                <div class="kpi-card kpi-card-meteo meteo-modern-premium" id="cardMeteoDashboard" onclick="CaricaMeteoLive()" data-hint="Meteo Live: condizioni atmosferiche e stradali aggiornate in tempo reale.">
+                    <div class="meteo-bg-glow"></div>
+                    <h3 class="meteo-title">
+                        <span><img src="https://img.icons8.com/fluency/48/partly-cloudy-day.png" onerror="HandleIconError(this,'⛅')" class="meteo-title-icon"> METEO LIVE</span>
+                        <span class="meteo-refresh" title="Aggiorna meteo">🔄</span>
+                    </h3>
+
+                    <div class="meteo-main-row">
+                        <div class="meteo-text-col">
+                            <div id="lblMeteoTemp" class="meteo-temp">--°C</div>
+                            <div id="lblMeteoDesc" class="meteo-desc">CARICAMENTO...</div>
+                        </div>
+                        <div id="lblMeteoIcon" class="meteo-icon">☀️</div>
+                    </div>
+
+                    <div id="lblMeteoTip" class="meteo-tip">
+                        Verifica condizioni stradali...
+                    </div>
+                </div>
+            </section>
+
+            <!-- AGENDA LIVE (RICHIESTA UTENTE) -->
+            <section class="agenda-section">
+                <div class="action-panel premium-table-panel">
+                    <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><img src="https://img.icons8.com/fluency/48/calendar.png" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;">Agenda Consegne Operative (Priorità Urgenze)</span>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <!-- FILTRI RAPIDI A PILLOLA APPLE-STYLE (UX-9) -->
+                            <div style="display:inline-flex; background:#f1f5f9; border-radius:20px; padding:2px; border:1px solid #e2e8f0; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);">
+                                <button onclick="ApplicaFiltroAgenda('TUTTE')" id="btnFiltroTutte" style="border:none; background:#ffffff; color:#0f172a; font-size:9px; font-weight:800; padding:4px 12px; border-radius:15px; cursor:pointer; transition:all 0.2s; outline:none; box-shadow:0 1px 3px rgba(0,0,0,0.1);" title="Visualizza tutte le consegne operative">TUTTE</button>
+                                <button onclick="ApplicaFiltroAgenda('URGENTI')" id="btnFiltroUrgenti" style="border:none; background:transparent; color:#64748b; font-size:9px; font-weight:800; padding:4px 12px; border-radius:15px; cursor:pointer; transition:all 0.2s; outline:none;" title="Visualizza solo consegne URGENTI">🚨 URGENTI</button>
+                            </div>
+                            <div style="position:relative; display:inline-flex; align-items:center;">
+                                <input type="text" id="txtCercaAgenda" placeholder="🔍 Cerca al volo..." style="padding: 4px 10px 4px 24px; border-radius: 20px; border: 1.5px solid #cbd5e1; font-size: 11px; font-weight: 600; width: 160px; outline: none; transition: all 0.3s ease; background: white; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);" onfocus="this.style.width='220px'; this.style.borderColor='#005a9e'; this.style.boxShadow='0 0 0 3px rgba(0, 90, 158, 0.15)';" onblur="this.style.width='160px'; this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';" oninput="FiltraAgendaLive(this.value)">
+                            </div>
+                            <span id="lblAgendaStatus" style="font-size:10px; color:#27ae60; font-weight:bold; display:inline-flex; align-items:center; gap:6px;"><span class="pulse-dot"></span> LIVE MONITOR</span>
+                        </div>
+                    </div>
+                    
+                    <!-- ANALYTICS BREAKDOWN BAR (VISUAL DATA VIZ) -->
+                    <div class="agenda-breakdown-container" style="margin-top:-5px; margin-bottom:12px; padding: 0 20px;">
+                        <div class="agenda-breakdown-bar">
+                            <div id="barUrgente" class="bar-segment segment-urgent" style="width:0%" title="Ordini Urgenti"></div>
+                            <div id="barOggi" class="bar-segment segment-today" style="width:0%" title="Ordini di Oggi"></div>
+                            <div id="barPianificato" class="bar-segment segment-planned" style="width:0%" title="Ordini Pianificati"></div>
+                        </div>
+                        <div class="agenda-breakdown-legend">
+                            <span class="leg-item"><span class="dot dot-urgent"></span> URGENTI (<b id="cntUrg">0</b>)</span>
+                            <span class="leg-item"><span class="dot dot-today"></span> OGGI (<b id="cntOggi">0</b>)</span>
+                            <span class="leg-item"><span class="dot dot-planned"></span> PIANIFICATI (<b id="cntPianif">0</b>)</span>
+                        </div>
+                    </div>
+
+                    <div class="home-table-wrapper">
+                        <table class="home-agenda-table">
+                            <thead>
+                                <tr>
+                                    <th width="200">CLIENTE</th>
+                                    <th width="100">GIORNO</th>
+                                    <th width="80">ORA</th>
+                                    <th width="150">LOCALITÀ</th>
+                                    <th width="100">ORDINE</th>
+                                    <th>MERCE</th>
+                                    <th width="180">NOTE</th>
+                                    <th width="60" style="text-align:center;">SPUNTA</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyAgendaHome">
+                                <tr>
+                                    <td colspan="8" style="text-align:center; padding:30px; color:#95a5a6;">
+                                        <i class="fa fa-spinner fa-spin"></i> Caricamento agenda in corso...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ACTION GRIDS -->
+            <section class="actions-section">
+                
+                <!-- OPERAZIONI RAPIDE -->
+                <div class="action-panel">
+                    <div class="panel-header">Operazioni Rapide</div>
+                    <div class="grid-layout">
+                        <button class="action-btn" id="btnNavAsl" onclick="LaunchModule('asl_monitor.hta')" data-hint="Accedi al Centro Monitoraggio ASL: Controlla idoneità, codici ISO e scadenze dei 6 anni.">
+                            <img src="https://img.icons8.com/fluency/48/stethoscope.png" onerror="HandleIconError(this, '🩺')">
+                            <span>Gestione A.S.L.</span>
+                        </button>
+                        <button class="action-btn" id="btnGestioneArticoli">
+                            <img src="https://img.icons8.com/color/48/box--v1.png" onerror="HandleIconError(this, '📦')">
+                            <span>Articoli</span>
+                        </button>
+                        <button class="action-btn" id="btnConsegneGiornata">
+                            <img src="https://img.icons8.com/color/48/calendar--v1.png" onerror="HandleIconError(this, '📅')">
+                            <span>Agenda</span>
+                        </button>
+                        <button class="action-btn" id="btnStampaReport">
+                            <img src="https://img.icons8.com/color/48/pdf-2.png" onerror="HandleIconError(this, '📄')">
+                            <span>Report PDF</span>
+                        </button>
+                        <button class="action-btn" id="cmdStampaPerData">
+                            <img src="https://img.icons8.com/color/48/print.png" onerror="HandleIconError(this, '🖨️')">
+                            <span>Stampa Data</span>
+                        </button>
+                        <button class="action-btn" id="btnPromemoria" style="position: relative;">
+                            <img src="https://img.icons8.com/color/48/appointment-reminders.png" onerror="HandleIconError(this, '🔔')">
+                            <span>Promemoria</span>
+                            <div class="badge-count" id="badgePromemoria" style="display: none;">0</div>
+                        </button>
+                        <button class="action-btn" id="btnAnyDesk" data-hint="Teleassistenza AnyDesk: Connettiti rapidamente ai PC della rete.">
+                            <img src="https://img.icons8.com/color/48/anydesk.png" onerror="HandleIconError(this, '🔴')">
+                            <span>TELEASSISTENZA</span>
+                        </button>
+                        <button class="action-btn" id="btnRadarLive" onclick="LaunchModuleStayOpen('mappa_radar.hta')" data-hint="Radar Flotta Live: Visualizza in tempo reale la posizione GPS dei tuoi corrieri sulla mappa.">
+                            <img src="https://img.icons8.com/color/48/radar.png" onerror="HandleIconError(this, '📡')">
+                            <span>RADAR FLOTTA</span>
+                        </button>
+                        <button class="action-btn" id="btnSincroMaterialiAuto" onclick="LaunchModuleStayOpen('gestione_materiale/visualizzatore_materiali.html');" style="border:2px solid #3b82f6 !important; background:linear-gradient(135deg, rgba(30,58,138,0.3), rgba(59,130,246,0.3)) !important; box-shadow:0 8px 20px rgba(59,130,246,0.3) !important;" data-hint="Sincro Materiali & Autocompilazione: Consultazione ed autocompilazione automatica per cognome e nome.">
+                            <img src="assets/img/icona_materiali.png" style="width:38px; height:38px; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));" onerror="HandleIconError(this, '📦')">
+                            <span style="font-weight:900; color:#ffffff; font-size:11px; letter-spacing:0.3px;">AUTOCOMPILAZIONE & MATERIALI</span>
+                        </button>
+                        <button class="action-btn" id="btnCambiaFileExcel" onclick="MaterialiEngine.selezionaFileExcel();" data-hint="Seleziona o sostituisci il file Excel sorgente.">
+                            <img src="https://img.icons8.com/color/48/microsoft-excel-2019.png" onerror="HandleIconError(this, '📊')">
+                            <span>FILE DANEA</span>
+                        </button>
+                        <input type="file" id="excelFilePicker" style="display:none" accept=".xls,.xlsx">
+                    </div>
+                </div>
+
+                <!-- GESTIONE PERSONALE -->
+                <div class="action-panel">
+                    <div class="panel-header">Gestione Personale</div>
+                    <div class="grid-layout">
+                        <button class="action-btn" onclick="LaunchModule('admin_utenti.hta')">
+                            <img src="https://img.icons8.com/color/48/admin-settings-male.png">
+                            <span>Account & Utenti</span>
+                        </button>
+                        <button class="action-btn" id="btnPermessi">
+                            <img src="https://img.icons8.com/color/48/checked-user-male.png">
+                            <span>Permessi</span>
+                        </button>
+                        <button class="action-btn" id="btnRimborsi">
+                            <img src="https://img.icons8.com/color/48/money--v1.png">
+                            <span>Rimborsi</span>
+                        </button>
+                        <button class="action-btn" id="cmdApriPresenze">
+                            <img src="https://img.icons8.com/color/48/timetable.png" onerror="HandleIconError(this, '📊')">
+                            <span>Presenze</span>
+                        </button>
+                        <button class="action-btn" id="cmdApriGestioneAuto">
+                            <img src="https://img.icons8.com/color/48/car.png">
+                            <span>Gestione Auto</span>
+                        </button>
+                        <button class="action-btn" id="btnReportPresenze" data-hint="Genera o stampa il prospetto presenze mensili del tuo profilo.">
+                            <img src="https://img.icons8.com/fluency/48/print.png" onerror="HandleIconError(this, '🖨️')">
+                            <span>REPORT PRESENZE</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER BAR -->
+            <footer class="footer">
+                <div class="footer-hint" id="lblFooterHint">
+                    Passa il mouse sopra un pulsante per visualizzarne la funzione.
+                </div>
+                <div class="footer-profile" id="lblFooterProfile" style="display:inline-flex; align-items:center; font-size:13px; font-weight:600; color:#333;">
+                    Profilo: Attendere... 
+                    <div style="width:24px; height:24px; border-radius:50%; background:#eee; display:inline-flex; align-items:center; justify-content:center; margin-left:8px; overflow:hidden;">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/user-male-circle.png" style="width:14px; height:14px; opacity:0.7;">
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+    </div> <!-- Fine mainDashboardContainer -->
+
+    <!-- MODALE CALENDARIO -->
+    <div id="calendarOverlay" class="calendar-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
+        <div class="calendar-modal">
+            <div class="calendar-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid #eee; padding-bottom:10px;">
+                <button class="icon-btn" id="btnCalPrev" style="border:none; cursor:pointer; font-size:1.2rem; background:none;">◀️</button>
+                <h3 id="lblCalMeseAnno">Mese Anno</h3>
+                <button class="icon-btn" id="btnCalNext" style="border:none; cursor:pointer; font-size:1.2rem; background:none;">▶️</button>
+            </div>
+            <div id="gridCalendario">
+                <!-- Tabella generata da JS -->
+            </div>
+            <div class="calendar-footer">
+                <button id="btnCalOggi" class="btn-cal-action">OGGI</button>
+                <button id="btnCalChiudi" class="btn-cal-action">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTAINER REPORT DI STAMPA -->
+    <div id="reportStampaContainer" style="display:none;"></div>
+
+    <!-- OVERLAY ANTEPRIMA VOLANTE (UX-10) -->
+    <div id="anteprimaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); z-index:10001; justify-content:center; align-items:center;">
+        <div style="background:white; width:500px; border-radius:20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow:hidden; animation: modalSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER CON GRADIENTE -->
+            <div style="background:linear-gradient(135deg, #ff8c00, #e67e22); padding:20px; color:white; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="https://img.icons8.com/fluency/48/delivery-time.png" style="width:26px; height:26px; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2));">
+                    <h3 style="margin:0; font-size:15px; font-weight:800; letter-spacing:0.8px; font-family:'Segoe UI', Arial;">PROSSIMI 7 GIORNI</h3>
+                </div>
+                <button onclick="ChiudiAnteprimaInArrivo()" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:28px; height:28px; cursor:pointer; font-weight:900; font-size:14px; display:flex; align-items:center; justify-content:center; outline:none; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">×</button>
+            </div>
+            <!-- CORPO DELLA LISTA -->
+            <div id="listaAnteprimaCorpo" style="padding:20px; max-height:320px; overflow-y:auto; background:#f8fafc; border-bottom:1px solid #f1f5f9;">
+                <!-- Generato dinamicamente in dashboard_hta.js -->
+            </div>
+            <!-- FOOTER AZIONI -->
+            <div style="padding:15px 20px; background:white; text-align:right; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Sguardo rapido sul calendario</span>
+                <button onclick="ChiudiAnteprimaInArrivo(); LaunchModule('consegne.hta');" style="background:#0f172a; color:white; border:none; border-radius:8px; padding:8px 18px; font-size:11px; font-weight:800; cursor:pointer; transition:all 0.2s; outline:none; text-transform:uppercase;" onmouseover="this.style.background='#1e293b'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#0f172a'; this.style.transform='none';">Apri Modulo Consegne</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY MAPPA AL VOLO (FASE 3) -->
+    <div id="mappaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.4); backdrop-filter:blur(8px); z-index:10500; justify-content:center; align-items:center;">
+        <div style="background:white; width:85%; height:85%; max-width:1000px; border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3); overflow:hidden; display:flex; flex-direction:column; border: 1px solid rgba(255,255,255,0.3); animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER -->
+            <div style="background:linear-gradient(135deg, #005a9e 0%, #1e3a8a 100%); padding:15px 25px; color:white; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="https://img.icons8.com/fluency/48/google-maps-new.png" style="width:26px; height:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+                    <div>
+                        <h3 style="margin:0; font-size:15px; font-weight:800; letter-spacing:0.5px; font-family:'Segoe UI', Arial;">MAPPA AL VOLO</h3>
+                        <div id="lblMappaIndirizzo" style="font-size:11px; color:rgba(255,255,255,0.8); font-weight:600; margin-top:2px; text-transform:uppercase; font-family:'Segoe UI', Arial;">Caricamento indirizzo...</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button id="btnApriMappaEsterna" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:8px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer; font-family:'Segoe UI', Arial; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">APRI NEL BROWSER</button>
+                    <button onclick="ChiudiMappaInApp()" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; cursor:pointer; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; outline:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='rotate(90deg)';" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='none';">×</button>
+                </div>
+            </div>
+            <!-- CORPO CON IFRAME -->
+            <div style="flex:1; background:#f1f5f9; position:relative;">
+                <iframe id="iframeMappa" style="width:100%; height:100%; border:none; display:block; background:#e5e7eb;" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLYOUT NOTIFICATION DRAWER (FASE 2) -->
+    <div id="notifDrawerOverlay" class="drawer-overlay" onclick="ToggleNotifDrawer(false)"></div>
+    <div id="notifDrawer" class="drawer-panel">
+        <div class="drawer-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="https://img.icons8.com/fluency/48/bell.png" style="width: 28px; height: 28px;">
+                <h2 style="margin: 0; font-family:'Segoe UI', Arial; font-size: 18px; font-weight: 800; letter-spacing: 0.5px; color:#0f172a;">Centro Notifiche</h2>
+            </div>
+            <button class="drawer-close-btn" onclick="ToggleNotifDrawer(false)">&times;</button>
+        </div>
+        
+        <div id="drawerContent" class="drawer-content">
+            <div style="text-align: center; padding: 40px; color: #94a3b8; font-weight: 600;">
+                Nessuna notifica recente.
+            </div>
+        </div>
+        
+        <div class="drawer-footer">
+            <button class="drawer-action-btn" onclick="AggiornaDashboardStats(); ToggleNotifDrawer(false);">CHIUDI E AGGIORNA</button>
+        </div>
+    </div>
+
+    <!-- SOVRAPPOSIZIONE GUIDA INTERATTIVA (GLASSMORPHISM) -->
+    <div id="guidaNovitaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.55); backdrop-filter:blur(10px); z-index:20000; justify-content:center; align-items:center; transition: all 0.3s ease;">
+        <div style="background:white; width:800px; height:550px; border-radius:24px; box-shadow: 0 30px 70px rgba(0,0,0,0.25); display:flex; flex-direction:column; overflow:hidden; animation: modalSlideUp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(255,255,255,0.3);">
+            <!-- HEADER -->
+            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 25px 35px; color:white; display:flex; justify-content:space-between; align-items:center; position:relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div>
+                    <div style="font-size:10px; font-weight:900; color:#ffab00; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">Tutorial & Istruzioni</div>
+                    <h2 style="margin:0; font-size:22px; font-weight:800; letter-spacing:-0.5px; display:flex; align-items:center; gap:10px;">✨ Guida alle Novità del Cruscotto</h2>
+                </div>
+                <button onclick="ChiudiGuidaNovita()" style="background:rgba(255,255,255,0.1); border:none; color:white; border-radius:50%; width:36px; height:36px; cursor:pointer; font-weight:900; font-size:18px; display:flex; align-items:center; justify-content:center; outline:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(231, 76, 60, 0.8)'; this.style.transform='rotate(90deg)';" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='none';">×</button>
+            </div>
+            
+            <!-- CONTENITORE PRINCIPALE CON SIDEBAR TABS -->
+            <div style="display:flex; flex:1; overflow:hidden;">
+                <!-- TABS MENU (SINISTRA) -->
+                <div style="width:240px; background:#f8fafc; border-right:1.5px solid #e2e8f0; padding:20px 15px; display:flex; flex-direction:column; gap:8px;">
+                    <button class="tab-guida-btn active" onclick="CambiaTabGuida(0, this)" id="tabGuidaBtn0">📊 Widget & KPI</button>
+                    <button class="tab-guida-btn" onclick="CambiaTabGuida(1, this)" id="tabGuidaBtn1">📅 Agenda Operativa</button>
+                    <button class="tab-guida-btn" onclick="CambiaTabGuida(2, this)" id="tabGuidaBtn2">⚡ Scorciatoie & Trucchi</button>
+                    <button class="tab-guida-btn" onclick="CambiaTabGuida(3, this)" id="tabGuidaBtn3" style="color:#d97706; font-weight:900; background:linear-gradient(90deg, transparent, rgba(217, 119, 6, 0.05)); border-left-color:#d97706;">🌟 Premium Gold</button>
+                    
+                    <div style="margin-top:auto; background:rgba(255, 171, 0, 0.1); border:1.5px dashed #ffab00; padding:15px; border-radius:16px; font-size:11px; color:#9b6d00; line-height:1.4;">
+                        <b>💡 Lo Sapevi?</b><br>Tutti i bottoni visualizzano una descrizione d'aiuto nel footer quando ci passi sopra col mouse!
+                    </div>
+                </div>
+                
+                <!-- CONTENUTO TABS (DESTRA) -->
+                <div style="flex:1; overflow-y:auto; padding:30px 35px; background:#ffffff;" id="contenutoGuida">
+                    <!-- Dati inseriti dinamicamente via JS -->
+                </div>
+            </div>
+            
+            <!-- FOOTER AZIONI -->
+            <div style="padding:15px 35px; background:#f8fafc; border-top:1.5px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Logistica C. Milella Gold v4.0</span>
+                <button onclick="ChiudiGuidaNovita()" style="background:#0f172a; color:white; border:none; border-radius:10px; padding:10px 25px; font-size:12px; font-weight:800; cursor:pointer; transition:all 0.2s; letter-spacing:0.5px; text-transform:uppercase; box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 8px 15px rgba(15, 23, 42, 0.25)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 10px rgba(15, 23, 42, 0.15)';" >HO CAPITO, GRAZIE!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAUSA SCHERMO (SCREENSAVER) -->
+    <div id="screensaver" class="screensaver-overlay" style="display: none;" onmousemove="ResetScreensaver()">
+        <div class="ss-aurora ss-aurora-1"></div>
+        <div class="ss-aurora ss-aurora-2"></div>
+        <canvas id="ssCanvas" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2;"></canvas>
+        <div class="screensaver-content" style="text-align: center;">
+            <div id="ssClock" class="ss-clock">00:00</div>
+            <div class="ss-date" id="ssDate">Lunedì 1 Gennaio 2026</div>
+            <div class="ss-cards-container">
+                <div class="ss-card">
+                    <span class="ss-card-icon">📦</span>
+                    <div class="ss-card-label">
+                        <span class="ss-card-title">Consegne Oggi</span>
+                        <span class="ss-card-val" id="ssConsegneOggi">0</span>
+                    </div>
+                </div>
+                <div class="ss-card">
+                    <span class="ss-card-icon">⛅</span>
+                    <div class="ss-card-label">
+                        <span class="ss-card-title">Meteo Bari</span>
+                        <span class="ss-card-val" id="ssMeteo">Bari --°C</span>
+                    </div>
+                            <img src="https://img.icons8.com/color/48/admin-settings-male.png">
+                            <span>Account & Utenti</span>
+                        </button>
+                        <button class="action-btn" id="btnPermessi">
+                            <img src="https://img.icons8.com/color/48/checked-user-male.png">
+                            <span>Permessi</span>
+                        </button>
+                        <button class="action-btn" id="btnRimborsi">
+                            <img src="https://img.icons8.com/color/48/money--v1.png">
+                            <span>Rimborsi</span>
+                        </button>
+                        <button class="action-btn" id="cmdApriPresenze">
+                            <img src="https://img.icons8.com/color/48/timetable.png" onerror="HandleIconError(this, '📊')">
+                            <span>Presenze</span>
+                        </button>
+                        <button class="action-btn" id="cmdApriGestioneAuto">
+                            <img src="https://img.icons8.com/color/48/car.png">
+                            <span>Gestione Auto</span>
+                        </button>
+                        <button class="action-btn" id="btnReportPresenze" data-hint="Genera o stampa il prospetto presenze mensili del tuo profilo.">
+                            <img src="https://img.icons8.com/fluency/48/print.png" onerror="HandleIconError(this, '🖨️')">
+                            <span>REPORT PRESENZE</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER BAR -->
+            <footer class="footer">
+                <div class="footer-hint" id="lblFooterHint">
+                    Passa il mouse sopra un pulsante per visualizzarne la funzione.
+                </div>
+                <div class="footer-profile" id="lblFooterProfile" style="display:inline-flex; align-items:center; font-size:13px; font-weight:600; color:#333;">
+                    Profilo: Attendere... 
+                    <div style="width:24px; height:24px; border-radius:50%; background:#eee; display:inline-flex; align-items:center; justify-content:center; margin-left:8px; overflow:hidden;">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/user-male-circle.png" style="width:14px; height:14px; opacity:0.7;">
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+    </div> <!-- Fine mainDashboardContainer -->
+
+    <!-- MODALE CALENDARIO -->
+    <div id="calendarOverlay" class="calendar-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
+        <div class="calendar-modal">
+            <div class="calendar-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid #eee; padding-bottom:10px;">
+                <button class="icon-btn" id="btnCalPrev" style="border:none; cursor:pointer; font-size:1.2rem; background:none;">◀️</button>
+                <h3 id="lblCalMeseAnno">Mese Anno</h3>
+                <button class="icon-btn" id="btnCalNext" style="border:none; cursor:pointer; font-size:1.2rem; background:none;">▶️</button>
+            </div>
+            <div id="gridCalendario">
+                <!-- Tabella generata da JS -->
+            </div>
+            <div class="calendar-footer">
+                <button id="btnCalOggi" class="btn-cal-action">OGGI</button>
+                <button id="btnCalChiudi" class="btn-cal-action">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTAINER REPORT DI STAMPA -->
+    <div id="reportStampaContainer" style="display:none;"></div>
+
+    <!-- OVERLAY ANTEPRIMA VOLANTE (UX-10) -->
+    <div id="anteprimaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); z-index:10001; justify-content:center; align-items:center;">
+        <div style="background:white; width:500px; border-radius:20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow:hidden; animation: modalSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER CON GRADIENTE -->
+            <div style="background:linear-gradient(135deg, #ff8c00, #e67e22); padding:20px; color:white; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="https://img.icons8.com/fluency/48/delivery-time.png" style="width:26px; height:26px; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2));">
+                    <h3 style="margin:0; font-size:15px; font-weight:800; letter-spacing:0.8px; font-family:'Segoe UI', Arial;">PROSSIMI 7 GIORNI</h3>
+                </div>
+                <button onclick="ChiudiAnteprimaInArrivo()" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:28px; height:28px; cursor:pointer; font-weight:900; font-size:14px; display:flex; align-items:center; justify-content:center; outline:none; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">×</button>
+            </div>
+            <!-- CORPO DELLA LISTA -->
+            <div id="listaAnteprimaCorpo" style="padding:20px; max-height:320px; overflow-y:auto; background:#f8fafc; border-bottom:1px solid #f1f5f9;">
+                <!-- Generato dinamicamente in dashboard_hta.js -->
+            </div>
+            <!-- FOOTER AZIONI -->
+            <div style="padding:15px 20px; background:white; text-align:right; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Sguardo rapido sul calendario</span>
+                <button onclick="ChiudiAnteprimaInArrivo(); LaunchModule('consegne.hta');" style="background:#0f172a; color:white; border:none; border-radius:8px; padding:8px 18px; font-size:11px; font-weight:800; cursor:pointer; transition:all 0.2s; outline:none; text-transform:uppercase;" onmouseover="this.style.background='#1e293b'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#0f172a'; this.style.transform='none';">Apri Modulo Consegne</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY MAPPA AL VOLO (FASE 3) -->
+    <div id="mappaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.4); backdrop-filter:blur(8px); z-index:10500; justify-content:center; align-items:center;">
+        <div style="background:white; width:85%; height:85%; max-width:1000px; border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3); overflow:hidden; display:flex; flex-direction:column; border: 1px solid rgba(255,255,255,0.3); animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <!-- HEADER -->
+            <div style="background:linear-gradient(135deg, #005a9e 0%, #1e3a8a 100%); padding:15px 25px; color:white; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="https://img.icons8.com/fluency/48/google-maps-new.png" style="width:26px; height:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+                    <div>
+                        <h3 style="margin:0; font-size:15px; font-weight:800; letter-spacing:0.5px; font-family:'Segoe UI', Arial;">MAPPA AL VOLO</h3>
+                        <div id="lblMappaIndirizzo" style="font-size:11px; color:rgba(255,255,255,0.8); font-weight:600; margin-top:2px; text-transform:uppercase; font-family:'Segoe UI', Arial;">Caricamento indirizzo...</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button id="btnApriMappaEsterna" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:8px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer; font-family:'Segoe UI', Arial; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">APRI NEL BROWSER</button>
+                    <button onclick="ChiudiMappaInApp()" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; cursor:pointer; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; outline:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='rotate(90deg)';" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='none';">×</button>
+                </div>
+            </div>
+            <!-- CORPO CON IFRAME -->
+            <div style="flex:1; background:#f1f5f9; position:relative;">
+                <iframe id="iframeMappa" style="width:100%; height:100%; border:none; display:block; background:#e5e7eb;" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLYOUT NOTIFICATION DRAWER (FASE 2) -->
+    <div id="notifDrawerOverlay" class="drawer-overlay" onclick="ToggleNotifDrawer(false)"></div>
+    <div id="notifDrawer" class="drawer-panel">
+        <div class="drawer-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="https://img.icons8.com/fluency/48/bell.png" style="width: 28px; height: 28px;">
+                <h2 style="margin: 0; font-family:'Segoe UI', Arial; font-size: 18px; font-weight: 800; letter-spacing: 0.5px; color:#0f172a;">Centro Notifiche</h2>
+            </div>
+            <button class="drawer-close-btn" onclick="ToggleNotifDrawer(false)">&times;</button>
+        </div>
+        
+        <div id="drawerContent" class="drawer-content">
+            <div style="text-align: center; padding: 40px; color: #94a3b8; font-weight: 600;">
+                Nessuna notifica recente.
+            </div>
+        </div>
+        
+        <div class="drawer-footer">
+            <button class="drawer-action-btn" onclick="AggiornaDashboardStats(); ToggleNotifDrawer(false);">CHIUDI E AGGIORNA</button>
+        </div>
+    </div>
+
+    <!-- SOVRAPPOSIZIONE GUIDA INTERATTIVA (GLASSMORPHISM) -->
+    <div id="guidaNovitaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.55); backdrop-filter:blur(10px); z-index:20000; justify-content:center; align-items:center; transition: all 0.3s ease;">
+        <div style="background:white; width:800px; height:550px; border-radius:24px; box-shadow: 0 30px 70px rgba(0,0,0,0.25); display:flex; flex-direction:column; overflow:hidden; animation: modalSlideUp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(255,255,255,0.3);">
+            <!-- HEADER -->
+            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 25px 35px; color:white; display:flex; justify-content:space-between; align-items:center; position:relative; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div>
+                    <div style="font-size:10px; font-weight:900; color:#ffab00; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">Tutorial & Istruzioni</div>
+                    <h2 style="margin:0; font-size:22px; font-weight:800; letter-spacing:-0.5px; display:flex; align-items:center; gap:10px;">✨ Guida alle Novità del Cruscotto</h2>
+                </div>
+                <button onclick="ChiudiGuidaNovita()" style="background:rgba(255,255,255,0.1); border:none; color:white; border-radius:50%; width:36px; height:36px; cursor:pointer; font-weight:900; font-size:18px; display:flex; align-items:center; justify-content:center; outline:none; transition:all 0.2s;" onmouseover="this.style.background='rgba(231, 76, 60, 0.8)'; this.style.transform='rotate(90deg)';" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='none';">×</button>
+            </div>
+            
+            <!-- CONTENITORE PRINCIPALE CON SIDEBAR TABS -->
+            <div style="display:flex; flex:1; overflow:hidden;">
+                <!-- TABS MENU (SINISTRA) -->
+                <div style="width:240px; background:#f8fafc; border-right:1.5px solid #e2e8f0; padding:20px 15px; display:flex; flex-direction:column; gap:8px;">
+                    <button class="tab-guida-btn active" onclick="CambiaTabGuida(0, this)" id="tabGuidaBtn0">📊 Widget & KPI</button>
+                    <button class="tab-guida-btn" onclick="CambiaTabGuida(1, this)" id="tabGuidaBtn1">📅 Agenda Operativa</button>
+                    <button class="tab-guida-btn" onclick="CambiaTabGuida(2, this)" id="tabGuidaBtn2">⚡ Scorciatoie & Trucchi</button>
+                    <button class="tab-guida-btn" onclick="CambiaTabGuida(3, this)" id="tabGuidaBtn3" style="color:#d97706; font-weight:900; background:linear-gradient(90deg, transparent, rgba(217, 119, 6, 0.05)); border-left-color:#d97706;">🌟 Premium Gold</button>
+                    
+                    <div style="margin-top:auto; background:rgba(255, 171, 0, 0.1); border:1.5px dashed #ffab00; padding:15px; border-radius:16px; font-size:11px; color:#9b6d00; line-height:1.4;">
+                        <b>💡 Lo Sapevi?</b><br>Tutti i bottoni visualizzano una descrizione d'aiuto nel footer quando ci passi sopra col mouse!
+                    </div>
+                </div>
+                
+                <!-- CONTENUTO TABS (DESTRA) -->
+                <div style="flex:1; overflow-y:auto; padding:30px 35px; background:#ffffff;" id="contenutoGuida">
+                    <!-- Dati inseriti dinamicamente via JS -->
+                </div>
+            </div>
+            
+            <!-- FOOTER AZIONI -->
+            <div style="padding:15px 35px; background:#f8fafc; border-top:1.5px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Logistica C. Milella Gold v4.0</span>
+                <button onclick="ChiudiGuidaNovita()" style="background:#0f172a; color:white; border:none; border-radius:10px; padding:10px 25px; font-size:12px; font-weight:800; cursor:pointer; transition:all 0.2s; letter-spacing:0.5px; text-transform:uppercase; box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 8px 15px rgba(15, 23, 42, 0.25)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 10px rgba(15, 23, 42, 0.15)';" >HO CAPITO, GRAZIE!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAUSA SCHERMO (SCREENSAVER) -->
+    <div id="screensaver" class="screensaver-overlay" style="display: none;" onmousemove="ResetScreensaver()">
+        <div class="ss-aurora ss-aurora-1"></div>
+        <div class="ss-aurora ss-aurora-2"></div>
+        <canvas id="ssCanvas" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2;"></canvas>
+        <div class="screensaver-content" style="text-align: center;">
+            <div id="ssClock" class="ss-clock">00:00</div>
+            <div class="ss-date" id="ssDate">Lunedì 1 Gennaio 2026</div>
+            <div class="ss-cards-container">
+                <div class="ss-card">
+                    <span class="ss-card-icon">📦</span>
+                    <div class="ss-card-label">
+                        <span class="ss-card-title">Consegne Oggi</span>
+                        <span class="ss-card-val" id="ssConsegneOggi">0</span>
+                    </div>
+                </div>
+                <div class="ss-card">
+                    <span class="ss-card-icon">⛅</span>
+                    <div class="ss-card-label">
+                        <span class="ss-card-title">Meteo Bari</span>
+                        <span class="ss-card-val" id="ssMeteo">Bari --°C</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS FAB -->
+    <div id="ux-quick-fab" style="position:fixed; bottom:30px; right:30px; z-index:9999; display:flex; flex-direction:column; align-items:flex-end; gap:15px;">
+        <div id="ux-fab-menu" style="display:none; flex-direction:column; gap:10px; align-items:flex-end;">
+            <button class="ux-ripple-btn" onclick="try{ NavigaModulo('consegne.hta'); }catch(e){ window.location.href='consegne_v2.hta'; }" style="background:#2563eb; color:white; border:none; padding:10px 18px; border-radius:20px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(37,99,235,0.3); font-size:12px; display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16px;">📦</span> Nuova Consegna
+            </button>
+            <button class="ux-ripple-btn" onclick="try{ NavigaModulo('anagrafica.hta'); }catch(e){ window.location.href='anagrafica.hta'; }" style="background:#059669; color:white; border:none; padding:10px 18px; border-radius:20px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(5,150,105,0.3); font-size:12px; display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16px;">👥</span> Gestione Clienti
+            </button>
+            <button class="ux-ripple-btn" onclick="if(window.CalcolaPercorsoMappaOdierno) CalcolaPercorsoMappaOdierno(); else UXPremium.ShowToast('Funzione non disponibile', 'error');" style="background:#d97706; color:white; border:none; padding:10px 18px; border-radius:20px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(217,119,6,0.3); font-size:12px; display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16px;">🗺️</span> Calcola Percorso Mappa
+            </button>
+        </div>
+        <button id="ux-fab-main" onclick="var m=document.getElementById('ux-fab-menu'); m.style.display=m.style.display==='none'?'flex':'none';" class="ux-ripple-btn" style="width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #d97706); border:none; color:white; font-size:28px; box-shadow:0 8px 25px rgba(217,119,6,0.5); cursor:pointer; display:flex; justify-content:center; align-items:center; transition:transform 0.3s; outline:none;" onmouseover="this.style.transform='scale(1.1) rotate(90deg)';" onmouseout="this.style.transform='scale(1) rotate(0deg)';">
+            +
+        </button>
+    </div>
+
+    <script src="assets/js/accessibility.js"></script>
+    <script src="assets/js/dashboard_hta.js"></script>
+    <script src="assets/js/materiali_engine.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+<!-- MODAL GUIDA ALL'USO (MSHTA REFLOW COMPATIBLE) -->
+<div id="helpModalOverlay" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;">
+    <div style="position:absolute; top:50%; left:50%; margin-top:-260px; margin-left:-320px; width:640px; background:#0f172a; border:2px solid #38bdf8; border-radius:16px; box-shadow:0 0 35px rgba(56, 189, 248, 0.4); padding:25px; color:#f8fafc; font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;">
+        <!-- Header Modal -->
+        <div style="border-bottom:1px solid #38bdf8; padding-bottom:12px; margin-bottom:15px; position:relative;">
+            <div style="font-family:'Outfit', sans-serif; font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.5px;">
+                &#128216; GUIDA ALL'USO - ZENITH MATERIALI
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Manuale Rapido Operativo &amp; Scorciatoie</div>
+            <div onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="cursor:pointer; position:absolute; top:0; right:0; width:30px; height:30px; background:#1e293b; border:1px solid #38bdf8; border-radius:50%; text-align:center; line-height:28px; color:#f8fafc; font-weight:bold; font-size:1.2rem; user-select:none;">&times;</div>
+        </div>
+
+        <!-- Content Modal -->
+        <div style="height:350px; overflow-y:auto; padding-right:5px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                <tr>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#fbbf24; font-size:0.88rem; margin-bottom:6px;">
+                                &#128269; 1. Ricerca Globale Istantanea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Digita nel campo in alto per filtrare in tempo reale clienti, città, telefoni o specifiche attrezzature assegnate.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#38bdf8; font-size:0.88rem; margin-bottom:6px;">
+                                &#128205; 2. Filtri Provincia &amp; Articolo
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Usa la barra laterale sinistra per isolare velocemente le province (Bari, Foggia, Taranto) o i dispositivi (Orologio, Sveglia, Braille).
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#34d399; font-size:0.88rem; margin-bottom:6px;">
+                                &#128203; 3. Pulsanti Copia Dati
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Clicca sul tasto verde <b>Copia</b> per salvare la scheda cliente negli appunti e trasferirla nei promemoria o report.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#a78bfa; font-size:0.88rem; margin-bottom:6px;">
+                                &#128259; 4. Sincronizzazione Danea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Dal menu <b>File</b> o <b>Strumenti</b> premi <i>Sincronizza Excel Ora</i> per ricaricare le anagrafiche aggiornate.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; padding:12px; border-radius:10px; font-size:0.8rem; color:#cbd5e1;">
+                <b style="color:#38bdf8;">&#9889; Suggerimento Rapido:</b> Per resettare tutti i filtri attivi e tornare alla vista completa, seleziona <b>TUTTE LE PROVINCE</b> ed <b>ELENCO COMPLETO</b> dalla sidebar a sinistra.
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); text-align:right;">
+            <span style="font-size:0.75rem; color:#94a3b8; float:left; margin-top:8px;">Sistema Zenith Materiali v1.0 &bull; C. Milella 2026</span>
+            <button onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="background:#0284c7; color:white; border:1px solid #38bdf8; padding:8px 24px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; font-family:'Outfit', sans-serif;">HO CAPITO</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

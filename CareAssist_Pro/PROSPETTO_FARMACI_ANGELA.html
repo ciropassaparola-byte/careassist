@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>CareAssist Pro - Prospetto Terapeutico: Angela Mazzicone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm 12mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 20px 10px;
+      font-size: 9pt;
+      line-height: 1.35;
+    }
+
+    .no-print-toolbar {
+      max-width: 920px;
+      margin: 0 auto 16px auto;
+      background: #ffffff;
+      padding: 14px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.45);
+    }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sheet-page {
+      max-width: 920px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 26px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2.5px solid #d97706;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .brand-title {
+      font-size: 18pt;
+      font-weight: 900;
+      color: #b45309;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand-sub {
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .doc-badge {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1.5px solid #d97706;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 9pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: right;
+    }
+
+    .anagrafica-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: 1.4fr 1.3fr 1.3fr;
+      gap: 12px;
+      font-size: 8.5pt;
+    }
+    .anag-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .anag-col b {
+      color: #0f172a;
+    }
+    .anag-title {
+      font-weight: 800;
+      font-size: 7.5pt;
+      color: #b45309;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+
+    .med-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+      margin-bottom: 14px;
+    }
+    .med-table th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 800;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .med-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+    .med-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .badge-ora {
+      display: inline-block;
+      background: #fef3c7;
+      color: #b45309;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 8pt;
+    }
+    .pill-utilita {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 8pt;
+      font-weight: 700;
+    }
+    .chk-ricetta {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #64748b;
+      border-radius: 4px;
+      background: #ffffff;
+    }
+
+    .footer-note {
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8pt;
+      color: #64748b;
+      margin-top: 10px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA STRUMENTI SUPERIORE A SCHERMO -->
+  <div class="no-print-toolbar">
+    <div>
+      <div style="font-weight: 800; font-size: 15px; color: #b45309;">👤 Scheda Distinta: Angela Mazzicone (Anni 88)</div>
+      <div style="font-size: 12px; color: #64748b;">Prospetto terapeutico esclusivo pronto per stampa singola o richiesta ricette</div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button type="button" class="btn-action" onclick="window.print()">🖨️ Stampa Scheda Angela A4</button>
+      <a href="PROSPETTO_FARMACI_ALDO.html" class="btn-outline">👴 Scheda Aldo</a>
+      <a href="PROSPETTO_FARMACI_ROSA.html" class="btn-outline">👵 Scheda Rosa</a>
+    </div>
+  </div>
+
+  <div class="sheet-page">
+    <!-- BANNER DI CONTROLLO IDENTITÀ ASSISTITO (SICUREZZA CLINICA) -->
+    <div style="background: #fffbeb; border: 2px solid #f59e0b; border-radius: 10px; padding: 10px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 28px;">👵</span>
+        <div>
+          <div style="font-size: 16pt; font-weight: 900; color: #b45309; letter-spacing: -0.3px;">
+            SCHEDA ASSISTITA: Angela Mazzicone
+          </div>
+          <div style="font-size: 8.5pt; color: #78350f; font-weight: 600;">
+            Nata il 29/05/1938 (88 anni) • Coniuge di Aldo • Medico: Dott. Roberto Scarcia • Farmacia MACARIO
+          </div>
+        </div>
+      </div>
+      <div style="text-align: right; background: #ffffff; border: 1.5px solid #fcd34d; border-radius: 6px; padding: 4px 10px; font-size: 8pt; font-weight: 800; color: #b45309;">
+        ✅ CONTROLLO IDENTITÀ ASSISTITA
+      </div>
+    </div>
+
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">🩺 CareAssist Pro</div>
+        <div class="brand-sub">Sistema Informativo Integrato Assistenza Territoriale & Domiciliare</div>
+      </div>
+      <div class="doc-badge">
+        SCHEDA TERAPEUTICA — Angela Mazzicone
+      </div>
+    </div>
+
+    <!-- ANAGRAFICA ASSISTITA, MEDICO & FARMACIA -->
+    <div class="anagrafica-box">
+      <div class="anag-col">
+        <div class="anag-title">👤 Assistita</div>
+        <div>Nome: <b>Angela Mazzicone</b> (Anni 88)</div>
+        <div>Data Nascita: <b>29/05/1938</b></div>
+        <div>Residenza: <b>Via Giovanni Modugno, 25 - Bari</b></div>
+        <div>Presidio: <b>Ausilio CPAP Notturno per OSAS</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🩺 Medico Curante (MMG)</div>
+        <div>Medico: <b>Dott. Roberto Scarcia</b></div>
+        <div>Studio: <b>Via Muciaccia 11, Bari</b></div>
+        <div>Tel. Studio: <b>080 557 44 90</b></div>
+        <div>Email Ricette: <b>scarcia.roberto@alice.it</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🏥 Farmacia & Coniuge</div>
+        <div>Farmacia: <b>Farmacia Dott. MACARIO</b></div>
+        <div>Indirizzo: <b>Via G. Petroni, 69/b - Bari (080 542 8061)</b></div>
+        <div>Coniuge/Caregiver: <b>Aldo Zamparino</b></div>
+        <div>Recapiti: <b>338 306 69 05 / 338 944 96 10</b></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="font-weight: 800; font-size: 10.5pt; color: #b45309; text-transform: uppercase; letter-spacing: 0.5px;">
+        💊 Elenco Terapie Farmacologiche con Rispettiva Utilità Clinica
+      </div>
+      <div style="font-size: 8pt; color: #64748b; font-style: italic;">
+        Quadri clinici: Ipertensione • Dislipidemia • Cardioaspirina • Diuretico • Acido Urico • Vit. D3
+      </div>
+    </div>
+
+    <!-- TABELLA FARMACI CON RISPETTIVA UTILITÀ -->
+    <table class="med-table">
+      <thead>
+        <tr>
+          <th style="width: 14%;">Orario / Fascia</th>
+          <th style="width: 25%;">Farmaco & Dosaggio</th>
+          <th style="width: 18%;">Principio Attivo</th>
+          <th style="width: 35%;">Utilità Clinica & Finalità Terapeutica</th>
+          <th style="width: 8%; text-align: center;">Ricetta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-ora">08:00</span><br><small style="color:#64748b;">Colazione</small></td>
+          <td><b>Bisoprololo 1,25 mg</b><br><small>1 compressa rivestita</small></td>
+          <td>Bisoprololo fumarato</td>
+          <td><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">❤️ Battito & Pressione</span><br>Beta-bloccante selettivo: controllo della frequenza cardiaca e protezione cardiocircolatoria.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">08:30</span><br><small style="color:#64748b;">Colazione</small></td>
+          <td><b>Irbesartan/Idroclorotiazide</b><br><small>300 mg / 12,5 mg (1 cpr)</small></td>
+          <td>Irbesartan + HCTZ</td>
+          <td><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">🩸 Ipertensione Arteriosa</span><br>Associazione sartano + diuretico: abbassamento efficace e costante dei valori pressori nell'arco delle 24h.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">09:00</span><br><small style="color:#64748b;">Mattina</small></td>
+          <td><b>Lasix 25 mg (Furosemide)</b><br><small>1 compressa</small></td>
+          <td>Furosemide</td>
+          <td><span class="pill-utilita" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">💧 Diuretico dell'Ansa</span><br>Favorisce l'escrezione dei liquidi in eccesso e previene ristagni polmonari ed edemi declivi agli arti inferiori.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">13:00</span><br><small style="color:#64748b;">Pranzo</small></td>
+          <td><b>Cardioaspirin 100 mg</b><br><small>1 cpr gastroresistente</small></td>
+          <td>Acido acetilsalicilico</td>
+          <td><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">🩸 Antiaggregante Salvacuore</span><br>Fluidificante ematico: previene la formazione di trombi, ictus cerebrale ed eventi ischemici cardiovascolari.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">13:30</span><br><small style="color:#64748b;">Dopo Pranzo</small></td>
+          <td><b>Allopurinolo 300 mg</b><br><small>1 compressa</small></td>
+          <td>Allopurinolo</td>
+          <td><span class="pill-utilita" style="background:#ecfdf5; color:#065f46; border-color:#a7f3d0;">🦴 Controllo Acido Urico</span><br>Inibitore dell'ossidasi xantinica: abbassa l'uricemia prevenendo attacchi dolorosi di gotta e calcoli renali.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">15:30</span><br><small style="color:#64748b;">Al bisogno</small></td>
+          <td><b>Riopan 80 mg/ml (Gel)</b><br><small>1 bustina / monodose</small></td>
+          <td>Magaldrato anidro</td>
+          <td><span class="pill-utilita" style="background:#ecfdf5; color:#065f46; border-color:#a7f3d0;">🛡️ Antiacido & Reflusso</span><br>Tampone gastrico immediato: neutralizza l'iperacidità e contrasta bruciore gastrico e pirosi.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">20:30</span><br><small style="color:#64748b;">Cena</small></td>
+          <td><b>Aplactin 40 mg (Pravastatina)</b><br><small>1 compressa</small></td>
+          <td>Pravastatina sale sodico</td>
+          <td><span class="pill-utilita" style="background:#fef3c7; color:#b45309; border-color:#fde68a;">🔬 Statina / Controllo Lipidi</span><br>Riduce la sintesi epatica di colesterolo LDL prevenendo la formazione di placche aterosclerotiche nei vasi sanguigni.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora">Ciclico</span><br><small style="color:#64748b;">1 volta/mese</small></td>
+          <td><b>DIBASE 50.000 U.I. / 2,5 ml</b><br><small>1 flaconcino monodose orale</small></td>
+          <td>Colecalciferolo (Vit. D3)</td>
+          <td><span class="pill-utilita" style="background:#fef9c3; color:#854d0e; border-color:#fef08a;">🦴 Rimineralizzazione Ossea</span><br>Fissa il calcio nelle ossa contrastando osteoporosi senile e riducendo il rischio di fratture da fragilità.</td>
+          <td style="text-align: center;"><span class="chk-ricetta"></span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:8.5pt; color:#92400e; line-height:1.45;">
+      <b>🫁 Presidio Respiratorio CPAP Notturno:</b><br>
+      La paziente è in trattamento con CPAP ventilatoria notturna a pressione positiva per OSAS (Sindrome delle Apnee Ostruttive nel Sonno). L'uso costante durante il riposo notturno evita desaturazioni di ossigeno e sovraccarico cardiaco.
+    </div>
+
+    <div class="footer-note">
+      <div>Generato con <b>CareAssist Pro</b> • Fascicolo Sanitario Territoriale</div>
+      <div>Data Stampa: <b>16 Ottobre 2026</b></div>
+      <div>Firma Richiedente / Medico: ____________________________</div>
+    </div>
+  </div>
+
+</body>
+</html>

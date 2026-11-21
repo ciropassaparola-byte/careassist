@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <script src="assets/js/crypto_engine.js"></script>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="SistemaLogin"
+        ID="SistemaLogin"
+        BORDER="none"
+        ICON="assets/img/app_icon_premium.ico"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SCROLL="no"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="normal"
+        SYSMENU="no"
+        TRUSTED="yes"
+        NAVIGABLE="yes"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <script src="assets/js/hta_polyfills.js"></script>
+    <title>C. Milella - Accesso al Sistema</title>
+    <script>
+        // Configurazione dimensioni finestra
+        var w = 450;
+        var h = 820;
+        
+        // Centratura perfetta calcolando i bordi del sistema
+        function autoResize() {
+            window.resizeTo(w, h);
+            var l = (screen.availWidth - w) / 2;
+            var t = (screen.availHeight - h) / 2;
+            if (t < 10) t = 10;
+            window.moveTo(l, t);
+        }
+        autoResize();
+    </script>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/login.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <style>
+        .refresh-logo-btn {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s !important;
+            cursor: pointer !important;
+        }
+        .refresh-logo-btn:hover {
+            transform: scale(1.18) rotate(15deg) !important;
+            filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.7)) !important;
+        }
+        .refresh-logo-btn:active {
+            transform: scale(0.9) rotate(360deg) !important;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div id="loginCard" class="login-container" style="position: relative; display:flex; flex-direction:column; padding-top: 42px;">
+        <!-- BARRA TITOLO APPLE STYLE -->
+        <div class="apple-title-bar" onmousedown="StartDrag()" style="position: absolute; top: 0; left: 0; right: 0; height:35px; background:rgba(0,0,0,0.4); border-radius: 24px 24px 0 0; display:flex; align-items:center; padding:0 15px; cursor:move; z-index: 200;">
+            <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="cursor:default;">
+                <div class="apple-btn close" onclick="ChiudiDaApple()" title="Chiudi"></div>
+                <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+                <div class="apple-btn maximize" style="opacity:0.3; cursor:default;" title="N.D."></div>
+            </div>
+            <img src="assets/img/app_icon_premium.png?v=2" class="refresh-logo-btn" style="height:22px; width:auto; margin-left:10px; border-radius:4px; vertical-align:middle; background:white; padding:2px;" alt="Refresh" onclick="location.reload();" title="Ricarica Maschera">
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 4px; margin-bottom: 6px;">
+            <button id="btnVoiceToggle" class="btn-acc" style="position: relative; color: #ffe066;">🔊 VOCE ON</button>
+            <button id="btnAccessibility" class="btn-acc" style="position: relative;">Alto Contrasto</button>
+        </div>
+        
+        <div id="lblGreeting" class="greeting-msg" style="margin-top: 2px;"></div>
+        <div class="login-header">
+            <img src="assets/img/app_icon_premium.png?v=2" class="login-logo refresh-logo-btn" alt="Logo C. Milella" onclick="location.reload();" title="Ricarica Maschera">
+            <h1 style="display:none;">C. MILELLA</h1>
+            
+            <div class="subtitle">ROYAL PLATINUM EDITION ● C. MILELLA</div>
+        </div>
+
+        <div class="login-form">
+            <div class="form-group">
+                <label>NOME UTENTE (ALT+U)</label>
+                <div class="custom-select" id="customCmbWrapper">
+                    <select id="cmbUtente"></select>
+                </div>
+                <div id="lblStatoUtente" class="status-lbl"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>PASSWORD (ALT+P)</label>
+                <div class="pass-wrapper">
+                    <input type="password" id="txtPassword" placeholder="***" accesskey="P">
+                    <button id="btnMostraPassword" type="button" title="Mostra password">👁</button>
+                    <button id="btnInfoRecupero" type="button" title="Informazioni recupero password">?</button>
+                </div>
+                <div id="lblCaps" class="caps-warning" style="display:none;">⚠️ MAIUSCOLO ATTIVO</div>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label><input type="checkbox" id="chkRicorda"> Memorizza i miei dati di accesso</label>
+            </div>
+
+            <div id="lblError" class="error-msg"></div>
+
+            <button id="btnLogin" class="btn-login">Accedi in modo sicuro</button>
+
+            <div class="footer-buttons">
+                <button id="btnRecupero" class="btn-secondary">Password smarrita?</button>
+                <button id="btnEsci" class="btn-danger">Chiudi App</button>
+            </div>
+            <div class="footer-hint" id="lblFooterHint">Inserisci le tue credenziali per continuare</div>
+            
+            <div class="security-disclaimer">
+                <b>SISTEMA AZIENDALE PROTETTO</b>
+                L'accesso non autorizzato è severamente vietato e monitorato ai sensi delle vigenti leggi sulla privacy e sicurezza informatica. Ogni operazione all'interno del sistema viene registrata nel System Audit Trail.
+            </div>
+            
+            <div class="version-label">Sistema Logistica C. Milella - Royal Platinum ● C. Milella Edition</div>
+        </div>
+    </div>
+
+    <!-- Maschera Cambio Password Obbligatorio -->
+    <div id="modalChangePassword" class="modal-overlay" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>CAMBIO PASSWORD OBBLIGATORIO</h3>
+                <p>Per motivi di sicurezza, devi impostare una nuova password.</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>NUOVA PASSWORD</label>
+                    <div class="pass-wrapper">
+                        <input type="password" id="txtNewPassword" placeholder="Inserisci nuova password">
+                        <button id="btnShowNP" type="button" title="Mostra nuova password">👁</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>CONFERMA PASSWORD</label>
+                    <div class="pass-wrapper">
+                        <input type="password" id="txtConfirmPassword" placeholder="Ripeti la password">
+                        <button id="btnShowCP" type="button" title="Mostra conferma password">👁</button>
+                    </div>
+                </div>
+                <div id="lblModalError" class="error-msg"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveNewPassword" class="btn-login">Salva e Accedi</button>
+                <button id="btnCancelChange" class="btn-secondary">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Maschera Recupero Password -->
+    <div id="modalRecovery" class="modal-overlay" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>RECUPERO PASSWORD</h3>
+                <p>Inserisci l'email ufficiale del tuo account per ricevere un nuovo codice d'accesso:</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>EMAIL AZIENDALE</label>
+                    <input type="text" id="txtEmailRecovery" placeholder="esempio@nicolodi.it">
+                </div>
+                <div id="lblRecoveryError" class="error-msg"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnConfirmRecovery" class="btn-login">Verifica Email</button>
+                <button id="btnCancelRecovery" class="btn-secondary">Torna Indietro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Alert Personalizzato (Royal Platinum Style) -->
+    <div id="modalCustomAlert" class="modal-overlay" style="display:none;">
+        <div class="modal-card" style="border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 0 30px rgba(212, 175, 55, 0.25);">
+            <div class="modal-header">
+                <h3 id="modalCustomAlertTitle">NOTIFICA DI SISTEMA</h3>
+            </div>
+            <div class="modal-body" style="padding: 10px 0;">
+                <p id="modalCustomAlertMessage" style="color: #cbd5e1; font-size: 13px; text-align: left; line-height: 1.6; white-space: pre-wrap; margin: 0;"></p>
+            </div>
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button id="btnCustomAlertOk" class="btn-login" style="margin: 0;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/login_hta.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+

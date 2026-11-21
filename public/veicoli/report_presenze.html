@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>REPORT PRESENZE MENSILI - C.Milella</title>
+    <hta:application 
+        id="oReportPresenze"
+        applicationname="ReportPresenze"
+        border="none"
+        caption="no"
+        showintaskbar="yes"
+        singleinstance="yes"
+        sysmenu="no"
+        maximizebutton="no"
+        minimizebutton="no"
+        windowstate="maximize"
+        ICON="assets/img/app_icon.ico"
+        scroll="yes"
+        trusted="yes"
+        navigable="yes"
+    />
+    
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/report_mensile.css">
+    <style>
+        @media print {
+            .no-print, .print-btn, .danea-top-black-bar { display: none !important; }
+            body { background: #fff !important; margin: 0; padding: 0; }
+            .page { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 auto !important; width: 100% !important; }
+            table th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            tr.bg-alt td { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            tr.is-weekend td { background-color: #f1f5f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 0; color: #1e293b; }
+        
+        .print-btn {
+            position: fixed; top: 50px; right: 30px;
+            background: linear-gradient(135deg, #06b6d4, #0891b2); color: white;
+            border: none; padding: 14px 28px; font-size: 14px; font-weight: 800;
+            border-radius: 30px; cursor: pointer; box-shadow: 0 10px 25px rgba(8, 145, 178, 0.3);
+            transition: all 0.2s ease; z-index: 9999; display: flex; align-items: center; gap: 8px;
+        }
+        .print-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(8, 145, 178, 0.4); }
+        
+        .page {
+            background: #fff; width: 210mm; min-height: 297mm; margin: 60px auto;
+            padding: 20mm; box-shadow: 0 15px 40px rgba(0,0,0,0.05); border-radius: 8px;
+            position: relative; box-sizing: border-box;
+        }
+        
+        .header-report { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 15px; margin-bottom: 25px; }
+        .header-report img { height: 55px; width: auto; border-radius: 8px; }
+        .header-report .title-box { text-align: right; }
+        .header-report h1 { font-size: 18px; font-weight: 900; margin: 0; text-transform: uppercase; color: #0f172a; letter-spacing: 1px; }
+        .header-report p { font-size: 11px; color: #64748b; font-weight: 700; margin: 4px 0 0 0; text-transform: uppercase; }
+        
+        .sub-info { display: flex; justify-content: space-between; background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; }
+        .sub-info-item { font-size: 12px; font-weight: 800; color: #334155; }
+        .sub-info-item span { font-weight: 900; color: #0f172a; text-transform: uppercase; margin-left: 5px; }
+        
+        .table-presenze { width: 100%; border-collapse: collapse; font-size: 9px; text-align: center; margin-bottom: 25px; }
+        .table-presenze th { background: #f1f5f9; color: #334155; font-weight: 900; text-transform: uppercase; padding: 8px 4px; border: 1px solid #cbd5e1; font-size: 8.5px; }
+        .table-presenze td { padding: 6px 4px; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; }
+        
+        .table-presenze tr.is-weekend td { background: #f8fafc; color: #64748b; font-style: italic; }
+        .table-presenze tr.is-holiday td { background: #fef2f2; }
+        .table-presenze td.cell-bold { font-weight: 800; color: #0f172a; background: #fcfdff; }
+        
+        .badge-item { font-size: 8px; font-weight: 900; padding: 1px 4px; border-radius: 4px; color: white; text-transform: uppercase; }
+        .badge-ferie { background: #3b82f6; }
+        .badge-malattia { background: #ef4444; }
+        .badge-104 { background: #f59e0b; }
+        
+        .summary-section { display: flex; justify-content: space-between; margin-top: 20px; gap: 15px; }
+        .summary-box { flex: 1; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 15px; background: #fafbfc; }
+        .summary-box h4 { margin: 0 0 10px 0; font-size: 11px; font-weight: 900; color: #334155; text-transform: uppercase; border-bottom: 1.5px dashed #cbd5e1; padding-bottom: 5px; letter-spacing: 0.5px; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; font-weight: 700; color: #475569; }
+        .summary-row span { font-weight: 900; color: #0f172a; }
+        
+        .signatures { display: flex; justify-content: space-between; margin-top: 60px; }
+        .sig-block { width: 40%; border-top: 1.5px solid #334155; text-align: center; padding-top: 8px; font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; }
+    </style>
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        var fso = null;
+        var currentDir = "";
+        try {
+            if (typeof ActiveXObject !== "undefined") {
+                fso = new ActiveXObject("Scripting.FileSystemObject");
+                var pathEval = document.location.pathname;
+                if(pathEval.indexOf("/") === 0) pathEval = pathEval.substring(1);
+                pathEval = decodeURIComponent(pathEval).replace(/\//g, "\\");
+                currentDir = fso.GetParentFolderName(pathEval);
+            }
+        } catch(eFso) {}
+
+        function EseguiStampa() {
+            // 1. Stampa HTA Nativa (se in ambiente HTA/IE Object)
+            try {
+                if (typeof ActiveXObject !== "undefined") {
+                    if (!document.getElementById("WebBrowserPrinter")) {
+                        var wbObj = document.createElement("object");
+                        wbObj.id = "WebBrowserPrinter";
+                        wbObj.width = "0";
+                        wbObj.height = "0";
+                        wbObj.classid = "CLSID:8856F961-340A-11D0-A96B-00C04FD705A2";
+                        document.body.appendChild(wbObj);
+                    }
+                    var wb = document.getElementById("WebBrowserPrinter");
+                    if (wb && typeof wb.ExecWB === "unknown" || (wb && wb.ExecWB)) {
+                        wb.ExecWB(6, 1); // 6 = OLECMDID_PRINT, 1 = OLECMDEXECOPT_PROMPTUSER
+                        return;
+                    }
+                }
+            } catch(eHta) {}
+
+            // 2. Stampa Browser / Modern Web (Chrome, Edge, Brave, WebView)
+            try {
+                window.print();
+            } catch(err) {
+                alert("Errore durante la stampa: " + err.message);
+            }
+        }
+
+        var selUser = "Ospite";
+        var selMonth = "";
+        var selYear = "";
+        var nomeMesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+
+        function CaricaParametri() {
+            try {
+                if (typeof localStorage !== "undefined") {
+                    if (localStorage.getItem("report_user")) selUser = localStorage.getItem("report_user");
+                    if (localStorage.getItem("report_month")) selMonth = parseInt(localStorage.getItem("report_month"), 10);
+                    if (localStorage.getItem("report_year")) selYear = parseInt(localStorage.getItem("report_year"), 10);
+                }
+            } catch(eLS) {}
+            try {
+                if (typeof fso !== "undefined" && fso && currentDir) {
+                    var pFile = fso.BuildPath(fso.BuildPath(currentDir, "system"), "report_presenze_params.tmp");
+                    if (fso.FileExists(pFile)) {
+                        var f = fso.OpenTextFile(pFile, 1);
+                        var u = f.ReadLine();
+                        var m = f.ReadLine();
+                        var y = f.ReadLine();
+                        if (u) selUser = u;
+                        if (m) selMonth = parseInt(m, 10);
+                        if (y) selYear = parseInt(y, 10);
+                        f.Close();
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function QueryDB(sql) {
+            try {
+                var http = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                http.Open("POST", "http://127.0.0.1:3002/query", false);
+                http.SetRequestHeader("Content-Type", "application/json");
+                http.Send(JSON.stringify({ sql: sql }));
+                if (http.Status === 200) return JSON.parse(http.ResponseText);
+            } catch (e) { alert("Errore Connessione Database: " + e.message); }
+            return [];
+        }
+
+        function FormattaOre(decimali) {
+            var d = parseFloat(decimali) || 0;
+            var h = Math.floor(d);
+            var m = Math.round((d - h) * 60);
+            return h + "h " + (m < 10 ? "0" : "") + m + "m";
+        }
+
+        function IsFestivo(d, m, y) {
+            if (d === 1 && m === 1) return true;
+            if (d === 6 && m === 1) return true;
+            if (d === 25 && m === 4) return true;
+            if (d === 1 && m === 5) return true;
+            if (d === 2 && m === 6) return true;
+            if (d === 15 && m === 8) return true;
+            if (d === 1 && m === 11) return true;
+            if (d === 8 && m === 12) return true;
+            if (d === 25 && m === 12) return true;
+            if (d === 26 && m === 12) return true;
+            return false;
+        }
+
+        window.onload = function() {
+            CaricaParametri();
+            
+            document.getElementById("lblUser").innerText = selUser;
+            document.getElementById("lblMese").innerText = nomeMesi[selMonth - 1] + " " + selYear;
+            document.getElementById("lblDataStampa").innerText = new Date().toLocaleDateString("it-IT");
+
+            var sql = "SELECT * FROM tblOrePresenze WHERE Month(DataLavoro) = " + selMonth + " AND Year(DataLavoro) = " + selYear + " " +
+                      "AND LCase(Utente) = '" + selUser.trim().toLowerCase().replace(/'/g, "''") + "' ORDER BY DataLavoro ASC";
+            
+            var dbRes = QueryDB(sql);
+            var dbMap = {};
+            for(var k=0; k<dbRes.length; k++) {
+                var r = dbRes[k];
+                var ds = r.DataLavoro ? r.DataLavoro.toString().replace(/-/g, "/") : "";
+                var dt = ds ? new Date(ds) : null;
+                if (dt && !isNaN(dt.getTime())) dbMap[dt.getDate()] = r;
+            }
+
+            var numDays = new Date(selYear, selMonth, 0).getDate();
+            var html = "";
+            
+            var totLavorate = 0;
+            var totRecupero = 0;
+            var totPermessi = 0;
+            var nFerie = 0;
+            var nMalattia = 0;
+            var n104 = 0;
+
+            var settGiorni = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
+
+            for(var i = 1; i <= numDays; i++) {
+                var curDt = new Date(selYear, selMonth - 1, i);
+                var dw = curDt.getDay();
+                var isWk = (dw === 0 || dw === 6);
+                var isFes = IsFestivo(i, selMonth, selYear);
+                
+                var rowClass = isWk ? "is-weekend" : "";
+                if (dw === 0 || isFes) rowClass += " is-holiday";
+                
+                var dData = dbMap[i] || {};
+                
+                totLavorate += parseFloat(dData.OreLavorate) || 0;
+                totRecupero += parseFloat(dData.OreRecupero) || 0;
+                totPermessi += parseFloat(dData.Permessi) || 0;
+                
+                if (dData.Ferie == "1" || dData.Ferie === true) nFerie++;
+                if (dData.Malattia == "1" || dData.Malattia === true) nMalattia++;
+                if (dData.Legge104 == "1" || dData.Legge104 === true) n104++;
+
+                var badgeHtml = "";
+                if (dData.Ferie == "1" || dData.Ferie === true) badgeHtml += '<span class="badge-item badge-ferie">FER</span> ';
+                if (dData.Malattia == "1" || dData.Malattia === true) badgeHtml += '<span class="badge-item badge-malattia">MAL</span> ';
+                if (dData.Legge104 == "1" || dData.Legge104 === true) badgeHtml += '<span class="badge-item badge-104">104</span> ';
+
+                html += '<tr class="' + rowClass + '">';
+                html += '<td style="font-weight:900;">' + (i < 10 ? "0" : "") + i + '</td>';
+                html += '<td style="font-weight:700; color:#64748b;">' + settGiorni[dw] + '</td>';
+                html += '<td>' + (dData.Entrata1 || "-") + '</td>';
+                html += '<td>' + (dData.Uscita1 || "-") + '</td>';
+                html += '<td>' + (dData.Entrata2 || "-") + '</td>';
+                html += '<td>' + (dData.Uscita2 || "-") + '</td>';
+                html += '<td style="color:#d97706;">' + (parseFloat(dData.Permessi) > 0 ? dData.Permessi + "h" : "-") + '</td>';
+                html += '<td>' + badgeHtml + '</td>';
+                html += '<td class="cell-bold">' + (parseFloat(dData.OreLavorate) > 0 ? FormattaOre(dData.OreLavorate) : "-") + '</td>';
+                html += '<td class="cell-bold" style="color:#7c3aed;">' + (parseFloat(dData.OreRecupero) > 0 ? FormattaOre(dData.OreRecupero) : "-") + '</td>';
+                html += '<td style="text-align:left; padding-left:8px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:8px; font-style:italic; color:#64748b;">' + (dData.Note || "") + '</td>';
+                html += '</tr>';
+            }
+
+            document.getElementById("bodyContent").innerHTML = html;
+
+            document.getElementById("sumOreLavorate").innerText = FormattaOre(totLavorate);
+            document.getElementById("sumOreRecupero").innerText = FormattaOre(totRecupero);
+            document.getElementById("sumOrePermessi").innerText = totPermessi + " Ore";
+            
+            document.getElementById("sumGiorniFerie").innerText = nFerie + " GG";
+            document.getElementById("sumGiorniMalattia").innerText = nMalattia + " GG";
+            document.getElementById("sumGiorni104").innerText = n104 + " GG";
+            
+            window.resizeTo(1100, 900);
+        };
+    </script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <!-- TOP CONTROL BAR -->
+    <div class="danea-top-black-bar no-print" onmousedown="StartDrag()" style="height:35px; background:#1e293b; color:white; display:flex; align-items:center; padding:0 15px; font-size:11px; font-weight:bold; cursor:move;">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:5px; cursor:default;">
+            <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+            <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+            <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+        </div>
+        <img src="assets/img/logo_final.jpg" style="height:22px; margin-left:10px; margin-right:12px; border-radius:3px; vertical-align:middle; background:white; padding:1px;">
+        <span>Stampa Riepilogo Mensile Presenze - C. Milella</span>
+    </div>
+
+    <button class="print-btn" onclick="EseguiStampa();">
+        <img src="https://img.icons8.com/fluency/48/print.png" style="width:18px; height:18px; filter:brightness(0) invert(1);"> 
+        STAMPA / SALVA PDF
+    </button>
+
+    <div class="page">
+        
+        <div class="header-report">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <img src="assets/img/logo_final.jpg" alt="Logo C.Milella">
+                <div>
+                    <div style="font-weight:900; font-size:22px; color:#0f172a; letter-spacing:-0.5px;">C. Milella</div>
+                    <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase;">Logistica & Servizi Ambientali</div>
+                </div>
+            </div>
+            <div class="title-box">
+                <h1 style="display:none;">Prospetto Mensile Presenze</h1>
+
+                <p>Registro Lavoro Ordinario e Straordinario</p>
+            </div>
+        </div>
+
+        <div class="sub-info">
+            <div class="sub-info-item">DIPENDENTE/UTENTE: <span id="lblUser">ATTENDERE...</span></div>
+            <div class="sub-info-item">PERIODO: <span id="lblMese">--/----</span></div>
+            <div class="sub-info-item" style="font-size:10px; color:#64748b;">ELABORATO IL: <span id="lblDataStampa">--/--/----</span></div>
+        </div>
+
+        <table class="table-presenze">
+            <thead>
+                <tr>
+                    <th width="30">GG</th>
+                    <th width="35">SET</th>
+                    <th width="55">ENT 1</th>
+                    <th width="55">USC 1</th>
+                    <th width="55">ENT 2</th>
+                    <th width="55">USC 2</th>
+                    <th width="50">PERM.</th>
+                    <th width="60">STATO</th>
+                    <th width="75">ORE LAVORATE</th>
+                    <th width="75">RECUPERO</th>
+                    <th>NOTE OPERATIVE</th>
+                </tr>
+            </thead>
+            <tbody id="bodyContent">
+                <!-- Loaded dynamically via JS -->
+            </tbody>
+        </table>
+
+        <div class="summary-section">
+            <div class="summary-box">
+                <h4>Riepilogo Orario</h4>
+                <div class="summary-row">Ore Totali Lavorate: <span id="sumOreLavorate">-</span></div>
+                <div class="summary-row">Accumulo Ore Recupero: <span id="sumOreRecupero" style="color:#7c3aed;">-</span></div>
+                <div class="summary-row">Totale Ore Permesso Usufruite: <span id="sumOrePermessi" style="color:#d97706;">-</span></div>
+            </div>
+            
+            <div class="summary-box">
+                <h4>Giustificativi e Assenze</h4>
+                <div class="summary-row">Totale Giorni Ferie: <span id="sumGiorniFerie" style="color:#3b82f6;">-</span></div>
+                <div class="summary-row">Totale Giorni Malattia: <span id="sumGiorniMalattia" style="color:#ef4444;">-</span></div>
+                <div class="summary-row">Totale Congedi Legge 104: <span id="sumGiorni104" style="color:#f59e0b;">-</span></div>
+            </div>
+        </div>
+
+        <div class="signatures">
+            <div class="sig-block">Firma Dipendente</div>
+            <div class="sig-block">Timbro e Firma Responsabile</div>
+        </div>
+
+    </div>
+
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,3608 @@
+﻿
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CareAssist Pro - Gestione Roster & Turni Personale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓️</text></svg>">
+
+  <style>
+    :root {
+      --bg-dark: #080d1a;
+      --surface-1: #0e1726;
+      --surface-2: #152238;
+      --surface-3: #1e2f4d;
+      --card-bg: rgba(14, 23, 38, 0.78);
+      --card-border: rgba(148, 163, 184, 0.12);
+      --card-border-hover: rgba(56, 189, 248, 0.35);
+      
+      --cyan-primary: #0284c7;
+      --cyan-light: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.25);
+      
+      --emerald-accent: #10b981;
+      --emerald-light: #34d399;
+      --amber-accent: #f59e0b;
+      --indigo-accent: #6366f1;
+      --purple-accent: #a855f7;
+      --rose-accent: #f43f5e;
+      
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --transition-smooth: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 10% 5%, #131c31 0%, #080d1a 60%, #030712 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 80px;
+      line-height: 1.5;
+    }
+
+    /* EXECUTIVE TOPBAR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8, 13, 26, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: -0.4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--cyan-light);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+
+    .brand-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ROLE BADGE */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .role-admin {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.25) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.6);
+      color: #fbbf24;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
+    }
+
+    .role-collaboratore {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+    }
+
+    /* ACTIONS GROUP */
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition-smooth);
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1.5px);
+    }
+
+    .btn-sky {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-sky:hover {
+      box-shadow: 0 6px 22px rgba(2, 132, 199, 0.5);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-emerald:hover {
+      box-shadow: 0 6px 22px rgba(5, 150, 105, 0.5);
+    }
+
+    .btn-wa {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 28px;
+    }
+
+    /* PATIENT EXECUTIVE BANNER */
+    .patient-banner {
+      background: linear-gradient(135deg, rgba(14, 23, 38, 0.85) 0%, rgba(21, 34, 56, 0.6) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: var(--radius-xl);
+      padding: 16px 24px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+    }
+
+    .patient-meta-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .patient-avatar-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+      color: #0b1120;
+      font-size: 17px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .patient-title-h2 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .patient-badge-h24 {
+      font-size: 10.5px;
+      font-weight: 800;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+
+    .patient-coord-text {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .emergency-dial-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-dial {
+      background: rgba(244, 63, 94, 0.14);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fda4af;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-dial:hover {
+      background: rgba(244, 63, 94, 0.28);
+      transform: translateY(-1px);
+    }
+
+    .btn-dial-gm {
+      background: rgba(2, 132, 199, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #7dd3fc;
+    }
+
+    .btn-dial-gm:hover {
+      background: rgba(2, 132, 199, 0.28);
+    }
+
+    /* KPI METRICS GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+      transition: var(--transition-smooth);
+    }
+
+    .kpi-card:hover {
+      border-color: var(--card-border-hover);
+      transform: translateY(-2px);
+    }
+
+    .kpi-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .kpi-val {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .kpi-lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* NOTICE COLLABORATORE */
+    .notice-collaboratore {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(14, 165, 233, 0.08) 100%);
+      border: 1.5px solid rgba(56, 189, 248, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: #bae6fd;
+      font-size: 13px;
+    }
+
+    /* CONTROLS STRIP */
+    .controls-strip {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 14px 20px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .segmented-control {
+      display: flex;
+      background: rgba(10, 15, 28, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .seg-pill {
+      padding: 7px 18px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .seg-pill.active {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+    }
+
+    /* MODERN EXECUTIVE CALENDAR BAR */
+    .calendar-nav-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+
+    .nav-arrow-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-arrow-btn:hover {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--cyan-light);
+      transform: translateY(-1px);
+    }
+
+    .calendar-display-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(21, 34, 56, 0.85) 100%);
+      border: 1.5px solid rgba(56, 189, 248, 0.35);
+      padding: 7px 18px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      transition: var(--transition-smooth);
+      user-select: none;
+    }
+
+    .calendar-display-pill:hover {
+      border-color: var(--cyan-light);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .cal-icon-glow {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      background: rgba(2, 132, 199, 0.22);
+      border: 1.5px solid rgba(56, 189, 248, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+      flex-shrink: 0;
+    }
+
+    .cal-text-block {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+    }
+
+    .cal-week-interval {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.2px;
+    }
+
+    .cal-week-sub {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--cyan-light);
+    }
+
+    .cal-chevron {
+      color: var(--text-muted);
+      margin-left: 4px;
+      transition: transform 0.2s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .calendar-display-pill:hover .cal-chevron {
+      color: var(--cyan-light);
+      transform: translateY(1.5px);
+    }
+
+    .btn-today-pill {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--cyan-light);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-today-pill:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--cyan-light);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* MODERN CALENDAR POPOVER */
+    .modern-calendar-popover {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 45px;
+      z-index: 90;
+      background: rgba(10, 16, 30, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1.5px solid rgba(56, 189, 248, 0.38);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(2, 132, 199, 0.25);
+      width: 320px;
+      display: none;
+      color: #ffffff;
+      animation: popoverFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popoverFadeIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .cal-pop-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .cal-pop-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: capitalize;
+    }
+
+    .cal-pop-nav-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      transition: var(--transition-smooth);
+    }
+
+    .cal-pop-nav-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--cyan-light);
+      color: var(--cyan-light);
+    }
+
+    .cal-weekdays-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .cal-weekday-th {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      padding: 4px 0;
+    }
+
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    .cal-day-cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #ffffff;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .cal-day-cell:hover {
+      background: rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+    }
+
+    .cal-day-cell.other-month {
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .cal-day-cell.active-week {
+      background: rgba(2, 132, 199, 0.35);
+      color: #ffffff;
+      border-radius: 0;
+    }
+
+    .cal-day-cell.active-week-start {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    .cal-day-cell.active-week-end {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    .cal-day-cell.today-dot::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--cyan-light);
+      box-shadow: 0 0 6px var(--cyan-light);
+    }
+
+    .cal-pop-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 11px;
+    }
+
+    .cal-pop-btn-quick {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      transition: var(--transition-smooth);
+    }
+
+    .cal-pop-btn-quick:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--cyan-light);
+      color: #ffffff;
+    }
+
+    /* ROSTER MATRIX TABLE */
+    .roster-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 10px 36px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .roster-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+    }
+
+    .roster-table th {
+      background: rgba(14, 23, 38, 0.96);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 14px 10px;
+      border-bottom: 1.5px solid rgba(56, 189, 248, 0.18);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .roster-table th.th-op {
+      text-align: left;
+      padding-left: 24px;
+      min-width: 260px;
+      position: sticky;
+      left: 0;
+      background: #0e1726;
+      z-index: 10;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .day-header-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .day-header-date {
+      font-size: 11px;
+      color: var(--cyan-light);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .roster-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: center;
+      vertical-align: middle;
+      transition: background 0.15s ease;
+    }
+
+    .roster-table td.td-op {
+      text-align: left;
+      padding-left: 24px;
+      position: sticky;
+      left: 0;
+      background: #0e1726;
+      z-index: 9;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .roster-table tr:hover td {
+      background: rgba(30, 47, 77, 0.4);
+    }
+
+    .roster-table tr:hover td.td-op {
+      background: #121e33;
+    }
+
+    /* OPERATOR CELL META */
+    .op-meta-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .op-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .op-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+
+    .btn-icon-edit {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--cyan-light);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      flex-shrink: 0;
+    }
+
+    .btn-icon-edit:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--cyan-light);
+      transform: scale(1.1);
+    }
+
+    .op-role {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .op-badge-pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      margin-top: 4px;
+    }
+
+    /* SHIFT CAPSULE */
+    .shift-chip {
+      width: 100%;
+      min-width: 74px;
+      min-height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      transition: var(--transition-smooth);
+      border: 1.5px solid transparent;
+      user-select: none;
+    }
+
+    .shift-chip.interactive {
+      cursor: pointer;
+    }
+
+    .shift-chip.interactive:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .shift-letter {
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .shift-sub {
+      font-size: 10px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    /* REFINED SHIFT THEMES */
+    .chip-m {
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+    }
+
+    .chip-p {
+      background: rgba(245, 158, 11, 0.16);
+      border-color: rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+    }
+
+    .chip-n {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(129, 140, 248, 0.5);
+      color: #c7d2fe;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.18);
+    }
+
+    .chip-s {
+      background: rgba(234, 179, 8, 0.14);
+      border-color: rgba(234, 179, 8, 0.38);
+      color: #fef08a;
+    }
+
+    .chip-r {
+      background: rgba(148, 163, 184, 0.08);
+      border-color: rgba(148, 163, 184, 0.2);
+      color: #94a3b8;
+    }
+
+    .chip-d {
+      background: rgba(168, 85, 247, 0.18);
+      border-color: rgba(192, 132, 252, 0.5);
+      color: #e9d5ff;
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+    }
+
+    /* LEGEND BAR */
+    .roster-legend-bar {
+      padding: 14px 24px;
+      background: rgba(14, 23, 38, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .legend-chips-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .leg-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* CARDS VIEW (MOBILE / PERSONAL) */
+    .cards-view-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .op-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      box-shadow: 0 4px 22px rgba(0, 0, 0, 0.25);
+      transition: var(--transition-smooth);
+    }
+
+    .op-card:hover {
+      border-color: var(--card-border-hover);
+      transform: translateY(-2px);
+    }
+
+    .op-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .op-card-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .op-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon-action {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-icon-action:hover {
+      transform: scale(1.08);
+    }
+
+    .btn-icon-wa {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: #4ade80;
+    }
+
+    .btn-icon-tel {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+    }
+
+    .week-chips-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .mini-day-box {
+      text-align: center;
+    }
+
+    .mini-day-name {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .op-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* AGENDA VIEW */
+    .agenda-view-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .agenda-day-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 18px 22px;
+      transition: var(--transition-smooth);
+    }
+
+    .agenda-day-card:hover {
+      border-color: var(--card-border-hover);
+    }
+
+    .agenda-day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .agenda-shifts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .agenda-shift-slot {
+      background: rgba(10, 15, 28, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+
+    .agenda-slot-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .agenda-slot-body {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* REPERIBILITÀ SECTION */
+    .rep-card {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(14, 23, 38, 0.85) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: var(--radius-xl);
+      padding: 20px 24px;
+      box-shadow: 0 4px 22px rgba(168, 85, 247, 0.15);
+      margin-bottom: 24px;
+    }
+
+    .rep-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 900;
+      color: #e9d5ff;
+      margin-bottom: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .rep-content {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #f3e8ff;
+    }
+
+    /* MODAL BASE */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 15, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .modal-box {
+      background: #0e1726;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      padding: 26px;
+      color: #ffffff;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* TOAST ELEGANTE */
+    #elegant-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(14, 23, 38, 0.95);
+      border: 1px solid var(--cyan-light);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: var(--radius-lg);
+      font-size: 13px;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .topbar {
+        padding: 10px 16px;
+      }
+      .brand-title {
+        font-size: 1rem;
+      }
+      .top-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .container {
+        padding: 16px 12px;
+      }
+      .controls-strip {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .segmented-control {
+        justify-content: space-around;
+      }
+    }
+  </style>
+
+  <style>
+    @media (max-width: 768px) {
+      .app-header {
+        padding: 10px 12px !important;
+      }
+      .brand-group {
+        margin-bottom: 6px !important;
+      }
+      #user-role-container {
+        margin-bottom: 8px !important;
+      }
+      .top-actions {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        width: 100% !important;
+      }
+      .top-actions .btn, .top-actions a {
+        width: 100% !important;
+        justify-content: center !important;
+        font-size: 11.5px !important;
+        padding: 8px 6px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+      }
+      .top-actions .btn-span-2 {
+        grid-column: span 2 !important;
+      }
+      .top-actions .btn-cosa-serve {
+        grid-column: span 2 !important;
+        background: #eff6ff !important;
+        color: #0284c7 !important;
+        border: 1.5px solid #38bdf8 !important;
+        font-weight: 900 !important;
+        font-size: 13px !important;
+        padding: 9px 12px !important;
+        box-shadow: 0 2px 8px rgba(2,132,199,0.2) !important;
+      }
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- EXECUTIVE TOPBAR -->
+  <header class="topbar">
+    <div class="brand-group">
+      <div class="brand-icon-wrap">🗓️</div>
+      <div>
+        <div class="brand-title">
+          <span>CareAssist Pro</span>
+          <span class="brand-tag">Roster Sanitario H24</span>
+        </div>
+        <div class="brand-subtitle">
+          Pianificazione Continua &bull; Conforme D.Lgs. 66/2003 (11h riposo) &bull; CCNL 36h/38h
+        </div>
+      </div>
+    </div>
+
+    <!-- RUOLO E STATO ATTUALE (ADMIN O COLLABORATORE) -->
+    <div id="user-role-container">
+      <div class="role-badge role-admin" style="display:inline-flex; align-items:center; gap:8px; border:1.5px solid #d4af37; background:linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(217,119,6,0.3) 100%); color:#fde047; box-shadow:0 0 14px rgba(212,175,55,0.25); font-size:13px; font-weight:800; border-radius:999px; padding:6px 16px;">
+        <span>👑</span> <span>Admin Coordinatore (Ciro Milella)</span>
+      </div>
+    </div>
+
+    <!-- AZIONI RAPIDE IN HEADER -->
+    <div class="top-actions">
+      <!-- 0. PULSANTE GUIDA A COSA SERVE (A TUTTA LARGHEZZA SU SMARTPHONE) -->
+      <button type="button" onclick="document.getElementById('modal-guida-turnario').style.display='flex';" ontouchstart="document.getElementById('modal-guida-turnario').style.display='flex';" class="btn btn-cosa-serve" title="A cosa serve il Roster Sanitario Turni H24">
+        <span>💡</span> <span>A cosa serve questa maschera</span>
+      </button>
+
+      <!-- 1. TORNA A CAREASSIST PRO -->
+      <a href="/careassist/" class="btn btn-careassist-back" style="text-decoration:none; border: 1.5px solid #38bdf8; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; font-weight: 800; border-radius: 999px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; box-shadow: 0 0 14px rgba(56,189,248,0.35);" title="Torna alla Cartella Clinica CareAssist Pro">
+        🩺 Torna a CareAssist
+      </a>
+
+      <!-- 2. CONDIVIDI TURNI WA -->
+      <button type="button" onclick="condividiRosterWhatsApp()" class="btn btn-wa-roster" style="border: 1.5px solid #86efac; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #ffffff; font-weight: 800; border-radius: 999px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; box-shadow: 0 0 12px rgba(22,163,74,0.3);" title="Condividi la sintesi dei turni su WhatsApp agli Operatori">
+        💬 Condividi Turni WA
+      </button>
+
+      <!-- 3. CONSEGNE H24 -->
+      <button type="button" onclick="apriModalConsegneCliniche()" class="btn btn-ghost" style="border: 1.5px solid rgba(16,185,129,0.5); color: #6ee7b7; background: rgba(16,185,129,0.14); font-weight: 800; border-radius: 999px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;" title="Registro consegne cliniche tra turnisti H24">
+        📝 Consegne H24
+      </button>
+
+      <!-- 4. BILANCIO ORE -->
+      <button type="button" onclick="apriModalBilancioMensile()" class="btn btn-ghost" style="border: 1.5px solid rgba(168,85,247,0.5); color: #d8b4fe; background: rgba(168,85,247,0.14); font-weight: 800; border-radius: 999px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;" title="Bilancio mensile ore, riepilogo CCNL e banca ore">
+        📊 Bilancio Ore
+      </button>
+
+      <!-- 5. STAMPA A4 -->
+      <button type="button" class="btn btn-emerald" onclick="apriStampaA4()" style="background:#059669; color:#ffffff; border:none; border-radius:999px; padding: 8px 12px; font-size: 12px; font-weight:800; display:inline-flex; align-items:center; gap:5px;">
+        🖨️ Stampa A4
+      </button>
+
+      <!-- 6. ESPORTA ICAL -->
+      <button type="button" onclick="apriModalEsportaICal()" class="btn btn-ghost" style="border: 1.5px solid rgba(245,158,11,0.5); color: #fde047; background: rgba(245,158,11,0.14); font-weight: 800; border-radius: 999px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;" title="Esporta turni su Google Calendar, iPhone, Android e Outlook">
+        📅 Esporta iCal
+      </button>
+
+      <!-- 7. BACKUP USB -->
+      <button type="button" onclick="apriModalSincroUSB()" class="btn btn-ghost" style="border: 1.5px solid rgba(56,189,248,0.5); color: #7dd3fc; background: rgba(56,189,248,0.14); font-weight: 800; border-radius: 999px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;" title="Copia di sicurezza e sincronizzazione diretta con chiavetta USB">
+        💾 Backup USB
+      </button>
+
+      <!-- 8. SUITE MILELLA -->
+      <button type="button" onclick="vaiAlPannelloSuite()" class="btn btn-suite-gold" style="border: 1.5px solid #d4af37; background: rgba(212,175,55,0.18); color: #fef08a; font-weight: 800; border-radius: 999px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;" title="Torna al Portale Aziendale Suite Milella">
+        🏢 Home Suite
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- PATIENT & COORDINATOR STRIP -->
+    <section class="patient-banner">
+      <div class="patient-meta-group">
+        <div class="patient-avatar-box" style="padding:0; overflow:hidden; border:2px solid #d4af37; box-shadow:0 0 12px rgba(212,175,55,0.35);">
+          <img src="/assets/img/cm_shield_badge.png" alt="Sig. Ciro Milella" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='/careassist/assets/img/cm_shield_badge.png';">
+        </div>
+        <div>
+          <h2 class="patient-title-h2">
+            <span>Paziente: Sig. Ciro Milella</span>
+            <span class="patient-badge-h24">Assistenza Continua H24</span>
+          </h2>
+          <div class="patient-coord-text">
+            Coordinatore Turni: <b>Ciro Milella (Admin Coordinatore)</b> &bull; Sede Bari (BA)
+          </div>
+        </div>
+      </div>
+
+      <!-- RECAPITI EMERGENZA GESTITI SENZA POPUP WINDOWS -->
+      <div class="emergency-dial-group">
+        <button class="btn-dial" style="background:rgba(239,68,68,0.18); border-color:rgba(239,68,68,0.5); color:#fca5a5;" onclick="gestisciChiamata('112', 'NUE 112 - Numero Unico Emergenze Europeo')">
+          <span>🚨</span> <b>112 NUE</b>
+        </button>
+        <button class="btn-dial" onclick="gestisciChiamata('118', 'Pronto Intervento Sanitario 118')">
+          <span>🚑</span> <b>118 Sanità</b>
+        </button>
+        <button class="btn-dial btn-dial-gm" onclick="gestisciChiamata('0805841111', 'Guardia Medica Continuità Assistenziale')">
+          <span>📞</span> <b>Guardia Medica</b>
+        </button>
+      </div>
+    </section>
+
+    <!-- KPI STATS CARDS -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" style="background:rgba(2,132,199,0.15); color:#38bdf8;">👥</div>
+        <div>
+          <div class="kpi-val" id="kpi-tot-ops">--</div>
+          <div class="kpi-lbl">Operatori Abilitati Care</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" style="background:rgba(16,185,129,0.15); color:#34d399;">☀️</div>
+        <div>
+          <div class="kpi-val" id="kpi-mattine">100%</div>
+          <div class="kpi-lbl">Copertura Mattine (07-14)</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" style="background:rgba(245,158,11,0.15); color:#fbbf24;">🌤️</div>
+        <div>
+          <div class="kpi-val" id="kpi-pomeriggi">100%</div>
+          <div class="kpi-lbl">Copertura Pomeriggi (14-21)</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" style="background:rgba(99,102,241,0.18); color:#a5b4fc;">🌙</div>
+        <div>
+          <div class="kpi-val" id="kpi-notti">100%</div>
+          <div class="kpi-lbl">Copertura Notti (21-07)</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" style="background:rgba(168,85,247,0.18); color:#d8b4fe;">🦺</div>
+        <div>
+          <div class="kpi-val" id="kpi-disp">Attivo</div>
+          <div class="kpi-lbl">Reperibili Emergenze</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" style="background:rgba(16,185,129,0.15); color:#10b981;">⚖️</div>
+        <div>
+          <div class="kpi-val" style="color:#34d399;">100%</div>
+          <div class="kpi-lbl">D.Lgs 66 (11h Riposo)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVVISO COLLABORATORE (SE NON ADMIN) -->
+    <div id="collaboratore-banner" class="notice-collaboratore" style="display:none;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:20px;">🔒</span>
+        <div>
+          <b>Accesso Collaboratore (Sola Lettura):</b> I turni e le disponibilità sono stabiliti ed assegnati esclusivamente dall'Admin Coordinatore. Puoi consultare i turni e stampare il prospetto A4.
+        </div>
+      </div>
+      <button class="btn" onclick="apriModalPinAdmin()" style="background:#ffffff; color:#0369a1; border:1px solid #bae6fd; font-size:12px; padding:6px 14px;">
+        🔑 Sblocca con PIN Admin
+      </button>
+    </div>
+
+    <!-- CONTROLS STRIP: VIEW SWITCHER & WEEK NAVIGATOR -->
+    <div class="controls-strip">
+      <!-- SEGMENTED TRI-VIEW SWITCHER -->
+      <div class="segmented-control">
+        <button class="seg-pill active" id="btn-view-matrix" onclick="cambiaVista('matrix')">
+          <span>📊</span> Matrice Roster
+        </button>
+        <button class="seg-pill" id="btn-view-cards" onclick="cambiaVista('cards')">
+          <span>📱</span> Schede Personali
+        </button>
+        <button class="seg-pill" id="btn-view-agenda" onclick="cambiaVista('agenda')">
+          <span>🗓️</span> Agenda Giornaliera
+        </button>
+      </div>
+
+      <!-- MODERN EXECUTIVE CALENDAR BAR -->
+      <div class="calendar-nav-bar" id="calendarNavBarWrap">
+        <!-- PULSANTE SETTIMANA PRECEDENTE -->
+        <button class="nav-arrow-btn" onclick="navigaSettimanaOffset(-1)" title="Settimana Precedente">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+
+        <!-- PILLOLA DISPLAY CALENDARIO MODERNO (CLICCABILE PER APRIRE IL CALENDARIO) -->
+        <div class="calendar-display-pill" onclick="toggleMiniCalendarPopover(event)" title="Tocca per scegliere qualsiasi data dal calendario">
+          <div class="cal-icon-glow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <circle cx="8" cy="14" r="1.3" fill="#38bdf8"></circle>
+              <circle cx="12" cy="14" r="1.3" fill="#38bdf8"></circle>
+              <circle cx="16" cy="14" r="1.3" fill="#38bdf8"></circle>
+              <circle cx="8" cy="18" r="1.3" fill="#38bdf8"></circle>
+              <circle cx="12" cy="18" r="1.3" fill="#38bdf8"></circle>
+            </svg>
+          </div>
+          
+          <div class="cal-text-block">
+            <div class="cal-week-interval" id="label-settimana-estesa">Caricamento settimana...</div>
+            <div class="cal-week-sub" id="label-settimana-numero">Settimana &bull; Assistenza Continua H24</div>
+          </div>
+
+          <div class="cal-chevron">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </div>
+
+        <!-- PULSANTE SETTIMANA SUCCESSIVA -->
+        <button class="nav-arrow-btn" onclick="navigaSettimanaOffset(1)" title="Settimana Successiva">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+
+        <!-- PULSANTE OGGI -->
+        <button class="btn-today-pill" onclick="vaiASettimanaCorrenteOggi()" title="Torna alla settimana corrente">
+          <span>⚡</span> Oggi
+        </button>
+
+        <!-- POPOVER CALENDARIO MODERNO FLUTTUANTE -->
+        <div class="modern-calendar-popover" id="popover-mini-calendar" onclick="event.stopPropagation()">
+          <div class="cal-pop-header">
+            <button class="cal-pop-nav-btn" onclick="navigaMesePopover(-1)">◀</button>
+            <div class="cal-pop-title" id="cal-popover-month-title">Ottobre 2026</div>
+            <button class="cal-pop-nav-btn" onclick="navigaMesePopover(1)">▶</button>
+          </div>
+
+          <div class="cal-weekdays-grid">
+            <div class="cal-weekday-th">L</div>
+            <div class="cal-weekday-th">M</div>
+            <div class="cal-weekday-th">M</div>
+            <div class="cal-weekday-th">G</div>
+            <div class="cal-weekday-th">V</div>
+            <div class="cal-weekday-th">S</div>
+            <div class="cal-weekday-th">D</div>
+          </div>
+
+          <div class="cal-days-grid" id="cal-popover-days-body">
+            <!-- Giorni popolati dinamicamente -->
+          </div>
+
+          <div class="cal-pop-footer">
+            <button class="cal-pop-btn-quick" onclick="navigaSettimanaOffset(-1); chiudiMiniCalendarPopover();">◀ Scorsa</button>
+            <button class="cal-pop-btn-quick" style="color:var(--cyan-light); border-color:rgba(56,189,248,0.4);" onclick="vaiASettimanaCorrenteOggi(); chiudiMiniCalendarPopover();">⚡ Questa</button>
+            <button class="cal-pop-btn-quick" onclick="navigaSettimanaOffset(1); chiudiMiniCalendarPopover();">Prossima ▶</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AZIONI ADMIN -->
+      <div id="admin-actions-box" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-sky" onclick="apriModalConfiguratoreAI()">
+          ⚡ Sviluppa Combinazione AI
+        </button>
+        <button class="btn btn-ghost" onclick="apriModalNuovoOperatore()">
+          + Collaboratore
+        </button>
+        <button class="btn btn-ghost" onclick="apriModalGuidaTurni()" style="border:1.5px solid rgba(56,189,248,0.4); color:#38bdf8; display:inline-flex; align-items:center; gap:6px; font-weight:800;" title="Spiegazione su come sviluppare e assegnare i turni">
+          ℹ️ Info Turni
+        </button>
+      </div>
+    </div>
+
+    <!-- VISTA 1: ROSTER MATRIX TABLE -->
+    <div id="view-matrix" class="roster-card">
+      <div class="table-responsive">
+        <table class="roster-table">
+          <thead>
+            <tr>
+              <th class="th-op">Collaboratore / Profilo</th>
+              <th>
+                <div class="day-header-title">LUN</div>
+                <div class="day-header-date" id="col-date-lun">--</div>
+              </th>
+              <th>
+                <div class="day-header-title">MAR</div>
+                <div class="day-header-date" id="col-date-mar">--</div>
+              </th>
+              <th>
+                <div class="day-header-title">MER</div>
+                <div class="day-header-date" id="col-date-mer">--</div>
+              </th>
+              <th>
+                <div class="day-header-title">GIO</div>
+                <div class="day-header-date" id="col-date-gio">--</div>
+              </th>
+              <th>
+                <div class="day-header-title">VEN</div>
+                <div class="day-header-date" id="col-date-ven">--</div>
+              </th>
+              <th>
+                <div class="day-header-title">SAB</div>
+                <div class="day-header-date" id="col-date-sab">--</div>
+              </th>
+              <th>
+                <div class="day-header-title">DOM</div>
+                <div class="day-header-date" id="col-date-dom">--</div>
+              </th>
+              <th style="width:110px;">Ore Totali</th>
+            </tr>
+          </thead>
+          <tbody id="roster-tbody">
+            <!-- Righe inserite dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- BOTTOM LEGEND BAR -->
+      <div class="roster-legend-bar">
+        <div class="legend-chips-wrap">
+          <span class="leg-item chip-m">☀️ M = Mattina 07:00-14:00 (7h)</span>
+          <span class="leg-item chip-p">🌤️ P = Pomeriggio 14:00-21:00 (7h)</span>
+          <span class="leg-item chip-n">🌙 N = Notte 21:00-07:00 (10h)</span>
+          <span class="leg-item chip-s">🛌 S = Smonto (Recupero)</span>
+          <span class="leg-item chip-r">☕ R = Riposo di Legge</span>
+          <span class="leg-item chip-d" onclick="apriModalGuidaReperibilita()" style="cursor:pointer;" title="Clicca per visualizzare la guida alla Reperibilità">🦺 D = Reperibilità / Jolly ℹ️</span>
+          <span class="leg-item" onclick="apriModalGuidaTurni()" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); color:#38bdf8; cursor:pointer; font-weight:800;" title="Clicca per visualizzare la guida allo sviluppo dei turni">ℹ️ Guida Turni</span>
+        </div>
+        <div id="hint-click-edit" style="font-size:11.5px; color:#94a3b8; font-weight:600;">
+          💡 Tocca qualsiasi cella per assegnare o modificare il turno
+        </div>
+      </div>
+    </div>
+
+    <!-- VISTA 2: CARDS PERSONALI OPERATORI -->
+    <div id="view-cards" class="cards-view-grid" style="display:none;">
+      <!-- Popolato dinamicamente -->
+    </div>
+
+    <!-- VISTA 3: AGENDA GIORNALIERA CONSEGNE -->
+    <div id="view-agenda" class="agenda-view-container" style="display:none;">
+      <!-- Popolato dinamicamente -->
+    </div>
+
+    <!-- SEZIONE PIANO REPERIBILITÀ & COPERTURE DI EMERGENZA -->
+    <div class="rep-card">
+      <div class="rep-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span>🦺</span> <b>PIANO REPERIBILITÀ & COPERTURE DI EMERGENZA (DISPONIBILITÀ ATTIVA)</b>
+        </div>
+        <button onclick="apriModalGuidaReperibilita()" style="background:linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(126,34,206,0.3) 100%); border:1.5px solid rgba(168,85,247,0.5); color:#f3e8ff; border-radius:10px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; box-shadow:0 0 12px rgba(168,85,247,0.2);" onmouseover="this.style.background='rgba(168,85,247,0.45)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(126,34,206,0.3) 100%)'">
+          ℹ️ Info Reperibilità
+        </button>
+      </div>
+      <div class="rep-content" id="rep-giornaliera-testo">
+        <!-- Generato dinamicamente -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL SELETTORE RAPIDO TURNO CELLA -->
+  <div id="modal-select-turno" class="modal-backdrop">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div style="font-weight:900; font-size:16px;" id="modal-target-op-nome">Modifica Turno</div>
+        <button onclick="chiudiModalTurno()" style="background:none; border:none; font-size:18px; cursor:pointer; color:#94a3b8;">✕</button>
+      </div>
+      <div style="font-size:12.5px; color:#94a3b8; margin-bottom:16px;" id="modal-target-giorno-desc">
+        Seleziona il nuovo turno per questo giorno:
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+        <button class="shift-chip chip-m" style="padding:12px; cursor:pointer;" onclick="applicaTurnoScelto('M')">
+          <span class="shift-letter">M</span>
+          <span class="shift-sub">Mattina (07:00-14:00 • 7h)</span>
+        </button>
+        <button class="shift-chip chip-p" style="padding:12px; cursor:pointer;" onclick="applicaTurnoScelto('P')">
+          <span class="shift-letter">P</span>
+          <span class="shift-sub">Pomeriggio (14:00-21:00 • 7h)</span>
+        </button>
+        <button class="shift-chip chip-n" style="padding:12px; cursor:pointer;" onclick="applicaTurnoScelto('N')">
+          <span class="shift-letter">N</span>
+          <span class="shift-sub">Notte (21:00-07:00 • 10h)</span>
+        </button>
+        <button class="shift-chip chip-s" style="padding:12px; cursor:pointer;" onclick="applicaTurnoScelto('S')">
+          <span class="shift-letter">S</span>
+          <span class="shift-sub">Smonto Post-Notte (0h)</span>
+        </button>
+        <button class="shift-chip chip-r" style="padding:12px; cursor:pointer;" onclick="applicaTurnoScelto('R')">
+          <span class="shift-letter">R</span>
+          <span class="shift-sub">Riposo di Legge (0h)</span>
+        </button>
+        <button class="shift-chip chip-d" style="padding:12px; cursor:pointer;" onclick="applicaTurnoScelto('D')">
+          <span class="shift-letter">D</span>
+          <span class="shift-sub">Disponibilità / Jolly (0h)</span>
+        </button>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="chiudiModalTurno()">Annulla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIGURATORE COMBINAZIONI TURNI AI (MODELLI OSPEDALIERI & SSN) -->
+  <div id="modal-configuratore-ai" class="modal-backdrop">
+    <div class="modal-box" style="max-width:660px; max-height:90vh; overflow-y:auto; padding:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; position:sticky; top:0; background:rgba(10,15,28,0.95); backdrop-filter:blur(10px); padding-bottom:8px; z-index:2; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="font-weight:900; font-size:18px; display:flex; align-items:center; gap:8px;">
+          <span style="color:#38bdf8;">⚡</span> <span>Configuratore Modelli Turni Sanitari & SSN</span>
+        </div>
+        <button onclick="chiudiModalConfiguratoreAI()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#94a3b8;">✕</button>
+      </div>
+
+      <div style="font-size:12.5px; color:#94a3b8; margin-bottom:16px; line-height:1.5;">
+        Seleziona il modello organizzativo di reparto o assistenza domiciliare. L'algoritmo distribuisce e sfalsa automaticamente la sequenza su tutti i collaboratori, garantendo la copertura continuativa H24 365 giorni/anno, il riposo di 11 ore consecutive (D.Lgs. 66/2003) e lo smonto notte biologico.
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="display:block; font-size:11.5px; font-weight:800; color:var(--cyan-light); text-transform:uppercase; margin-bottom:10px; letter-spacing:0.5px;">
+          1. Seleziona Modello di Rotazione Ospedaliera / Sanitaria:
+        </label>
+
+        <div style="display:flex; flex-direction:column; gap:9px;">
+          <!-- 1. Ciclo in 5ª SSN Variante Pomeriggio (P - M - N - S - R) -->
+          <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(2,132,199,0.08); border:1.5px solid #0284c7; padding:12px 14px; border-radius:12px; cursor:pointer;">
+            <input type="radio" name="preset_combinazione" value="ssn_pmnsr" checked style="margin-top:3px; accent-color:#38bdf8;">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <div style="font-weight:900; color:#ffffff; font-size:13.5px;">🩺 Ciclo in 5ª SSN (P - M - N - S - R)</div>
+                <span style="font-size:10.5px; font-weight:800; background:rgba(56,189,248,0.2); color:#38bdf8; border:1px solid #0284c7; padding:2px 8px; border-radius:6px;">⭐ Consigliato Infermieri SSN</span>
+              </div>
+              <div style="font-size:12px; color:#cbd5e1; margin-top:3px; line-height:1.4;">
+                <b>Pomeriggio ➔ Mattina ➔ Notte ➔ Smonto Notte ➔ Riposo</b> (Ciclo di 5 giorni).
+              </div>
+              <div style="font-size:11.5px; color:#94a3b8; margin-top:3px; line-height:1.4;">
+                Modello ufficiale adottato nelle degenze ospedaliere e strutture convenzionate SSN: garantisce ben <b>55 ore continuative di riposo</b> dallo smonto notte al successivo pomeriggio. Con 5 infermieri sfalsati di 1 giorno, la copertura H24 è costante e impeccabile.
+              </div>
+            </div>
+          </label>
+
+          <!-- 2. Ciclo in 5ª Tradizionale SSN (M - P - N - S - R) -->
+          <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(10,15,28,0.6); border:1px solid rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; cursor:pointer;">
+            <input type="radio" name="preset_combinazione" value="ssn_mpnsr" style="margin-top:3px; accent-color:#38bdf8;">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <div style="font-weight:900; color:#ffffff; font-size:13.5px;">🏥 Ciclo in 5ª Tradizionale SSN (M - P - N - S - R)</div>
+                <span style="font-size:10.5px; font-weight:800; background:rgba(16,185,129,0.2); color:#6ee7b7; border:1px solid #059669; padding:2px 8px; border-radius:6px;">🏛️ Standard Sanità Classica</span>
+              </div>
+              <div style="font-size:12px; color:#cbd5e1; margin-top:3px; line-height:1.4;">
+                <b>Mattina ➔ Pomeriggio ➔ Notte ➔ Smonto Notte ➔ Riposo</b> (Ciclo di 5 giorni).
+              </div>
+              <div style="font-size:11.5px; color:#94a3b8; margin-top:3px; line-height:1.4;">
+                Classica rotazione a carico orario progressivo della sanità pubblica: 24h di stacco tra mattina e pomeriggio, 24h tra pomeriggio e notte, smonto biologico e riposo settimanale.
+              </div>
+            </div>
+          </label>
+
+          <!-- 3. Ciclo in 4ª H12 Emergenza / Intensiva -->
+          <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(10,15,28,0.6); border:1px solid rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; cursor:pointer;">
+            <input type="radio" name="preset_combinazione" value="ssn_h12" style="margin-top:3px; accent-color:#38bdf8;">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <div style="font-weight:900; color:#ffffff; font-size:13.5px;">🚑 Ciclo in 4ª Emergenza H12 (Giorno 12h - Notte 12h - S - R)</div>
+                <span style="font-size:10.5px; font-weight:800; background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid #dc2626; padding:2px 8px; border-radius:6px;">⚡ Terapia Intensiva / 118</span>
+              </div>
+              <div style="font-size:12px; color:#cbd5e1; margin-top:3px; line-height:1.4;">
+                <b>Giorno 12h ➔ Notte 12h ➔ Smonto Notte ➔ Riposo</b> (Ciclo di 4 giorni).
+              </div>
+              <div style="font-size:11.5px; color:#94a3b8; margin-top:3px; line-height:1.4;">
+                Configurazione a 4 squadre per Pronto Soccorso, Rianimazione, Dialisi H24 e SUEM 118 con copertura totale giorno/notte a blocchi da 12 ore.
+              </div>
+            </div>
+          </label>
+
+          <!-- 4. Ciclo in 6ª con Doppio Riposo -->
+          <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(10,15,28,0.6); border:1px solid rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; cursor:pointer;">
+            <input type="radio" name="preset_combinazione" value="ssn_sesta" style="margin-top:3px; accent-color:#38bdf8;">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <div style="font-weight:900; color:#ffffff; font-size:13.5px;">🛌 Ciclo in 6ª con Doppio Riposo (M - P - N - S - R - R)</div>
+                <span style="font-size:10.5px; font-weight:800; background:rgba(168,85,247,0.2); color:#d8b4fe; border:1px solid #9333ea; padding:2px 8px; border-radius:6px;">🛡️ CCNL 36h / 48h Riposo</span>
+              </div>
+              <div style="font-size:12px; color:#cbd5e1; margin-top:3px; line-height:1.4;">
+                <b>Mattina ➔ Pomeriggio ➔ Notte ➔ Smonto ➔ Riposo ➔ Riposo</b> (Ciclo di 6 giorni).
+              </div>
+              <div style="font-size:11.5px; color:#94a3b8; margin-top:3px; line-height:1.4;">
+                Garantisce 48 ore consecutive di riposo (due giorni interi) dopo la notte e lo smonto, ideale per bilanciare l'orario contrattuale a 36 ore.
+              </div>
+            </div>
+          </label>
+
+          <!-- 5. Servizio Diurno Continuo ADI / Ambulatorio -->
+          <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(10,15,28,0.6); border:1px solid rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; cursor:pointer;">
+            <input type="radio" name="preset_combinazione" value="diurno_adi" style="margin-top:3px; accent-color:#38bdf8;">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <div style="font-weight:900; color:#ffffff; font-size:13.5px;">🏡 Servizio Diurno ADI / Territoriale (M - P - R)</div>
+                <span style="font-size:10.5px; font-weight:800; background:rgba(234,179,8,0.2); color:#fef08a; border:1px solid #ca8a04; padding:2px 8px; border-radius:6px;">☀️ Diurno Senza Notte</span>
+              </div>
+              <div style="font-size:12px; color:#cbd5e1; margin-top:3px; line-height:1.4;">
+                <b>Alternanza Mattina (07-14) e Pomeriggio (14-21)</b> con riposo infrasettimanale e domenica libera.
+              </div>
+              <div style="font-size:11.5px; color:#94a3b8; margin-top:3px; line-height:1.4;">
+                Specifico per Assistenza Domiciliare Integrata (ADI), Poliambulatori, Day Surgery e Centri Diurni.
+              </div>
+            </div>
+          </label>
+
+          <!-- 6. Turno Misto CareAssist Domiciliare -->
+          <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(10,15,28,0.6); border:1px solid rgba(255,255,255,0.12); padding:12px 14px; border-radius:12px; cursor:pointer;">
+            <input type="radio" name="preset_combinazione" value="misto_pn" style="margin-top:3px; accent-color:#38bdf8;">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <div style="font-weight:900; color:#ffffff; font-size:13.5px;">🌟 Turno Misto CareAssist (Pomeriggio & Notte + Reperibilità D)</div>
+                <span style="font-size:10.5px; font-weight:800; background:rgba(59,130,246,0.2); color:#93c5fd; border:1px solid #2563eb; padding:2px 8px; border-radius:6px;">🦺 Reperibilità Emergenze</span>
+              </div>
+              <div style="font-size:12px; color:#cbd5e1; margin-top:3px; line-height:1.4;">
+                <b>Pomeriggi, Notti, Smonto e Reperibilità / Jolly (D)</b> per coperture immediate.
+              </div>
+              <div style="font-size:11.5px; color:#94a3b8; margin-top:3px; line-height:1.4;">
+                Ideale per assistenza domiciliare ad alta intensità con operatori disponibili per sostituzioni e picchi assistenziali imprevisti.
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:12px; padding:12px 14px; margin-bottom:18px; font-size:11.5px; color:#a7f3d0; line-height:1.5;">
+        <b>🛡️ Vincoli di Legge & CCNL Sanità Garantiti:</b><br>
+        ✓ D.Lgs. 66/2003: 11 ore consecutive di riposo giornaliero tassative.<br>
+        ✓ Smonto Notte (S / SN) obbligatorio dopo il turno notturno.<br>
+        ✓ Media oraria contrattuale 36h/38h settimanali per collaboratore.
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn btn-ghost" onclick="chiudiModalConfiguratoreAI()">Annulla</button>
+        <button class="btn btn-sky" onclick="eseguiGenerazionePresetScelto()">
+          🚀 Sviluppa & Applica Turni
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL SMART DIAL INFO (PER EVITARE POPUP WINDOWS) -->
+  <div id="modal-smart-dial" class="modal-backdrop">
+    <div class="modal-box" style="max-width:380px; text-align:center;">
+      <div style="font-size:36px; margin-bottom:10px;" id="dial-modal-icon">📞</div>
+      <div style="font-size:17px; font-weight:800; margin-bottom:4px;" id="dial-modal-title">Contatto Telefonico</div>
+      <div style="font-size:22px; font-weight:900; color:var(--cyan-light); margin:12px 0; letter-spacing:1px;" id="dial-modal-number">
+        --
+      </div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:18px;">
+        Su smartphone avvia la chiamata diretta. Da PC puoi copiare il recapito negli appunti.
+      </div>
+      <div style="display:flex; justify-content:center; gap:10px;">
+        <button class="btn btn-sky" onclick="copiaNumeroChiamata()">
+          📋 Copia Numero
+        </button>
+        <button class="btn btn-ghost" onclick="chiudiModalDial()">
+          Chiudi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ELEGANTE AGGIUNGI / MODIFICA COLLABORATORE (MASSIMA LEGGIBILITÀ E ACCESSIBILITÀ) -->
+  <div id="modal-nuovo-operatore" class="modal-backdrop">
+    <div class="modal-box" style="max-width:640px; width:95%; max-height:92vh; overflow-y:auto; background:linear-gradient(180deg, #131c31 0%, #0c1424 100%); border:1.5px solid rgba(56,189,248,0.3); border-radius:18px; padding:24px 26px; box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(56,189,248,0.18);">
+      <input type="hidden" id="editing-op-id" value="">
+      
+      <!-- INTESTAZIONE MODALE -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; position:sticky; top:0; background:rgba(12,20,36,0.96); backdrop-filter:blur(10px); padding-bottom:12px; z-index:2; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div>
+          <div style="font-weight:900; font-size:20px; display:flex; align-items:center; gap:9px; color:#ffffff;">
+            <span id="icona-modal-op" style="font-size:22px;">✏️</span>
+            <span id="titolo-modal-op">Modifica Dati Collaboratore</span>
+          </div>
+          <div style="font-size:12.5px; color:#94a3b8; margin-top:3px; font-weight:500;">
+            Impostazione rapida di orari, mansione e recapiti per il Roster Assistenziale.
+          </div>
+        </div>
+        <button onclick="chiudiModalNuovoOperatore()" title="Chiudi" style="background:rgba(255,255,255,0.08); border:none; border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; color:#cbd5e1; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#fca5a5';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#cbd5e1';">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:20px;">
+        
+        <!-- CAMPO: NOME E COGNOME -->
+        <div>
+          <label style="display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:800; color:#f8fafc; margin-bottom:7px;">
+            <span style="color:#38bdf8; font-size:16px;">👤</span> Nome & Cognome Collaboratore
+          </label>
+          <input type="text" id="nuovo-op-nome" placeholder="Es. Maria Cristina Stoppelli" style="width:100%; background:rgba(15,23,42,0.85); border:1.5px solid rgba(255,255,255,0.18); border-radius:11px; padding:12px 14px; color:#ffffff; font-size:15px; font-weight:700; outline:none; transition:border-color 0.2s;" onfocus="this.style.borderColor='#38bdf8'" onblur="this.style.borderColor='rgba(255,255,255,0.18)'">
+        </div>
+
+        <!-- CAMPI: RUOLO E CELLULARE (2 COLONNE CHIARE) -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:800; color:#f8fafc; margin-bottom:7px;">
+              <span style="color:#38bdf8; font-size:16px;">💼</span> Ruolo / Specializzazione
+            </label>
+            <input type="text" id="nuovo-op-ruolo" placeholder="Es. OSS, Infermiere SSN..." value="OSS Referente" style="width:100%; background:rgba(15,23,42,0.85); border:1.5px solid rgba(255,255,255,0.18); border-radius:11px; padding:12px 14px; color:#ffffff; font-size:14.5px; font-weight:700; outline:none; transition:border-color 0.2s;" onfocus="this.style.borderColor='#38bdf8'" onblur="this.style.borderColor='rgba(255,255,255,0.18)'">
+          </div>
+          <div>
+            <label style="display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:800; color:#f8fafc; margin-bottom:7px;">
+              <span style="color:#22c55e; font-size:16px;">📱</span> Cellulare / WhatsApp
+            </label>
+            <input type="tel" id="nuovo-op-tel" placeholder="Es. 338 739 7671" style="width:100%; background:rgba(15,23,42,0.85); border:1.5px solid rgba(255,255,255,0.18); border-radius:11px; padding:12px 14px; color:#ffffff; font-size:14.5px; font-weight:700; outline:none; transition:border-color 0.2s;" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='rgba(255,255,255,0.18)'">
+          </div>
+        </div>
+
+        <!-- SEZIONE REGIME CONTRATTUALE: FULL TIME vs PART TIME -->
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:15px;">
+          <label style="display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:800; color:#f8fafc; margin-bottom:10px;">
+            <span style="color:#f59e0b; font-size:16px;">⚖️</span> Regime di Lavoro Contrattuale
+          </label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+            <label id="label-regime-ft" style="display:flex; align-items:center; gap:12px; padding:13px 15px; border-radius:12px; border:2px solid #38bdf8; background:linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(2,132,199,0.15) 100%); cursor:pointer; font-weight:800; color:#ffffff; transition:all 0.2s; user-select:none; box-shadow:0 0 16px rgba(56,189,248,0.2);">
+              <input type="radio" name="nuovo_op_regime" value="full_time" checked onchange="aggiornaCampiRegimeOrarioModal('full_time')" style="display:none;">
+              <span style="font-size:26px;">☀️</span>
+              <div style="text-align:left;">
+                <div style="font-size:15px; font-weight:800; line-height:1.2;">Full Time</div>
+                <div style="font-size:12px; opacity:0.85; font-weight:500;">Tempo Pieno (36h – 40h)</div>
+              </div>
+            </label>
+            <label id="label-regime-pt" style="display:flex; align-items:center; gap:12px; padding:13px 15px; border-radius:12px; border:1.5px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.04); cursor:pointer; font-weight:800; color:#94a3b8; transition:all 0.2s; user-select:none;">
+              <input type="radio" name="nuovo_op_regime" value="part_time" onchange="aggiornaCampiRegimeOrarioModal('part_time')" style="display:none;">
+              <span style="font-size:26px;">⏳</span>
+              <div style="text-align:left;">
+                <div style="font-size:15px; font-weight:800; line-height:1.2;">Part Time</div>
+                <div style="font-size:12px; opacity:0.85; font-weight:500;">Tempo Parziale (18h – 30h)</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- BOX OPZIONI CONDIZIONI FULL TIME -->
+          <div id="box-condizioni-ft" style="display:block;">
+            <label style="display:block; font-size:12.5px; font-weight:800; color:#38bdf8; margin-bottom:6px;">
+              📋 Contratto Full Time & Modello Orario:
+            </label>
+            <select id="nuovo-op-condizione-ft" onchange="aggiornaDettaglioInfoContratto()" style="width:100%; background:#0b1324; border:1.5px solid rgba(56,189,248,0.4); border-radius:11px; padding:12px 14px; color:#ffffff; font-size:14px; font-weight:700; outline:none; cursor:pointer;">
+              <option value="ft_ssn_turnista_36h" selected>🏥 SSN Ospedaliero Turnista H24 — 36 ore (CCNL Sanità • Turni P-M-N-S-R)</option>
+              <option value="ft_ssn_36h_5gg">📅 SSN Settimana Corta (5 Giorni) — 36 ore (Lun - Ven, weekend liberi)</option>
+              <option value="ft_ssn_36h_6gg">⏱️ SSN Standard (6 Giorni) — 36 ore (6h al giorno Lun-Sab)</option>
+              <option value="ft_privata_36h">🏢 Sanità Privata AIOP / ARIS — 36 ore (Cliniche e degenze convenzionate)</option>
+              <option value="ft_coop_turnista_38h">🤝 Cooperative Sociali Turnista H24 — 38 ore (CCNL Coop Sociali • RSA)</option>
+              <option value="ft_coop_38h_5gg">🚗 Cooperative Sociali Diurno / ADI — 38 ore (Assistenza domiciliare)</option>
+              <option value="ft_standard_40h">💼 Full Time Standard UNEBA — 40 ore (8h al giorno Lun-Ven)</option>
+            </select>
+          </div>
+
+          <!-- BOX OPZIONI CONDIZIONI PART TIME -->
+          <div id="box-condizioni-pt" style="display:none;">
+            <label style="display:block; font-size:12.5px; font-weight:800; color:#fb923c; margin-bottom:6px;">
+              📋 Contratto Part Time & Articolazione:
+            </label>
+            <select id="nuovo-op-condizione-pt" onchange="aggiornaDettaglioInfoContratto()" style="width:100%; background:#0b1324; border:1.5px solid rgba(251,146,60,0.4); border-radius:11px; padding:12px 14px; color:#ffffff; font-size:14px; font-weight:700; outline:none; cursor:pointer;">
+              <option value="pt_orizzontale_20h" selected>⏱️ Part Time 20 ore (4h al giorno da Lunedì a Venerdì)</option>
+              <option value="pt_orizzontale_18h">⏱️ Part Time 18 ore / 50% (3h 36m/gg o mezze giornate)</option>
+              <option value="pt_orizzontale_24h">⏱️ Part Time 24 ore / ~66% (CCNL Sanità / Coop Sociali)</option>
+              <option value="pt_orizzontale_30h">⏱️ Part Time 30 ore / ~80% (6h al giorno Lun-Ven)</option>
+              <option value="pt_verticale_3gg">📆 Part Time Verticale (3 Giorni interi a settimana — 21h)</option>
+              <option value="pt_verticale_4gg">📆 Part Time Verticale (4 Giorni interi a settimana — 28h)</option>
+              <option value="pt_ciclico_turnista">🔄 Part Time Ciclico Turnista (20 ore medie a settimane rotanti)</option>
+            </select>
+          </div>
+
+          <!-- INFO DESCRITTIVA CONTRATTUALE -->
+          <div id="info-regime-dettaglio" style="margin-top:10px; background:rgba(56,189,248,0.08); border:1.5px solid rgba(56,189,248,0.25); border-radius:11px; padding:11px 14px; font-size:12.5px; color:#e2e8f0; line-height:1.45;">
+            <!-- Aggiornato via JS -->
+          </div>
+        </div>
+
+        <!-- CAMPO: PROFILO TURNAZIONE PREDEFINITO -->
+        <div>
+          <label style="display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:800; color:#f8fafc; margin-bottom:7px;">
+            <span style="color:#a855f7; font-size:16px;">🔄</span> Profilo Turnazione Predefinito
+          </label>
+          <select id="nuovo-op-profilo" style="width:100%; background:#0b1324; border:1.5px solid rgba(255,255,255,0.18); border-radius:11px; padding:12px 14px; color:#ffffff; font-size:14.5px; font-weight:700; outline:none; cursor:pointer;">
+            <option value="infermiere_ssn">🏥 Infermiere Reparto / SSN (Ciclo Continuo P - M - N - S - R)</option>
+            <option value="misto_pn" selected>🌗 Misto Pomeriggio / Notte + Reperibilità (Consigliato)</option>
+            <option value="diurno">☀️ Solo Diurno: Mattina & Pomeriggio (No notti)</option>
+            <option value="full_h24">🌐 Full H24: Tutte le fasce orarie disponibili</option>
+          </select>
+        </div>
+
+        <!-- CHECKBOX: DISPONIBILITÀ EMERGENZE -->
+        <label style="display:flex; align-items:center; gap:12px; background:rgba(168,85,247,0.12); border:1.5px solid rgba(168,85,247,0.35); border-radius:12px; padding:12px 16px; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='rgba(168,85,247,0.18)'" onmouseout="this.style.background='rgba(168,85,247,0.12)'">
+          <input type="checkbox" id="nuovo-op-disp" checked style="width:20px; height:20px; accent-color:#a855f7; cursor:pointer; flex-shrink:0;">
+          <div>
+            <div style="font-size:14px; color:#ffffff; font-weight:800;">🚨 Disponibile per Reperibilità & Sostituzioni di Emergenza</div>
+            <div style="font-size:12px; color:#d8b4fe; font-weight:500;">Attiva la presenza nella lista reperibilità rapida in caso di imprevisti o cambi turno.</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- PULSANTI AZIONE (GRANDI, IMPOSSIBILE SBAGLIARE) -->
+      <div style="display:flex; justify-content:space-between; align-items:center; position:sticky; bottom:0; background:rgba(12,20,36,0.96); backdrop-filter:blur(10px); padding-top:14px; margin-top:10px; border-top:1px solid rgba(255,255,255,0.1);">
+        <button type="button" class="btn" id="btn-elimina-op" style="background:rgba(239,68,68,0.15); border:1.5px solid #ef4444; color:#fca5a5; font-weight:800; font-size:14px; padding:11px 18px; border-radius:11px; display:none; cursor:pointer;" onclick="confermaEliminaOperatore()">
+          🗑️ Rimuovi
+        </button>
+        <div style="display:flex; gap:12px; margin-left:auto;">
+          <button class="btn btn-ghost" onclick="chiudiModalNuovoOperatore()" style="font-size:14px; font-weight:700; padding:11px 18px; border-radius:11px; cursor:pointer; color:#cbd5e1; border:1px solid rgba(255,255,255,0.15);">Annulla</button>
+          <button class="btn btn-emerald" id="btn-salva-op" onclick="salvaNuovoOperatoreDaModal()" style="font-size:15px; font-weight:800; padding:12px 24px; border-radius:11px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; box-shadow:0 4px 14px rgba(16,185,129,0.35); cursor:pointer;">
+            💾 Salva Modifiche
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GUIDA OPERATIVA: COME SVILUPPARE UN TURNO -->
+  <div id="modal-guida-turni" class="modal-backdrop">
+    <div class="modal-box" style="max-width:660px; width:95%; max-height:90vh; overflow-y:auto; background:linear-gradient(180deg, #131d33 0%, #0c1424 100%); border:1.5px solid rgba(56,189,248,0.3); border-radius:18px; padding:24px 26px; box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(56,189,248,0.18);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; position:sticky; top:0; background:rgba(12,20,36,0.96); backdrop-filter:blur(10px); padding-bottom:12px; z-index:2; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div>
+          <div style="font-weight:900; font-size:20px; display:flex; align-items:center; gap:9px; color:#ffffff;">
+            <span style="font-size:24px;">ℹ️</span>
+            <span>Come Sviluppare un Turno (Guida Rapida)</span>
+          </div>
+          <div style="font-size:12.5px; color:#94a3b8; margin-top:3px; font-weight:500;">
+            Istruzioni passo-passo per pianificare l'assistenza senza errori né buchi di orario.
+          </div>
+        </div>
+        <button onclick="chiudiModalGuidaTurni()" title="Chiudi" style="background:rgba(255,255,255,0.08); border:none; border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; color:#cbd5e1; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#fca5a5';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#cbd5e1';">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px; font-size:13.5px; color:#cbd5e1; line-height:1.55;">
+        
+        <!-- CARD METODO 1: AUTOMATICO IN 1 CLIC CON IA -->
+        <div style="background:rgba(14,165,233,0.08); border:1.5px solid rgba(56,189,248,0.3); border-radius:14px; padding:16px;">
+          <div style="display:flex; align-items:center; gap:8px; font-weight:900; font-size:16px; color:#38bdf8; margin-bottom:8px;">
+            <span>✨</span> <span>Metodo 1: Generazione Automatica in 1 Clic (Consigliato)</span>
+          </div>
+          <p style="margin:0 0 10px 0;">Ideale per generare l'intera settimana all'istante rispettando i modelli ospedalieri e le ore contrattuali:</p>
+          <ol style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+            <li>Clicca sul pulsante azzurro in alto <b>"⚡ Sviluppa Combinazione AI"</b>.</li>
+            <li>Scegli la rotazione desiderata (es. <b>Ciclo Ospedaliero SSN P-M-N-S-R</b>, <b>Ciclo Tradizionale</b> o <b>Misto CareAssist</b>).</li>
+            <li>Clicca su <b>"Applica Combinazione"</b>: l'algoritmo distribuisce e sfalsa automaticamente i turni coprendo Mattine, Pomeriggi e Notti senza buchi di assistenza e rispettando le 11h di riposo consecutivo.</li>
+          </ol>
+        </div>
+
+        <!-- CARD METODO 2: MANUALE CELLA PER CELLA -->
+        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.12); border-radius:14px; padding:16px;">
+          <div style="display:flex; align-items:center; gap:8px; font-weight:900; font-size:16px; color:#f8fafc; margin-bottom:8px;">
+            <span>👆</span> <span>Metodo 2: Assegnazione o Modifica Manuale (Cella per Cella)</span>
+          </div>
+          <p style="margin:0 0 10px 0;">Per modificare un singolo turno o fare sostituzioni personalizzate:</p>
+          <ol style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+            <li><b>Tocca o clicca direttamente sulla cella</b> del giorno e dell'operatore desiderato nella tabella.</li>
+            <li>Dal menu a comparsa, seleziona il turno con un tocco:
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+                <span style="background:rgba(16,185,129,0.15); color:#6ee7b7; border:1px solid rgba(16,185,129,0.3); border-radius:6px; padding:3px 8px; font-weight:700; font-size:12px;">☀️ M = Mattina (07-14 • 7h)</span>
+                <span style="background:rgba(245,158,11,0.15); color:#fcd34d; border:1px solid rgba(245,158,11,0.3); border-radius:6px; padding:3px 8px; font-weight:700; font-size:12px;">🌤️ P = Pomeriggio (14-21 • 7h)</span>
+                <span style="background:rgba(99,102,241,0.15); color:#c7d2fe; border:1px solid rgba(99,102,241,0.3); border-radius:6px; padding:3px 8px; font-weight:700; font-size:12px;">🌙 N = Notte (21-07 • 10h)</span>
+                <span style="background:rgba(254,243,199,0.15); color:#fde68a; border:1px solid rgba(254,243,199,0.3); border-radius:6px; padding:3px 8px; font-weight:700; font-size:12px;">🛌 S = Smonto Notte (0h)</span>
+                <span style="background:rgba(148,163,184,0.15); color:#e2e8f0; border:1px solid rgba(148,163,184,0.3); border-radius:6px; padding:3px 8px; font-weight:700; font-size:12px;">☕ R = Riposo Legge (0h)</span>
+                <span style="background:rgba(168,85,247,0.15); color:#f3e8ff; border:1px solid rgba(168,85,247,0.3); border-radius:6px; padding:3px 8px; font-weight:700; font-size:12px;">🦺 D = Reperibilità (0h)</span>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <!-- REGOLE DI CONFORMITÀ SANITARIA -->
+        <div style="background:rgba(16,185,129,0.06); border:1.5px solid rgba(16,185,129,0.3); border-radius:14px; padding:16px;">
+          <div style="font-weight:900; font-size:15px; color:#34d399; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+            <span>⚖️</span> <span>Regole di Conformità Sanitaria (D.Lgs. 66/2003 & CCNL)</span>
+          </div>
+          <ul style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:5px;">
+            <li><b>Smonto post-notte obbligatorio:</b> chi conclude una notte (21–07) il giorno seguente deve fare <b>Smonto (S)</b> per recupero biologico.</li>
+            <li><b>Totale Ore in Tempo Reale:</b> l'ultima colonna a destra calcola in tempo reale le ore svolte, segnalando se l'operatore è allineato al suo contratto (es. 36h o 38h).</li>
+            <li><b>Condivisione Immediata:</b> completati i turni, clicca su <b>"🖨️ Stampa A4"</b> per il prospetto cartaceo o <b>"📲 Invia WhatsApp"</b> per trasmetterlo all'équipe.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.1);">
+        <button class="btn btn-sky" onclick="chiudiModalGuidaTurni()" style="font-size:14px; font-weight:800; padding:10px 22px; border-radius:10px;">
+          Ho Capito, Chiudi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GUIDA OPERATIVA: COME SI SVILUPPA E COME INSERIRE LA REPERIBILITÀ -->
+  <div id="modal-guida-reperibilita" class="modal-backdrop">
+    <div class="modal-box" style="max-width:660px; width:95%; max-height:90vh; overflow-y:auto; background:linear-gradient(180deg, #18152e 0%, #0d0f1e 100%); border:1.5px solid rgba(168,85,247,0.35); border-radius:18px; padding:24px 26px; box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(168,85,247,0.18);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; position:sticky; top:0; background:rgba(18,16,34,0.96); backdrop-filter:blur(10px); padding-bottom:12px; z-index:2; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div>
+          <div style="font-weight:900; font-size:20px; display:flex; align-items:center; gap:9px; color:#ffffff;">
+            <span style="font-size:24px;">🦺</span>
+            <span>Come Funziona & Come Inserire la Reperibilità</span>
+          </div>
+          <div style="font-size:12.5px; color:#cbd5e1; margin-top:3px; font-weight:500;">
+            Come si calcola la disponibilità, come inserirla e come funzionano le coperture di emergenza.
+          </div>
+        </div>
+        <button onclick="chiudiModalGuidaReperibilita()" title="Chiudi" style="background:rgba(255,255,255,0.08); border:none; border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; color:#cbd5e1; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#fca5a5';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#cbd5e1';">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px; font-size:13.5px; color:#cbd5e1; line-height:1.55;">
+        
+        <!-- COS'È LA REPERIBILITÀ -->
+        <div style="background:rgba(168,85,247,0.1); border:1.5px solid rgba(168,85,247,0.3); border-radius:14px; padding:16px;">
+          <div style="font-weight:900; font-size:16px; color:#e9d5ff; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+            <span>💡</span> <span>Cos'è la Reperibilità (Sigla D)?</span>
+          </div>
+          <p style="margin:0 0 8px 0;">
+            La <b>Reperibilità (D)</b> indica la <i>pronta disponibilità telefonica fiduciaria</i>: l'operatore non è fisicamente in turno programmato, ma è reperibile per intervenire d'urgenza in caso di improvvisa assenza di un collega o emergenza dell'assistito.
+          </p>
+          <div style="font-size:12.5px; color:#c084fc; font-weight:700;">
+            ⏱️ Nel monte ore settimanale vale <b>0 ore fisse</b> (da CCNL è remunerata con indennità forfettaria di disponibilità; solo in caso di chiamata attiva le ore prestate si trasformano in lavoro effettivo).
+          </div>
+        </div>
+
+        <!-- COME INSERIRLA: 2 METODI SEMPLICI -->
+        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.12); border-radius:14px; padding:16px;">
+          <div style="font-weight:900; font-size:16px; color:#ffffff; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
+            <span>🛠️</span> <span>Come Inserire la Reperibilità (2 Modi):</span>
+          </div>
+          
+          <div style="margin-bottom:12px;">
+            <div style="font-weight:800; color:#38bdf8; margin-bottom:4px;">1. Inserimento Manuale Diretto (Cella per Cella):</div>
+            <div style="padding-left:14px;">
+              Tocca qualsiasi cella del giorno libero dell'operatore nella tabella e seleziona <b>🦺 D = Reperibilità / Jolly</b>. La casella si colorerà di lilla e l'operatore comparirà all'istante nel piano reperibilità giornaliero.
+            </div>
+          </div>
+
+          <div>
+            <div style="font-weight:800; color:#a855f7; margin-bottom:4px;">2. Assegnazione Automatica con IA:</div>
+            <div style="padding-left:14px;">
+              Nella scheda del collaboratore (tasto ✏️), lascia attiva la spunta <b>"🚨 Disponibile per Reperibilità & Emergenze"</b>. Quando premi <b>"⚡ Sviluppa Combinazione AI"</b>, l'algoritmo distribuisce automaticamente la sigla <b>D</b> nei giorni cuscinetto compatibili con il riposo di legge.
+            </div>
+          </div>
+        </div>
+
+        <!-- REPERIBILITÀ DI EMERGENZA DEL COORDINATORE -->
+        <div style="background:rgba(217,119,6,0.08); border:1.5px solid rgba(245,158,11,0.3); border-radius:14px; padding:16px;">
+          <div style="font-weight:900; font-size:15px; color:#fbbf24; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+            <span>🛡️</span> <span>Copertura di Emergenza Sempre Garantita</span>
+          </div>
+          <p style="margin:0 0 6px 0;">
+            Se in un determinato giorno nessun collaboratore è assegnato alla sigla <b>D</b>, il sistema attiva automaticamente come referente di emergenza l'<b>Admin Coordinatore Ciro Milella (📞 366 460 7396)</b>.
+          </p>
+          <div style="font-size:12px; color:#fde68a;">
+            📞 <b>Chiamata con 1 tocco:</b> Sia nell'agenda che nel box inferiore, basta cliccare sul numero telefonico dell'operatore reperibile per chiamarlo o scrivergli via WhatsApp.
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.1);">
+        <button class="btn btn-sky" onclick="chiudiModalGuidaReperibilita()" style="background:#7e22ce; border-color:#9333ea; font-size:14px; font-weight:800; padding:10px 22px; border-radius:10px;">
+          Ho Capito, Chiudi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ELEGANTE SBLOCCO PIN ADMIN (ZERO PROMPT DEL BROWSER) -->
+  <div id="modal-pin-admin" class="modal-backdrop">
+    <div class="modal-box" style="max-width:400px; text-align:center;">
+      <div style="font-size:38px; margin-bottom:8px;">👑</div>
+      <div style="font-size:18px; font-weight:900; margin-bottom:6px;">Accesso Coordinatore Admin</div>
+      <div style="font-size:12.5px; color:var(--text-muted); margin-bottom:18px; line-height:1.45;">
+        Inserisci il PIN Master di sicurezza per sbloccare i privilegi di modifica e assegnazione turni:
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <input type="password" id="input-pin-master-admin" placeholder="PIN di Sicurezza" style="width:100%; text-align:center; letter-spacing:4px; font-size:18px; font-weight:900; background:rgba(255,255,255,0.06); border:1.5px solid rgba(56,189,248,0.4); border-radius:12px; padding:12px; color:#fff; outline:none;" onkeyup="if(event.key==='Enter') confermaSbloccoPinAdmin()">
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:10px;">
+        <button class="btn btn-ghost" onclick="chiudiModalPinAdmin()">Annulla</button>
+        <button class="btn btn-sky" onclick="confermaSbloccoPinAdmin()">
+          🔑 Sblocca Accesso
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ELEGANT TOAST NOTIFIER -->
+  
+  <!-- MODAL 1: BACKUP E SINCRONIZZAZIONE USB (WEB <-> USB) -->
+  <div id="modal-sincro-usb" class="modal-backdrop">
+    <div class="modal-box" style="max-width:720px; width:95%;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="font-size:26px;">💾</div>
+          <div>
+            <div style="font-size:19px; font-weight:900; color:#f8fafc;">Backup & Sincronizzazione Chiavetta USB</div>
+            <div style="font-size:12.5px; color:#94a3b8;">Proteggi i tuoi dati e sincronizza il Turnario e l'intera Suite Milella con la tua chiavetta USB</div>
+          </div>
+        </div>
+        <button class="modal-close" onclick="chiudiModalSincroUSB()" style="font-size:22px; cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:20px;">
+        <!-- CARD 1: SALVA COPIA SU USB -->
+        <div style="background:rgba(56,189,248,0.06); border:1.5px solid rgba(56,189,248,0.3); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <span style="font-size:22px;">💾</span>
+              <span style="font-size:15px; font-weight:800; color:#38bdf8;">1. Salva Copia di Sicurezza su USB</span>
+            </div>
+            <p style="font-size:13px; color:#cbd5e1; line-height:1.5; margin-bottom:14px;">
+              Genera una copia di backup completa (Turnario, Collaboratori, Progetti, Inventario, Parametri e Note CareAssist). Puoi salvarla direttamente sulla tua chiavetta USB collegata al PC.
+            </p>
+          </div>
+          <div>
+            <button class="btn btn-sky" onclick="avviaBackupSicurezzaUSB()" style="width:100%; font-weight:800; font-size:13.5px; padding:12px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
+              <span>💾</span> Salva su Chiavetta USB
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 2: SINCRONIZZA DA USB -->
+        <div style="background:rgba(16,185,129,0.06); border:1.5px solid rgba(16,185,129,0.3); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <span style="font-size:22px;">🔄</span>
+              <span style="font-size:15px; font-weight:800; color:#34d399;">2. Sincronizza Dati da USB al Web</span>
+            </div>
+            <p style="font-size:13px; color:#cbd5e1; line-height:1.5; margin-bottom:14px;">
+              Hai apportato modifiche offline o salvato un backup su chiavetta? Seleziona il file dalla chiavetta per aggiornare istantaneamente il turnario e il database cloud.
+            </p>
+          </div>
+          <div>
+            <input type="file" id="input-file-backup-usb" accept=".json" style="display:none;" onchange="gestisciFileCaricatoUSB(this)">
+            <button class="btn btn-emerald" onclick="document.getElementById('input-file-backup-usb').click()" style="width:100%; font-weight:800; font-size:13.5px; padding:12px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
+              <span>📂</span> Scegli File da USB & Sincronizza
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:10px; padding:12px 16px; font-size:12.5px; color:#fde68a; display:flex; align-items:center; gap:10px;">
+        <span style="font-size:18px;">💡</span>
+        <span><b>Consiglio di sicurezza:</b> Tieni sempre inserita la tua chiavetta USB ed esegui un salvataggio prima e dopo ogni modifica settimanale ai turni.</span>
+      </div>
+
+      <div style="text-align:right; margin-top:16px;">
+        <button class="btn btn-ghost" onclick="chiudiModalSincroUSB()" style="padding:9px 20px; font-weight:700;">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: BILANCIO ORE MENSILE & BANCA ORE -->
+  <div id="modal-bilancio-mensile" class="modal-backdrop">
+    <div class="modal-box" style="max-width:850px; width:95%;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="font-size:26px;">📊</div>
+          <div>
+            <div style="font-size:19px; font-weight:900; color:#f8fafc;">Bilancio Ore & Statistiche Operatori</div>
+            <div style="font-size:12.5px; color:#94a3b8;">Verifica straordinari, banca ore, notti e rispetto CCNL 36h/38h</div>
+          </div>
+        </div>
+        <button class="modal-close" onclick="chiudiModalBilancioMensile()" style="font-size:22px; cursor:pointer;">&times;</button>
+      </div>
+
+      <div id="contenitore-tabella-bilancio" style="overflow-x:auto; margin-bottom:16px;">
+        <!-- Tabella generata dinamicamente via JS -->
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="font-size:12px; color:#94a3b8;">
+          * CCNL Sanità: turno M/P = 7h &bull; Notte N = 10h &bull; S = Smonto &bull; R = Riposo &bull; D = Reperibilità
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-ghost" onclick="chiudiModalBilancioMensile()">Chiudi</button>
+          <button class="btn btn-emerald" onclick="window.print()">🖨️ Stampa Riepilogo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CONSEGNE CLINICHE H24 (HANDOVER) -->
+  <div id="modal-consegne-cliniche" class="modal-backdrop">
+    <div class="modal-box" style="max-width:760px; width:95%;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="font-size:26px;">📝</div>
+          <div>
+            <div style="font-size:19px; font-weight:900; color:#f8fafc;">Diario Consegne Cliniche di Turno (H24)</div>
+            <div style="font-size:12.5px; color:#94a3b8;">Passaggio consegne tra operatori smontanti e montanti &bull; Paziente Sig. Ciro Milella</div>
+          </div>
+        </div>
+        <button class="modal-close" onclick="chiudiModalConsegneCliniche()" style="font-size:22px; cursor:pointer;">&times;</button>
+      </div>
+
+      <!-- FORM NUOVA CONSEGNA -->
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:16px; margin-bottom:20px;">
+        <div style="font-size:14px; font-weight:800; color:#38bdf8; margin-bottom:10px;">✍️ Registra Nuova Consegna di Turno</div>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:12px;">
+          <div>
+            <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">Fascia di Turno</label>
+            <select id="consegna-fascia" style="width:100%; background:#0b1324; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 10px; color:#fff; font-size:13px;">
+              <option value="M">☀️ Mattina (07:00 - 14:00)</option>
+              <option value="P" selected>🌤️ Pomeriggio (14:00 - 21:00)</option>
+              <option value="N">🌙 Notte (21:00 - 07:00)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">Operatore Smontante</label>
+            <input type="text" id="consegna-operatore" placeholder="Nome Operatore" value="M.C. Stoppelli" style="width:100%; background:#0b1324; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 10px; color:#fff; font-size:13px;">
+          </div>
+          <div>
+            <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">Parametri Rilevati (PA / SpO2 / FC)</label>
+            <input type="text" id="consegna-parametri" placeholder="es. PA 120/80, SpO2 98%" style="width:100%; background:#0b1324; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 10px; color:#fff; font-size:13px;">
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">Note Cliniche, Terapie Somministrate e Raccomandazioni</label>
+          <textarea id="consegna-note" rows="3" placeholder="Scrivi gli eventi importanti, la condizione dell'assistito, orari pasti e terapie somministrate..." style="width:100%; background:#0b1324; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px; color:#fff; font-size:13px; resize:vertical; outline:none;"></textarea>
+        </div>
+
+        <div style="text-align:right;">
+          <button class="btn btn-emerald" onclick="salvaNuovaConsegnaDaModal()" style="font-size:13px; padding:8px 18px; font-weight:800;">
+            💾 Salva Consegna
+          </button>
+        </div>
+      </div>
+
+      <!-- STORICO RECENTE CONSEGNE -->
+      <div style="font-size:14px; font-weight:800; color:#f8fafc; margin-bottom:10px;">📋 Ultime Consegne Registrate:</div>
+      <div id="storico-consegne-cliniche" style="max-height:260px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+        <!-- Elementi inseriti via JS -->
+      </div>
+
+      <div style="text-align:right; margin-top:16px;">
+        <button class="btn btn-ghost" onclick="chiudiModalConsegneCliniche()">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: ESPORTAZIONE ICAL (.ICS) -->
+  <div id="modal-esporta-ical" class="modal-backdrop">
+    <div class="modal-box" style="max-width:540px; width:95%; text-align:center;">
+      <div style="font-size:38px; margin-bottom:8px;">📅</div>
+      <div style="font-size:19px; font-weight:900; color:#f8fafc; margin-bottom:6px;">Esporta Calendario Turni (.ics)</div>
+      <div style="font-size:13px; color:#94a3b8; margin-bottom:20px; line-height:1.45;">
+        Scarica il file standard iCalendar compatibile con Google Calendar, Apple Calendar (iPhone/iPad/Mac) e Microsoft Outlook con promemoria automatici.
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <button class="btn btn-sky" onclick="window.esportaCalendarioICS(); chiudiModalEsportaICal();" style="font-weight:800; font-size:14px; padding:12px; border-radius:10px;">
+          📅 Scarica Calendario Completo (Tutti i Turni)
+        </button>
+        
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px; text-align:left;">
+          <label style="font-size:12px; font-weight:700; color:#cbd5e1; display:block; margin-bottom:6px;">Oppure scarica solo per un collaboratore:</label>
+          <div style="display:flex; gap:8px;">
+            <select id="select-op-ical" style="flex:1; background:#0b1324; border:1px solid rgba(255,255,255,0.18); border-radius:8px; padding:8px 10px; color:#fff; font-size:13px;">
+              <!-- Popolato via JS -->
+            </select>
+            <button class="btn btn-emerald" onclick="esportaICalSingoloOperatore()" style="font-size:13px; padding:8px 14px; font-weight:700;">
+              Scarica
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button class="btn btn-ghost" onclick="chiudiModalEsportaICal()">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="elegant-toast">
+    <span id="elegant-toast-icon">✨</span>
+    <span id="elegant-toast-msg">Notifica</span>
+  </div>
+
+  <script src="/careassist/turnario_admin.js?v=3"></script>
+  <script src="/suite_nav.js" defer></script>
+  <script>
+    let activeCellTarget = null;
+    let currentViewMode = 'matrix';
+    let _ultimoNumeroSelezionato = '';
+
+    function mostraToast(msg, icon = '✨') {
+      const t = document.getElementById('elegant-toast');
+      const mi = document.getElementById('elegant-toast-icon');
+      const mm = document.getElementById('elegant-toast-msg');
+      if (!t) return;
+      if (mi) mi.textContent = icon;
+      if (mm) mm.textContent = msg;
+      t.style.display = 'flex';
+      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
+    // GESTORE CHIAMATE SENZA TRIGGERARE "SCEGLI UN'APP" SU WINDOWS
+    function gestisciChiamata(numero, label) {
+      _ultimoNumeroSelezionato = numero;
+      const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = `tel:${numero}`;
+      } else {
+        // Su Desktop apriamo un modal pulito senza far scattare il prompt di Windows
+        const modal = document.getElementById('modal-smart-dial');
+        const tit = document.getElementById('dial-modal-title');
+        const num = document.getElementById('dial-modal-number');
+        if (tit) tit.textContent = label || 'Contatto Telefonico';
+        if (num) num.textContent = numero;
+        if (modal) modal.style.display = 'flex';
+      }
+    }
+
+    function chiudiModalDial() {
+      const modal = document.getElementById('modal-smart-dial');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function copiaNumeroChiamata() {
+      if (_ultimoNumeroSelezionato) {
+        navigator.clipboard.writeText(_ultimoNumeroSelezionato).then(() => {
+          chiudiModalDial();
+          mostraToast(`Numero ${_ultimoNumeroSelezionato} copiato negli appunti!`, '📋');
+        }).catch(() => {
+          chiudiModalDial();
+          mostraToast(`Numero: ${_ultimoNumeroSelezionato}`, '📞');
+        });
+      }
+    }
+
+    function apriChatWhatsApp(tel, nome) {
+      const telClean = (tel || '').replace(/\D/g, '');
+      const url = `https://wa.me/39${telClean}?text=${encodeURIComponent(`Ciao ${nome}, ti contatto per il coordinamento del servizio di assistenza CareAssist.`)}`;
+      window.open(url, '_blank');
+    }
+
+    function verificaRuoloAdmin() {
+      const isAdmin = window.isUtenteAdmin ? window.isUtenteAdmin() : true;
+      const roleCont = document.getElementById('user-role-container');
+      const collBanner = document.getElementById('collaboratore-banner');
+      const adminActions = document.getElementById('admin-actions-box');
+      const hintEdit = document.getElementById('hint-click-edit');
+
+      if (roleCont) {
+        roleCont.innerHTML = isAdmin ? `
+          <div class="role-badge role-admin" style="display:inline-flex; align-items:center; gap:8px;">
+            <img src="/assets/img/cm_shield_badge.png" alt="Ciro Milella" style="width:20px; height:20px; border-radius:50%; object-fit:cover; border:1px solid #d4af37; box-shadow:0 0 6px rgba(212,175,55,0.4);" onerror="this.onerror=null; this.src='/careassist/assets/img/cm_shield_badge.png';">
+            <span>Admin Coordinatore (Ciro Milella)</span>
+          </div>
+        ` : `
+          <div class="role-badge role-collaboratore">
+            <span>🔒</span> <span>Collaboratore (Sola Lettura)</span>
+          </div>
+        `;
+      }
+
+      if (collBanner) collBanner.style.display = isAdmin ? 'none' : 'flex';
+      if (adminActions) adminActions.style.display = isAdmin ? 'flex' : 'none';
+      if (hintEdit) {
+        hintEdit.innerHTML = isAdmin 
+          ? '💡 <b>Pannello Admin:</b> tocca qualsiasi cella per assegnare o modificare il turno'
+          : '🔒 <b>Sola Lettura:</b> i turni sono stabiliti e assegnati esclusivamente dall\'Admin Coordinatore';
+      }
+    }
+
+    function cambiaVista(mode) {
+      currentViewMode = mode;
+      document.getElementById('btn-view-matrix').classList.toggle('active', mode === 'matrix');
+      document.getElementById('btn-view-cards').classList.toggle('active', mode === 'cards');
+      document.getElementById('btn-view-agenda').classList.toggle('active', mode === 'agenda');
+
+      document.getElementById('view-matrix').style.display = (mode === 'matrix') ? 'block' : 'none';
+      document.getElementById('view-cards').style.display = (mode === 'cards') ? 'grid' : 'none';
+      document.getElementById('view-agenda').style.display = (mode === 'agenda') ? 'flex' : 'none';
+
+      renderViste();
+    }
+
+    function renderViste() {
+      verificaRuoloAdmin();
+      const isAdmin = window.isUtenteAdmin ? window.isUtenteAdmin() : true;
+      const data = window.caricaDatiTurnario ? window.caricaDatiTurnario() : null;
+      if (!data) return;
+
+      const lun = window.parseDateYMD ? window.parseDateYMD(data.settimanaInizio) : new Date(data.settimanaInizio + 'T00:00:00');
+      const dom = new Date(lun);
+      dom.setDate(lun.getDate() + 6);
+
+      const lblExt = document.getElementById('label-settimana-estesa');
+      const lblNum = document.getElementById('label-settimana-numero');
+      if (lblExt) {
+        lblExt.textContent = `${lun.toLocaleDateString('it-IT', { day:'2-digit', month:'short' })} – ${dom.toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' })}`;
+      }
+      if (lblNum) {
+        const dForWeek = new Date(Date.UTC(lun.getFullYear(), lun.getMonth(), lun.getDate()));
+        dForWeek.setUTCDate(dForWeek.getUTCDate() + 4 - (dForWeek.getUTCDay() || 7));
+        const yearStart = new Date(Date.UTC(dForWeek.getUTCFullYear(), 0, 1));
+        const weekNo = Math.ceil((((dForWeek - yearStart) / 86400000) + 1) / 7);
+        lblNum.textContent = `Settimana ${weekNo} • Copertura H24`;
+      }
+
+      const giorni = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'];
+      const nomiGiorni = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+
+      giorni.forEach((g, i) => {
+        const cur = new Date(lun);
+        cur.setDate(lun.getDate() + i);
+        const thDate = document.getElementById(`col-date-${g}`);
+        if (thDate) thDate.textContent = `${cur.getDate()}/${cur.getMonth() + 1}`;
+      });
+
+      const ops = data.operatori || [];
+      document.getElementById('kpi-tot-ops').textContent = ops.length;
+
+      // 1. RENDER MATRICE TABELLARE
+      const tbody = document.getElementById('roster-tbody');
+      if (tbody) {
+        let htmlMatrice = '';
+        ops.forEach(op => {
+          const riga = data.griglia[op.id] || {};
+          let oreTot = 0;
+          let giorniDisp = 0;
+
+          const regInfo = (window.REGIMI_ORARI_INFO && window.REGIMI_ORARI_INFO[op.condizioneOrario]) || {
+            nome: op.regimeOrario === 'part_time' ? 'Part Time' : 'Full Time',
+            ore: op.oreContrattuali || (op.regimeOrario === 'part_time' ? 20 : 36),
+            badge: op.regimeOrario === 'part_time' ? `PT ${op.oreContrattuali || 20}h` : `FT ${op.oreContrattuali || 36}h`,
+            bg: op.regimeOrario === 'part_time' ? 'rgba(251,146,60,0.18)' : 'rgba(56,189,248,0.18)',
+            color: op.regimeOrario === 'part_time' ? '#fb923c' : '#38bdf8'
+          };
+          const badgeRegime = `<span class="op-badge-pill" style="background:${regInfo.bg}; color:${regInfo.color}; border:1px solid ${regInfo.color}40;" title="${regInfo.nome} (${regInfo.ore}h settimanali)">${regInfo.badge}</span>`;
+
+          let badgeProfilo = '';
+          if (op.profilo === 'infermiere_ssn') {
+            badgeProfilo = '<span class="op-badge-pill" style="background:rgba(56,189,248,0.2); color:#38bdf8;">🩺 Infermiere SSN</span>';
+          } else if (op.profilo === 'misto_pn') {
+            badgeProfilo = '<span class="op-badge-pill" style="background:rgba(245,158,11,0.2); color:#fcd34d;">🌙 Pom/Notte + Disp.</span>';
+          } else if (op.profilo === 'diurno') {
+            badgeProfilo = '<span class="op-badge-pill" style="background:rgba(16,185,129,0.2); color:#6ee7b7;">☀️ Diurno</span>';
+          } else {
+            badgeProfilo = '<span class="op-badge-pill" style="background:rgba(99,102,241,0.2); color:#c7d2fe;">⭐ Full H24</span>';
+          }
+
+          const dispLabel = op.disponibileCoperture ? '<span title="Reperibile per emergenze" style="font-size:12px; cursor:help;">🦺</span>' : '';
+          const opIniziali = op.nome.split(' ').map(n => n[0]).slice(0, 2).join('');
+
+          let celle = '';
+          giorni.forEach(g => {
+            const t = riga[g] || 'R';
+            const info = window.TURNI_INFO ? (window.TURNI_INFO[t] || window.TURNI_INFO['R']) : { nome: t, ore: 0 };
+            oreTot += info.ore;
+            if (t === 'D') giorniDisp++;
+
+            const chipClass = `chip-${t.toLowerCase()}`;
+            const isInteractive = isAdmin ? 'interactive' : 'readonly';
+
+            celle += `
+              <td>
+                <div class="shift-chip ${chipClass} ${isInteractive}" 
+                     onclick="${isAdmin ? `apriSelettoreTurnoCella('${op.id}', '${op.nome.replace(/'/g, "\\'")}', '${g}')` : ''}"
+                     title="${info.nome} (${info.orario})${isAdmin ? ' - Clicca per cambiare' : ''}">
+                  <span class="shift-letter">${t}</span>
+                  <span class="shift-sub">${info.ore > 0 ? info.ore + 'h' : (t === 'D' ? 'DISP' : (t === 'S' || t === 'SN' ? 'SMONT' : 'LIB'))}</span>
+                </div>
+              </td>
+            `;
+          });
+
+          const oreTarget = regInfo.ore || 36;
+          const delta = oreTot - oreTarget;
+          let targetBadge = '';
+          if (oreTot === 0) {
+            targetBadge = `<div style="font-size:10px; color:#94a3b8; font-weight:700;">Riposo sett.</div>`;
+          } else if (delta === 0) {
+            targetBadge = `<div style="font-size:10px; color:#34d399; font-weight:800;">✓ In target (${oreTarget}h)</div>`;
+          } else if (delta > 0) {
+            targetBadge = `<div style="font-size:10px; color:#38bdf8; font-weight:800;">+${delta}h credito</div>`;
+          } else {
+            targetBadge = `<div style="font-size:10px; color:#fb923c; font-weight:800;">${delta}h debito</div>`;
+          }
+          const oreColor = (delta >= 0) ? '#34d399' : (oreTot > 0 ? '#38bdf8' : '#94a3b8');
+
+          const isCiro = op.nome && op.nome.toLowerCase().includes('ciro');
+          const avatarMarkup = isCiro
+            ? `<div class="op-avatar" style="padding:0; overflow:hidden; border:1.5px solid #d4af37; background:#0b1120;"><img src="/assets/img/cm_shield_badge.png" alt="${op.nome}" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='/careassist/assets/img/cm_shield_badge.png';"></div>`
+            : `<div class="op-avatar">${opIniziali}</div>`;
+
+          htmlMatrice += `
+            <tr>
+              <td class="td-op">
+                <div class="op-meta-box">
+                  ${avatarMarkup}
+                  <div style="flex:1; min-width:0;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                      <div class="op-name" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${op.nome}</div>
+                      ${isAdmin ? `<button class="btn-icon-edit" onclick="apriModalModificaOperatore('${op.id}')" title="Modifica dati collaboratore">✏️</button>` : ''}
+                    </div>
+                    <div class="op-role">${op.ruolo} &bull; 📞 ${op.tel}</div>
+                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:3px;">
+                      ${badgeRegime}
+                      ${badgeProfilo}
+                      ${dispLabel}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              ${celle}
+              <td>
+                <div style="font-weight:900; font-size:14.5px; color:${oreColor};">
+                  ${oreTot}h <span style="font-size:11px; opacity:0.8; font-weight:700; color:#94a3b8;">/ ${oreTarget}h</span>
+                </div>
+                ${targetBadge}
+                ${giorniDisp > 0 ? `<div style="font-size:10px; color:#c084fc; font-weight:700; margin-top:2px;">+${giorniDisp} Disp.</div>` : ''}
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = htmlMatrice;
+      }
+
+      // 2. RENDER SCHEDE PERSONALI
+      const cardsBox = document.getElementById('view-cards');
+      if (cardsBox) {
+        let htmlCards = '';
+        ops.forEach(op => {
+          const riga = data.griglia[op.id] || {};
+          let oreTot = 0;
+          let miniChips = '';
+
+          const regInfo = (window.REGIMI_ORARI_INFO && window.REGIMI_ORARI_INFO[op.condizioneOrario]) || {
+            nome: op.regimeOrario === 'part_time' ? 'Part Time' : 'Full Time',
+            ore: op.oreContrattuali || (op.regimeOrario === 'part_time' ? 20 : 36),
+            badge: op.regimeOrario === 'part_time' ? `PT ${op.oreContrattuali || 20}h` : `FT ${op.oreContrattuali || 36}h`,
+            bg: op.regimeOrario === 'part_time' ? 'rgba(251,146,60,0.18)' : 'rgba(56,189,248,0.18)',
+            color: op.regimeOrario === 'part_time' ? '#fb923c' : '#38bdf8'
+          };
+
+          giorni.forEach((g) => {
+            const t = riga[g] || 'R';
+            const info = window.TURNI_INFO ? (window.TURNI_INFO[t] || window.TURNI_INFO['R']) : { ore: 0 };
+            oreTot += info.ore;
+            const chipClass = `chip-${t.toLowerCase()}`;
+
+            miniChips += `
+              <div class="mini-day-box">
+                <div class="mini-day-name">${g.toUpperCase()}</div>
+                <div class="shift-chip ${chipClass}" style="min-width:auto; min-height:36px; padding:4px;">
+                  <span style="font-weight:900; font-size:12px;">${t}</span>
+                </div>
+              </div>
+            `;
+          });
+
+          const opIniziali = op.nome.split(' ').map(n => n[0]).slice(0, 2).join('');
+          const oreTarget = regInfo.ore || 36;
+          const delta = oreTot - oreTarget;
+
+          const isCiroCard = op.nome && op.nome.toLowerCase().includes('ciro');
+          const cardAvatarMarkup = isCiroCard
+            ? `<div class="op-avatar" style="padding:0; overflow:hidden; border:1.5px solid #d4af37; background:#0b1120;"><img src="/assets/img/cm_shield_badge.png" alt="${op.nome}" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='/careassist/assets/img/cm_shield_badge.png';"></div>`
+            : `<div class="op-avatar">${opIniziali}</div>`;
+
+          htmlCards += `
+            <div class="op-card">
+              <div class="op-card-header">
+                <div class="op-card-profile">
+                  ${cardAvatarMarkup}
+                  <div>
+                    <div style="font-weight:800; font-size:15px; color:#ffffff;">${op.nome}</div>
+                    <div style="font-size:12px; color:var(--text-muted);">${op.ruolo} &bull; <span style="color:${regInfo.color}; font-weight:700;">${regInfo.badge}</span></div>
+                  </div>
+                </div>
+                <div class="op-card-actions">
+                  ${isAdmin ? `<button class="btn-icon-action" onclick="apriModalModificaOperatore('${op.id}')" title="Modifica dati collaboratore">✏️</button>` : ''}
+                  <button class="btn-icon-action btn-icon-wa" onclick="window.notificaTurnoWhatsApp ? window.notificaTurnoWhatsApp('${op.id}') : apriChatWhatsApp('${op.tel}', '${op.nome}')" title="Invia Prospetto Turni su WhatsApp">📲</button>
+                  <button class="btn-icon-action" onclick="window.esportaCalendarioICS && window.esportaCalendarioICS('${op.id}')" title="Scarica Calendario iCal (.ics)">📅</button>
+                  <button class="btn-icon-action btn-icon-tel" onclick="gestisciChiamata('${op.tel}', '${op.nome}')" title="Chiama">📞</button>
+                </div>
+              </div>
+
+              <div class="week-chips-row">
+                ${miniChips}
+              </div>
+
+              <div class="op-card-footer">
+                <div>
+                  <span style="color:var(--text-muted);">Ore Settimanali:</span>
+                  <b style="color:var(--cyan-light); font-size:14px; margin-left:4px;">${oreTot}h</b> / ${oreTarget}h
+                  <span style="font-size:11px; margin-left:6px; color:${regInfo.color}; font-weight:800;">(${regInfo.badge})</span>
+                </div>
+                <div style="font-size:11.5px; color:${delta >= 0 ? '#34d399' : '#fb923c'}; font-weight:700;">
+                  ${delta === 0 ? '✓ In target' : (delta > 0 ? `+${delta}h credito` : `${delta}h debito`)}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        cardsBox.innerHTML = htmlCards;
+      }
+
+      // 3. RENDER AGENDA CONSEGNE GIORNALIERA
+      const agendaBox = document.getElementById('view-agenda');
+      if (agendaBox) {
+        let htmlAgenda = '';
+        giorni.forEach((g, idx) => {
+          const cur = new Date(lun);
+          cur.setDate(lun.getDate() + idx);
+          const dataStr = cur.toLocaleDateString('it-IT', { day: '2-digit', month: 'long' });
+
+          const opsM = [];
+          const opsP = [];
+          const opsN = [];
+          const opsD = [];
+
+          ops.forEach(op => {
+            const t = (data.griglia[op.id] && data.griglia[op.id][g]) || 'R';
+            if (t === 'M') opsM.push(op.nome);
+            if (t === 'P') opsP.push(op.nome);
+            if (t === 'N') opsN.push(op.nome);
+            if (t === 'D') opsD.push(op.nome);
+          });
+
+          htmlAgenda += `
+            <div class="agenda-day-card">
+              <div class="agenda-day-header">
+                <div style="font-size:15px; font-weight:900; color:#ffffff; display:flex; align-items:center; gap:8px;">
+                  <span style="color:var(--cyan-light);">📅</span> <span>${nomiGiorni[idx]}</span>
+                  <span style="font-size:12.5px; color:var(--text-muted); font-weight:600;">(${dataStr})</span>
+                </div>
+                <div style="font-size:11px; background:rgba(56,189,248,0.15); color:var(--cyan-light); padding:3px 10px; border-radius:9999px; font-weight:700;">
+                  Copertura H24
+                </div>
+              </div>
+
+              <div class="agenda-shifts-grid">
+                <div class="agenda-shift-slot" style="border-left: 3px solid #10b981;">
+                  <div class="agenda-slot-title" style="color:#6ee7b7;">☀️ Mattina (07:00 - 14:00)</div>
+                  <div class="agenda-slot-body">${opsM.length ? opsM.join(', ') : '<span style="color:#64748b; font-weight:500;">Nessun operatore</span>'}</div>
+                </div>
+
+                <div class="agenda-shift-slot" style="border-left: 3px solid #f59e0b;">
+                  <div class="agenda-slot-title" style="color:#fcd34d;">🌤️ Pomeriggio (14:00 - 21:00)</div>
+                  <div class="agenda-slot-body">${opsP.length ? opsP.join(', ') : '<span style="color:#64748b; font-weight:500;">Nessun operatore</span>'}</div>
+                </div>
+
+                <div class="agenda-shift-slot" style="border-left: 3px solid #818cf8;">
+                  <div class="agenda-slot-title" style="color:#c7d2fe;">🌙 Notte (21:00 - 07:00)</div>
+                  <div class="agenda-slot-body">${opsN.length ? opsN.join(', ') : '<span style="color:#64748b; font-weight:500;">Nessun operatore</span>'}</div>
+                </div>
+
+                <div class="agenda-shift-slot" style="border-left: 3px solid #c084fc;">
+                  <div class="agenda-slot-title" style="color:#e9d5ff;">🦺 Reperibile Emergenze</div>
+                  <div class="agenda-slot-body">${opsD.length ? opsD.join(', ') : '<span style="color:#64748b; font-weight:500;">Ciro Milella (Admin)</span>'}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        agendaBox.innerHTML = htmlAgenda;
+      }
+
+      // 4. AGGIORNA SEZIONE REPERIBILITÀ INFERIORE
+      const repBox = document.getElementById('rep-giornaliera-testo');
+      if (repBox) {
+        let repArray = [];
+        giorni.forEach((g, idx) => {
+          const repOggi = [];
+          ops.forEach(op => {
+            if (data.griglia[op.id] && data.griglia[op.id][g] === 'D') {
+              repArray.push(`• <b>${nomiGiorni[idx]}:</b> ${op.nome} (📞 <span onclick="gestisciChiamata('${op.tel}','${op.nome}')" style="color:var(--cyan-light); cursor:pointer; text-decoration:underline;">${op.tel}</span>)`);
+            }
+          });
+        });
+
+        if (repArray.length > 0) {
+          repBox.innerHTML = repArray.join('<br>');
+        } else {
+          repBox.innerHTML = '<i>Reperibilità garantita dall\'Admin Coordinatore Ciro Milella (📞 <span onclick="gestisciChiamata(\'3664607396\',\'Ciro Milella\')" style="color:var(--cyan-light); cursor:pointer; text-decoration:underline;">366 460 7396</span>).</i>';
+        }
+      }
+    }
+
+    function navigaSettimanaOffset(offset) {
+      if (window.navigaSettimana) {
+        window.navigaSettimana(offset);
+      }
+      renderViste();
+      mostraToast(offset > 0 ? 'Settimana successiva ▶' : '◀ Settimana precedente', '📅');
+    }
+
+    // GESTIONE CALENDARIO MODERNO INTERATTIVO FLUTTUANTE
+    let calPopoverTargetMonth = new Date();
+
+    function toggleMiniCalendarPopover(event) {
+      if (event) event.stopPropagation();
+      const popover = document.getElementById('popover-mini-calendar');
+      if (!popover) return;
+      const isOpen = popover.style.display === 'block';
+      if (isOpen) {
+        popover.style.display = 'none';
+      } else {
+        const data = window.caricaDatiTurnario ? window.caricaDatiTurnario() : null;
+        if (data && data.settimanaInizio && window.parseDateYMD) {
+          calPopoverTargetMonth = window.parseDateYMD(data.settimanaInizio);
+        } else {
+          calPopoverTargetMonth = new Date();
+        }
+        renderMiniCalendarPopover();
+        popover.style.display = 'block';
+      }
+    }
+
+    function chiudiMiniCalendarPopover() {
+      const popover = document.getElementById('popover-mini-calendar');
+      if (popover) popover.style.display = 'none';
+    }
+
+    function navigaMesePopover(offset) {
+      calPopoverTargetMonth.setMonth(calPopoverTargetMonth.getMonth() + offset);
+      renderMiniCalendarPopover();
+    }
+
+    function vaiASettimanaCorrenteOggi() {
+      const oggi = new Date();
+      if (window.getLunediSettimana && window.cambiaSettimanaTurnario && window.formatDateYMD) {
+        const lun = window.getLunediSettimana(oggi);
+        const ymd = window.formatDateYMD(lun);
+        window.cambiaSettimanaTurnario(ymd);
+      }
+      renderViste();
+      mostraToast('Allineato alla settimana corrente di Oggi!', '⚡');
+    }
+
+    function selezionaDataDaPopover(ymd) {
+      if (window.cambiaSettimanaTurnario) {
+        window.cambiaSettimanaTurnario(ymd);
+      }
+      chiudiMiniCalendarPopover();
+      renderViste();
+      mostraToast('Settimana impostata con successo', '🗓️');
+    }
+
+    function renderMiniCalendarPopover() {
+      const monthTitle = document.getElementById('cal-popover-month-title');
+      const daysBody = document.getElementById('cal-popover-days-body');
+      if (!monthTitle || !daysBody) return;
+
+      const year = calPopoverTargetMonth.getFullYear();
+      const month = calPopoverTargetMonth.getMonth();
+
+      const mesiNomi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+      monthTitle.textContent = `${mesiNomi[month]} ${year}`;
+
+      const dataTurnario = window.caricaDatiTurnario ? window.caricaDatiTurnario() : null;
+      let activeLunStr = dataTurnario ? dataTurnario.settimanaInizio : '';
+      let activeDomDate = null;
+      if (activeLunStr && window.parseDateYMD) {
+        const lDate = window.parseDateYMD(activeLunStr);
+        activeDomDate = new Date(lDate);
+        activeDomDate.setDate(lDate.getDate() + 6);
+      }
+
+      // Calcola primo giorno del mese
+      const primoDelMese = new Date(year, month, 1);
+      let dayOfWeek = primoDelMese.getDay(); // 0 Dom, 1 Lun...
+      let startOffset = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+
+      const today = new Date();
+      const todayStr = window.formatDateYMD ? window.formatDateYMD(today) : '';
+
+      let html = '';
+      const startDate = new Date(year, month, 1 + startOffset);
+
+      for (let i = 0; i < 42; i++) {
+        const cur = new Date(startDate);
+        cur.setDate(startDate.getDate() + i);
+        const curYmd = window.formatDateYMD ? window.formatDateYMD(cur) : '';
+        const isOtherMonth = cur.getMonth() !== month;
+        const isToday = curYmd === todayStr;
+
+        let inActiveWeek = false;
+        let isWeekStart = false;
+        let isWeekEnd = false;
+        if (activeLunStr && window.parseDateYMD) {
+          const lDate = window.parseDateYMD(activeLunStr);
+          if (cur >= lDate && cur <= activeDomDate) {
+            inActiveWeek = true;
+            if (cur.getTime() === lDate.getTime()) isWeekStart = true;
+            if (cur.getTime() === activeDomDate.getTime()) isWeekEnd = true;
+          }
+        }
+
+        let cls = 'cal-day-cell';
+        if (isOtherMonth) cls += ' other-month';
+        if (inActiveWeek) cls += ' active-week';
+        if (isWeekStart) cls += ' active-week-start';
+        if (isWeekEnd) cls += ' active-week-end';
+        if (isToday) cls += ' today-dot';
+
+        html += `
+          <div class="${cls}" onclick="selezionaDataDaPopover('${curYmd}')" title="${cur.toLocaleDateString('it-IT')}">
+            ${cur.getDate()}
+          </div>
+        `;
+      }
+
+      daysBody.innerHTML = html;
+    }
+
+    // Chiudi popover al click fuori dal box
+    document.addEventListener('click', (e) => {
+      const wrap = document.getElementById('calendarNavBarWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        chiudiMiniCalendarPopover();
+      }
+    });
+
+    function selezionaDataInizio(val) {
+      if (window.cambiaSettimanaTurnario) {
+        window.cambiaSettimanaTurnario(val);
+      }
+      renderViste();
+      mostraToast('Data settimana aggiornata', '📅');
+    }
+
+    function apriModalConfiguratoreAI() {
+      const modal = document.getElementById('modal-configuratore-ai');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function chiudiModalConfiguratoreAI() {
+      const modal = document.getElementById('modal-configuratore-ai');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function eseguiGenerazionePresetScelto() {
+      const radios = document.getElementsByName('preset_combinazione');
+      let preset = 'ssn_pmnsr'; // Default: Ciclo in 5ª SSN (P - M - N - S - R)
+      for (const r of radios) {
+        if (r.checked) { preset = r.value; break; }
+      }
+      if (window.sviluppaCombinazioneAutomatica) {
+        window.sviluppaCombinazioneAutomatica(preset);
+      }
+      chiudiModalConfiguratoreAI();
+      renderViste();
+
+      const descMap = {
+        'ssn_pmnsr': '🩺 Ciclo in 5ª SSN (P-M-N-S-R) applicato!',
+        'ssn_mpnsr': '🏥 Ciclo in 5ª Tradizionale SSN applicato!',
+        'ssn_h12': '🚑 Ciclo Emergenza H12 applicato!',
+        'ssn_sesta': '🛌 Ciclo in 6ª con Doppio Riposo applicato!',
+        'diurno_adi': '🏡 Servizio Diurno ADI applicato!',
+        'misto_pn': '🌟 Turno Misto CareAssist applicato!'
+      };
+      mostraToast(descMap[preset] || 'Combinazione turni sviluppata con successo!', '✨');
+    }
+
+    // GESTIONE REGIME ORARIO: FULL TIME vs PART TIME
+    function aggiornaCampiRegimeOrarioModal(regimePreset) {
+      let regime = regimePreset;
+      if (!regime) {
+        const radios = document.getElementsByName('nuovo_op_regime');
+        for (const r of radios) {
+          if (r.checked) { regime = r.value; break; }
+        }
+      }
+      if (!regime) regime = 'full_time';
+      const isFt = regime === 'full_time';
+      
+      const boxFt = document.getElementById('box-condizioni-ft');
+      const boxPt = document.getElementById('box-condizioni-pt');
+      const lblFt = document.getElementById('label-regime-ft');
+      const lblPt = document.getElementById('label-regime-pt');
+      
+      if (boxFt) boxFt.style.display = isFt ? 'block' : 'none';
+      if (boxPt) boxPt.style.display = isFt ? 'none' : 'block';
+      
+      if (lblFt) {
+        lblFt.style.border = isFt ? '2px solid #38bdf8' : '1.5px solid rgba(255,255,255,0.12)';
+        lblFt.style.background = isFt ? 'linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(2,132,199,0.15) 100%)' : 'rgba(255,255,255,0.03)';
+        lblFt.style.boxShadow = isFt ? '0 0 16px rgba(56,189,248,0.25)' : 'none';
+        lblFt.style.color = isFt ? '#ffffff' : '#94a3b8';
+      }
+      if (lblPt) {
+        lblPt.style.border = !isFt ? '2px solid #f97316' : '1.5px solid rgba(255,255,255,0.12)';
+        lblPt.style.background = !isFt ? 'linear-gradient(135deg, rgba(249,115,22,0.25) 0%, rgba(234,88,12,0.15) 100%)' : 'rgba(255,255,255,0.03)';
+        lblPt.style.boxShadow = !isFt ? '0 0 16px rgba(249,115,22,0.25)' : 'none';
+        lblPt.style.color = !isFt ? '#ffffff' : '#94a3b8';
+      }
+      aggiornaDettaglioInfoContratto();
+    }
+
+    function aggiornaDettaglioInfoContratto() {
+      let isFt = true;
+      const radios = document.getElementsByName('nuovo_op_regime');
+      for (const r of radios) {
+        if (r.checked) { isFt = (r.value === 'full_time'); break; }
+      }
+
+      const cond = isFt 
+        ? (document.getElementById('nuovo-op-condizione-ft')?.value || 'ft_ssn_turnista_36h')
+        : (document.getElementById('nuovo-op-condizione-pt')?.value || 'pt_orizzontale_20h');
+      
+      const info = (window.REGIMI_ORARI_INFO && window.REGIMI_ORARI_INFO[cond]) || {
+        nome: isFt ? 'Full Time SSN Turnista H24' : 'Part Time 20h Orizzontale',
+        ore: isFt ? 36 : 20,
+        ccnl: isFt ? 'CCNL Sanità Pubblica' : 'CCNL Sanità / Cooperative',
+        desc: isFt ? '36 ore medie settimanali con rotazione continua H24 (P-M-N-S-R).' : '20 ore settimanali ordinarie distribuite su 5 giorni.'
+      };
+
+      const box = document.getElementById('info-regime-dettaglio');
+      if (box) {
+        box.innerHTML = `
+          <div style="font-weight:800; color:#ffffff; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:8px;">
+            <span style="font-size:14px; font-weight:800; color:#ffffff;">📋 ${info.nome}</span>
+            <span style="background:${isFt ? 'rgba(56,189,248,0.2)' : 'rgba(251,146,60,0.2)'}; color:${isFt ? '#38bdf8' : '#fb923c'}; font-size:12.5px; font-weight:900; padding:4px 10px; border-radius:20px; border:1px solid ${isFt ? 'rgba(56,189,248,0.4)' : 'rgba(251,146,60,0.4)'};">⚡ ${info.ore} ore / settimana</span>
+          </div>
+          <div style="font-size:12.5px; color:#cbd5e1; font-weight:700; margin-bottom:4px;">Inquadramento: <span style="color:#ffffff;">${info.ccnl}</span></div>
+          <div style="font-size:12.5px; color:#94a3b8; line-height:1.45;">${info.desc}</div>
+        `;
+        box.style.borderColor = isFt ? 'rgba(56,189,248,0.35)' : 'rgba(251,146,60,0.35)';
+        box.style.background = isFt ? 'rgba(56,189,248,0.08)' : 'rgba(251,146,60,0.08)';
+      }
+    }
+
+    // GESTIONE MODAL COLLABORATORE (INSERIMENTO & MODIFICA ELEGANTE)
+    function apriModalNuovoOperatore() {
+      document.getElementById('editing-op-id').value = '';
+      document.getElementById('titolo-modal-op').textContent = 'Nuovo Collaboratore Roster';
+      document.getElementById('icona-modal-op').textContent = '👤';
+      document.getElementById('nuovo-op-nome').value = '';
+      document.getElementById('nuovo-op-ruolo').value = 'Infermiera / OSS';
+      document.getElementById('nuovo-op-tel').value = '';
+      document.getElementById('nuovo-op-profilo').value = 'infermiere_ssn';
+      document.getElementById('nuovo-op-disp').checked = true;
+
+      const radios = document.getElementsByName('nuovo_op_regime');
+      for (const r of radios) {
+        r.checked = (r.value === 'full_time');
+      }
+      if (document.getElementById('nuovo-op-condizione-ft')) {
+        document.getElementById('nuovo-op-condizione-ft').value = 'ft_ssn_turnista_36h';
+      }
+      if (document.getElementById('nuovo-op-condizione-pt')) {
+        document.getElementById('nuovo-op-condizione-pt').value = 'pt_orizzontale_20h';
+      }
+      aggiornaCampiRegimeOrarioModal('full_time');
+
+      const btnElimina = document.getElementById('btn-elimina-op');
+      if (btnElimina) btnElimina.style.display = 'none';
+      const btnSalva = document.getElementById('btn-salva-op');
+      if (btnSalva) btnSalva.innerHTML = '💾 Salva nel Roster';
+
+      const modal = document.getElementById('modal-nuovo-operatore');
+      if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => document.getElementById('nuovo-op-nome')?.focus(), 100);
+      }
+    }
+
+    function apriModalModificaOperatore(opId) {
+      const data = window.caricaDatiTurnario ? window.caricaDatiTurnario() : null;
+      if (!data) return;
+      const op = data.operatori.find(o => o.id === opId);
+      if (!op) return;
+
+      document.getElementById('editing-op-id').value = op.id;
+      document.getElementById('titolo-modal-op').textContent = 'Modifica Dati Collaboratore';
+      document.getElementById('icona-modal-op').textContent = '✏️';
+      document.getElementById('nuovo-op-nome').value = op.nome || '';
+      document.getElementById('nuovo-op-ruolo').value = op.ruolo || '';
+      document.getElementById('nuovo-op-tel').value = op.tel || '';
+      document.getElementById('nuovo-op-profilo').value = op.profilo || 'infermiere_ssn';
+      document.getElementById('nuovo-op-disp').checked = Boolean(op.disponibileCoperture);
+
+      const regime = op.regimeOrario || 'full_time';
+      const radios = document.getElementsByName('nuovo_op_regime');
+      for (const r of radios) {
+        r.checked = (r.value === regime);
+      }
+      if (regime === 'part_time') {
+        if (document.getElementById('nuovo-op-condizione-pt')) {
+          document.getElementById('nuovo-op-condizione-pt').value = op.condizioneOrario || 'pt_orizzontale_20h';
+        }
+      } else {
+        if (document.getElementById('nuovo-op-condizione-ft')) {
+          document.getElementById('nuovo-op-condizione-ft').value = op.condizioneOrario || 'ft_ssn_turnista_36h';
+        }
+      }
+      aggiornaCampiRegimeOrarioModal(regime);
+
+      const btnElimina = document.getElementById('btn-elimina-op');
+      if (btnElimina) btnElimina.style.display = 'inline-flex';
+      const btnSalva = document.getElementById('btn-salva-op');
+      if (btnSalva) btnSalva.innerHTML = '💾 Salva Modifiche';
+
+      const modal = document.getElementById('modal-nuovo-operatore');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function chiudiModalNuovoOperatore() {
+      const modal = document.getElementById('modal-nuovo-operatore');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function salvaNuovoOperatoreDaModal() {
+      const editId = document.getElementById('editing-op-id')?.value;
+      const nome = document.getElementById('nuovo-op-nome')?.value.trim();
+      if (!nome) {
+        mostraToast('Inserisci il Nome e Cognome del collaboratore', '⚠️');
+        return;
+      }
+      const ruolo = document.getElementById('nuovo-op-ruolo')?.value.trim() || 'Infermiera / OSS';
+      const tel = document.getElementById('nuovo-op-tel')?.value.trim() || '';
+      const profilo = document.getElementById('nuovo-op-profilo')?.value || 'infermiere_ssn';
+      const disp = document.getElementById('nuovo-op-disp')?.checked ?? true;
+
+      const radios = document.getElementsByName('nuovo_op_regime');
+      let regime = 'full_time';
+      for (const r of radios) {
+        if (r.checked) { regime = r.value; break; }
+      }
+      const cond = regime === 'part_time'
+        ? (document.getElementById('nuovo-op-condizione-pt')?.value || 'pt_orizzontale_20h')
+        : (document.getElementById('nuovo-op-condizione-ft')?.value || 'ft_ssn_turnista_36h');
+      
+      const rInfo = (window.REGIMI_ORARI_INFO && window.REGIMI_ORARI_INFO[cond]) || null;
+      const oreContr = rInfo ? rInfo.ore : (regime === 'part_time' ? 20 : 36);
+
+      const payload = {
+        nome: nome,
+        ruolo: ruolo,
+        tel: tel,
+        profilo: profilo,
+        regimeOrario: regime,
+        condizioneOrario: cond,
+        oreContrattuali: oreContr,
+        disponibileCoperture: disp
+      };
+
+      if (editId) {
+        // AGGIORNAMENTO
+        if (window.aggiornaDatiOperatore) {
+          window.aggiornaDatiOperatore(editId, payload);
+        }
+        mostraToast(`Dati di ${nome} aggiornati!`, '✅');
+      } else {
+        // NUOVO
+        if (window.aggiungiOperatoreTurnario) {
+          window.aggiungiOperatoreTurnario(payload);
+        }
+        mostraToast(`Collaboratore ${nome} aggiunto al roster!`, '👤');
+      }
+
+      chiudiModalNuovoOperatore();
+      renderViste();
+    }
+
+    function confermaEliminaOperatore() {
+      const editId = document.getElementById('editing-op-id')?.value;
+      const nome = document.getElementById('nuovo-op-nome')?.value.trim() || 'Collaboratore';
+      if (!editId) return;
+
+      if (window.rimuoviOperatoreTurnario) {
+        window.rimuoviOperatoreTurnario(editId);
+      }
+      chiudiModalNuovoOperatore();
+      renderViste();
+      mostraToast(`Collaboratore ${nome} rimosso dal roster.`, '🗑️');
+    }
+
+    // MODAL SBLOCCO PIN ADMIN (ELEGANTE, ZERO PROMPT BROWSER)
+    function apriModalPinAdmin() {
+      const modal = document.getElementById('modal-pin-admin');
+      const inp = document.getElementById('input-pin-master-admin');
+      if (inp) inp.value = '';
+      if (modal) modal.style.display = 'flex';
+      setTimeout(() => inp?.focus(), 100);
+    }
+
+    function chiudiModalPinAdmin() {
+      const modal = document.getElementById('modal-pin-admin');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function confermaSbloccoPinAdmin() {
+      const inp = document.getElementById('input-pin-master-admin');
+      const pin = inp ? inp.value.trim() : '';
+      if (!pin) {
+        mostraToast('Inserisci il PIN di Sicurezza', '⚠️');
+        return;
+      }
+      if (window.sbloccaModalitaAdminManuale) {
+        const ok = window.sbloccaModalitaAdminManuale(pin);
+        if (ok) {
+          chiudiModalPinAdmin();
+          renderViste();
+          mostraToast('Modalità Admin Coordinatore Sbloccata!', '👑');
+        } else {
+          mostraToast('PIN Errato. Riprova', '❌');
+          if (inp) inp.select();
+        }
+      }
+    }
+
+    function apriStampaA4() {
+      if (window.stampaTurnarioCartaceoA4) window.stampaTurnarioCartaceoA4();
+    }
+
+    function condividiWhatsApp() {
+      if (window.condividiTurnarioWhatsApp) window.condividiTurnarioWhatsApp();
+    }
+
+    function apriSelettoreTurnoCella(opId, opNome, giorno) {
+      activeCellTarget = { opId, giorno };
+      const modal = document.getElementById('modal-select-turno');
+      document.getElementById('modal-target-op-nome').textContent = `Modifica Turno: ${opNome}`;
+      document.getElementById('modal-target-giorno-desc').textContent = `Seleziona il turno per ${giorno.toUpperCase()}:`;
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function chiudiModalTurno() {
+      const modal = document.getElementById('modal-select-turno');
+      if (modal) modal.style.display = 'none';
+      activeCellTarget = null;
+    }
+
+    function applicaTurnoScelto(turno) {
+      if (activeCellTarget && window.impostaTurnoCella) {
+        window.impostaTurnoCella(activeCellTarget.opId, activeCellTarget.giorno, turno);
+      }
+      chiudiModalTurno();
+      renderViste();
+      mostraToast(`Turno ${turno} assegnato con successo!`, '✅');
+    }
+
+    // GESTIONE MODAL GUIDA TURNI & REPERIBILITÀ
+    function apriModalGuidaTurni() {
+      const modal = document.getElementById('modal-guida-turni');
+      if (modal) modal.style.display = 'flex';
+    }
+    function chiudiModalGuidaTurni() {
+      const modal = document.getElementById('modal-guida-turni');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function apriModalGuidaReperibilita() {
+      const modal = document.getElementById('modal-guida-reperibilita');
+      if (modal) modal.style.display = 'flex';
+    }
+    function chiudiModalGuidaReperibilita() {
+      const modal = document.getElementById('modal-guida-reperibilita');
+      if (modal) modal.style.display = 'none';
+    }
+
+    
+    // FUNZIONI MODAL BACKUP USB & SINCRONIZZAZIONE
+    function apriModalSincroUSB() {
+      const m = document.getElementById('modal-sincro-usb');
+      if (m) m.style.display = 'flex';
+    }
+    function chiudiModalSincroUSB() {
+      const m = document.getElementById('modal-sincro-usb');
+      if (m) m.style.display = 'none';
+    }
+    async function avviaBackupSicurezzaUSB() {
+      if (window.eseguiBackupSicurezzaUSB) {
+        await window.eseguiBackupSicurezzaUSB();
+      }
+    }
+    async function gestisciFileCaricatoUSB(input) {
+      if (window.eseguiSincronizzazioneUSB) {
+        await window.eseguiSincronizzazioneUSB(input);
+      }
+      chiudiModalSincroUSB();
+    }
+
+    // FUNZIONI BILANCIO MENSILE
+    function apriModalBilancioMensile() {
+      const m = document.getElementById('modal-bilancio-mensile');
+      if (!m) return;
+      const box = document.getElementById('contenitore-tabella-bilancio');
+      if (box && window.calcolaBilancioMensile) {
+        const stats = window.calcolaBilancioMensile();
+        let thtml = `
+          <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px; color:#e2e8f0;">
+            <thead>
+              <tr style="border-bottom:2px solid rgba(255,255,255,0.12); color:#94a3b8; font-size:12px;">
+                <th style="padding:10px 8px;">COLLABORATORE</th>
+                <th style="padding:10px 8px;">RUOLO</th>
+                <th style="padding:10px 8px; text-align:center;">ORE SETT.</th>
+                <th style="padding:10px 8px; text-align:center;">CCNL BASE</th>
+                <th style="padding:10px 8px; text-align:center;">SALDO BANCA</th>
+                <th style="padding:10px 8px; text-align:center;">☀️ M</th>
+                <th style="padding:10px 8px; text-align:center;">🌤️ P</th>
+                <th style="padding:10px 8px; text-align:center;">🌙 N</th>
+                <th style="padding:10px 8px; text-align:center;">🦺 D</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        stats.forEach(st => {
+          const saldoColor = st.saldo > 0 ? '#34d399' : (st.saldo < 0 ? '#f87171' : '#38bdf8');
+          const saldoSign = st.saldo > 0 ? '+' : '';
+          thtml += `
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+              <td style="padding:10px 8px; font-weight:800; color:#fff;">${st.nome}</td>
+              <td style="padding:10px 8px; color:#94a3b8; font-size:12px;">${st.ruolo}</td>
+              <td style="padding:10px 8px; text-align:center; font-weight:800; color:#38bdf8;">${st.oreLav}h</td>
+              <td style="padding:10px 8px; text-align:center; color:#cbd5e1;">${st.oreContrattuali}h</td>
+              <td style="padding:10px 8px; text-align:center; font-weight:900; color:${saldoColor};">${saldoSign}${st.saldo}h</td>
+              <td style="padding:10px 8px; text-align:center; color:#fde047;">${st.mattine}</td>
+              <td style="padding:10px 8px; text-align:center; color:#fb923c;">${st.pomeriggi}</td>
+              <td style="padding:10px 8px; text-align:center; color:#818cf8;">${st.notti}</td>
+              <td style="padding:10px 8px; text-align:center; color:#c084fc;">${st.disp}</td>
+            </tr>
+          `;
+        });
+        thtml += `</tbody></table>`;
+        box.innerHTML = thtml;
+      }
+      m.style.display = 'flex';
+    }
+    function chiudiModalBilancioMensile() {
+      const m = document.getElementById('modal-bilancio-mensile');
+      if (m) m.style.display = 'none';
+    }
+
+    // FUNZIONI CONSEGNE CLINICHE
+    function apriModalConsegneCliniche() {
+      const m = document.getElementById('modal-consegne-cliniche');
+      if (!m) return;
+      caricaStoricoConsegne();
+      m.style.display = 'flex';
+    }
+    function chiudiModalConsegneCliniche() {
+      const m = document.getElementById('modal-consegne-cliniche');
+      if (m) m.style.display = 'none';
+    }
+    function caricaStoricoConsegne() {
+      const box = document.getElementById('storico-consegne-cliniche');
+      if (!box || !window.getConsegneCliniche) return;
+      const consegne = window.getConsegneCliniche();
+      if (!consegne || consegne.length === 0) {
+        box.innerHTML = '<div style="font-size:12.5px; color:#64748b; font-style:italic; padding:8px;">Nessuna consegna registrata di recente.</div>';
+        return;
+      }
+      let cHtml = '';
+      consegne.slice(0, 10).forEach(c => {
+        const fasciaIcon = c.fascia === 'M' ? '☀️ Mattina' : (c.fascia === 'P' ? '🌤️ Pomeriggio' : '🌙 Notte');
+        const dataStr = c.timestamp ? new Date(c.timestamp).toLocaleString('it-IT') : '';
+        cHtml += `
+          <div style="background:rgba(255,255,255,0.04); border-left:3px solid #38bdf8; border-radius:8px; padding:10px 14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:800; font-size:13px; color:#f8fafc;">${fasciaIcon} &bull; ${c.operatore || 'Operatore'}</span>
+              <span style="font-size:11px; color:#94a3b8;">${dataStr}</span>
+            </div>
+            ${c.parametri ? '<div style="font-size:12px; color:#34d399; font-weight:700; margin-bottom:4px;">📊 ' + c.parametri + '</div>' : ''}
+            <div style="font-size:12.5px; color:#cbd5e1; line-height:1.4;">${c.note || 'Nessuna nota particolare'}</div>
+          </div>
+        `;
+      });
+      box.innerHTML = cHtml;
+    }
+    function salvaNuovaConsegnaDaModal() {
+      const fascia = document.getElementById('consegna-fascia').value;
+      const op = document.getElementById('consegna-operatore').value.trim();
+      const param = document.getElementById('consegna-parametri').value.trim();
+      const note = document.getElementById('consegna-note').value.trim();
+      if (!note) {
+        mostraToast('Inserisci le note della consegna prima di salvare.', '⚠️');
+        return;
+      }
+      if (window.aggiungiConsegnaClinica) {
+        window.aggiungiConsegnaClinica({
+          fascia,
+          operatore: op,
+          parametri: param,
+          note
+        });
+        document.getElementById('consegna-note').value = '';
+        document.getElementById('consegna-parametri').value = '';
+        caricaStoricoConsegne();
+        mostraToast('Consegna clinica registrata con successo!', '📝');
+      }
+    }
+
+    // FUNZIONI ICAL
+    function apriModalEsportaICal() {
+      const m = document.getElementById('modal-esporta-ical');
+      const sel = document.getElementById('select-op-ical');
+      if (sel && window.turnarioCorrente && window.turnarioCorrente.operatori) {
+        let optHtml = '';
+        window.turnarioCorrente.operatori.forEach(op => {
+          optHtml += `<option value="${op.id}">${op.nome} (${op.ruolo})</option>`;
+        });
+        sel.innerHTML = optHtml;
+      }
+      if (m) m.style.display = 'flex';
+    }
+    function chiudiModalEsportaICal() {
+      const m = document.getElementById('modal-esporta-ical');
+      if (m) m.style.display = 'none';
+    }
+    function esportaICalSingoloOperatore() {
+      const sel = document.getElementById('select-op-ical');
+      if (sel && sel.value && window.esportaCalendarioICS) {
+        window.esportaCalendarioICS(sel.value);
+        chiudiModalEsportaICal();
+      }
+    }
+
+    function vaiAlPannelloSuite() {
+      try {
+        localStorage.setItem('milella_session_unlocked', 'true');
+        sessionStorage.setItem('milella_session_unlocked', 'true');
+        sessionStorage.removeItem('milella_app_locked');
+        sessionStorage.removeItem('milella_lock_requested');
+        localStorage.setItem('milella_role', 'admin');
+        localStorage.setItem('milella_last_authenticated_role', 'admin');
+        localStorage.setItem('milella_user_nome', 'Ciro Milella');
+        localStorage.setItem('milella_admin_pin', 'SOS999');
+      } catch(e) {}
+      window.location.href = '/launcher.html?from=turni&auth_role=admin';
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (window.sincronizzaOperatoriCareAssist) {
+        await window.sincronizzaOperatoriCareAssist();
+      }
+      renderViste();
+    });
+  </script>
+<script>
+    function condividiRosterWhatsApp() {
+      try {
+        const dataOggi = new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        let msg = `*🗓️ ROSTER TURNI CAREASSIST PRO - ${dataOggi.toUpperCase()}*\n\n`;
+        msg += `Coordinamento Operatori Sanitari & Domiciliari H24\n`;
+        msg += `Pianificazione attiva e conforme D.Lgs. 66/2003.\n\n`;
+        msg += `👉 Per consultare il tabellone completo e registrare cambi turno:\n`;
+        msg += `https://milella-suite-iv93.onrender.com/careassist/turni.html\n\n`;
+        msg += `_CareAssist Pro • Direzione Operativa_`;
+        
+        const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg);
+        window.open(url, '_blank');
+      } catch(e) {
+        alert('Impossibile aprire WhatsApp: ' + e.message);
+      }
+    }
+    </script>
+
+
+<!-- ==========================================================================
+     BARRA DI NAVIGAZIONE MULTI-DISPOSITIVO GLOBALE SUITE MILELLA (PC & SMARTPHONE)
+     ========================================================================== -->
+
+
+
+
+
+
+
+<style id="suite-unified-mobile-bar-style">
+  .mobile-bottom-bar {
+    position: fixed !important;
+    bottom: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 24px) !important;
+    max-width: 440px !important;
+    height: 64px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 22px !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 8px !important;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+    z-index: 999999 !important;
+    box-sizing: border-box !important;
+  }
+  .mobile-bottom-bar .bar-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #64748b !important;
+    text-decoration: none !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    gap: 3px !important;
+    cursor: pointer !important;
+    background: none !important;
+    border: none !important;
+    flex: 1 !important;
+    height: 100% !important;
+    transition: all 0.2s !important;
+    -webkit-tap-highlight-color: transparent !important;
+    padding: 0 !important;
+  }
+  .mobile-bottom-bar .bar-item:active,
+  .mobile-bottom-bar .bar-item.active {
+    color: #0284c7 !important;
+  }
+  .mobile-bottom-bar .bar-item .icon {
+    font-size: 20px !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action {
+    position: relative !important;
+    top: -12px !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action .btn-circle-add {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    border: 3px solid #ffffff !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 24px !important;
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4) !important;
+    cursor: pointer !important;
+    transition: transform 0.15s !important;
+  }
+  .mobile-bottom-bar .bar-item.center-action .btn-circle-add:active {
+    transform: scale(0.92) !important;
+  }
+  body {
+    padding-bottom: 84px !important;
+  }
+</style>
+
+<nav class="mobile-bottom-bar" id="careassist-turni-mobile-bar" aria-label="Navigazione Suite">
+  <button type="button" class="bar-item" onclick="window.history.length > 1 ? window.history.back() : window.location.href='/launcher.html'" title="Torna Indietro">
+    <span class="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </span>
+    <span>Indietro</span>
+  </button>
+  
+  <a href="/launcher.html" class="bar-item" title="Home Suite Milella">
+    <span class="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </span>
+    <span>Home Suite</span>
+  </a>
+
+  <div class="bar-item center-action">
+    <button type="button" class="btn-circle-add" onclick="const b=document.getElementById('btnNuovoTurno')||document.querySelector('[data-action=nuovo-turno]'); if(b){b.click();}else{window.scrollTo({top:0,behavior:'smooth'});}" title="Nuovo Turno">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+    <span style="font-size:10px; font-weight:800; color:#0284c7; margin-top:3px;">Nuovo</span>
+  </div>
+
+  <button type="button" class="bar-item" onclick="location.reload()" title="Ricarica Dati">
+    <span class="icon">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+    </span>
+    <span>Ricarica</span>
+  </button>
+
+  <a href="./index.html" class="bar-item" title="Cartelle Assistiti">
+    <span class="icon">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </span>
+    <span>Assistiti</span>
+  </a>
+</nav>
+
+
+<!-- MODALE GUIDA CONTESTUALE TURNARIO ROSTER H24 -->
+<div id="modal-guida-turnario" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999999; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px; box-sizing:border-box;">
+  <div style="background:#ffffff; width:100%; max-width:540px; border-radius:20px; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.5); border:2px solid #38bdf8; animation:modalPopIn 0.25s cubic-bezier(0.16,1,0.3,1); display:flex; flex-direction:column; max-height:90vh;">
+    
+    <div style="background:linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color:#ffffff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:26px;">🗓️</span>
+        <div>
+          <div style="font-size:10.5px; font-weight:800; color:#bae6fd; text-transform:uppercase;">GUIDA CLINICO-GESTIONALE</div>
+          <h3 style="font-size:15px; font-weight:900; margin:0; color:#ffffff;">Roster Sanitario &amp; Turnario Operatori H24</h3>
+        </div>
+      </div>
+      <button type="button" onclick="document.getElementById('modal-guida-turnario').style.display='none';" ontouchstart="document.getElementById('modal-guida-turnario').style.display='none';" style="background:rgba(255,255,255,0.2); border:none; color:#ffffff; width:32px; height:32px; border-radius:50%; font-size:16px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+    </div>
+
+    <div style="padding:18px 20px; overflow-y:auto; -webkit-overflow-scrolling:touch; font-size:13px; color:#1e293b; line-height:1.5;">
+      
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-left:4px solid #0284c7; border-radius:10px; padding:12px 14px; margin-bottom:14px;">
+        <div style="font-size:11px; text-transform:uppercase; font-weight:900; color:#0369a1; letter-spacing:0.5px; margin-bottom:4px;">🎯 A cosa serve (Scopo del Turnario)</div>
+        <div>Questa schermata gestisce la pianificazione continua e in tempo reale dell'assistenza domiciliare 24 ore su 24 (Mattina, Pomeriggio, Notte). Garantisce la copertura completa dei turni di assistenza per ciascun paziente, controllando il rispetto delle <b>11 ore di riposo obbligatorio</b> (D.Lgs. 66/2003) e dei massimali orari previsti dal CCNL socio-sanitario.</div>
+      </div>
+
+      <div style="font-weight:900; font-size:13px; color:#0f172a; margin-bottom:10px;">📋 Funzioni Principali:</div>
+      
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div style="background:#0284c7; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0; margin-top:2px;">1</div>
+          <div><b>Griglia Turni &amp; Copertura H24</b>: visualizza chi è in turno adesso (Mattina 07-14, Pomeriggio 14-21, Notte 21-07) e la percentuale di copertura garantita per la settimana.</div>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div style="background:#0284c7; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0; margin-top:2px;">2</div>
+          <div><b>💬 Condividi Turni WA</b>: invia con 1 tocco l'orario settimanale e i turni ai colleghi e collaboratori direttamente su WhatsApp.</div>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div style="background:#0284c7; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0; margin-top:2px;">3</div>
+          <div><b>📝 Consegne H24 &amp; Bilancio Ore</b>: permette il passaggio di consegne cliniche tra il turno uscente e quello montante, oltre al computo automatico delle ore lavorate e straordinari.</div>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div style="background:#0284c7; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0; margin-top:2px;">4</div>
+          <div><b>🖨️ Stampa A4 &amp; Esporta iCal</b>: stampa il foglio turni da appendere a casa dell'assistito o sincronizza i turni sul calendario Google/Apple del cellulare.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end;">
+      <button type="button" onclick="document.getElementById('modal-guida-turnario').style.display='none';" ontouchstart="document.getElementById('modal-guida-turnario').style.display='none';" style="background:#0284c7; color:#ffffff; border:none; padding:8px 20px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer;">Ho capito</button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

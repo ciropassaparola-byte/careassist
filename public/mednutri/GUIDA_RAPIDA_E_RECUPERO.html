@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedNutri Pro - Manuale Rapido e Guida di Emergenza</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+        }
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+        h1 span { color: var(--primary); }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-top: 6px;
+        }
+        .print-btn {
+            margin-top: 15px;
+            display: inline-block;
+            background: #0f172a;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+        }
+        .print-btn:hover { background: #334155; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin-bottom: 22px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .card-icon {
+            font-size: 1.8rem;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #f0f9ff;
+        }
+        h2 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        p { margin-bottom: 12px; color: #334155; font-size: 0.98rem; }
+        ul, ol { margin-left: 20px; margin-bottom: 12px; color: #334155; font-size: 0.95rem; }
+        li { margin-bottom: 8px; }
+        .highlight-box {
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 14px 0;
+            font-size: 0.95rem;
+        }
+        .puk-box {
+            background: #fef2f2;
+            border-left: 4px solid var(--danger);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .code-tag {
+            background: #e2e8f0;
+            color: #0f172a;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .print-btn { display: none; }
+            .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">⚕️</div>
+            <h1>MedNutri <span>Pro</span></h1>
+            <div class="subtitle">Manuale Rapido di Utilizzo, Sicurezza e Ripristino Cloud</div>
+            <button class="print-btn" onclick="window.print()">🖨️ Stampa questa Guida</button>
+        </div>
+
+        <!-- 1. COME ENTRARE NEL PROGRAMMA -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">🔑</div>
+                <h2>1. Come Entrare nell'Ambulatorio (PIN Medico)</h2>
+            </div>
+            <p>Quando apri il programma, per tutelare la <strong>privacy dei pazienti (GDPR)</strong>, appare una schermata con il tuo nome e la richiesta del PIN:</p>
+            <ol>
+                <li>Digita il tuo <strong>PIN numerico</strong> (es. 4 cifre) che hai impostato al primo avvio.</li>
+                <li>Clicca sul pulsante blu <strong>"🔓 Sblocca Ambulatorio"</strong> (o premi Invio).</li>
+                <li>L'ambulatorio si sblocca all'istante e compare la <strong>barra laterale a sinistra</strong> con tutte le sezioni (Nuovo Paziente, Archivio Clinico, Database Patologie, ecc.).</li>
+            </ol>
+            
+            <div class="puk-box">
+                <strong>🚨 Hai dimenticato il PIN? Codice PUK di Emergenza:</strong>
+                <p style="margin-top: 6px; margin-bottom: 0;">
+                    Se non ricordi più il PIN, digita nella casella del PIN il codice master di soccorso: <span class="code-tag">SOS999</span> e clicca su <em>Sblocca Ambulatorio</em>.<br>
+                    Il programma si sbloccherà immediatamente consentendoti di accedere e modificare o impostare un nuovo PIN.
+                </p>
+            </div>
+        </div>
+
+        <!-- 2. COME FUNZIONA LA CHIAVETTA USB -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">💾</div>
+                <h2>2. Utilizzo su Chiavetta USB (Massima Portabilità)</h2>
+            </div>
+            <p>MedNutri Pro è progettato per essere portato su una normale chiavetta USB e funzionare su qualsiasi PC Windows:</p>
+            <ul>
+                <li><strong>Come si avvia:</strong> Inserisci la chiavetta nel PC e fai doppio clic sul file <span class="code-tag">0_AVVIA_MEDNUTRI_PORTATILE.vbs</span>.</li>
+                <li><strong>Privacy Totale:</strong> Tutti i dati dei pazienti vengono scritti solo nella chiavetta (nella cartella <em>Dati_Clinici_USB</em>). Sul computer utilizzato <u>non rimane nessuna traccia</u>.</li>
+                <li><strong>Senza Internet:</strong> Il programma funziona ovunque anche in assenza di connessione internet.</li>
+            </ul>
+        </div>
+
+        <!-- 3. COME FUNZIONA IL CLOUD -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">☁️</div>
+                <h2>3. Salvataggio e Sincronizzazione Cloud</h2>
+            </div>
+            <p>Non devi preoccuparti di fare salvataggi complicati: il sistema include una copia di sicurezza nel Cloud protetta.</p>
+            <div class="highlight-box">
+                <strong>🔄 Salvataggio Automatico:</strong> Quando sei connesso a internet, ogni volta che usi il programma e salvi dati, viene inviato automaticamente un backup protetto al Cloud. In alto a destra vedi il badge <strong>🟢 Cloud Sincronizzato</strong>.
+            </div>
+            <p>Se vuoi fare un salvataggio immediato in qualsiasi momento:</p>
+            <ul>
+                <li>Apri il menu a sinistra e clicca su <strong>☁️ Sincronizza Cloud</strong>.</li>
+                <li>Il sistema ti confermerà l'avvenuta sincronizzazione con la data e l'ora esatta.</li>
+            </ul>
+        </div>
+
+        <!-- 4. COSA FARE SE PERDI LA CHIAVETTA -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">🆘</div>
+                <h2>4. Cosa Fare se Smarrisci o Perdi la Chiavetta USB</h2>
+            </div>
+            <p>Se perdi la chiavetta USB, <strong>non perdi né il programma né i dati dei tuoi pazienti</strong>. Ecco i 4 semplici passi per ripristinare tutto:</p>
+            <ol>
+                <li><strong>Prendi una nuova chiavetta USB</strong> (o usa una cartella sul tuo computer).</li>
+                <li><strong>Copia la cartella del programma:</strong> Basta copiare la cartella originale di MedNutri Pro (che puoi conservare come copia di riserva sul computer di casa o dello studio).</li>
+                <li><strong>Avvia il programma:</strong> Fai doppio clic su <span class="code-tag">0_AVVIA_MEDNUTRI_PORTATILE.vbs</span>.</li>
+                <li><strong>Ripristina i dati dal Cloud:</strong>
+                    <ul>
+                        <li>Nella schermata iniziale clicca sul link azzurro: <strong>"☁️ Hai perso la chiavetta o cambiato PC? Ripristina dal Cloud"</strong>.</li>
+                        <li>Inserisci il tuo Codice Studio e il tuo PIN (o <span class="code-tag">SOS999</span>).</li>
+                        <li>Clicca su <strong>"📥 Ripristina e Risincronizza"</strong>: tutti i pazienti, le patologie e le diete ricompariranno come per magia!</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- 5. CONSIGLI D'ORO -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">💡</div>
+                <h2>5. Riepilogo Rapido e Buone Pratiche</h2>
+            </div>
+            <ul>
+                <li><strong>Copia di sicurezza della cartella:</strong> Una volta al mese, fai una semplice copia dell'intera cartella <em>MedNutri_Pro</em> sul tuo computer personale. In questo modo avrai sempre il programma pronto anche se la chiavetta viene smarrita.</li>
+                <li><strong>Memorizza il PUK di Emergenza:</strong> Il codice salvavita è sempre <span class="code-tag">SOS999</span>.</li>
+                <li><strong>Chiusura e blocco:</strong> Quando ti allontani dalla scrivania, puoi cliccare nel menu a sinistra su <strong>🔒 Blocca Ambulatorio</strong> per rimettere subito il PIN a protezione della privacy.</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            MedNutri Pro • Sistema Clinico Nutrizionale Portatile &copy; 2026 • Conserva questo foglio per tua comodità.
+        </div>
+    </div>
+</body>
+</html>

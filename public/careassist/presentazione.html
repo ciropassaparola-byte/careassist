@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareAssist Pro — Presentazione Ufficiale del Progetto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070e1c;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --accent-blue: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-gold: #f59e0b;
+      --text-main: #f8fafc;
+      --text-sub: #cbd5e1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 15% 15%, #0c2d57 0%, #070e1c 55%, #030712 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Top bar */
+    .pres-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(7, 14, 28, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 20;
+    }
+    .pres-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+    }
+    .pres-brand-badge {
+      background: linear-gradient(135deg, #0284c7, #10b981);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .pres-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pres-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .pres-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+    .pres-btn.primary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-color: #34d399;
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
+    }
+
+    /* Slide stage */
+    .pres-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 40px;
+      position: relative;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1220px;
+      animation: slideFade 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide.active {
+      display: block;
+    }
+    @keyframes slideFade {
+      from { opacity: 0; transform: translateY(14px) scale(0.99); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .slide-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 18px;
+    }
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(30px, 4.2vw, 52px);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -0.8px;
+      margin-bottom: 16px;
+    }
+    .slide-title .grad {
+      background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .slide-lead {
+      font-size: clamp(16px, 1.8vw, 21px);
+      color: var(--text-sub);
+      line-height: 1.55;
+      max-width: 920px;
+      margin-bottom: 28px;
+    }
+
+    /* Grid cards */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+
+    .p-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 20px;
+      padding: 22px 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+    }
+    .p-card.highlight-blue { border-color: rgba(56, 189, 248, 0.55); background: linear-gradient(145deg, rgba(14, 116, 144, 0.25), rgba(15, 23, 42, 0.85)); }
+    .p-card.highlight-green { border-color: rgba(16, 185, 129, 0.55); background: linear-gradient(145deg, rgba(6, 95, 70, 0.28), rgba(15, 23, 42, 0.85)); }
+    .p-card.highlight-gold { border-color: rgba(245, 158, 11, 0.55); background: linear-gradient(145deg, rgba(146, 64, 14, 0.25), rgba(15, 23, 42, 0.85)); }
+
+    .p-card-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .p-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .p-card p {
+      font-size: 15px;
+      color: var(--text-sub);
+      line-height: 1.55;
+    }
+    .p-list {
+      list-style: none;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .p-list li {
+      font-size: 15px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      line-height: 1.45;
+    }
+
+    .stat-big {
+      font-family: 'Outfit', sans-serif;
+      font-size: 40px;
+      font-weight: 900;
+      color: var(--accent-blue);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    /* Footer controls */
+    .pres-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      border-top: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(7, 14, 28, 0.9);
+    }
+    .dots {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .dot.active {
+      width: 34px;
+      background: var(--accent-blue);
+    }
+    .nav-arrows {
+      display: flex;
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .pres-topbar, .pres-footer { padding: 12px 16px; }
+      .pres-stage { padding: 18px 16px; }
+      .pres-brand span.sub-hide { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="pres-topbar">
+    <div class="pres-brand">
+      <span>🩺 CareAssist Pro</span>
+      <span class="pres-brand-badge">Presentazione Ufficiale</span>
+      <span class="sub-hide" style="font-size:13px; color:#94a3b8; font-weight:600;">Ideato da Ciro Milella • Sviluppo Assistito AI</span>
+    </div>
+    <div class="pres-top-actions">
+      <button class="pres-btn" onclick="toggleFullScreen()" title="Schermo intero (F11)">🖥️ Schermo Intero</button>
+      <a href="/careassist/index.html" class="pres-btn primary">🚀 Apri App dal Vivo</a>
+    </div>
+  </header>
+
+  <main class="pres-stage">
+
+    <!-- SLIDE 1: SINERGIA UOMO + AI -->
+    <section class="slide active">
+      <div class="slide-kicker">🤝 Capitolo 1 • La Nascita del Progetto</div>
+      <h1 class="slide-title">
+        Quando l'esperienza reale sul campo incontra <span class="grad">l'Intelligenza Artificiale</span>
+      </h1>
+      <p class="slide-lead">
+        CareAssist Pro non nasce in un laboratorio teorico: nasce dalle vere esigenze quotidiane dell'assistenza domiciliare familiare e sanitaria, trasformate in codice grazie a un dialogo continuo tra <b>Ciro Milella</b> e l'<b>Intelligenza Artificiale</b>.
+      </p>
+
+      <div class="grid-3">
+        <div class="p-card highlight-gold">
+          <div class="p-card-icon">🧠</div>
+          <h3>La Mente Umana (Ciro Milella)</h3>
+          <p>Ha portato l'esperienza viva del caregiver: gli orari reali dei farmaci, il problema delle scatole che finiscono nei festivi, le penne di insulina in frigo, i moduli Ex-CTO e la tutela degli anziani.</p>
+        </div>
+        <div class="p-card highlight-blue">
+          <div class="p-card-icon">🤖</div>
+          <h3>Il Partner Tecnologico (AI)</h3>
+          <p>Ha tradotto ogni singola esigenza pratica in algoritmi clinici immediati, calcoli predittivi sulle scorte, sincronizzazione Cloud/Smartphone in tempo reale e interfacce su misura.</p>
+        </div>
+        <div class="p-card highlight-green">
+          <div class="p-card-icon">🏆</div>
+          <h3>Il Risultato Raggiunto</h3>
+          <p>Una piattaforma socio-sanitaria completa (oltre <b>19.000 righe di codice</b>) che elimina l'errore umano e unisce famiglia, operatori OSS, farmacia e medico curante.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: IL PROBLEMA REALE A DOMICILIO -->
+    <section class="slide">
+      <div class="slide-kicker">⚠️ Capitolo 2 • Perché Serviva CareAssist Pro</div>
+      <h1 class="slide-title">
+        La complessità della politerapia domiciliare <span class="grad">prima e dopo</span>
+      </h1>
+      <p class="slide-lead">
+        Gestire più assistiti anziani con patologie croniche (cardiopatie, diabete, Parkinson, epatopatie) comporta decine di scadenze incrociate ogni settimana.
+      </p>
+
+      <div class="grid-2">
+        <div class="p-card" style="border-color: rgba(239,68,68,0.45);">
+          <div class="p-card-icon">❌</div>
+          <h3 style="color:#fca5a5;">Prima: Fogli Sparsi e Rischio Errori</h3>
+          <ul class="p-list">
+            <li><span>•</span> <span><b>Scorte impreviste:</b> ci si accorge che un farmaco salvavita è finito quando si apre l'ultimo blister.</span></li>
+            <li><span>•</span> <span><b>Farmaci multi-orario o penne:</b> difficile calcolare quanti giorni durano davvero 2 penne di insulina o compresse prese 2 volte al giorno.</span></li>
+            <li><span>•</span> <span><b>Passaggio di consegne frammentato:</b> tra familiari e operatori non si sa mai con certezza se la compressa delle 08:00 è già stata data.</span></li>
+            <li><span>•</span> <span><b>Visite dal medico:</b> si arriva in ambulatorio senza l'elenco aggiornato di dosaggi, glicemie e scadenze ASL.</span></li>
+          </ul>
+        </div>
+
+        <div class="p-card highlight-green">
+          <div class="p-card-icon">✅</div>
+          <h3 style="color:#6ee7b7;">Oggi con CareAssist Pro: Controllo Totale</h3>
+          <ul class="p-list">
+            <li><span>•</span> <span><b>Scarico automatico:</b> ogni spunta "Assunto Oggi" scala la dose reale dalla scatola e aggiorna la data esatta di fine scorta.</span></li>
+            <li><span>•</span> <span><b>Preavviso Ricetta MMG:</b> il sistema avvisa con giorni di anticipo e invia la richiesta al medico via WhatsApp o Email.</span></li>
+            <li><span>•</span> <span><b>Sincronizzazione Istantanea:</b> PC di casa e Smartphone vedono la stessa identica situazione al secondo.</span></li>
+            <li><span>•</span> <span><b>Zero perdita dati:</b> Cestino di sicurezza con ripristino fino a 60 giorni.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: MOTORI FARMACOLOGICI INTELLIGENTI -->
+    <section class="slide">
+      <div class="slide-kicker">💊 Capitolo 3 • Intelligenza Farmacologica</div>
+      <h1 class="slide-title">
+        Tre problemi clinici reali risolti con <span class="grad">calcolo automatico</span>
+      </h1>
+      <p class="slide-lead">
+        Non tutti i farmaci sono "1 compressa al giorno". CareAssist Pro riconosce la formulazione e adatta automaticamente maschera e calcoli.
+      </p>
+
+      <div class="grid-3">
+        <div class="p-card highlight-blue">
+          <div class="p-card-icon">💉</div>
+          <h3>1. Motore Penne Insulina &amp; Kit Diabete</h3>
+          <p>Per <b>Xultophy penna</b> calcola le Unità Internazionali (300 UI/penna ÷ 16 UI/die = 18 gg/penna), mostra le penne in frigo e calcola il giorno esatto in cui si apre l'ultima penna per <b>richiedere la ricetta al MMG</b>, associando in automatico strisce <i>GlucoMen</i> e lancette <i>Glucoject</i>.</p>
+        </div>
+        <div class="p-card highlight-green">
+          <div class="p-card-icon">🔗</div>
+          <h3>2. Scorta Condivisa Multi-Tempo</h3>
+          <p>Per farmaci assunti più volte al giorno come <b>Sinemet 100+25 mg</b> (ore 08:00 e 12:30), divide i tempi nell'elenco ma <b>unifica il calcolo della scorta</b> sul consumo reale complessivo (4 cpr/die), evitando sovrastime pericolose.</p>
+        </div>
+        <div class="p-card highlight-gold">
+          <div class="p-card-icon">🌓</div>
+          <h3>3. Dosi Alternate &amp; Quindicinali</h3>
+          <p>Gestisce nativamente terapie a giorni alterni (es. <b>Triatec</b> ½ cpr / 1 cpr) e terapie mensili a data fissa (es. <b>Dibase</b> il 15 e il 30 del mese), mostrando "OGGI TOCCA" solo nei giorni previsti.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: CONTINUITÀ OSPEDALE - TERRITORIO - EMERGENZA -->
+    <section class="slide">
+      <div class="slide-kicker">🏥 Capitolo 4 • Dialogo con Medici, ASL e 118</div>
+      <h1 class="slide-title">
+        Dalla cucina di casa all'ambulatorio <span class="grad">in un solo clic</span>
+      </h1>
+      <p class="slide-lead">
+        Strumenti progettati per far risparmiare tempo prezioso ai medici curanti, agli specialisti ospedalieri e ai soccorritori del 118.
+      </p>
+
+      <div class="grid-4">
+        <div class="p-card">
+          <div class="p-card-icon">🩺</div>
+          <h3>Lettera Visita Specialistica</h3>
+          <p>Genera un foglio A4 firmato con anamnesi, terapia attiva, ultimi parametri e spazio per le variazioni dello specialista.</p>
+        </div>
+        <div class="p-card">
+          <div class="p-card-icon">🚑</div>
+          <h3>Passaporto 118 con QR</h3>
+          <p>Scheda da frigo con allergie in evidenza, farmaci salvavita, contatti e QR Code immediato per i sanitari dell'emergenza.</p>
+        </div>
+        <div class="p-card">
+          <div class="p-card-icon">🗓️</div>
+          <h3>Roadmap Scadenze Executive</h3>
+          <p>Vista panoramica unificata di tutti i 4 assistiti: esaurimento farmaci, rinnovi piani terapeutici, forniture pannoloni ASL e visite.</p>
+        </div>
+        <div class="p-card">
+          <div class="p-card-icon">🏛️</div>
+          <h3>Follow-up Policlinico &amp; Ex-CTO</h3>
+          <p>Cartella Epatologia/Malattie Infettive e compilazione automatica del modulo ufficiale per il ritiro farmaci DPC Ex-CTO Bari.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: NUMERI E LANCIO DEMO LIVE -->
+    <section class="slide">
+      <div class="slide-kicker">🚀 Capitolo 5 • Passiamo alla Dimostrazione dal Vivo</div>
+      <h1 class="slide-title">
+        Tutto pronto, su <span class="grad">PC e Smartphone</span>
+      </h1>
+      <p class="slide-lead">
+        Vediamo ora il sistema in azione in tempo reale.
+      </p>
+
+      <div class="grid-4" style="margin-bottom: 28px;">
+        <div class="p-card" style="text-align:center;">
+          <div class="stat-big">4</div>
+          <h3>Cartelle Assistiti</h3>
+          <p>Aldo, Angela, Rosa Annunziata e Ciro gestiti con un selettore istantaneo</p>
+        </div>
+        <div class="p-card" style="text-align:center;">
+          <div class="stat-big" style="color:#34d399;">100%</div>
+          <h3>Cloud &amp; Offline</h3>
+          <p>Operativo ovunque: a casa, in studio medico e in farmacia</p>
+        </div>
+        <div class="p-card" style="text-align:center;">
+          <div class="stat-big" style="color:#fbbf24;">0</div>
+          <h3>Scorte Dimenticate</h3>
+          <p>Calcolo predittivo al giorno esatto con alert personalizzabili</p>
+        </div>
+        <div class="p-card" style="text-align:center;">
+          <div class="stat-big" style="color:#c084fc;">AI</div>
+          <h3>Voce &amp; Scanner</h3>
+          <p>Briefing vocale mattutino e controllo interazioni farmacologiche</p>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="/careassist/index.html" class="pres-btn primary" style="font-size:20px; padding:16px 36px;">
+          🩺 Entra Ora in CareAssist Pro (Demo Live)
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pres-footer">
+    <div style="font-size:13.5px; color:#94a3b8; font-weight:600;">
+      Slide <span id="slide-idx">1</span> di 5 • Usa le frecce <b>← →</b> della tastiera o i pulsanti a destra
+    </div>
+    <div class="dots" id="dots-box"></div>
+    <div class="nav-arrows">
+      <button class="pres-btn" onclick="prevSlide()">← Precedente</button>
+      <button class="pres-btn primary" id="btn-next" onclick="nextSlide()">Successiva →</button>
+    </div>
+  </footer>
+
+  <script>
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var cur = 0;
+    var dotsBox = document.getElementById('dots-box');
+
+    function renderDots() {
+      dotsBox.innerHTML = slides.map(function (_, i) {
+        return '<div class="dot ' + (i === cur ? 'active' : '') + '" onclick="goSlide(' + i + ')"></div>';
+      }).join('');
+      document.getElementById('slide-idx').textContent = (cur + 1);
+      var btnNext = document.getElementById('btn-next');
+      if (cur === slides.length - 1) {
+        btnNext.textContent = '🚀 Apri CareAssist Pro';
+      } else {
+        btnNext.textContent = 'Successiva →';
+      }
+    }
+    function goSlide(n) {
+      slides[cur].classList.remove('active');
+      cur = (n + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      renderDots();
+    }
+    function nextSlide() {
+      if (cur === slides.length - 1) {
+        window.location.href = '/careassist/index.html';
+        return;
+      }
+      goSlide(cur + 1);
+    }
+    function prevSlide() { goSlide(cur - 1); }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    });
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(function () {});
+      } else {
+        document.exitFullscreen().catch(function () {});
+      }
+    }
+    renderDots();
+  </script>
+</body>
+</html>
+

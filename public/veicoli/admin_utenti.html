@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Enterprise Admin - Gestione Utenti</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="AdminUtenti"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        WINDOWSTATE="maximize"
+        ICON="assets/img/app_icon.ico"
+        NAVIGABLE="no"
+    />
+    <script>
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e) {}
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <link rel="stylesheet" href="assets/css/admin_utenti.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <style>
+        .refresh-logo-btn {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s !important;
+            cursor: pointer !important;
+        }
+        .refresh-logo-btn:hover {
+            transform: scale(1.18) rotate(15deg) !important;
+            filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.7)) !important;
+        }
+        .refresh-logo-btn:active {
+            transform: scale(0.9) rotate(360deg) !important;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+    </style>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="admin-header" onmousedown="StartDrag()" style="cursor:move;">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:15px; margin-right:15px; cursor:default;">
+            <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+            <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+            <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+        </div>
+        <div class="admin-header-title" style="flex:1;">
+            <!-- LOGO PREMIUM FLUTTUANTE A DESTRA CON PROFILO -->
+            <div style="position: absolute; right: 30px; top: 10px; z-index: 100; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <img src="assets/img/app_icon_premium.png?v=2" class="refresh-logo-btn" style="height: 55px; width: auto; border-radius: 14px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); border: 2px solid white; cursor: pointer;" alt="Logo Premium" onclick="location.reload();" title="Ricarica Maschera" onerror="this.src='assets/img/app_icon.jpg'">
+                <span style="color: #ffffff; font-size: 13px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); letter-spacing: 0.5px; font-family: 'Outfit', sans-serif;">C. Milella</span>
+            </div>
+            <div>
+                <h1 style="display:none;">USER MANAGEMENT</h1>
+
+                <p>Amministrazione profili, sicurezza dati e permessi logistici d'accesso <span style="opacity:0.2; font-size:11px; font-weight:normal; cursor:help;" title="Prova a digitare la parola 'hack' sulla tastiera...">[?]</span></p>
+            </div>
+        </div>
+        
+        <!-- NIGHT / DAY MODE 2-BUTTON CONTROL (ISOLATO DA PSEUDO-ELEMENTI CSS) -->
+        <div class="theme-switcher-container" style="display:inline-flex; align-items:center; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:30px; padding:3px; gap:4px; margin-right:20px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <!-- Pulsante Giorno (Sole) -->
+            <button type="button" id="btnThemeDay" onclick="SetThemeMode(false)" title="Attiva Modalità Giorno" style="display:flex; align-items:center; gap:6px; background:linear-gradient(135deg, #f59e0b, #d97706); color:#ffffff; border:none; border-radius:22px; padding:6px 14px; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow:0 2px 8px rgba(245,158,11,0.4);">
+                <i class="fa fa-sun-o" style="font-size:16px;"></i>
+                <span>Giorno</span>
+            </button>
+            
+            <!-- Switch Toggle Centrale Isolato -->
+            <label style="position:relative; width:44px; height:24px; cursor:pointer; margin:0 2px; display:inline-block;" title="Cambia tema">
+                <input type="checkbox" id="chkNightMode" onchange="ToggleNightMode()" style="opacity:0; width:0; height:0; position:absolute;">
+                <span id="nightSliderTrack" style="position:absolute; top:0; left:0; right:0; bottom:0; background-color:#cbd5e1; border-radius:24px; transition:background-color 0.4s; display:block;">
+                    <span id="nightSliderKnob" style="position:absolute; height:18px; width:18px; left:3px; top:3px; background-color:#ffffff; border-radius:50%; transition:transform 0.3s ease; box-shadow:0 2px 5px rgba(0,0,0,0.3); display:block;"></span>
+                </span>
+            </label>
+
+            <!-- Pulsante Notte (Luna) -->
+            <button type="button" id="btnThemeNight" onclick="SetThemeMode(true)" title="Attiva Modalità Notte" style="display:flex; align-items:center; gap:6px; background:transparent; color:#64748b; border:none; border-radius:22px; padding:6px 14px; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                <i class="fa fa-moon-o" style="font-size:16px;"></i>
+                <span>Notte</span>
+            </button>
+        </div>
+        
+        <!-- Interruttore manuale Sintesi Vocale -->
+        <label class="switch-custom" style="display:inline-flex; align-items:center; cursor:pointer; margin-right:20px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:30px; padding:6px 14px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <span style="margin-right:10px; font-weight:800; font-size:13px; color:#64748b;"><i class="fa fa-volume-up" style="margin-right:4px;"></i> VOCE</span>
+            <input type="checkbox" id="chkSpeech" style="display:none;">
+            <div style="width:36px; height:20px; background:#cbd5e1; border-radius:20px; position:relative; transition:background-color 0.4s;" id="speechTrack">
+                <div style="width:16px; height:16px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; transition:transform 0.3s ease; box-shadow:0 2px 5px rgba(0,0,0,0.3);" id="speechKnob"></div>
+            </div>
+        </label>
+        <script>
+            document.getElementById('chkSpeech').addEventListener('change', function() {
+                document.getElementById('speechTrack').style.background = this.checked ? '#10b981' : '#cbd5e1';
+                document.getElementById('speechKnob').style.transform = this.checked ? 'translateX(16px)' : 'translateX(0px)';
+                if (typeof window.ToggleSpeech === 'function') {
+                    window.ToggleSpeech(this.checked);
+                }
+            });
+            setTimeout(function() {
+                if(window.getSpeechEnabledSetting && window.getSpeechEnabledSetting()) {
+                    var chk = document.getElementById('chkSpeech');
+                    if(!chk.checked) {
+                        chk.checked = true;
+                        document.getElementById('speechTrack').style.background = '#10b981';
+                        document.getElementById('speechKnob').style.transform = 'translateX(16px)';
+                    }
+                }
+            }, 600);
+        </script>
+
+        <button class="btn btn-primary" style="background:#f0f9ff; color:#0284c7; border: 2px solid #bae6fd; font-size:18px; padding:15px 30px; margin-right:100px;" onclick="HelpIstruzioni()">
+            <img src="https://img.icons8.com/color/48/info.png" style="width:24px; margin-right:8px;"> ISTRUZIONI
+        </button>
+    </div>
+
+    <!-- BARRA DEI MENU CLASSICA -->
+    <div class="menu-bar">
+        <div class="menu-item"><u>F</u>ile
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="NuovoUtente()"><img src="https://img.icons8.com/material-rounded/24/new-view.png" style="width:16px;"> <u>N</u>uovo Account</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="EsportaExcel()"><img src="https://img.icons8.com/material-rounded/24/export.png" style="width:16px;"> <u>E</u>sporta Excel</div>
+                <div class="dropdown-item" onclick="ImportaExcel()"><img src="https://img.icons8.com/material-rounded/24/import.png" style="width:16px;"> <u>I</u>mporta Excel</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="window.close()"><img src="https://img.icons8.com/material-rounded/24/exit.png" style="width:16px;"> <u>E</u>sci</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>M</u>odifica
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="SalvaUtente()"><img src="https://img.icons8.com/material-rounded/24/save.png" style="width:16px;"> <u>S</u>alva Modifiche</div>
+                <div class="dropdown-item" onclick="EliminaUtente()"><img src="https://img.icons8.com/material-rounded/24/trash.png" style="width:16px;"> <u>E</u>limina Utente</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="ClearField('txtPassword')">Pulisci <u>P</u>assword</div>
+                <div class="dropdown-item" onclick="ClearField('txtMail')">Pulisci <u>E</u>mail</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>V</u>isualizza
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="CaricaUtenti()"><img src="https://img.icons8.com/material-rounded/24/refresh.png" style="width:16px;"> <u>A</u>ggiorna Elenco</div>
+                <div class="dropdown-item" onclick="AggiornaStats()">Ricalcola <u>S</u>tatistiche</div>
+            </div>
+        </div>
+        <div class="menu-item"><u>A</u>iuto
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="ImpostaBroadcast()" style="color:#d97706; font-weight:bold;"><img src="https://img.icons8.com/material-rounded/24/megaphone.png" style="width:16px;"> <u>I</u>nvia Broadcast Globale</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="HelpIstruzioni()"><img src="https://img.icons8.com/material-rounded/24/help.png" style="width:16px;"> <u>M</u>anuale Online</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="InviaSOS()" style="color:#ef4444; font-weight:bold;"><img src="https://img.icons8.com/material-rounded/24/error.png" style="width:16px;"> Invia Segnalazione <u>S</u>.O.S.</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="ApriGuidaDistribuzione()"><img src="https://img.icons8.com/material-rounded/24/workflow.png" style="width:16px;"> <u>G</u>uida alla Distribuzione</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" onclick="alert('Sistema Logistica C. Milella\nVersione Cockpit 2026.4')"><u>I</u>nformazioni su...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-dashboard-wrap">
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #005a9e, #003d6b);"><i class="fa fa-users" style="color:white; font-size:24px;"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statTotale">-</div>
+                    <div class="stat-label">Utenti Registrati</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fa fa-check-circle" style="color:white; font-size:24px;"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statAttivi">-</div>
+                    <div class="stat-label">Account Attivi</div>
+                </div>
+            </div>
+            <div class="stat-card" id="cardStatMail">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa fa-envelope" style="color:white; font-size:24px;"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statMailMancanti">-</div>
+                    <div class="stat-label">Email Mancanti</div>
+                </div>
+            </div>
+            <div class="stat-card" style="cursor:pointer;" onclick="EseguiSnapshotDB()" title="Clicca per eseguire Snapshot di Backup Immediato">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #64748b, #334155);"><i class="fa fa-shield" style="color:white; font-size:24px;"></i></div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statDbInfo" style="font-size:16px;">Calcolo...</div>
+                    <div class="stat-label">Salute Database (Click=Backup)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VISIBLE ENTERPRISE GOLD ACTION BAR -->
+        <div style="background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 12px; padding: 15px; margin: 0 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid #334155;">
+            <div style="color: #cbd5e1; font-weight: 900; font-size: 14px; letter-spacing: 2px;"><i class="fa fa-star" style="color:#f1c40f; margin-right:6px;"></i> ENTERPRISE GOLD MODULES:</div>
+            <div style="display: flex; gap: 15px;">
+                <button class="btn btn-primary" style="background:#fff; color:#0ea5e9; border:none; padding:10px 20px; font-size:14px; height:auto;" onclick="EseguiSnapshotDB()">
+                    <img src="https://img.icons8.com/color/48/database-export.png" style="width:20px;"> 1. SNAPSHOT DB
+                </button>
+                <button class="btn btn-primary" style="background:#fff; color:#d97706; border:none; padding:10px 20px; font-size:14px; height:auto;" onclick="ImpostaBroadcast()">
+                    <img src="https://img.icons8.com/color/48/megaphone.png" style="width:20px;"> 2. BROADCAST
+                </button>
+                <button class="btn btn-primary" style="background:#fff; color:#059669; border:none; padding:10px 20px; font-size:14px; height:auto;" onclick="ApriUserAudit()">
+                    <img src="https://img.icons8.com/color/48/spy.png" style="width:20px;"> 3. USER AUDIT
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-body">
+            <!-- LIST CARD -->
+            <div class="card list-card">
+                <div class="card-header">
+                    <img src="https://img.icons8.com/fluency/64/conference-call.png" style="width:36px;">
+                    <h2>ELENCO ACCOUNT GESTIONALI</h2>
+                    <div style="position:relative; display:flex; align-items:center;">
+                        <img src="https://img.icons8.com/fluency/48/search.png" style="width:20px; position:absolute; left:12px; opacity:0.7;">
+                        <input type="text" id="txtSearch" placeholder="Cerca..." onkeyup="FiltraUtenti()" 
+                               style="padding: 10px 12px 10px 40px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; width: 180px; outline: none; background:#f8fafc;">
+                    </div>
+                </div>
+                <div id="insightBox" class="insight-box">
+                    <span><i class="fa fa-info-circle" style="color:#38bdf8; font-size:16px;"></i></span> 
+                    <span id="lblLastLogin">Analisi accessi in corso...</span>
+                </div>
+                <div id="userGrid" class="user-grid" style="padding-top:10px;"></div>
+            </div>
+
+            <!-- DETAILS CARD -->
+            <div class="card details-card">
+                <div class="card-header">
+                    <img src="https://img.icons8.com/fluency/64/settings.png" style="width:36px;">
+                    <h2>CONFIGURAZIONE</h2>
+                </div>
+                <div class="details-body">
+                    <div class="form-group">
+                        <label for="txtNome"><i class="fa fa-user" style="color:#0ea5e9; margin-right:5px;"></i> NOME UTENTE / LOGIN</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <input type="text" id="txtNome" placeholder="Username">
+                            </div>
+                            <div class="row-actions">
+                                <button class="row-btn btn-save" title="Salva Utente" onclick="SalvaUtente()"><img src="https://img.icons8.com/fluency/48/save.png"></button>
+                                <button class="row-btn" title="Focus Campo" onclick="FocusField('txtNome')"><img src="https://img.icons8.com/fluency/48/pencil.png"></button>
+                                <button class="row-btn btn-clear" title="Pulisci Campo" onclick="ClearField('txtNome')"><img src="https://img.icons8.com/fluency/48/broom.png"></button>
+                                <div style="width:10px;"></div>
+                                <button class="row-btn" style="border-color:var(--cl-success);" title="Nuovo Utente" onclick="NuovoUtente()"><img src="https://img.icons8.com/fluency/48/plus.png"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtPassword"><i class="fa fa-key" style="color:#0ea5e9; margin-right:5px;"></i> CHIAVE DI ACCESSO (TEXT)</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <input type="text" id="txtPassword" placeholder="Inserisci password" onkeyup="AnalizzaPassword(this.value)">
+                            </div>
+                            <div class="row-actions">
+                                <button class="row-btn" id="btnTogglePass" title="Mostra/Nascondi Password" onclick="TogglePasswordVisibility()"><img id="imgTogglePass" src="https://img.icons8.com/fluency/48/visible.png"></button>
+                                <button class="row-btn" title="Genera Password Sicura" onclick="GeneraPasswordSicura()"><img src="https://img.icons8.com/fluency/48/dice.png"></button>
+                                <button class="row-btn btn-save" title="Salva Utente" onclick="SalvaUtente()"><img src="https://img.icons8.com/fluency/48/save.png"></button>
+                                <button class="row-btn btn-clear" title="Pulisci Campo" onclick="ClearField('txtPassword')"><img src="https://img.icons8.com/fluency/48/broom.png"></button>
+                            </div>
+                        </div>
+                        <div class="strength-container">
+                            <div id="strengthBar" class="strength-bar"></div>
+                        </div>
+                        <div id="strengthText" class="strength-text">Nessuna Password</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtMail"><i class="fa fa-envelope" style="color:#0ea5e9; margin-right:5px;"></i> EMAIL DI SICUREZZA</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <input type="text" id="txtMail" placeholder="Indirizzo e-mail">
+                            </div>
+                            <div class="row-actions">
+                                <button class="row-btn btn-save" title="Salva Utente" onclick="SalvaUtente()"><img src="https://img.icons8.com/fluency/48/save.png"></button>
+                                <button class="row-btn" title="Focus Campo" onclick="FocusField('txtMail')"><img src="https://img.icons8.com/fluency/48/pencil.png"></button>
+                                <button class="row-btn btn-clear" title="Pulisci Campo" onclick="ClearField('txtMail')"><img src="https://img.icons8.com/fluency/48/broom.png"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label for="cmbRuolo"><i class="fa fa-shield" style="color:#0ea5e9; margin-right:5px;"></i> RUOLO E PERMESSI</label>
+                        <div class="row-input">
+                            <div class="input-wrap">
+                                <select id="cmbRuolo" style="width:100%; padding:10px 14px; border-radius:12px; border:1.5px solid #e2e8f0; font-weight:bold; color:#1e293b; outline:none; background:#f8fafc;">
+                                    <option value="Amministratore">👑 Amministratore (Accesso Totale)</option>
+                                    <option value="Operatore" selected>💻 Operatore Logistica (Ufficio)</option>
+                                    <option value="Autista">🚚 Autista / Driver (Solo Mobile)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; margin-top:10px; margin-bottom:15px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; flex:none;">
+                        <label class="checkbox-group" for="chkAbilitato" style="margin:0 0 10px 0;">
+                            <input type="checkbox" id="chkAbilitato" checked> 
+                            <span style="font-weight:bold; color:#0f172a;">Account Abilitato al login</span>
+                        </label>
+                        <div style="height:1px; background:#e2e8f0; margin: 10px 0;"></div>
+                        <label class="checkbox-group" for="chkPermCancella" style="margin:0 0 10px 0;">
+                            <input type="checkbox" id="chkPermCancella"> 
+                            <span style="font-weight:bold; color:#d97706;">Permesso di Eliminazione Dati</span>
+                        </label>
+                        <label class="checkbox-group" for="chkPermExport" style="margin:0;">
+                            <input type="checkbox" id="chkPermExport"> 
+                            <span style="font-weight:bold; color:#059669;">Permesso di Esportazione Excel</span>
+                        </label>
+                    </div>
+
+                    <div style="display:flex; margin-bottom:15px; flex:none;">
+                        <button class="btn btn-primary" style="flex:1; background:#25d366; border-color:#25d366; margin-right:10px;" onclick="CondividiCredenziali('whatsapp')" title="Invia su WhatsApp">
+                            <i class="fa fa-whatsapp" style="font-size:18px;"></i> INVIA CREDENZIALI
+                        </button>
+                        <button class="btn btn-primary" style="flex:1; background:#005a9e; color:white; border-color:#005a9e;" onclick="GeneraQRLogin()" title="Genera QR per App Mobile">
+                            <i class="fa fa-qrcode" style="font-size:18px;"></i> MOSTRA QR LOGIN
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                            <label style="color: #005a9e; font-weight: 800; font-size: 11px; letter-spacing: 0.5px; margin:0;"><i class="fa fa-clock-o" style="color:#0ea5e9; margin-right:5px;"></i> MODELLO ORARIO STANDARD</label>
+                            <div id="badgeTotalOre" style="font-size: 10px; background:#f1f5f9; color:#64748b; border: 1px solid #cbd5e1; padding: 3px 10px; border-radius: 20px; font-weight:800; transition: all 0.2s;"><i class="fa fa-hourglass-half" style="color:#64748b; margin-right:4px;"></i> TOTALE: 0h 00m</div>
+                        </div>
+                        <div style="display:flex; gap:8px; margin-top:5px;">
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">ENTRATA 1</label>
+                                <input type="text" id="txtStdE1" placeholder="09:00" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">USCITA 1</label>
+                                <input type="text" id="txtStdU1" placeholder="13:30" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">ENTRATA 2</label>
+                                <input type="text" id="txtStdE2" placeholder="14:30" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:9px; opacity:0.8; font-weight:bold; display:block; margin-bottom:2px;">USCITA 2</label>
+                                <input type="text" id="txtStdU2" placeholder="17:30" onkeyup="CalcolaTotaleOre()" onchange="CalcolaTotaleOre()" style="text-align:center; height:32px; padding: 5px; font-size:12px; border: 1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                        </div>
+                        <p style="font-size:9px; color:#64748b; margin-top:5px; font-style:italic; margin-bottom:0;">Caricati automaticamente nel registro presenze.</p>
+                        
+                        <!-- VISUAL GANTT (CARICO ORARIO) -->
+                        <div style="margin-top:10px; background:#e2e8f0; height:12px; border-radius:6px; position:relative; overflow:hidden; border:1px solid #cbd5e1;" title="Diagramma Carico Orario Giornaliero (00:00 - 24:00)">
+                            <div id="ganttBar1" style="position:absolute; height:100%; left:0%; width:0%; background:linear-gradient(90deg, #3b82f6, #2563eb); border-radius:6px; transition:all 0.5s;"></div>
+                            <div id="ganttBar2" style="position:absolute; height:100%; left:0%; width:0%; background:linear-gradient(90deg, #3b82f6, #2563eb); border-radius:6px; transition:all 0.5s;"></div>
+                            <!-- Griglia oraria fissa (Tick marks) -->
+                            <div style="position:absolute; left:25%; height:100%; border-left:1px dashed rgba(0,0,0,0.2);"></div>
+                            <div style="position:absolute; left:50%; height:100%; border-left:1px solid rgba(0,0,0,0.4);"></div>
+                            <div style="position:absolute; left:75%; height:100%; border-left:1px dashed rgba(0,0,0,0.2);"></div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:8px; color:#94a3b8; font-weight:bold; margin-top:2px;">
+                            <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; margin-top:20px;">
+                        <button class="btn btn-success" style="flex:1; height:46px; font-size:15px; padding:0; margin-right:15px;" onclick="SalvaUtente()">
+                            <img src="https://img.icons8.com/fluency/48/checked-user-male.png" style="width:24px;"> SALVA
+                        </button>
+                        <button class="btn btn-danger" style="flex:1; height:46px; font-size:15px; padding:0;" onclick="EliminaUtente()">
+                            <img src="https://img.icons8.com/fluency/48/trash.png" style="width:24px;"> ELIMINA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-audit">
+            <div class="audit-header">
+                <div><span><i class="fa fa-history" style="color:#0ea5e9; margin-right:5px;"></i></span> SYSTEM AUDIT TRAIL (STORICO VERSIONAMENTO)</div>
+                <div class="audit-actions">
+                    <button class="audit-btn" onclick="ApriUserAudit()" title="Apri log tracciamento utenti">
+                        <img src="https://img.icons8.com/color/48/spy.png" style="width:16px;"> USER AUDIT
+                    </button>
+                    <button class="audit-btn" onclick="ApriLogCompleto()" title="Apri file log completo con Notepad">
+                        <img src="https://img.icons8.com/color/48/external-link.png" style="width:16px;"> VEDI TUTTO
+                    </button>
+                    <button class="audit-btn btn-clear-log" onclick="SvuotaLog()" title="Cancella tutto lo storico log">
+                        <img src="https://img.icons8.com/color/48/delete-forever.png" style="width:16px;"> SVUOTA LOG
+                    </button>
+                </div>
+            </div>
+            <div id="logContainer" class="log-container"></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+        <div class="bottom-actions">
+            <button class="btn btn-primary" onclick="EsportaExcel()">
+                <img src="https://img.icons8.com/fluency/48/microsoft-excel-2019.png" style="width:24px;">
+                ESPORTA
+            </button>
+            <button class="btn btn-primary" onclick="ImportaExcel()">
+                <img src="https://img.icons8.com/fluency/48/import.png" style="width:24px;">
+                IMPORTA
+            </button>
+            <div style="width:15px;"></div>
+            <button class="btn btn-primary" style="color:#b73e35; border-color:#b73e35;" onclick="VerificaEmail()">
+                 <img src="https://img.icons8.com/fluency/48/mail-error.png" style="width:20px;">
+                 EMAIL MANCANTI
+            </button>
+            <button class="btn btn-primary" onclick="AggiornaVersione()">
+                <img src="https://img.icons8.com/fluency/48/checkmark-release.png" style="width:20px;">
+                SYSTEM LOG
+            </button>
+        </div>
+        
+        <div class="hint-text" id="lblHint">Seleziona un utente dal listino per visualizzare i dettagli.</div>
+        
+        <button class="btn btn-primary" style="background:#f1f5f9; color:#334155; border-color:#cbd5e1;" onclick="TornaDashboard()">
+            <img src="https://img.icons8.com/fluency/48/exit.png" style="width:24px;">
+            CHIUDI ADMIN
+        </button>
+    </div>
+
+    <!-- CONTEXT MENU (Glass Style) -->
+    <div id="ctxMenu" class="context-menu" style="display:none;">
+        <div class="ctx-item" onclick="EseguiGhostLoginDalContext()" style="color:#0ea5e9; font-weight:bold;">
+            <img src="https://img.icons8.com/material-rounded/24/0ea5e9/ghost.png">
+            ENTRA COME... (Ghost Login)
+        </div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-item" onclick="StampaSchedaDalContext()">
+            <img src="https://img.icons8.com/material-rounded/24/print.png">
+            STAMPA SCHEDA UTENTE
+        </div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-item danger" onclick="EliminaDalContext()">
+            <img src="https://img.icons8.com/material-rounded/24/trash.png">
+            ELIMINA UTENTE
+        </div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-item" onclick="HideContextMenu()">
+            <img src="https://img.icons8.com/material-rounded/24/cancel.png">
+            ANNULLA
+        </div>
+    </div>
+
+    <!-- TIME PICKER OVERLAY (MASCHERA ORARI) -->
+    <div id="tpOverlay" class="tp-overlay">
+        <div class="tp-modal">
+            <div class="tp-header">SELEZIONE ORARIO STANDARD</div>
+            <div class="tp-body">
+                <div class="tp-col">
+                    <div class="tp-col-title">ORE</div>
+                    <div class="tp-scroll" id="tp-hours"></div>
+                </div>
+                <div class="tp-col">
+                    <div class="tp-col-title">MINUTI</div>
+                    <div class="tp-scroll" id="tp-minutes"></div>
+                </div>
+            </div>
+            <div class="tp-footer">
+                <button class="btn-tp-cancel" onclick="CloseTimePicker()">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- MODALE QR CODE LOGIN -->
+    <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); backdrop-filter:blur(5px); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:white; padding:30px; border-radius:24px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); max-width:400px; animation: modalContentSlide 0.3s ease-out;">
+            <h2 style="margin-top:0; color:#0f172a; font-weight:900;"><i class="fa fa-mobile" style="font-size:24px; color:#3b82f6;"></i> Login Rapido App</h2>
+            <p style="color:#64748b; font-size:13px; margin-bottom:20px;">L'autista pu� scansionare questo QR con l'App Mobile per accedere immediatamente senza digitare la password.</p>
+            <div style="background:#f8fafc; padding:20px; border-radius:16px; border:2px dashed #cbd5e1; display:inline-block; margin-bottom:20px;">
+                <img id="imgQrCode" src="" alt="QR Code" style="width:200px; height:200px;">
+            </div>
+            <div>
+                <button class="btn btn-primary" style="width:100%; font-size:15px; padding:12px; border-radius:12px; background:#005a9e;" onclick="document.getElementById('qrModal').style.display='none'">CHIUDI E TORNA ALLA SCHEDA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE WHATSAPP -->
+    <div id="waModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); backdrop-filter:blur(5px); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:white; padding:30px; border-radius:24px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); width:380px; animation: modalContentSlide 0.3s ease-out;">
+            <h2 style="margin-top:0; color:#0f172a; font-weight:900;"><i class="fa fa-whatsapp" style="font-size:28px; color:#25d366;"></i> Numero WhatsApp</h2>
+            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Inserisci il numero di telefono a cui inviare le credenziali (compreso di prefisso es. 39...)</p>
+            <div style="margin-bottom:20px;">
+                <input type="text" id="txtWaPhone" placeholder="393331234567" style="width:100%; padding:15px; border:3px solid #e2e8f0; border-radius:12px; font-size:20px; font-weight:900; color:#0f172a; outline:none; text-align:center; box-sizing:border-box;">
+            </div>
+            <div style="display:flex;">
+                <button class="btn btn-primary" style="flex:1; background:#f1f5f9; color:#64748b; border:2px solid #cbd5e1; padding:12px; border-radius:12px; font-size:14px; margin-right:10px;" onclick="document.getElementById('waModal').style.display='none'">ANNULLA</button>
+                <button class="btn btn-primary" style="flex:1; background:#25d366; color:white; border:2px solid #25d366; padding:12px; border-radius:12px; font-size:14px;" onclick="ConfermaWaInvio()"><i class="fa fa-paper-plane"></i> INVIA ORA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE BROADCAST (ENTERPRISE GOLD) -->
+    <div id="broadcastModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); backdrop-filter:blur(5px); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:white; padding:30px; border-radius:24px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); width:480px; animation: modalContentSlide 0.3s ease-out;">
+            <h2 style="margin-top:0; color:#0f172a; font-weight:900;"><img src="https://img.icons8.com/color/48/megaphone.png" style="width:36px; vertical-align:middle; margin-right:10px;"> INVIA BROADCAST</h2>
+            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Scrivi il messaggio che apparir&agrave; in popup a tutti gli operatori aziendali al loro prossimo accesso.<br><span style="font-size:11px; opacity:0.8;">(Lascia vuoto e salva per rimuovere un broadcast attivo)</span></p>
+            <div style="margin-bottom:20px;">
+                <textarea id="txtBroadcastMsg" placeholder="Esempio: Attenzione, oggi i server saranno riavviati alle ore 15:00..." style="width:100%; height:120px; padding:15px; border:3px solid #e2e8f0; border-radius:12px; font-size:16px; font-weight:600; color:#0f172a; outline:none; resize:none; box-sizing:border-box; font-family:inherit;"></textarea>
+            </div>
+            <div style="display:flex;">
+                <button class="btn btn-primary" style="flex:1; background:#f1f5f9; color:#64748b; border:2px solid #cbd5e1; padding:12px; border-radius:12px; font-size:14px; margin-right:10px;" onclick="document.getElementById('broadcastModal').style.display='none'">ANNULLA</button>
+                <button class="btn btn-primary" style="flex:1; background:linear-gradient(135deg, #f59e0b, #d97706); color:white; border:none; padding:12px; border-radius:12px; font-size:14px;" onclick="ConfermaBroadcast()"><i class="fa fa-paper-plane" style="margin-right:8px;"></i> PUBBLICA ORA</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var pendingWaMsg = "";
+        
+        function CondividiCredenziali(metodo) {
+            var utente = document.getElementById('txtNome').value;
+            var pass = document.getElementById('txtPassword').value;
+            if (!utente) { alert('Seleziona o crea un utente prima di condividere le credenziali.'); return; }
+            
+            pendingWaMsg = "Ciao! Ecco le tue credenziali di accesso per il Gestionale C. Milella:\n\nUtente: " + utente + "\nPassword: " + (pass ? pass : "[La tua password attuale]") + "\n\nRaccomandiamo di non conservare o condividere questi dati.";
+            
+            if (metodo === 'whatsapp') {
+                var phoneInput = document.getElementById('txtWaPhone');
+                phoneInput.value = "39";
+                document.getElementById('waModal').style.display = 'flex';
+                setTimeout(function(){ phoneInput.focus(); }, 200);
+            }
+        }
+
+        function ConfermaWaInvio() {
+            var phone = document.getElementById('txtWaPhone').value;
+            if (phone && phone.length > 5) {
+                var waNum = phone.replace(/[^0-9]/g, '');
+                var waText = encodeURIComponent(pendingWaMsg);
+                
+                try {
+                    // Tenta di aprire l'App Desktop in modo nativo su Windows senza passare dal browser
+                    var shell = new ActiveXObject("WScript.Shell");
+                    shell.Run('cmd.exe /c start "" "whatsapp://send?phone=' + waNum + '&text=' + waText + '"', 0, false);
+                } catch(e) {
+                    // Fallback di sicurezza: se ActiveX � bloccato, apri tramite link Web standard
+                    window.open("https://api.whatsapp.com/send?phone=" + waNum + "&text=" + waText, "_blank");
+                }
+                
+                document.getElementById('waModal').style.display = 'none';
+            } else {
+                alert("Inserisci un numero di telefono valido.");
+            }
+        }
+
+        function GeneraQRLogin() {
+            var utente = document.getElementById('txtNome').value;
+            var pass = document.getElementById('txtPassword').value;
+            if (!utente || !pass) { alert('ATTENZIONE: Occorre avere un Utente e una Password visibile per generare il QR Code di Login.'); return; }
+            
+            // Utilizziamo l'API di goqr.me per generare il QR (molto affidabile per vecchi browser)
+            var qrData = "LOGIN:" + utente + "|" + pass;
+            var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(qrData);
+            
+            document.getElementById('imgQrCode').src = qrUrl;
+            document.getElementById('qrModal').style.display = 'flex';
+        }
+    </script>
+    <script src="assets/js/crypto_engine.js"></script>
+    <script src="assets/js/admin_utenti_hta.js"></script>
+    <script src="assets/js/accessibility.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+
+
+

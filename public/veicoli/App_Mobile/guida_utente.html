@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Consegnatario - Sistema Logistica Platinum SVILUPPATORE C. Milella</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/accessibility.css">
+    <style>
+        :root {
+            --bg: #0f111a;
+            --card: #1a1c2c;
+            --accent-orange: #ff6b00;
+            --accent-cyan: #00d2ff;
+            --text: #ffffff;
+            --text-sec: #bdc3c7;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--card) 0%, #000 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-orange);
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        h1 { margin: 0; font-size: 2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .version { font-size: 0.8rem; color: var(--accent-cyan); font-weight: 600; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .step-card {
+            background: var(--card);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .vignette-container {
+            width: 100%;
+            height: 350px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .vignette-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .step-content {
+            padding: 30px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--accent-orange);
+            color: #000;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        h2 { margin: 0 0 15px 0; color: var(--accent-cyan); font-size: 1.5rem; }
+        p { color: var(--text-sec); margin-bottom: 20px; }
+
+        .pro-tip {
+            background: rgba(0,210,255,0.1);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .pro-tip i { color: var(--accent-cyan); margin-right: 10px; }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-sec);
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: var(--accent-orange);
+            color: black;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 800;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<!-- STICKY TOP CONTROL BAR -->
+<div id="manualTopNav" style="position:sticky; top:0; left:0; width:100%; background:rgba(15,23,42,0.95); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:2px solid #00d2ff; padding:10px 20px; z-index:999999; display:flex; justify-content:space-between; align-items:center; box-sizing:border-box; box-shadow:0 4px 15px rgba(0,0,0,0.5);">
+    <button type="button" onclick="ChiudiOTrattieniManuale()" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #ef4444, #b91c1c); color:#ffffff; border:none; padding:8px 18px; border-radius:20px; font-weight:800; font-size:12.5px; cursor:pointer; box-shadow:0 3px 10px rgba(239,68,68,0.4); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='none';">
+        <i class="fa fa-arrow-left" style="font-size:14px;"></i>
+        <span>⬅️ CHIUDI & TORNA ALLA DASHBOARD</span>
+    </button>
+    
+    <div style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #0f172a, #1e293b); color:#f8fafc; border:1px solid #d4af37; padding:5px 16px; border-radius:20px; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+        <span style="color:#d4af37; font-size:13px;">👑</span>
+        <span>Amministratore del progetto Ciro Milella</span>
+    </div>
+    
+    <button type="button" onclick="window.print()" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; border:none; padding:8px 18px; border-radius:20px; font-weight:800; font-size:12px; cursor:pointer; box-shadow:0 3px 10px rgba(2,132,199,0.4); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='none';">
+        <i class="fa fa-print" style="font-size:14px;"></i>
+        <span>🖨️ STAMPA</span>
+    </button>
+</div>
+
+<script>
+function ChiudiOTrattieniManuale() {
+    try {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "../dashboard.html";
+        }
+    } catch(e) {
+        try { window.close(); } catch(eC) {}
+    }
+}
+</script>
+
+    <header>
+        <i class="fa fa-truck logo-icon"></i>
+        <h1>AURELIO NICOLODI</h1>
+        <div class="version">SISTEMA LOGISTICA PLATINUM by C. MILELLA</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="step-card">
+            <div class="vignette-container">
+                <img src="vignetta_setup.png" alt="Schermata di configurazione profilo autista. Inserisci e salva il tuo nome per le consegne.">
+            </div>
+            <div class="step-content">
+                <span class="step-number">1</span>
+                <h2>Configurazione Profilo</h2>
+                <p>Usa le <b>Impostazioni</b> per salvare il tuo nome. Questo permetterà all'ufficio di sapere chi ha effettuato la consegna e di creare le tue cartelle personali sul PC.</p>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="vignette-container">
+                <img src="vignetta_consegna.png" alt="Acquisizione prova di consegna POD. Schermata per inserimento firma del cliente o scatto fotografia del pacco.">
+            </div>
+            <div class="step-content">
+                <span class="step-number">2</span>
+                <h2>Firma e Foto</h2>
+                <p>Acquisisci la prova di consegna (POD) con un clic. Firma sullo schermo o scatta una foto del pacco consegnato.</p>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="vignette-container">
+                <img src="vignetta_note.png" alt="Blocco note privato dell'autista salvato localmente sul telefono.">
+            </div>
+            <div class="step-content">
+                <span class="step-number">3</span>
+                <h2>Note Personali</h2>
+                <p>Usa il blocco note per i tuoi promemoria. È un taccuino privato salvato solo sul tuo telefono.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="btn-home">Torna all'App</a>
+        </div>
+
+    </div>
+
+    <footer>
+        SISTEMA LOGISTICA PLATINUM SVILUPPATORE C. Milella &copy; 2026
+    </footer>
+    <script src="../assets/js/accessibility.js"></script>
+</body>
+</html>

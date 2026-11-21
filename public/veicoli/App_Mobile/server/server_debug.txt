@@ -1,0 +1,9 @@
+✅ Backup DB creato: C:\Users\Utente\Desktop\LOGISTICA_CONSEGNE_MC\questa\Sistema_Logistica_C_Milella\File_Sistema\DB_Backup_Auto\ConsegneDB_2026-09-25T08-23-35.sqlite
+🧹 Pulizia vecchi backup completata (mantenuti ultimi 3).
+========================================
+✅ UNIFIED PORTABLE BRIDGE SULLA PORTA 3002
+Disponibile per HTA locale e Mobile App
+========================================
+✅ Connesso a ConsegneDB_Legacy.sqlite su porta 3002
+✅ WAL mode attivato (protezione anti-corruzione USB)
+✅ Database integro (integrity_check OK)

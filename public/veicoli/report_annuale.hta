@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>REPORT ANNUALE - Riepilogo KM</title>
+    <hta:application 
+        id="oReportAnnuale"
+        applicationname="ReportAnnuale"
+        border="none"
+        caption="no"
+        showintaskbar="yes"
+        singleinstance="yes"
+        sysmenu="no"
+        maximizebutton="no"
+        minimizebutton="no"
+        windowstate="maximize"
+        ICON="assets/img/app_icon.ico"
+        scroll="yes"
+    />
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/report_mensile.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        var shell = new ActiveXObject("WScript.Shell");
+        
+        var pathEval = document.location.pathname;
+        if(pathEval.indexOf("/") === 0) pathEval = pathEval.substring(1);
+        pathEval = decodeURIComponent(pathEval).replace(/\//g, "\\");
+        var currentDir = fso.GetParentFolderName(pathEval);
+        var DB_PATH = fso.BuildPath(currentDir, "ConsegneDB.accdb"); document.title = "REPORT ANNUALE - Riepilogo KM";
+
+        var mesiNomi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+
+                function QueryDB(sql) {
+            try {
+                var jsonPath = fso.BuildPath(currentDir, "consegne_dump.json");
+                if (fso.FileExists(jsonPath)) {
+                    var f = fso.OpenTextFile(jsonPath, 1, false, -2); // System default encoding
+                    var data = f.ReadAll();
+                    f.Close();
+                    return JSON.parse(data);
+                }
+            } catch(e) {
+            }
+            return [];
+        }
+
+        function FormatDate(d) {
+            var dd = (d.getDate()<10?"0":"")+d.getDate();
+            var mm = (d.getMonth()+1<10?"0":"")+(d.getMonth()+1);
+            return dd + "/" + mm + "/" + d.getFullYear();
+        }
+
+        window.onload = function() {
+            try {
+                // Recupera tutte le consegne con KM
+                var sql = "SELECT DataConsegna, KmAndata, KmRitorno FROM tblConsegne";
+                var dati = QueryDB(sql);
+                
+                var annoSelezionato = 2026; // Puoi cambiarlo o renderlo dinamico
+                var mesiKm = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0};
+                var consegneMese = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0};
+                var totaleKmAnno = 0;
+                var totaleConsegne = 0;
+
+                for (var i = 0; i < dati.length; i++) {
+                    var r = dati[i];
+                    if (!r.DataConsegna) continue;
+                    
+                    var d = null;
+                    var ds = String(r.DataConsegna);
+                    if (ds.indexOf("/") > 0) {
+                        var parts = ds.split(" ")[0].split("/");
+                        if (parts.length === 3) d = new Date(parseInt(parts[2],10), parseInt(parts[1],10)-1, parseInt(parts[0],10));
+                    } else if (ds.indexOf("-") > 0) {
+                        var parts = ds.split(" ")[0].split("-");
+                        if (parts.length === 3) d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+                    } else {
+                        d = new Date(r.DataConsegna);
+                    }
+                    
+                    if (d && !isNaN(d.getTime()) && d.getFullYear() === annoSelezionato) {
+                        var mese = d.getMonth() + 1;
+                        var kA = parseFloat(String(r.KmAndata).replace(",", ".")) || 0;
+                        var kR = parseFloat(String(r.KmRitorno).replace(",", ".")) || 0;
+                        var ktot = kA + kR;
+                        
+                        mesiKm[mese] += ktot;
+                        consegneMese[mese]++;
+                        totaleKmAnno += ktot;
+                        totaleConsegne++;
+                    }
+                }
+
+                // Genera la tabella
+                var html = "";
+                var mesiAttivi = 0;
+                
+                for (var m = 1; m <= 12; m++) {
+                    if (mesiKm[m] > 0 || consegneMese[m] > 0) {
+                        mesiAttivi++;
+                        html += "<tr style='border-bottom: 1px solid #e2e8f0;'>";
+                        html += "<td style='padding:12px; font-weight:bold;'>" + mesiNomi[m-1].toUpperCase() + "</td>";
+                        html += "<td align='center' style='padding:12px;'>" + consegneMese[m] + "</td>";
+                        html += "<td align='right' style='padding:12px; font-weight:bold; color:#1e293b; font-size:16px;'>" + mesiKm[m].toLocaleString("it-IT", {minimumFractionDigits: 1, maximumFractionDigits: 1}) + " Km</td>";
+                        html += "</tr>";
+                    }
+                }
+                
+                document.getElementById("tBodyDati").innerHTML = html;
+                
+                var mediaMensile = mesiAttivi > 0 ? (totaleKmAnno / mesiAttivi) : 0;
+                
+                document.getElementById("lblTotaleAnno").innerText = totaleKmAnno.toLocaleString("it-IT", {minimumFractionDigits: 1, maximumFractionDigits: 1}) + " Km";
+                document.getElementById("lblMediaMensile").innerText = mediaMensile.toLocaleString("it-IT", {minimumFractionDigits: 1, maximumFractionDigits: 1}) + " Km";
+                document.getElementById("lblTotaleConsegne").innerText = totaleConsegne;
+                document.getElementById("lblAnno").innerText = annoSelezionato;
+                
+                var oggi = new Date();
+                document.getElementById("printDate").innerText = FormatDate(oggi) + " alle ore " + (oggi.getHours()<10?"0":"")+oggi.getHours() + ":" + (oggi.getMinutes()<10?"0":"")+oggi.getMinutes();
+
+            } catch(e) {
+                alert("Errore caricamento dati: " + e.message);
+            }
+        };
+
+        function EseguiStampa() { alert('ATTENZIONE:\n\nPer esportare il documento in PDF:\n1. Clicca OK su questo avviso.\n2. Nel menu che si aprir�, scegli la stampante chiamata \x22Microsoft Print to PDF\x22.\n3. Clicca Stampa e scegli dove salvare il file sul computer.');
+            window.print();
+        }
+    </script>
+    <style>
+        @media print {
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            .page { box-shadow: none !important; padding: 20px !important; max-width: 100% !important; border-radius: 0 !important; }
+            table { width: 95% !important; margin: 0 auto 40px auto !important; }
+            th, td { padding: 8px !important; }
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0; background: #f8fafc; font-family: 'Segoe UI', Tahoma, sans-serif;">
+    <div class="danea-top-black-bar no-print" onmousedown="StartDrag()" style="height:35px; background:#1a1a1a; color:white; display:flex; align-items:center; padding:0 15px; font-size:11px; font-weight:bold; cursor:move;">
+        <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:5px; cursor:default;">
+            <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+        </div>
+        <span style="margin-left:20px;">Report Annuale KM</span>
+    </div>
+
+    <div class="no-print" style="padding: 20px; text-align:center;">
+        <button onclick="EseguiStampa()" style="background:#0f172a; color:white; border:none; padding:12px 24px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            🖨️ STAMPA DOCUMENTO PER AVVOCATO
+        </button>
+    </div>
+
+    <div class="page" style="background:white; max-width:800px; margin: 0 auto; padding: 50px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-radius:12px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <div style="font-size: 28px; font-weight: 800; color:#0f172a; letter-spacing: -0.5px;">Logistica Aziendale</div>
+            <div style="font-size: 14px; color: #64748b; margin-top:5px;">Report Ufficiale Chilometraggio Annuale e Volume Consegne</div>
+        </div>
+        
+        <div style="border-bottom: 2px solid #e2e8f0; margin-bottom: 30px;"></div>
+        
+        <div style="text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 30px; color:#1e293b;">
+            RIEPILOGO ATTIVITA' ANNO <span id="lblAnno" style="color:#2563eb;">2026</span>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size:15px;">
+            <thead>
+                <tr style="background:#f1f5f9; border-bottom:2px solid #cbd5e1;">
+                    <th align="left" style="padding:12px; color:#475569;">Mese</th>
+                    <th align="center" style="padding:12px; color:#475569;">Numero Consegne</th>
+                    <th align="right" style="padding:12px; color:#475569;">Chilometri Percorsi</th>
+                </tr>
+            </thead>
+            <tbody id="tBodyDati">
+                <!-- Riempito via JS -->
+            </tbody>
+        </table>
+
+        <div style="display:flex; justify-content:space-between; gap:20px; margin-bottom:50px;">
+            <div style="flex:1; background:#f8fafc; padding:20px; border-radius:10px; border:1px solid #e2e8f0; text-align:center;">
+                <div style="font-size:12px; color:#64748b; font-weight:bold; text-transform:uppercase; margin-bottom:8px;">Totale Consegne</div>
+                <div id="lblTotaleConsegne" style="font-size:24px; font-weight:900; color:#0f172a;">0</div>
+            </div>
+            <div style="flex:1; background:#f8fafc; padding:20px; border-radius:10px; border:1px solid #e2e8f0; text-align:center;">
+                <div style="font-size:12px; color:#64748b; font-weight:bold; text-transform:uppercase; margin-bottom:8px;">Media Km Mensile</div>
+                <div id="lblMediaMensile" style="font-size:24px; font-weight:900; color:#0f172a;">0 Km</div>
+            </div>
+            <div style="flex:1; background:#eff6ff; padding:20px; border-radius:10px; border:1px solid #bfdbfe; text-align:center;">
+                <div style="font-size:12px; color:#1d4ed8; font-weight:bold; text-transform:uppercase; margin-bottom:8px;">Chilometraggio Totale</div>
+                <div id="lblTotaleAnno" style="font-size:28px; font-weight:900; color:#1e40af;">0 Km</div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
+            <div style="text-align: center; width: 250px;">
+                <div style="border-bottom: 1px solid #94a3b8; margin-bottom: 10px; height: 40px;"></div>
+                <div style="font-size: 12px; color: #64748b;">Firma Operatore</div>
+            </div>
+            <div style="text-align: center; width: 250px;">
+                <div style="border-bottom: 1px solid #94a3b8; margin-bottom: 10px; height: 40px;"></div>
+                <div style="font-size: 12px; color: #64748b;">Firma per Visione (Direzione)</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; font-size: 11px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+            Documento generato automaticamente dal Sistema Logistica Aziendale il <span id="printDate"></span>.
+            <br>Tutti i dati sono estratti dal database di tracciamento ufficiale delle consegne.
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

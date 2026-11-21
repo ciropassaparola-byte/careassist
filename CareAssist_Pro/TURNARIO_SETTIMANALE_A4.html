@@ -1,0 +1,480 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>CareAssist Pro - Piano Assistenza & Turnario Settimanale A4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 6mm 8mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 12px 10px;
+      font-size: 8pt;
+      line-height: 1.25;
+    }
+
+    .no-print-toolbar {
+      max-width: 1040px;
+      margin: 0 auto 10px auto;
+      background: #ffffff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+    }
+    .btn-wa {
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid #cbd5e1;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sheet-page {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 14px 18px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2.5px solid #059669;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .brand-title {
+      font-size: 14pt;
+      font-weight: 900;
+      color: #047857;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .doc-badge {
+      background: #ecfdf5;
+      color: #047857;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 8pt;
+      border: 1px solid #a7f3d0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .patient-strip {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 8pt;
+    }
+
+    .turni-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+    }
+    .turni-table th {
+      background: #f1f5f9;
+      color: #1e293b;
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 6px 4px;
+      border: 1px solid #cbd5e1;
+      text-align: center;
+    }
+    .turni-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 4px;
+      vertical-align: middle;
+    }
+
+    .badge-turno {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 6px;
+      font-weight: 900;
+      font-size: 11pt;
+      border: 1.5px solid #000;
+    }
+    .turno-m { background: #dcfce7 !important; color: #15803d !important; border-color: #86efac !important; }
+    .turno-p { background: #ffedd5 !important; color: #c2410c !important; border-color: #fdba74 !important; }
+    .turno-n { background: #e0e7ff !important; color: #4338ca !important; border-color: #a5b4fc !important; }
+    .turno-s { background: #fef3c7 !important; color: #b45309 !important; border-color: #fcd34d !important; }
+    .turno-r { background: #f8fafc !important; color: #94a3b8 !important; border-color: #e2e8f0 !important; }
+    .turno-d { background: #f3e8ff !important; color: #7e22ce !important; border-color: #d8b4fe !important; }
+
+    .box-reperibili {
+      background: #faf5ff;
+      border: 1.5px solid #d8b4fe;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+    }
+    .note-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 8px;
+      background: #ffffff;
+      min-height: 70px;
+    }
+    .signature-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 8px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA AZIONI NON STAMPABILE -->
+  <div class="no-print-toolbar">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:20px;">🗓️</span>
+      <div>
+        <div style="font-weight:800; font-size:13px; color:#0f172a;">Turnario Assistenziale & Piano Operatori A4</div>
+        <div style="font-size:11px; color:#64748b;">Pronto per la stampa cartacea orizzontale o salvataggio PDF</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button class="btn-action" onclick="window.print()">
+        🖨️ Stampa Turnario A4
+      </button>
+      <button class="btn-wa" onclick="condividiSuWhatsAppDaStampa()">
+        📲 Invia Turni WhatsApp
+      </button>
+      <button class="btn-outline" onclick="if(window.history.length > 1){window.history.back();}else{window.location.href='/careassist/turni.html';}">
+        ⬅️ Turnario
+      </button>
+      <a href="/launcher.html" class="btn-outline" style="text-decoration:none; display:inline-flex; align-items:center; color:#334155;">
+        🏢 Suite
+      </a>
+    </div>
+  </div>
+
+  <!-- FOGLIO A4 CARTACEO -->
+  <div class="sheet-page">
+
+    <!-- HEADER DOCUMENTO -->
+    <div class="doc-header">
+      <div class="brand-title">
+        <span>🩺</span> CareAssist Pro &bull; Piano Operatori & Assistenza H24
+      </div>
+      <div class="doc-badge" id="badge-periodo">
+        SETTIMANA IN CORSO
+      </div>
+    </div>
+
+    <!-- STRISCIA ASSISTITO & RECAPITI -->
+    <div class="patient-strip">
+      <div>
+        <b>ASSISTITO:</b> <span id="lbl-nome-assistito" style="font-weight:800; color:#0f172a;">Rosa Annunziata Cavalcante (88 anni)</span> &bull; 
+        <b>Domicilio:</b> <span id="lbl-indirizzo-assistito">Via Domenico Cirillo, 9</span>
+      </div>
+      <div>
+        <b>Admin Coordinatore:</b> Ciro Milella (📞 366 460 7396) &bull; 
+        <b style="color:#dc2626;">🚨 EMERGENZE: 112 (NUE) / 118 (Sanità)</b> &bull; Guardia Medica: 080 584 1111
+      </div>
+    </div>
+
+    <!-- TABELLA TURNI SETTIMANALE -->
+    <table class="turni-table">
+      <thead>
+        <tr>
+          <th style="width:22%; text-align:left; padding-left:8px;">Operatore / OSS</th>
+          <th style="width:10%;">LUN<br><span id="dt-lun" style="font-size:7pt; font-weight:600; color:#64748b;">--</span></th>
+          <th style="width:10%;">MAR<br><span id="dt-mar" style="font-size:7pt; font-weight:600; color:#64748b;">--</span></th>
+          <th style="width:10%;">MER<br><span id="dt-mer" style="font-size:7pt; font-weight:600; color:#64748b;">--</span></th>
+          <th style="width:10%;">GIO<br><span id="dt-gio" style="font-size:7pt; font-weight:600; color:#64748b;">--</span></th>
+          <th style="width:10%;">VEN<br><span id="dt-ven" style="font-size:7pt; font-weight:600; color:#64748b;">--</span></th>
+          <th style="width:10%;">SAB<br><span id="dt-sab" style="font-size:7pt; font-weight:600; color:#64748b;">--</span></th>
+          <th style="width:10%;">DOM<br><span id="dt-dom" style="font-size:7pt; font-weight:600; color:#64748b;">--</span></th>
+          <th style="width:8%;">Tot. Ore</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-turni-stampa">
+        <!-- Generato via JavaScript con i dati reali -->
+      </tbody>
+    </table>
+
+    <!-- FASCIA REPERIBILITÀ & COPERTURE STRAORDINARIE (D) -->
+    <div class="box-reperibili">
+      <div style="font-weight:800; font-size:8pt; color:#6b21a8; margin-bottom:3px; display:flex; align-items:center; gap:6px;">
+        <span>🦺</span> <b>REPERIBILITÀ & DISPONIBILITÀ PER COPERTURE STRAORDINARIE (D):</b>
+      </div>
+      <div id="reperibili-list" style="font-size:7.5pt; color:#4c1d95; line-height:1.35;">
+        <!-- Inseriti automaticamente i recapiti di chi è disponibile nei singoli giorni -->
+      </div>
+    </div>
+
+    <!-- LEGENDA ORARI UFFICIALI -->
+    <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:4px 8px; margin-bottom:8px; display:flex; justify-content:space-between; font-size:7pt; color:#334155; font-weight:700;">
+      <span>☀️ <b>M = Mattina:</b> 07:00 – 14:00 (7h)</span>
+      <span>🌤️ <b>P = Pomeriggio:</b> 14:00 – 21:00 (7h)</span>
+      <span>🌙 <b>N = Notte:</b> 21:00 – 07:00 (10h)</span>
+      <span>🛌 <b>S = Smonto:</b> Recupero post-notte</span>
+      <span>☕ <b>R = Riposo:</b> Libero di Legge</span>
+      <span>🦺 <b>D = Disponibilità:</b> Reperibile</span>
+    </div>
+
+    <!-- SEZIONE INFERIORE: NOTE CAMBIO TURNO E FIRME -->
+    <div class="bottom-grid">
+      <div class="note-box">
+        <div style="font-weight:800; font-size:7.5pt; color:#1e293b; border-bottom:1px solid #e2e8f0; padding-bottom:2px; margin-bottom:4px;">
+          📝 CONSEGNE CLINICHE & NOTE AL CAMBIO TURNO (A Penna):
+        </div>
+        <div style="color:#94a3b8; font-size:7pt; line-height:1.7;">
+          Lun: ____________________________________________________________________________________________________<br>
+          Mar: ____________________________________________________________________________________________________<br>
+          Mer: ____________________________________________________________________________________________________<br>
+          Gio: ____________________________________________________________________________________________________<br>
+          Ven: ____________________________________________________________________________________________________<br>
+          Sab/Dom: ________________________________________________________________________________________________
+        </div>
+      </div>
+
+      <div class="signature-box">
+        <div style="font-weight:800; font-size:7.5pt; color:#1e293b; border-bottom:1px solid #e2e8f0; padding-bottom:2px; margin-bottom:4px;">
+          ✍️ CONVALIDA & FIRME:
+        </div>
+        <div style="font-size:7pt; color:#475569; display:flex; flex-direction:column; justify-content:space-between; height:100%;">
+          <div>Firma Admin Coordinatore: ________________________</div>
+          <div style="margin-top:14px;">Firma Referente / Caregiver: ________________________</div>
+          <div style="margin-top:14px; font-size:6.5pt; color:#94a3b8;">
+            Documento generato da CareAssist Pro in conformità al D.Lgs. 66/2003 (11h riposo).
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const TURNI_INFO = {
+      'M': { nome: 'Mattina', orario: '07-14', ore: 7, cls: 'turno-m' },
+      'P': { nome: 'Pomeriggio', orario: '14-21', ore: 7, cls: 'turno-p' },
+      'N': { nome: 'Notte', orario: '21-07', ore: 10, cls: 'turno-n' },
+      'S': { nome: 'Smonto', orario: 'Recup.', ore: 0, cls: 'turno-s' },
+      'SN': { nome: 'Smonto', orario: 'Recup.', ore: 0, cls: 'turno-s' },
+      'R': { nome: 'Riposo', orario: 'Lib.', ore: 0, cls: 'turno-r' },
+      'D': { nome: 'Disp.', orario: 'Reper.', ore: 0, cls: 'turno-d' }
+    };
+
+    function caricaEStampaDati() {
+      const raw = localStorage.getItem('careassist_turnario_settimanale');
+      let data = null;
+      if (raw) {
+        try { data = JSON.parse(raw); } catch(e){}
+      }
+
+      if (!data) {
+        // Mock fallback se aperto senza storage
+        data = {
+          settimanaInizio: '2026-10-26',
+          operatori: [
+            { id: 'op_1', nome: 'Ciro Milella', ruolo: 'Admin / Coord.', tel: '366 460 7396', profilo: 'diurno' },
+            { id: 'op_2', nome: 'M.C. Stoppelli', ruolo: 'OSS Referente', tel: '338 739 7671', profilo: 'misto_pn' },
+            { id: 'op_3', nome: 'Marco Rossi', ruolo: 'OSS', tel: '340 123 4567', profilo: 'full_h24' },
+            { id: 'op_4', nome: 'Sara Viola', ruolo: 'Infermiera / OSS', tel: '347 987 6543', profilo: 'misto_pn' },
+            { id: 'op_5', nome: 'Elena Bianchi', ruolo: 'OSS Domiciliare', tel: '339 555 1234', profilo: 'full_h24' }
+          ],
+          griglia: {
+            'op_1': { lun:'M', mar:'M', mer:'M', gio:'M', ven:'M', sab:'R', dom:'R' },
+            'op_2': { lun:'P', mar:'N', mer:'S', gio:'R', ven:'P', sab:'N', dom:'S' },
+            'op_3': { lun:'N', mar:'S', mer:'P', gio:'N', ven:'S', sab:'R', dom:'M' },
+            'op_4': { lun:'D', mar:'P', mer:'N', gio:'S', ven:'D', sab:'P', dom:'N' },
+            'op_5': { lun:'P', mar:'D', mer:'R', gio:'P', ven:'N', sab:'S', dom:'R' }
+          }
+        };
+      }
+
+      // Imposta date header
+      const lun = new Date(data.settimanaInizio + 'T00:00:00');
+      const dom = new Date(lun);
+      dom.setDate(lun.getDate() + 6);
+
+      const bEl = document.getElementById('badge-periodo');
+      if (bEl) {
+        bEl.textContent = `SETTIMANA: ${lun.toLocaleDateString('it-IT', { day:'2-digit', month:'short' }).toUpperCase()} - ${dom.toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase()}`;
+      }
+
+      const giorni = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'];
+      giorni.forEach((g, i) => {
+        const curD = new Date(lun);
+        curD.setDate(lun.getDate() + i);
+        const el = document.getElementById(`dt-${g}`);
+        if (el) el.textContent = `${curD.getDate()}/${curD.getMonth() + 1}`;
+      });
+
+      // Tabella righe
+      const tbody = document.getElementById('tbody-turni-stampa');
+      if (tbody) {
+        let html = '';
+        data.operatori.forEach(op => {
+          const riga = data.griglia[op.id] || {};
+          let oreTot = 0;
+          let celle = '';
+
+          giorni.forEach(g => {
+            const t = riga[g] || 'R';
+            const inf = TURNI_INFO[t] || TURNI_INFO['R'];
+            oreTot += inf.ore;
+            celle += `
+              <td style="text-align:center;">
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                  <span class="badge-turno ${inf.cls}">${t}</span>
+                  <span style="font-size:6.5pt; font-weight:700; color:#64748b; margin-top:2px;">${inf.orario}</span>
+                </div>
+              </td>
+            `;
+          });
+
+          const oreTarget = op.oreContrattuali || (op.regimeOrario === 'part_time' ? 20 : 36);
+          const regimeLabel = op.regimeOrario === 'part_time' ? `<span style="color:#c2410c; font-weight:800;">PT ${oreTarget}h</span>` : `<span style="color:#0284c7; font-weight:800;">FT ${oreTarget}h</span>`;
+
+          html += `
+            <tr>
+              <td style="padding-left:8px;">
+                <div style="font-weight:800; font-size:8.5pt; color:#0f172a;">${op.nome}</div>
+                <div style="font-size:7pt; color:#64748b;">${op.ruolo} &bull; 📞 ${op.tel} &bull; ${regimeLabel}</div>
+              </td>
+              ${celle}
+              <td style="text-align:center; font-weight:900; font-size:9pt; color:#059669; background:#f8fafc;">
+                <div>${oreTot}h</div>
+                <div style="font-size:6.5pt; color:#64748b; font-weight:700;">target ${oreTarget}h</div>
+              </td>
+            </tr>
+          `;
+        });
+
+        tbody.innerHTML = html;
+      }
+
+      // Reperibilità e coperture (D)
+      const repBox = document.getElementById('reperibili-list');
+      if (repBox) {
+        const nomiGiorni = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+        let repText = [];
+        giorni.forEach((g, idx) => {
+          const reperibiliOggi = [];
+          data.operatori.forEach(op => {
+            if (data.griglia[op.id] && data.griglia[op.id][g] === 'D') {
+              reperibiliOggi.push(`<b>${op.nome}</b> (📞 ${op.tel})`);
+            }
+          });
+          if (reperibiliOggi.length > 0) {
+            repText.push(`<b>${nomiGiorni[idx]}:</b> ${reperibiliOggi.join(', ')}`);
+          }
+        });
+
+        if (repText.length > 0) {
+          repBox.innerHTML = repText.join(' &bull; ');
+        } else {
+          repBox.innerHTML = '<i>Nessun operatore in reperibilità straordinaria assegnato per questa settimana.</i>';
+        }
+      }
+    }
+
+    function condividiSuWhatsAppDaStampa() {
+      window.opener && window.opener.condividiTurnarioWhatsApp ? window.opener.condividiTurnarioWhatsApp() : window.print();
+    }
+
+    window.addEventListener('DOMContentLoaded', caricaEStampaDati);
+  </script>
+</body>
+</html>
+

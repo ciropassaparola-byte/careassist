@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Accessibilità e BlindShell Classic 3 - Sistema Logistica Platinum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/accessibility.css">
+    <style>
+        :root {
+            --bg: #0b0d19;
+            --card-bg: rgba(26, 28, 44, 0.65);
+            --border-glow: rgba(255, 171, 0, 0.2);
+            --accent-gold: #ffab00;
+            --accent-cyan: #00d2ff;
+            --accent-orange: #ff6b00;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 50% 0%, #151a30 0%, var(--bg) 80%);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(20, 22, 37, 0.95) 0%, rgba(5, 5, 10, 0.98) 100%);
+            padding: 50px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-gold), var(--accent-cyan));
+        }
+
+        .logo-icon {
+            font-size: 3.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 171, 0, 0.4);
+            animation: pulse-gold 2s infinite alternate;
+        }
+
+        @keyframes pulse-gold {
+            0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255, 171, 0, 0.2)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(255, 171, 0, 0.6)); }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .version {
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px 80px 20px;
+        }
+
+        .intro-box {
+            background: rgba(255, 171, 0, 0.05);
+            border: 1px solid rgba(255, 171, 0, 0.25);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .intro-box p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .step-card:hover {
+            border-color: var(--border-glow);
+        }
+
+        .step-content {
+            padding: 40px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: #000;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: 800;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            box-shadow: 0 0 10px rgba(255, 171, 0, 0.4);
+        }
+
+        h2 {
+            margin: 0 0 20px 0;
+            color: var(--accent-gold);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+
+        .phone-layout-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 25px;
+            align-items: flex-start;
+        }
+
+        .phone-mockup {
+            width: 260px;
+            background: #111424;
+            border: 6px solid #22263f;
+            border-radius: 36px;
+            padding: 20px 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.1);
+            margin: 0 auto;
+            flex-shrink: 0;
+        }
+
+        .mockup-screen {
+            background: #000;
+            height: 180px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        .screen-status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .screen-clock {
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+            line-height: 1;
+            margin: 20px 0 10px 0;
+            letter-spacing: 1px;
+        }
+
+        .screen-badge-sim {
+            text-align: center;
+            font-size: 14px;
+            color: var(--accent-gold);
+        }
+
+        .mockup-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .mockup-btn {
+            background: #2a2e4d;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 12px;
+            height: 42px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 3px 0 #181b30;
+        }
+
+        .mockup-btn.dot-btn {
+            border-radius: 50%;
+            height: 38px;
+            width: 38px;
+            margin: 0 auto;
+        }
+
+        .mockup-btn.bar-btn {
+            border-radius: 6px;
+            height: 25px;
+            grid-column: span 1;
+        }
+
+        .mockup-btn.call-btn {
+            background: #2ecc71;
+            box-shadow: 0 3px 0 #1e824c;
+        }
+
+        .mockup-btn.end-btn {
+            background: #e74c3c;
+            box-shadow: 0 3px 0 #962d22;
+        }
+
+        .mockup-btn.num-btn {
+            height: 45px;
+            border-radius: 16px;
+            background: #1d2036;
+            box-shadow: 0 3px 0 #0f111e;
+        }
+
+        .mockup-btn.num-btn span {
+            font-size: 9px;
+            font-weight: normal;
+            opacity: 0.6;
+            margin-top: 1px;
+        }
+
+        .mockup-btn.tactile-5 {
+            border: 2px solid var(--accent-gold);
+            position: relative;
+        }
+
+        .mockup-btn.tactile-5::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .phone-description {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .phone-description ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .phone-description li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .phone-description li strong {
+            color: var(--text-primary);
+        }
+
+        .shortcut-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .shortcut-table th, .shortcut-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .shortcut-table th {
+            background: rgba(255, 171, 0, 0.1);
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .shortcut-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .key-badge {
+            background: #252841;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .feature-list li::before {
+            content: "\f0a9";
+            font-family: FontAwesome;
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+        }
+
+        .pro-tip {
+            background: rgba(0, 210, 255, 0.08);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 20px;
+            border-radius: 0 16px 16px 0;
+            font-size: 1rem;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .pro-tip i {
+            color: var(--accent-cyan);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(10, 11, 20, 0.5);
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+            color: black;
+            text-decoration: none;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-weight: 800;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(255, 171, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(255, 171, 0, 0.5);
+        }
+
+        .btn-home:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+
+<!-- STICKY TOP CONTROL BAR -->
+<div id="manualTopNav" style="position:sticky; top:0; left:0; width:100%; background:rgba(15,23,42,0.95); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:2px solid #00d2ff; padding:10px 20px; z-index:999999; display:flex; justify-content:space-between; align-items:center; box-sizing:border-box; box-shadow:0 4px 15px rgba(0,0,0,0.5);">
+    <button type="button" onclick="ChiudiOTrattieniManuale()" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #ef4444, #b91c1c); color:#ffffff; border:none; padding:8px 18px; border-radius:20px; font-weight:800; font-size:12.5px; cursor:pointer; box-shadow:0 3px 10px rgba(239,68,68,0.4); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='none';">
+        <i class="fa fa-arrow-left" style="font-size:14px;"></i>
+        <span>⬅️ CHIUDI & TORNA ALLA DASHBOARD</span>
+    </button>
+    
+    <div style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #0f172a, #1e293b); color:#f8fafc; border:1px solid #d4af37; padding:5px 16px; border-radius:20px; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+        <span style="color:#d4af37; font-size:13px;">👑</span>
+        <span>Amministratore del progetto Ciro Milella</span>
+    </div>
+    
+    <button type="button" onclick="window.print()" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; border:none; padding:8px 18px; border-radius:20px; font-weight:800; font-size:12px; cursor:pointer; box-shadow:0 3px 10px rgba(2,132,199,0.4); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='none';">
+        <i class="fa fa-print" style="font-size:14px;"></i>
+        <span>🖨️ STAMPA</span>
+    </button>
+</div>
+
+<script>
+function ChiudiOTrattieniManuale() {
+    try {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "../dashboard.html";
+        }
+    } catch(e) {
+        try { window.close(); } catch(eC) {}
+    }
+}
+</script>
+
+    <header>
+        <i class="fa fa-universal-access logo-icon" aria-hidden="true"></i>
+        <h1>Aurelio Nicolodi</h1>
+        <div class="version">MANUALE ACCESSIBILITÀ &amp; BLINDSHELL CLASSIC 3 ● SVILUPPATORE C. MILELLA</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="intro-box" role="note" aria-label="Introduzione">
+            <p>
+                Benvenuto nel manuale operativo avanzato dedicato ai driver non vedenti e ipovedenti. Questa guida spiega in modo semplice ed esaustivo come configurare ed utilizzare lo smartphone accessibile di ultima generazione <strong>BlindShell Classic 3</strong> (raffigurato nella foto nei colori <em>Ocean Blue</em> e <em>Golden Sand</em>) per gestire le consegne con l'applicazione <strong>CONSEGNE Mobile</strong> del Sistema Logistica Platinum.
+            </p>
+        </div>
+
+        <!-- Layout Fisico Telefono -->
+        <div class="step-card">
+            <div class="step-content">
+                <span class="step-number">1</span>
+                <h2>Mappa Tattile del BlindShell Classic 3</h2>
+                <p>
+                    Il <strong>BlindShell Classic 3</strong> è progettato per essere gestito a memoria tramite il tatto grazie alla tastiera fisica con tasti grandi e ben distanziati, affiancata da un display touchscreen accessibile. Esaminiamo il layout fisico dall'alto verso il basso:
+                </p>
+
+                <div class="phone-layout-container">
+                    <!-- Mockup Visivo del Telefono -->
+                    <div class="phone-mockup" aria-hidden="true">
+                        <div class="mockup-screen">
+                            <div class="screen-status-bar">
+                                <span>📶 🔋</span>
+                                <span>🛜 📶</span>
+                            </div>
+                            <div class="screen-clock">12:30</div>
+                            <div class="screen-badge-sim">👤 1</div>
+                        </div>
+                        <div class="mockup-keypad">
+                            <!-- Riga 1: Dot sinistro, Barra, Dot destro -->
+                            <div class="mockup-btn dot-btn">•</div>
+                            <div class="mockup-btn bar-btn">▬</div>
+                            <div class="mockup-btn dot-btn">•</div>
+                            
+                            <!-- Riga 2: Verde, Barra, Rosso -->
+                            <div class="mockup-btn call-btn"><i class="fa fa-phone"></i></div>
+                            <div class="mockup-btn bar-btn">▬</div>
+                            <div class="mockup-btn end-btn"><i class="fa fa-times"></i></div>
+
+                            <!-- Tastierino -->
+                            <div class="mockup-btn num-btn">1 <span>.?,</span></div>
+                            <div class="mockup-btn num-btn">2 <span>ABC</span></div>
+                            <div class="mockup-btn num-btn">3 <span>DEF</span></div>
+
+                            <div class="mockup-btn num-btn">4 <span>GHI</span></div>
+                            <div class="mockup-btn num-btn tactile-5">5 <span>JKL</span></div>
+                            <div class="mockup-btn num-btn">6 <span>MNO</span></div>
+
+                            <div class="mockup-btn num-btn">7 <span>PQRS</span></div>
+                            <div class="mockup-btn num-btn">8 <span>TUV</span></div>
+                            <div class="mockup-btn num-btn">9 <span>WXYZ</span></div>
+
+                            <div class="mockup-btn num-btn">* <span>🔓</span></div>
+                            <div class="mockup-btn num-btn">0 <span>␣</span></div>
+                            <div class="mockup-btn num-btn"># <span>🔊</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Descrizione Testuale per Lettore di Schermo -->
+                    <div class="phone-description">
+                        <ul>
+                            <li>
+                                <strong>Display Touchscreen Integrato (in alto):</strong> Mostra le informazioni a caratteri giganti. Il Classic 3 supporta il <strong>tocco diretto sullo schermo</strong>, fondamentale per interagire agevolmente con elementi grafici complessi come le mappe o la firma dei clienti.
+                            </li>
+                            <li>
+                                <strong>Riga Funzioni Superiori (sotto lo schermo):</strong> 
+                                Comprende tre tasti. Il tasto a sinistra (con un punto in rilievo) apre il Menu contestuale della pagina. Il tasto centrale (barra orizzontale) serve per scorrere verso l'alto o il basso. Il tasto a destra (con un punto) serve per tornare indietro o annullare.
+                            </li>
+                            <li>
+                                <strong>Riga Chiamata e Controllo (seconda riga):</strong>
+                                Ha tre tasti principali. Il tasto Verde (a sinistra) serve a confermare, selezionare o avviare una chiamata. Il tasto centrale (barra orizzontale) è usato per lo scorrimento alternativo. Il tasto Rosso (a destra, con una riga trasversale) serve a rifiutare chiamate, uscire da un'applicazione o tornare alla schermata Home del telefono tenendolo premuto.
+                            </li>
+                            <li>
+                                <strong>Tastierino Numerico (12 tasti):</strong>
+                                Disposto nella classica griglia 3x4. Il tasto <strong>5</strong> al centro presenta un <strong>punto tattile a rilievo</strong> per consentirti di posizionare la mano senza guardare.
+                            </li>
+                            <li>
+                                <strong>Tasti Speciali:</strong>
+                                Il tasto Asterisco <strong>*</strong> (in basso a sinistra) serve a bloccare e sbloccare la tastiera. Il tasto Cancelletto <strong>#</strong> (in basso a destra) consente di cambiare il profilo audio (suoneria, vibrazione, silenzioso) o di farsi leggere l'ora e lo stato del telefono.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Novità BlindShell Classic 3 -->
+        <div class="step-card">
+            <div class="step-content">
+                <span class="step-number">2</span>
+                <h2>Nuove Funzionalità Avanzate del Classic 3</h2>
+                <p>
+                    Il BlindShell Classic 3 introduce tecnologie all'avanguardia che semplificano sensibilmente le attività del consegnatario:
+                </p>
+
+                <ul class="feature-list">
+                    <li>
+                        <strong>Integrazione Touchscreen:</strong> A differenza del modello precedente, il Classic 3 ti consente di toccare direttamente lo schermo per interagire con le applicazioni di terze parti come <em>CONSEGNE Mobile</em>. Questo rende le operazioni di firma e navigazione veloci ed intuitive.
+                    </li>
+                    <li>
+                        <strong>Assistente IA "Luna":</strong> Il telefono dispone di un assistente virtuale basato su intelligenza artificiale. Tenendo premuto il tasto laterale di dettatura, puoi chiedere a Luna di assisterti in tempo reale (es. <em>"Luna, imposta una sveglia per le 15:00"</em> o <em>"Luna, leggi i miei appunti"</em>).
+                    </li>
+                    <li>
+                        <strong>Applicazione "Observo" (Riconoscimento Visivo):</strong> Sfruttando la fotocamera posteriore potenziata e l'intelligenza artificiale, l'app Observo può identificare e descrivere a voce gli oggetti, scansionare codici a barre della merce, o leggere istantaneamente etichette e cartelli apposti sui pacchi.
+                    </li>
+                    <li>
+                        <strong>Assistenza Remota "Tandem":</strong> Permette a un supervisore d'ufficio o familiare fidato di collegarsi a distanza al tuo BlindShell tramite app Android/iOS per configurare password, reti Wi-Fi o aiutarti a gestire le impostazioni in caso di difficoltà tecnica.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scorciatoie e Accessibilità Zenith -->
+        <div class="step-card">
+            <div class="step-content">
+                <span class="step-number">3</span>
+                <h2>Scorciatoie di Accessibilità dell'Applicazione</h2>
+                <p>
+                    L'applicazione mobile include un motore di sintesi vocale e contrasto integrato (`accessibility.js`). Quando il browser del telefono è attivo, puoi utilizzare le seguenti scorciatoie fisiche o combinazioni rapide:
+                </p>
+
+                <table class="shortcut-table" role="table" aria-label="Tabella Scorciatoie">
+                    <thead>
+                        <tr role="row">
+                            <th role="columnheader">Comando / Tasto</th>
+                            <th role="columnheader">Azione Eseguita</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row">
+                            <td role="cell"><span class="key-badge">Ctrl + V</span> o tasto <span class="key-badge">A</span></td>
+                            <td role="cell">Attiva o disattiva la <strong>Sintesi Vocale</strong> (lettura ad alta voce degli elementi).</td>
+                        </tr>
+                        <tr role="row">
+                            <td role="cell"><span class="key-badge">Ctrl + H</span></td>
+                            <td role="cell">Attiva o disattiva il <strong>Contrasto Elevato</strong> (interfaccia in Giallo Neon e Nero ad alta visibilità).</td>
+                        </tr>
+                        <tr role="row">
+                            <td role="cell"><span class="key-badge">Ctrl + K</span></td>
+                            <td role="cell">Apre la <strong>Tavolozza dei Comandi</strong> rapida per navigare velocemente tra i moduli.</td>
+                        </tr>
+                        <tr role="row">
+                            <td role="cell"><span class="key-badge">Ctrl + Freccia Su</span></td>
+                            <td role="cell">Aumenta la velocità di lettura della voce guida.</td>
+                        </tr>
+                        <tr role="row">
+                            <td role="cell"><span class="key-badge">Ctrl + Freccia Giù</span></td>
+                            <td role="cell">Diminuisce la velocità di lettura della voce guida.</td>
+                        </tr>
+                        <tr role="row">
+                            <td role="cell"><span class="key-badge">Tasto Tab</span></td>
+                            <td role="cell">Scorre in avanti tra gli elementi cliccabili e i testi. Ogni passaggio viene letto a voce.</td>
+                        </tr>
+                        <tr role="row">
+                            <td role="cell"><span class="key-badge">Invio</span> o Tasto Verde</td>
+                            <td role="cell">Attiva o clicca l'elemento attualmente selezionato.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pro-tip" role="complementary">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <strong>Sblocco Audio Iniziale:</strong> Al primo avvio dell'app nel browser del BlindShell, tocca lo schermo in un punto qualsiasi o premi un tasto qualsiasi per sbloccare i permessi audio del browser. La voce dirà subito <em>"Sintesi vocale sbloccata"</em>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Flusso Operativo del Driver -->
+        <div class="step-card">
+            <div class="step-content">
+                <span class="step-number">4</span>
+                <h2>Guida Passo-Passo per le Consegne</h2>
+                <p>
+                    Ecco le istruzioni dettagliate per gestire il tuo turno di lavoro quotidiano in completa autonomia:
+                </p>
+
+                <ul class="feature-list">
+                    <li>
+                        <strong>1. Checklist di Partenza:</strong> 
+                        All'avvio dell'app ti verrà presentata la <em>Checklist Mattutina</em> per la sicurezza. Scorri con il tasto di navigazione o <span class="key-badge">Tab</span> sulle voci: Carburante, Gomme, Merce Sicura e Documenti. Premi il tasto Verde (o Invio) per barrare ciascun elemento. Posizionati su <strong>Inizia Turno</strong> e dai conferma per accedere all'elenco dei viaggi.
+                    </li>
+                    <li>
+                        <strong>2. Navigazione dell'Elenco Consegne:</strong>
+                        Usa il tasto di scorrimento centrale del BlindShell per navigare tra le consegne da eseguire. La sintesi vocale leggerà il nome del cliente e la città. Puoi selezionare i filtri in alto (DA ESEGUIRE, URGENTI, SOSPESI) per visualizzare solo le tratte che ti interessano.
+                    </li>
+                    <li>
+                        <strong>3. Lettura Dettagliata (Sintesi Vocale Integrata):</strong>
+                        Seleziona una consegna e premi il tasto Verde per aprire la scheda del cliente. Per ascoltare l'intera scheda letta ad alta voce in modo chiaro, posizionati sul pulsante con l'icona del <strong>Volume (btnVoice)</strong> e selezionalo. La voce ti dirà: nome cliente, indirizzo, telefono, tipo di merce da scaricare e le note operative inserite dalla sede.
+                    </li>
+                    <li>
+                        <strong>4. Dettato Vocale per le Note (btnDictate):</strong>
+                        Se devi scrivere un aggiornamento per l'ufficio (es. <em>"Cliente assente, lascio al civico 12"</em>), posizionati sul campo di testo della notifica, quindi seleziona il pulsante rotondo con l'icona del <strong>Microfono (btnDictate)</strong>. Attendi il segnale acustico e detta a voce il tuo messaggio. Verrà trascritto automaticamente nel campo di testo.
+                    </li>
+                    <li>
+                        <strong>5. Firma del Cliente e Acquisizione POD:</strong>
+                        Per raccogliere la firma digitale del cliente sul pad bianco:
+                        <ul>
+                            <li>Porgi il telefono al cliente, indicando che lo spazio di firma si trova nella metà inferiore dello schermo del BlindShell.</li>
+                            <li>Il cliente può firmare usando il proprio dito direttamente sul display touchscreen.</li>
+                            <li>Se commette un errore, posizionati sul pulsante <strong>PULISCI</strong> per cancellare il tratto e fargli ripetere la firma.</li>
+                            <li>Terminato il disegno, posizionati sul pulsante <strong>SALVA FIRMA</strong> e conferma.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>6. Foto Prova di Consegna:</strong>
+                        Se preferisci scattare una fotografia del pacco davanti alla porta come prova, seleziona il pulsante <strong>FOTO</strong>. Verrà attivata la fotocamera posteriore del BlindShell. Premi il tasto Verde per scattare e salvare la foto sul server logistico.
+                    </li>
+                    <li>
+                        <strong>7. Spese e Chiusura Turno:</strong>
+                        A fine giornata, vai sulla sezione <strong>Spese</strong> per registrare carburante o autostrade, usando il dettatore vocale per descrivere gli importi. Infine, vai in Impostazioni e seleziona <strong>TERMINA TURNO</strong> per sincronizzare tutti i dati con l'ufficio in modo sicuro.
+                    </li>
+                </ul>
+
+                <div class="pro-tip" role="complementary">
+                    <i class="fa fa-folder-open" aria-hidden="true"></i>
+                    <strong>Archiviazione Automatica:</strong> Tutte le firme e le foto salvate vengono rinominate automaticamente dal sistema con il nome del cliente e la data, e archiviate nella cartella <code>App_Mobile\server\PROVE_CONSEGNA</code>, rendendo semplicissimo il controllo sia per te che per la segreteria.
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="btn-home" role="button">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i> Torna all'Applicazione
+            </a>
+        </div>
+
+    </div>
+
+    <footer>
+        SISTEMA LOGISTICA PLATINUM &copy; 2026 - Istituto Aurelio Nicolodi - Sviluppatore C. Milella
+    </footer>
+
+    <script src="../assets/js/accessibility.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Mappa Premium</title>
+    
+    <style>
+        body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', sans-serif; background: #0f172a; }
+        #map { width: 100%; height: 100%; }
+        .leaflet-popup-content-wrapper { background: #1e293b; color: #f8fafc; border-radius: 8px; border: 1px solid #334155; }
+        .leaflet-popup-tip { background: #1e293b; }
+        .map-title { font-weight: bold; color: #0ea5e9; font-size: 14px; margin-bottom: 5px; }
+        .map-sub { font-size: 12px; color: #cbd5e1; }
+        .status-badge { display:inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-top: 5px;}
+        .status-badge.completed { background: #22c55e; color: white; }
+        .status-badge.pending { background: #facc15; color: black; }
+        .status-badge.urgent { background: #ef4444; color: white; }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <script>
+        var map = null;
+
+        function initPremiumMap() {
+            if (typeof L === 'undefined') {
+                setTimeout(initPremiumMap, 100);
+                return;
+            }
+
+            try {
+                if (!map) {
+                    map = L.map('map').setView([41.1171, 16.8719], 10);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors',
+                        maxZoom: 20
+                    }).addTo(map);
+
+                    loadDeliveriesOnMap();
+                }
+            } catch(e) {
+                console.error("Errore Mappa:", e);
+            }
+        }
+
+        function loadDeliveriesOnMap() {
+            if (!map || typeof L === 'undefined') return;
+            try {
+                if (window.parent && window.parent.arrayConsegneMemory) {
+                    var arr = window.parent.arrayConsegneMemory;
+                    var bounds = [];
+                    
+                    for (var i = 0; i < arr.length; i++) {
+                        var c = arr[i];
+                        
+                        var latOffset = (Math.random() - 0.5) * 0.1;
+                        var lngOffset = (Math.random() - 0.5) * 0.1;
+                        
+                        var lat = 41.1171 + latOffset;
+                        var lng = 16.8719 + lngOffset;
+                        
+                        if(c.Latitudine && c.Longitudine) {
+                            lat = parseFloat(c.Latitudine);
+                            lng = parseFloat(c.Longitudine);
+                        }
+                        
+                        bounds.push([lat, lng]);
+                        
+                        var lowStato = String(c.Stato || "").toLowerCase();
+                        var isClosed = (c.Consegnato === true || c.Consegnato === -1 || String(c.Consegnato).toLowerCase() === "true" || String(c.Consegnato) === "-1" || c.Consegnato === 1 || String(c.Consegnato) === "1");
+                        var badgeHtml = "";
+                        var markerColor = "#0ea5e9";
+                        
+                        if(isClosed) {
+                            badgeHtml = "<span class='status-badge completed'>Completata</span>";
+                            markerColor = "#22c55e";
+                        } else if (lowStato.indexOf("urgente") !== -1 || (c.Note && c.Note.toLowerCase().indexOf("urgente") !== -1)) {
+                            badgeHtml = "<span class='status-badge urgent'>Urgente</span>";
+                            markerColor = "#ef4444";
+                        } else {
+                            badgeHtml = "<span class='status-badge pending'>Pianificata</span>";
+                            markerColor = "#facc15";
+                        }
+                        
+                        var popupHtml = "<div class='map-title'>" + (c.ClienteNome || 'Sconosciuto') + "</div>" +
+                                        "<div class='map-sub'>" + (c.IndirizzoConsegna || '') + " " + (c.LocalitaConsegna || '') + "</div>" +
+                                        badgeHtml;
+                                        
+                        var iconHtml = "<div style='background-color:" + markerColor + "; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 0 5px rgba(0,0,0,0.8);'></div>";
+                        var customIcon = L.divIcon({
+                            html: iconHtml,
+                            className: 'custom-marker',
+                            iconSize: [18, 18],
+                            iconAnchor: [9, 9]
+                        });
+                        
+                        L.marker([lat, lng], {icon: customIcon}).addTo(map).bindPopup(popupHtml);
+                    }
+                    
+                    if (bounds.length > 0) {
+                        map.fitBounds(bounds, {padding: [50, 50]});
+                    }
+                }
+            } catch(e) {
+                console.error("Errore Mappa:", e);
+            }
+        }
+
+        initPremiumMap();
+    </script>
+</body>
+</html>

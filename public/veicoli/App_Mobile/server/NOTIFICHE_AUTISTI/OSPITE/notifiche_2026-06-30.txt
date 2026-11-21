@@ -1,0 +1,3 @@
+[07:30:27] - NOTIZIE DA STRADA: INIZIO TURNO: OSPITE ha completato la checklist.
+[07:33:43] - NOTIZIE DA STRADA: FINE TURNO: L'autista OSPITE ha completato e chiuso il turno.
+[17:04:43] - MODIFICA CONSEGNA ID 6918 (DELVECCHIO DONATO): Stato=, KM A=68.2, KM R=0

@@ -1,0 +1,77 @@
+{
+  "consegne": [
+    {
+      "id": "c-1001",
+      "destinatario": "Rosa C.",
+      "indirizzo": "Via Domenico Cirillo, 9",
+      "comune": "Corleto Perticara (PZ)",
+      "telefono": "338 379 76 71",
+      "ausilio": "🛏️ Letto Motorizzato Ortopedico 3 Snodi + Materasso Antidecubito",
+      "tipoAusilio": "letto",
+      "data": "2026-11-03",
+      "orario": "10:30",
+      "stato": "in_programma",
+      "priorita": "alta",
+      "note": "Consegna con montaggio sponde di protezione e test telecomando motore.",
+      "firma": null,
+      "firmatario": "",
+      "dataFirma": null,
+      "creatoIl": "2026-11-03T08:00:00.000Z"
+    },
+    {
+      "id": "c-1002",
+      "destinatario": "Aldo Z.",
+      "indirizzo": "Via Crispi, 42",
+      "comune": "Bari (BA)",
+      "telefono": "338 306 69 05",
+      "ausilio": "♿ Carrozzina Pieghevole Standard Seduta 43cm",
+      "tipoAusilio": "carrozzina",
+      "data": "2026-11-03",
+      "orario": "12:15",
+      "stato": "in_consegna",
+      "priorita": "media",
+      "note": "Piano rialzato, verificare aggancio pedane e freni manuali.",
+      "firma": null,
+      "firmatario": "",
+      "dataFirma": null,
+      "creatoIl": "2026-11-03T08:30:00.000Z"
+    },
+    {
+      "id": "c-1003",
+      "destinatario": "Angela M.",
+      "indirizzo": "Corso Umberto I, 15",
+      "comune": "Modugno (BA)",
+      "telefono": "338 944 96 10",
+      "ausilio": "🏋️ Sollevatore Clinico Elettrico con Imbracatura Dorsale",
+      "tipoAusilio": "sollevatore",
+      "data": "2026-11-02",
+      "orario": "16:00",
+      "stato": "consegnato",
+      "priorita": "media",
+      "note": "Istruzioni uso rilasciate al caregiver, prova salita/discesa ok.",
+      "firma": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVR42u3OMQEAAAgDoNf/aWvB1wMkmUnk2l4BAAAAAAAAAAAAAAAAAPhyAh8pAQE1FhyyAAAAAElFTkSuQmCC",
+      "firmatario": "Angela M. (Firma ricevente)",
+      "dataFirma": "2026-11-02T16:25:00.000Z",
+      "creatoIl": "2026-11-02T14:00:00.000Z"
+    },
+    {
+      "id": "c-1004",
+      "destinatario": "Michele Losacco",
+      "indirizzo": "Via Roma, 88",
+      "comune": "Bitonto (BA)",
+      "telefono": "347 112 23 34",
+      "ausilio": "💨 Concentratore di Ossigeno 5L/min + Cannule e Umidificatore",
+      "tipoAusilio": "ossigeno",
+      "data": "2026-11-04",
+      "orario": "09:30",
+      "stato": "in_programma",
+      "priorita": "alta",
+      "note": "Controllo filtro aria e concentrazione O2 certificata.",
+      "firma": null,
+      "firmatario": "",
+      "dataFirma": null,
+      "creatoIl": "2026-11-03T09:00:00.000Z"
+    }
+  ]
+}
+

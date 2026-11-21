@@ -1,0 +1,29 @@
+--------------------------------------------------
+   SISTEMA LOGISTICA INTEGRATA - C. MILELLA
+   Guida Rapida e Personalizzazione
+--------------------------------------------------
+
+1. COME CAMBIARE L'ICONA SUL DESKTOP
+Se vuoi cambiare l'immagine dell'icona che compare sul Desktop:
+   a. Fai click col TASTO DESTRO sull'icona "SISTEMA GESTIONALE C. Milella" sul Desktop.
+   b. Seleziona "PROPRIETÀ".
+   c. Vai nella scheda "COLLEGAMENTO" e clicca sul pulsante "CAMBIA ICONA...".
+   d. Clicca su "Sfoglia..." se hai un file .ico personale, oppure scegli una di 
+      quelle proposte da Windows (consigliate quelle in 'shell32.dll' o 'imageres.dll').
+   e. Clicca OK e poi APPLICA.
+
+2. COME AVVIARE IL SISTEMA SUL CELLULARE
+   a. Apri la cartella e avvia il file "AVVIA_MOBILE.bat".
+   b. Si aprirà una finestra nera (il Tunnel). Attendi che compaia un indirizzo 
+      che finisce con ".trycloudflare.com".
+   c. Scrivi quell'indirizzo sul browser del tuo smartphone.
+   d. Installa l'app dal menù del browser (tre puntini -> Installa app).
+
+3. PORTABILITÀ (CHIAVETTA USB)
+Puoi copiare l'intera cartella "Sistema_Logistica_C_Milella" su una chiavetta. 
+Per avviarla su un altro PC, entra nella chiavetta e avvia "SISTEMA_GESTIONALE.vbs".
+Verrà creata automaticamente l'icona sul desktop del nuovo PC!
+
+--------------------------------------------------
+Sviluppato con cura da C. Milella - 2026
+--------------------------------------------------

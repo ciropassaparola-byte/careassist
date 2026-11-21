@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <title>CREA COLLEGAMENTO - C.M</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=11">
+    <meta charset="UTF-8">
+    <hta:application 
+        id="appIcon"
+        applicationname="ShortcutCreator"
+        border="thin"
+        borderstyle="normal"
+        caption="yes"
+        maximizebutton="no"
+        minimizebutton="no"
+        showintaskbar="yes"
+        singleinstance="yes"
+        sysmenu="yes"
+        windowstate="normal"
+        navigable="yes"
+    />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e2124;
+            color: #ffffff;
+            margin: 0; padding: 20px;
+            text-align: center;
+        }
+        h2 { font-size: 18px; margin-bottom: 25px; color: #60b4ff; text-transform: uppercase; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .btn-icon {
+            background-color: #2f3136;
+            border: 2px solid #444;
+            border-radius: 12px;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-icon:hover {
+            border-color: #60b4ff;
+            background-color: #36393f;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .icon-symbol { font-size: 30px; }
+        .icon-name { font-size: 13px; font-weight: 600; }
+        .status { margin-top: 20px; font-size: 12px; color: #888; }
+    </style>
+</head>
+<body>
+
+    <h2>Scegli l'icona per il Desktop</h2>
+    
+    <div class="grid">
+        <div class="btn-icon" onclick="MakeShortcut('assets\\img\\app_icon_cm.ico', 0)" style="border-color: #60b4ff; grid-column: span 2; background: linear-gradient(145deg, #1e2124, #2a2d32);">
+            <img src="../assets/img/logo_modern.png" style="width: 50px; height: 50px; border-radius: 8px;">
+            <span class="icon-name" style="color: #60b4ff;">LOGO MODERNA (C.M) ✨</span>
+        </div>
+        <div class="btn-icon" onclick="MakeShortcut('shell32.dll', 196)">
+            <span class="icon-symbol">💻</span>
+            <span class="icon-name">COMPUTER</span>
+        </div>
+        <div class="btn-icon" onclick="MakeShortcut('shell32.dll', 13)">
+            <span class="icon-symbol">🌐</span>
+            <span class="icon-name">RETE / WEB</span>
+        </div>
+        <div class="btn-icon" onclick="MakeShortcut('shell32.dll', 238)">
+            <span class="icon-symbol">🛡️</span>
+            <span class="icon-name">PROTEZIONE</span>
+        </div>
+        <div class="btn-icon" onclick="MakeShortcut('shell32.dll', 43)">
+            <span class="icon-symbol">⭐</span>
+            <span class="icon-name">AZIENDALE</span>
+        </div>
+        <div class="btn-icon" onclick="MakeShortcut('shell32.dll', 44)">
+            <span class="icon-symbol">💼</span>
+            <span class="icon-name">LAVORO</span>
+        </div>
+        <div class="btn-icon" onclick="MakeShortcut('shell32.dll', 22)">
+            <span class="icon-symbol">⚙️</span>
+            <span class="icon-name">SISTEMA</span>
+        </div>
+    </div>
+
+    <div id="status" class="status">Fai clic su un'icona per generare il collegamento sul Desktop.</div>
+
+    <script>
+        window.resizeTo(480, 650);
+        
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        var shell = new ActiveXObject("WScript.Shell");
+
+        function MakeShortcut(iconPath, iconIndex) {
+            try {
+                var desktopPath = shell.SpecialFolders("Desktop");
+                var shortcutPath = fso.BuildPath(desktopPath, "SISTEMA GESTIONALE C.M.lnk");
+                
+                // Percorso del file target
+                var currentPath = window.location.pathname;
+                if (currentPath.indexOf("/") === 0) currentPath = currentPath.substring(1);
+                currentPath = decodeURIComponent(currentPath).replace(/\//g, "\\");
+                var baseDir = fso.GetParentFolderName(fso.GetParentFolderName(currentPath));
+                
+                // Nuovo nome file STABILE senza emoji
+                var fileName = "SISTEMA_GESTIONALE.vbs";
+                var targetFile = fso.BuildPath(baseDir, fileName);
+
+                if (!fso.FileExists(targetFile)) {
+                    alert("Errore critico: Impossibile trovare il file sorgente:\n" + targetFile);
+                    return;
+                }
+
+                var shortcut = shell.CreateShortcut(shortcutPath);
+                shortcut.TargetPath = "wscript.exe";
+                shortcut.Arguments = "\"" + targetFile + "\"";
+                shortcut.WorkingDirectory = baseDir;
+                
+                // Gestione percorso icona (relativo o assoluto)
+                var fullIconPath = iconPath;
+                if (iconPath.indexOf(".ico") !== -1 && iconPath.indexOf(":") === -1) {
+                    fullIconPath = fso.BuildPath(baseDir, iconPath);
+                }
+                
+                shortcut.IconLocation = fullIconPath + ", " + iconIndex;
+                shortcut.Description = "Gestionale C.M - Consegne e Presenze";
+                shortcut.Save();
+
+                // SINCRONIZZAZIONE ICONA BARRA APPLICAZIONI (TASKBAR)
+                var syncScript = fso.BuildPath(fso.GetParentFolderName(currentPath), "sincronizza_icone_taskbar.vbs");
+                if (fso.FileExists(syncScript)) {
+                    var syncCmd = "wscript.exe \"" + syncScript + "\" \"" + fullIconPath + "\" " + iconIndex;
+                    shell.Run(syncCmd, 1, false);
+                }
+
+                document.getElementById("status").innerHTML = "✅ Collegamento creato e icone sincronizzate!<br>Ora puoi usare il nuovo collegamento.";
+                document.getElementById("status").style.color = "#2ecc71";
+                
+                alert("Collegamento 'SISTEMA GESTIONALE C.M' creato sul Desktop correttamente!");
+                window.close();
+            } catch (e) {
+                alert("Errore durante la creazione del collegamento: " + e.message);
+            }
+
+}
+</script>
+<script src="../assets/js/hacker_mode.js"></script>
+
+<script src="../assets/js/global_context.js"></script>
+</body>
+</html>
+

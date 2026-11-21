@@ -1,0 +1,6 @@
+# File temporanei e di diagnostica generati dal server
+requests.log
+server_exit.log
+*.tmp.*
+node_modules/
+*.bak*

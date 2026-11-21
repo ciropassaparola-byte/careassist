@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installazione - AURELIO NICOLODI Platinum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/accessibility.css">
+    <style>
+        :root {
+            --bg: #0f111a;
+            --card: #1a1c2c;
+            --accent-orange: #ff6b00;
+            --accent-cyan: #00d2ff;
+            --text: #ffffff;
+            --text-sec: #bdc3c7;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--card) 0%, #000 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-orange);
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .version { font-size: 0.8rem; color: var(--accent-cyan); font-weight: 600; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .step-card {
+            background: var(--card);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .vignette-container {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .vignette-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .step-content {
+            padding: 25px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--accent-orange);
+            color: #000;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        h2 { margin: 0 0 10px 0; color: var(--accent-cyan); font-size: 1.3rem; }
+        p { color: var(--text-sec); margin-bottom: 15px; }
+
+        .code-box {
+            background: #000;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            color: #00ff00;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            border: 1px solid #333;
+        }
+
+        .pro-tip {
+            background: rgba(0,210,255,0.1);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 12px;
+            border-radius: 0 10px 10px 0;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-sec);
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+<!-- STICKY TOP CONTROL BAR -->
+<div id="manualTopNav" style="position:sticky; top:0; left:0; width:100%; background:rgba(15,23,42,0.95); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:2px solid #00d2ff; padding:10px 20px; z-index:999999; display:flex; justify-content:space-between; align-items:center; box-sizing:border-box; box-shadow:0 4px 15px rgba(0,0,0,0.5);">
+    <button type="button" onclick="ChiudiOTrattieniManuale()" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #ef4444, #b91c1c); color:#ffffff; border:none; padding:8px 18px; border-radius:20px; font-weight:800; font-size:12.5px; cursor:pointer; box-shadow:0 3px 10px rgba(239,68,68,0.4); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='none';">
+        <i class="fa fa-arrow-left" style="font-size:14px;"></i>
+        <span>⬅️ CHIUDI & TORNA ALLA DASHBOARD</span>
+    </button>
+    
+    <div style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #0f172a, #1e293b); color:#f8fafc; border:1px solid #d4af37; padding:5px 16px; border-radius:20px; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+        <span style="color:#d4af37; font-size:13px;">👑</span>
+        <span>Amministratore del progetto Ciro Milella</span>
+    </div>
+    
+    <button type="button" onclick="window.print()" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; border:none; padding:8px 18px; border-radius:20px; font-weight:800; font-size:12px; cursor:pointer; box-shadow:0 3px 10px rgba(2,132,199,0.4); transition:all 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='none';">
+        <i class="fa fa-print" style="font-size:14px;"></i>
+        <span>🖨️ STAMPA</span>
+    </button>
+</div>
+
+<script>
+function ChiudiOTrattieniManuale() {
+    try {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "../dashboard.html";
+        }
+    } catch(e) {
+        try { window.close(); } catch(eC) {}
+    }
+}
+</script>
+
+    <header>
+        <i class="fa fa-cogs logo-icon"></i>
+        <h1>Guida Installazione</h1>
+        <div class="version">AURELIO NICOLODI ● by C. MILELLA</div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Passo 1 -->
+        <div class="step-card">
+            <div class="vignette-container">
+                <img src="vignetta_install_pc.png" alt="Configurazione PC. Mostra il programma Ponte Mobile sul desktop con barra laterale, Reports, Dispatch e Suite.">
+            </div>
+            <div class="step-content">
+                <span class="step-number">1</span>
+                <h2>Avvio del Ponte Mobile (Sul PC)</h2>
+                <p>Assicurati che il PC dell'ufficio sia acceso. Fai doppio clic sull'icona con il furgone arancione intitolata <b>PONTE MOBILE</b>.</p>
+                <div class="pro-tip">
+                    <i class="fa fa-info-circle"></i> Lascia aperte le finestre nere che compaiono: sono il motore che invia i dati ai cellulari.
+                </div>
+            </div>
+        </div>
+
+        <!-- Passo 2 -->
+        <div class="step-card">
+            <div class="vignette-container">
+                <img src="vignetta_ufficio_ponte.png" alt="Nicolodi Smart Bridge - Advanced Digital Logistics - Connecting Network Systems. Mostra l'indirizzo web provvisorio di Cloudflare.">
+            </div>
+            <div class="step-content">
+                <span class="step-number">2</span>
+                <h2>Scegli e Identifica l'Indirizzo di Connessione</h2>
+                <p>A seconda di dove ti trovi, puoi connetterti in due modi tramite il programma su PC:</p>
+                <ul style="color:var(--text-sec); font-size:0.9rem; padding-left: 20px;">
+                    <li><b>Fuori Sede (Internet):</b> Seleziona <i>Tunnel Cloud</i> e scansiona il link che termina con <code>.trycloudflare.com</code> per lavorare ovunque via rete cellulare.</li>
+                    <li><b>In Magazzino (Senza Internet / Wi-Fi Locale):</b> Seleziona <i>Rete Locale (LAN Wi-Fi)</i>. Il PC mostrerà un indirizzo locale tipo <code>http://192.168.x.x:3002</code>. Connettiti al Wi-Fi dell'ufficio per usarlo anche offline da internet!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Passo 3 -->
+        <div class="step-card">
+            <div class="vignette-container">
+                <img src="vignetta_install_mobile.png" alt="Installazione su smartphone. Mostra l'applicazione aggiunta alla schermata Home del cellulare tramite Chrome o Safari.">
+            </div>
+            <div class="step-content">
+                <span class="step-number">3</span>
+                <h2>Salva e Installa l'App sul Telefono</h2>
+                <p>Scansiona il QR Code visualizzato sul PC o digita l'indirizzo nel browser del telefono. <b>Per non perdere la pagina a computer spento, aggiungila alla schermata Home:</b></p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                    <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                        <h4 style="margin: 0 0 10px 0; color: var(--accent-cyan);"><i class="fa fa-android"></i> Android (Chrome)</h4>
+                        <ol style="color:var(--text-sec); font-size:0.85rem; padding-left: 15px; margin: 0;">
+                            <li>Clicca sui <b>3 puntini</b> in alto a destra.</li>
+                            <li>Scegli <b>"Installa app"</b> o "Aggiungi a schermata Home".</li>
+                        </ol>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                        <h4 style="margin: 0 0 10px 0; color: #ffab00;"><i class="fa fa-apple"></i> iPhone (Safari)</h4>
+                        <ol style="color:var(--text-sec); font-size:0.85rem; padding-left: 15px; margin: 0;">
+                            <li>Clicca sul tasto <b>Condividi</b> (quadrato con freccia in alto).</li>
+                            <li>Scorri e scegli <b>"Aggiungi alla schermata Home"</b>.</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="pro-tip">
+                    <i class="fa fa-check-circle"></i> <b>Consiglio:</b> Aprendo l'app dall'icona creata sulla schermata Home, i dati rimarranno in memoria e potrai lavorare e consultare le consegne anche se il PC dell'ufficio viene spento!
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        SISTEMA LOGISTICA PLATINUM &copy; 2026<br>
+        AURELIO NICOLODI by C. MILELLA
+    </footer>
+    <script src="../assets/js/accessibility.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+{
+  "settimanaInizio": "2026-11-02",
+  "fabbisogno": {
+    "M": 1,
+    "P": 1,
+    "N": 1
+  },
+  "operatori": [
+    {
+      "id": "op_1",
+      "nome": "Ciro Milella",
+      "ruolo": "Admin / Coordinatore",
+      "tel": "366 460 7396",
+      "profilo": "diurno",
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_36h_5gg",
+      "oreContrattuali": 36,
+      "disponibileCoperture": true
+    },
+    {
+      "id": "op_2",
+      "nome": "M.C. Stoppelli",
+      "ruolo": "OSS Referente (CareAssist)",
+      "tel": "338 739 7671",
+      "profilo": "misto_pn",
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_coop_turnista_38h",
+      "oreContrattuali": 38,
+      "disponibileCoperture": true
+    },
+    {
+      "id": "op_3",
+      "nome": "Marco Rossi",
+      "ruolo": "OSS",
+      "tel": "340 123 4567",
+      "profilo": "full_h24",
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_turnista_36h",
+      "oreContrattuali": 36,
+      "disponibileCoperture": false
+    },
+    {
+      "id": "op_4",
+      "nome": "Sara Viola",
+      "ruolo": "Infermiera / Reparto SSN",
+      "tel": "347 987 6543",
+      "profilo": "infermiere_ssn",
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_turnista_36h",
+      "oreContrattuali": 36,
+      "disponibileCoperture": true
+    },
+    {
+      "id": "op_5",
+      "nome": "Elena Bianchi",
+      "ruolo": "OSS Domiciliare Part-Time",
+      "tel": "339 555 1234",
+      "profilo": "diurno",
+      "regimeOrario": "part_time",
+      "condizioneOrario": "pt_orizzontale_20h",
+      "oreContrattuali": 20,
+      "disponibileCoperture": false
+    },
+    {
+      "id": "op_master",
+      "nome": "Ciro Milella (Admin)",
+      "ruolo": "Admin / Coordinatore",
+      "tel": "366 460 7396",
+      "profilo": "diurno",
+      "disponibileCoperture": true,
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_turnista_36h",
+      "oreContrattuali": 36
+    },
+    {
+      "id": "op_stoppelli",
+      "nome": "M.C. Stoppelli",
+      "ruolo": "operatore",
+      "tel": "338 739 7671",
+      "profilo": "misto_pn",
+      "disponibileCoperture": true,
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_turnista_36h",
+      "oreContrattuali": 36
+    },
+    {
+      "id": "op_marco",
+      "nome": "Marco Rossi",
+      "ruolo": "OSS",
+      "tel": "340 123 4567",
+      "profilo": "full_h24",
+      "disponibileCoperture": false,
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_turnista_36h",
+      "oreContrattuali": 36
+    },
+    {
+      "id": "op_sara",
+      "nome": "Sara Viola",
+      "ruolo": "Infermiera / OSS",
+      "tel": "347 987 6543",
+      "profilo": "misto_pn",
+      "disponibileCoperture": true,
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_turnista_36h",
+      "oreContrattuali": 36
+    },
+    {
+      "id": "op_elena",
+      "nome": "Elena Bianchi",
+      "ruolo": "OSS Domiciliare",
+      "tel": "339 555 1234",
+      "profilo": "full_h24",
+      "disponibileCoperture": false,
+      "regimeOrario": "full_time",
+      "condizioneOrario": "ft_ssn_turnista_36h",
+      "oreContrattuali": 36
+    }
+  ],
+  "griglia": {
+    "op_1": {
+      "lun": "P",
+      "mar": "M",
+      "mer": "N",
+      "gio": "S",
+      "ven": "R",
+      "sab": "P",
+      "dom": "M"
+    },
+    "op_2": {
+      "lun": "M",
+      "mar": "N",
+      "mer": "S",
+      "gio": "R",
+      "ven": "P",
+      "sab": "M",
+      "dom": "N"
+    },
+    "op_3": {
+      "lun": "N",
+      "mar": "S",
+      "mer": "R",
+      "gio": "P",
+      "ven": "M",
+      "sab": "N",
+      "dom": "S"
+    },
+    "op_4": {
+      "lun": "S",
+      "mar": "R",
+      "mer": "P",
+      "gio": "M",
+      "ven": "N",
+      "sab": "S",
+      "dom": "R"
+    },
+    "op_5": {
+      "lun": "R",
+      "mar": "P",
+      "mer": "M",
+      "gio": "N",
+      "ven": "S",
+      "sab": "R",
+      "dom": "P"
+    }
+  },
+  "ultimoPreset": "ssn_pmnsr"
+}

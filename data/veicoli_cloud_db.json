@@ -1,0 +1,351 @@
+{
+  "spese": [
+    {
+      "id": 20,
+      "data": "2026-09-18",
+      "desc": "olio,",
+      "costo": 150,
+      "note": "ORDINARIA"
+    },
+    {
+      "id": 19,
+      "data": "2026-08-03",
+      "desc": "stostituzione pompa acqua",
+      "costo": 207,
+      "note": "STRAORDINARIA"
+    },
+    {
+      "id": 16,
+      "data": "2026-07-31",
+      "desc": "soccorso stradale Barletta-Bari",
+      "costo": 130,
+      "note": "soccorso stradale Barletta-Bari"
+    },
+    {
+      "id": 17,
+      "data": "2026-07-31",
+      "desc": "termostato ventola",
+      "costo": 140,
+      "note": "termostato ventola"
+    },
+    {
+      "id": 15,
+      "data": "2026-07-22",
+      "desc": "Distributore di accensione, candele",
+      "costo": 270,
+      "note": "Distributore di accensione, candele"
+    },
+    {
+      "id": 14,
+      "data": "2026-06-08",
+      "desc": "LAVAGGIO ESTERNO",
+      "costo": 7,
+      "note": "STRAORDINARIA"
+    },
+    {
+      "id": 13,
+      "data": "2026-05-29",
+      "desc": "Lavaggio interni ed esterni",
+      "costo": 13,
+      "note": "Lavaggio interni ed esterni"
+    },
+    {
+      "id": 3,
+      "data": "2026-04-20",
+      "desc": "Lavaggio completo e Igienizzazione",
+      "costo": 15,
+      "note": "Lavaggio interni ed esterni"
+    },
+    {
+      "id": 4,
+      "data": "2026-04-17",
+      "desc": "cambio ruote estive",
+      "costo": 45,
+      "note": "CAMBIO RUOTE ESTIVE"
+    }
+  ],
+  "rifornimenti": [
+    {
+      "id": 35,
+      "data": "2026-10-18",
+      "litri": 22.61,
+      "costo": 45.08,
+      "km": 149991,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 34,
+      "data": "2026-10-11",
+      "litri": 26.87,
+      "costo": 53.18,
+      "km": 149620,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 33,
+      "data": "2026-10-04",
+      "litri": 19.2,
+      "costo": 38,
+      "km": 149207,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 32,
+      "data": "2026-10-03",
+      "litri": 28.15,
+      "costo": 55.71,
+      "km": 0,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 31,
+      "data": "2026-09-25",
+      "litri": 12.99,
+      "costo": 27.53,
+      "km": 0,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 30,
+      "data": "2026-09-14",
+      "litri": 29,
+      "costo": 60,
+      "km": 148178,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 29,
+      "data": "2026-09-06",
+      "litri": 17.25,
+      "costo": 35,
+      "km": 147702,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 28,
+      "data": "2026-09-04",
+      "litri": 21.47,
+      "costo": 43.35,
+      "km": 147343,
+      "note": "Rifornimento"
+    },
+    {
+      "id": 27,
+      "data": "2026-07-31",
+      "litri": 22.97,
+      "costo": 45,
+      "km": 146036,
+      "note": "Centro commerciale casamassima"
+    },
+    {
+      "id": 26,
+      "data": "2026-07-23",
+      "litri": 25.82,
+      "costo": 50.06,
+      "km": 145074,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 24,
+      "data": "2026-07-13",
+      "litri": 16.59,
+      "costo": 30.34,
+      "km": 144674,
+      "note": "Rifornimento"
+    },
+    {
+      "id": 25,
+      "data": "2026-07-10",
+      "litri": 12,
+      "costo": 21.95,
+      "km": 144462,
+      "note": "Rifornimento"
+    },
+    {
+      "id": 23,
+      "data": "2026-07-05",
+      "litri": 18.19,
+      "costo": 33.27,
+      "km": 144159,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 22,
+      "data": "2026-07-04",
+      "litri": 24.16,
+      "costo": 44.19,
+      "km": 143811,
+      "note": "centro commerciale"
+    },
+    {
+      "id": 20,
+      "data": "2026-06-21",
+      "litri": 19.01,
+      "costo": 34.39,
+      "km": 143424,
+      "note": "Rifornimento"
+    },
+    {
+      "id": 21,
+      "data": "2026-06-19",
+      "litri": 26.66,
+      "costo": 48.23,
+      "km": 143049,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 19,
+      "data": "2026-06-14",
+      "litri": 16.71,
+      "costo": 31.06,
+      "km": 142572,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 18,
+      "data": "2026-06-13",
+      "litri": 20.48,
+      "costo": 38.07,
+      "km": 142226,
+      "note": "centro cemmerciale casamassima"
+    },
+    {
+      "id": 14,
+      "data": "2026-06-09",
+      "litri": 15.03,
+      "costo": 28.54,
+      "km": 141872,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 12,
+      "data": "2026-06-07",
+      "litri": 24.04,
+      "costo": 46.13,
+      "km": 141615,
+      "note": "CENTRO COMMERCIALE CASAMASSIMA"
+    },
+    {
+      "id": 9,
+      "data": "2026-05-30",
+      "litri": 17.1,
+      "costo": 32.81,
+      "km": 141183,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 8,
+      "data": "2026-05-29",
+      "litri": 19,
+      "costo": 36.46,
+      "km": 140845,
+      "note": "centro commerciale casamassima140845"
+    },
+    {
+      "id": 5,
+      "data": "2026-05-24",
+      "litri": 19.08,
+      "costo": 36.42,
+      "km": 140506,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 6,
+      "data": "2026-05-22",
+      "litri": 22.1,
+      "costo": 42.19,
+      "km": 140152,
+      "note": "centro commerciale casamassima"
+    },
+    {
+      "id": 4,
+      "data": "2026-05-05",
+      "litri": 34.41,
+      "costo": 65,
+      "km": 139856,
+      "note": "Centro commerciale Casamassima"
+    }
+  ],
+  "rimborsiMesi": [
+    {
+      "mese": "Gennaio 2026",
+      "rimborsi": 131.31,
+      "benzina": 32.7,
+      "netto": 98.61
+    },
+    {
+      "mese": "Febbraio 2026",
+      "rimborsi": 398.3,
+      "benzina": 99.18,
+      "netto": 299.12
+    },
+    {
+      "mese": "Marzo 2026",
+      "rimborsi": 319.38,
+      "benzina": 79.53,
+      "netto": 239.85
+    },
+    {
+      "mese": "Aprile 2026",
+      "rimborsi": 239.28,
+      "benzina": 59.58,
+      "netto": 119.7
+    },
+    {
+      "mese": "Maggio 2026",
+      "rimborsi": 280,
+      "benzina": 212.88,
+      "netto": 67.12
+    },
+    {
+      "mese": "Giugno 2026",
+      "rimborsi": 496.04,
+      "benzina": 226.42,
+      "netto": 269.62
+    },
+    {
+      "mese": "Luglio 2026",
+      "rimborsi": 305.6,
+      "benzina": 224.81,
+      "netto": 80.79
+    },
+    {
+      "mese": "Agosto 2026",
+      "rimborsi": 128.1,
+      "benzina": 33.08,
+      "netto": 95.02
+    },
+    {
+      "mese": "Settembre 2026",
+      "rimborsi": 310,
+      "benzina": 165.88,
+      "netto": 144.12
+    },
+    {
+      "mese": "Ottobre 2026",
+      "rimborsi": 380,
+      "benzina": 191.97,
+      "netto": 188.03
+    }
+  ],
+  "scadenze": {
+    "assicurazione": {
+      "titolo": "Assicurazione RCA Veicolo",
+      "data": "2026-12-31",
+      "nota": "Copertura Attiva Regolare",
+      "stato": "OK"
+    },
+    "revisione": {
+      "titolo": "Revisione Ministeriale Periodica",
+      "data": "2027-05-31",
+      "nota": "Centro Revisioni Autorizzato",
+      "stato": "In Regola"
+    },
+    "bollo": {
+      "titolo": "Bollo Auto Annuale",
+      "data": "2027-01-31",
+      "nota": "Regione Basilicata / ACI",
+      "stato": "Pagato"
+    }
+  }
+}

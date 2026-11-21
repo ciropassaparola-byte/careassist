@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro Ufficiale Vaccinazioni Antinfluenzali A4</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 8mm 10mm 10mm 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 10px;
+      color: #000000;
+      background: #ffffff;
+    }
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+    }
+    .asl-logo-area {
+      font-size: 13px;
+      font-weight: bold;
+    }
+    .titolo-campagna {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex: 1;
+    }
+    .stagione-box {
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    
+    /* TABELLA REGISTRO CON MISURE PRECISE MILLIMETRICHE */
+    table.registro-vaccini {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    table.registro-vaccini th,
+    table.registro-vaccini td {
+      border: 1px solid #000000;
+      padding: 0 4px;
+      font-size: 10.5px;
+      vertical-align: middle;
+      text-align: center;
+    }
+    table.registro-vaccini th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 9.5px;
+      padding: 6px 2px;
+      line-height: 1.25;
+    }
+
+    /* ALTEZZA DELLE RIGHE: 14.5 mm per consentire l'applicazione perfetta della fustella adesiva */
+    table.registro-vaccini tbody tr {
+      height: 14.5mm;
+    }
+
+    /* LARGHEZZA COLONNE IDENTICHE AL MODULO CARTACEO */
+    .col-n { width: 28px; font-weight: bold; }
+    .col-data { width: 68px; }
+    .col-cognome { width: 115px; }
+    .col-nome { width: 115px; }
+    .col-nascita { width: 75px; }
+    .col-residenza { width: 110px; }
+
+    /* COLONNA TALLONCINO VACCINO: CALIBRATA RIGIDAMENTE A 52mm (2 POLLICI) PER LE FUSTELLE DI FLUAD / VAXIGRIP */
+    .col-talloncino { 
+      width: 52mm; 
+      min-width: 52mm;
+      max-width: 52mm;
+      background-color: #fafafa;
+    }
+
+    .col-eta { width: 42px; }
+    .col-patologia { width: 110px; }
+    .col-firma { width: 130px; }
+
+    .talloncino-placeholder {
+      font-size: 8px;
+      color: #999999;
+      font-style: italic;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px dashed #cccccc;
+      border-radius: 3px;
+      height: 11mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1px auto;
+      width: 48mm;
+    }
+
+    .footer-page {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+      padding-right: 15px;
+    }
+
+    /* BARRA COMANDI NON STAMPABILE */
+    .no-print-bar {
+      position: fixed;
+      top: 12px;
+      right: 15px;
+      background: #0f172a;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      z-index: 99999;
+      border: 1.5px solid #38bdf8;
+    }
+    .no-print-bar button {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .no-print-bar button.btn-back {
+      background: #334155;
+    }
+    @media print {
+      .no-print-bar { display: none !important; }
+      body { padding: 0; }
+      .talloncino-placeholder { border: none !important; color: transparent !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DI STAMPA VELOCE -->
+  <div class="no-print-bar">
+    <span style="font-size: 13px; font-weight: bold; color:#e0f2fe;">🖨️ Registro Ufficiale Vaccinazioni A4 Orizzontale</span>
+    <button onclick="window.print()">
+      <span>🖨️ Stampa Foglio A4</span>
+    </button>
+    <button class="btn-back" onclick="window.close()">Chiudi</button>
+  </div>
+
+  <!-- INTESTAZIONE UFFICIALE -->
+  <div class="header-container">
+    <div class="asl-logo-area">
+      <span style="border: 1.5px solid #000; padding: 2px 6px; border-radius: 4px; font-size: 11px;">REGIONE / ASL</span>
+    </div>
+    <div class="titolo-campagna">
+      CAMPAGNA VACCINAZIONE ANTINFLUENZALE STAGIONE <span class="stagione-box">2025/2026</span>
+    </div>
+    <div style="font-size: 11px; font-weight: bold;">
+      MOD. VACC. ADI / MMG
+    </div>
+  </div>
+
+  <!-- TABELLA COMPILABILE -->
+  <table class="registro-vaccini">
+    <thead>
+      <tr>
+        <th class="col-n">N.</th>
+        <th class="col-data">DATA</th>
+        <th class="col-cognome">COGNOME</th>
+        <th class="col-nome">NOME</th>
+        <th class="col-nascita">DATA<br>DI NASCITA</th>
+        <th class="col-residenza">RESIDENZA</th>
+        <th class="col-talloncino">
+          FLUAD / EFLUELDA /<br>VAXIGRIP TETRA<br>
+          <span style="font-size: 7.5px; font-weight: normal; color: #555;">(Spazio Talloncino / Fustella)</span>
+        </th>
+        <th class="col-eta">ETA'<br>(SI/NO)</th>
+        <th class="col-patologia">PATOLOGIA</th>
+        <th class="col-firma">FIRMA DOPO LETTURA<br>CONSENSO INFORMATO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 16 righe conformi con spaziatura e altezza calibrate per le fustelle adesive -->
+      <tr><td class="col-n">1</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">2</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">3</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">4</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">5</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">6</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">7</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">8</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">9</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">10</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">11</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">12</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">13</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">14</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">15</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+      <tr><td class="col-n">16</td><td class="col-data"></td><td class="col-cognome"></td><td class="col-nome"></td><td class="col-nascita"></td><td class="col-residenza"></td><td class="col-talloncino"><div class="talloncino-placeholder">Fustella Vaccino</div></td><td class="col-eta"></td><td class="col-patologia"></td><td class="col-firma"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- PIÈ DI PAGINA -->
+  <div class="footer-page">
+            PAG. &nbsp; <u>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</u> &nbsp; / &nbsp; <u>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</u>
+          </div>
+
+</body>
+</html>

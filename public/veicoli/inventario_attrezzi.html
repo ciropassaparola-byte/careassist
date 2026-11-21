@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Inventario Attrezzi - C. Milella</title>
+    <style>
+        /* TEMA DARK GOLD */
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: #111827;
+            --gold-primary: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-dark: #aa7c11;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(180deg, #1e293b 0%, var(--panel-bg) 100%);
+            border-bottom: 2px solid var(--gold-primary);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(212,175,55,0.4);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            transform: translateY(-2px);
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR / FORM */
+        .sidebar {
+            width: 350px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label {
+            display: block;
+            color: var(--gold-light);
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 5px rgba(212,175,55,0.5);
+        }
+
+        /* LIST AREA */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            background: var(--panel-bg);
+            border: 1px solid var(--gold-primary);
+            color: #fff;
+            border-radius: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            border-color: var(--gold-primary);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-body { padding: 15px; }
+        .card-title {
+            color: var(--gold-light);
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .badge-garage { background: #475569; color: #fff; }
+        .badge-casa { background: #0f766e; color: #fff; }
+
+        .card-notes {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            height: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Inventario Attrezzi</h1>
+        <button class="btn" onclick="window.close()">Chiudi Inventario</button>
+    </div>
+
+    <div class="container">
+        <!-- SIDEBAR AGGIUNTA -->
+        <div class="sidebar">
+            <h2 style="color: var(--gold-primary); margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Nuovo Attrezzo</h2>
+            
+            <div class="form-group">
+                <label>Nome Attrezzo</label>
+                <input type="text" id="attrezzoNome" class="form-control" placeholder="Es. Trapano Bosch">
+            </div>
+
+            <div class="form-group">
+                <label>Posizione</label>
+                <select id="attrezzoPosizione" class="form-control">
+                    <option value="Garage">Garage</option>
+                    <option value="Casa">Casa</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Note / Cassetto</label>
+                <input type="text" id="attrezzoNote" class="form-control" placeholder="Es. Scaffale 3, ripiano basso">
+            </div>
+
+            <div class="form-group">
+                <label>Foto</label>
+                <input type="file" id="attrezzoFoto" class="form-control" accept="image/*">
+            </div>
+
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="salvaAttrezzo()">Salva Attrezzo</button>
+        </div>
+
+        <!-- MAIN LIST -->
+        <div class="main-content">
+            <input type="text" id="ricerca" class="search-bar" placeholder="Cerca attrezzo per nome o posizione..." onkeyup="filtraAttrezzi()">
+            
+            <div class="grid" id="listaAttrezzi">
+                <!-- Attrezzi verranno caricati qui -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var dbPath = "inventario.json";
+        var fotoDir = "Foto_Attrezzi";
+        var inventario = [];
+
+        // FSO initialization
+        var fso;
+        try {
+            fso = new ActiveXObject("Scripting.FileSystemObject");
+        } catch(e) {
+            alert("Errore FSO. Esegui il programma come HTA.");
+        }
+
+        // Funzione per caricare i dati
+        function caricaDati() {
+            try {
+                if (fso.FileExists(dbPath)) {
+                    var file = fso.OpenTextFile(dbPath, 1);
+                    var content = file.ReadAll();
+                    file.Close();
+                    if(content.trim() !== "") {
+                        inventario = JSON.parse(content);
+                    } else {
+                        inventario = [];
+                    }
+                }
+            } catch(e) {
+                alert("Errore nel caricamento dei dati: " + e.message);
+            }
+            renderizzaAttrezzi();
+        }
+
+        // Funzione per salvare i dati
+        function salvaDati() {
+            try {
+                var file = fso.CreateTextFile(dbPath, true);
+                file.Write(JSON.stringify(inventario, null, 4));
+                file.Close();
+            } catch(e) {
+                alert("Errore nel salvataggio: " + e.message);
+            }
+        }
+
+        // Funzione per copiare la foto
+        function copiaFoto(percorsoOrigine) {
+            if (!percorsoOrigine) return "";
+            try {
+                var extension = fso.GetExtensionName(percorsoOrigine);
+                var nuovoNome = "foto_" + new Date().getTime() + "." + extension;
+                var percorsoDest = fso.BuildPath(fso.GetAbsolutePathName(fotoDir), nuovoNome);
+                fso.CopyFile(percorsoOrigine, percorsoDest);
+                return "Foto_Attrezzi/" + nuovoNome;
+            } catch(e) {
+                alert("Impossibile copiare la foto. Forse il percorso non è valido o l'immagine è aperta in un altro programma.\nDettagli: " + e.message);
+                return "";
+            }
+        }
+
+        function salvaAttrezzo() {
+            var nome = document.getElementById("attrezzoNome").value.trim();
+            var posizione = document.getElementById("attrezzoPosizione").value;
+            var note = document.getElementById("attrezzoNote").value.trim();
+            var fotoInput = document.getElementById("attrezzoFoto");
+            
+            if (nome === "") {
+                alert("Inserisci almeno il nome dell'attrezzo.");
+                return;
+            }
+
+            var pathFoto = "";
+            if (fotoInput.value) {
+                pathFoto = copiaFoto(fotoInput.value);
+            }
+
+            var nuovoAttrezzo = {
+                id: new Date().getTime(),
+                nome: nome,
+                posizione: posizione,
+                note: note,
+                foto: pathFoto
+            };
+
+            inventario.push(nuovoAttrezzo);
+            salvaDati();
+            
+            // Reset form
+            document.getElementById("attrezzoNome").value = "";
+            document.getElementById("attrezzoNote").value = "";
+            document.getElementById("attrezzoFoto").value = "";
+            
+            renderizzaAttrezzi();
+        }
+
+        function eliminaAttrezzo(id) {
+            if(confirm("Sei sicuro di voler eliminare questo attrezzo?")) {
+                var index = inventario.findIndex(function(a){ return a.id == id; });
+                if(index > -1) {
+                    var attr = inventario[index];
+                    // Prova a eliminare la foto
+                    if(attr.foto) {
+                        try {
+                            var fotoPathAbs = fso.BuildPath(fso.GetAbsolutePathName("."), attr.foto.replace("/", "\\"));
+                            if (fso.FileExists(fotoPathAbs)) {
+                                fso.DeleteFile(fotoPathAbs);
+                            }
+                        } catch(e) {}
+                    }
+                    inventario.splice(index, 1);
+                    salvaDati();
+                    renderizzaAttrezzi();
+                }
+            }
+        }
+
+        function renderizzaAttrezzi(filtroNome = "") {
+            var contenitore = document.getElementById("listaAttrezzi");
+            contenitore.innerHTML = "";
+
+            var filtro = filtroNome.toLowerCase();
+            
+            for (var i = 0; i < inventario.length; i++) {
+                var attr = inventario[i];
+                
+                if (attr.nome.toLowerCase().indexOf(filtro) === -1 && 
+                    attr.posizione.toLowerCase().indexOf(filtro) === -1) {
+                    continue;
+                }
+
+                var card = document.createElement("div");
+                card.className = "card";
+                
+                var imgSrc = attr.foto ? attr.foto : "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z'/%3E%3C/svg%3E";
+
+                var badgeClass = attr.posizione === "Garage" ? "badge-garage" : "badge-casa";
+
+                card.innerHTML = `
+                    <img src="${imgSrc}" class="card-img" onerror="this.src=''">
+                    <div class="card-body">
+                        <span class="badge ${badgeClass}">${attr.posizione}</span>
+                        <div class="card-title">${attr.nome}</div>
+                        <div class="card-notes">${attr.note || "<i>Nessuna nota</i>"}</div>
+                        <div class="card-actions">
+                            <button class="btn-danger" onclick="eliminaAttrezzo(${attr.id})">Elimina</button>
+                        </div>
+                    </div>
+                `;
+                contenitore.appendChild(card);
+            }
+        }
+
+        function filtraAttrezzi() {
+            var val = document.getElementById("ricerca").value;
+            renderizzaAttrezzi(val);
+        }
+
+        // Avvio
+        window.onload = function() {
+            caricaDati();
+        };
+    </script>
+</body>
+</html>

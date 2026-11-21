@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Allineamento USB</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: #f1f5f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 30px;
+            overflow: hidden;
+            border: 2px solid #d4af37;
+            box-sizing: border-box;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .icon {
+            font-size: 54px;
+            margin-bottom: 15px;
+            color: #d4af37;
+            text-shadow: 0 0 20px rgba(212,175,55,0.5);
+        }
+        h2 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        p {
+            color: #cbd5e1;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-yes {
+            background: linear-gradient(135deg, #d4af37, #f1c40f);
+            color: #000;
+            box-shadow: 0 0 15px rgba(212,175,55,0.4);
+        }
+        .btn-yes:hover { transform: scale(1.05); }
+        .btn-no {
+            background: #334155;
+            color: #fff;
+        }
+        .btn-no:hover { background: #475569; }
+    </style>
+    <script>
+        function checkArgs() {
+            var args = window.dialogArguments;
+            if (args) {
+                document.getElementById('drive').innerText = "(" + args + ")";
+            }
+
+}
+</script>
+</head>
+<body onload="checkArgs()">
+    <div class="icon">🔄</div>
+    
+    <h2>Rilevata Chiavetta USB <span id="drive" style="color:#d4af37;"></span></h2>
+    <p>Vuoi allineare e sincronizzare automaticamente i dati sulla chiavetta prima di uscire?</p>
+    <div class="btn-container">
+        <button class="btn-yes" onclick="window.returnValue=true; window.close();">✔️ SÌ, ALLINEA</button>
+        <button class="btn-no" onclick="window.returnValue=false; window.close();">ESCI SENZA BACKUP</button>
+    </div>
+</body>
+</html>

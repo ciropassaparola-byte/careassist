@@ -1,0 +1,3 @@
+[07:54:22] - NOTIZIE DA STRADA: CAMBIO AUTISTA: Nuovo autista attivo: Marco
+[08:06:57] - NOTIZIE DA STRADA: CAMBIO AUTISTA: Nuovo autista attivo: Marco
+[08:09:31] - NOTIZIE DA STRADA: FINE TURNO: L'autista Marco ha terminato il turno e si è disconnesso.

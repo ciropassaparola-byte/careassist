@@ -1,0 +1,377 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>CareAssist Pro - Diario Clinico Glicemie &amp; Insulina: Rosa Annunziata Cavalcante</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 16px 10px;
+      font-size: 8.5pt;
+      line-height: 1.35;
+    }
+
+    .no-print-toolbar {
+      max-width: 940px;
+      margin: 0 auto 14px auto;
+      background: #ffffff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(29, 78, 216, 0.35);
+    }
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.45);
+    }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid #cbd5e1;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sheet-page {
+      max-width: 940px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 22px 26px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2.5px solid #1d4ed8;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .brand-title {
+      font-size: 17pt;
+      font-weight: 900;
+      color: #1e40af;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand-sub {
+      font-size: 8pt;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .doc-badge {
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 9pt;
+      border: 1px solid #bfdbfe;
+      text-align: right;
+    }
+
+    .anagrafica-box {
+      display: grid;
+      grid-template-columns: 1.2fr 1.3fr 1.1fr;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+    }
+    .anag-title {
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #475569;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 2px;
+    }
+
+    .target-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid #2563eb;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-size: 8pt;
+      color: #1e3a8a;
+      line-height: 1.35;
+    }
+
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+    .log-table th {
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 8pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 7px 8px;
+      border: 1px solid #cbd5e1;
+      text-align: left;
+    }
+    .log-table td {
+      padding: 6px 8px;
+      border: 1px solid #e2e8f0;
+      vertical-align: middle;
+      font-size: 8pt;
+    }
+    .log-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .badge-val {
+      font-size: 10pt;
+      font-weight: 900;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .val-normale { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .val-ipo { background: #fee2e2; color: #991b1b; border: 1px solid #f87171; font-weight: 900; }
+    .val-iper { background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; font-weight: 800; }
+
+    .footer-note {
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 7.5pt;
+      color: #64748b;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA STRUMENTI SUPERIORE A SCHERMO -->
+  <div class="no-print-toolbar">
+    <div>
+      <div style="font-weight: 800; font-size: 15px; color: #1d4ed8;">🩸 Scheda Ufficiale: REGISTRO DIARIO GLICEMIE &amp; INSULINA</div>
+      <div style="font-size: 12px; color: #64748b;">Report clinico stampabile pronto per la Dr.ssa Carolina Potenza / Diabetologo</div>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button type="button" class="btn-action" onclick="window.print()">🖨️ Stampa Diario A4</button>
+      <a href="PROSPETTO_FARMACI_ROSA.html" class="btn-outline">💊 Scheda Terapie Rosa</a>
+      <a href="PROSPETTO_FARMACI_ALDO.html" class="btn-outline">👴 Scheda Aldo</a>
+      <a href="PROSPETTO_FARMACI_ANGELA.html" class="btn-outline">👵 Scheda Angela</a>
+    </div>
+  </div>
+
+  <div class="sheet-page">
+    
+    <!-- BANNER DI CONTROLLO IDENTITÀ ASSISTITA -->
+    <div style="background: #eff6ff; border: 2px solid #2563eb; border-radius: 10px; padding: 10px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 28px;">🩸</span>
+        <div>
+          <div style="font-size: 16pt; font-weight: 900; color: #1e40af; letter-spacing: -0.3px;">
+            DIARIO GLICEMICO ASSISTITA: Rosa Annunziata Cavalcante
+          </div>
+          <div style="font-size: 8.5pt; color: #1e3a8a; font-weight: 600;">
+            Nata il 16/06/1938 (88 anni) • Corleto Perticara (PZ) • Medico: Dr.ssa Carolina Potenza • Terapia: Xultophy penna &amp; Diamicron RM
+          </div>
+        </div>
+      </div>
+      <div style="text-align: right; background: #ffffff; border: 1.5px solid #93c5fd; border-radius: 6px; padding: 4px 10px; font-size: 8pt; font-weight: 800; color: #1d4ed8;">
+        ✅ CONTROLLO IDENTITÀ ASSISTITA
+      </div>
+    </div>
+
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">🩺 CareAssist Pro</div>
+        <div class="brand-sub">Protocollo Diabetologico &amp; Monitoraggio Profilo Glicemico Domiciliare</div>
+      </div>
+      <div class="doc-badge">
+        REGISTRO GLICEMIE • DIABETE TIPO 2
+      </div>
+    </div>
+
+    <!-- ANAGRAFICA ASSISTITA, MEDICO & FARMACIA -->
+    <div class="anagrafica-box">
+      <div class="anag-col">
+        <div class="anag-title">👤 Assistita</div>
+        <div>Nome: <b>Rosa Annunziata Cavalcante</b> (88 anni)</div>
+        <div>Diagnosi: <b>Diabete mellito tipo 2 in duplice terapia</b></div>
+        <div>Farmaci: <b>Xultophy (sottocute 1/die) + Diamicron 60 mg</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">👨‍⚕️ Medico Curante &amp; Contatti</div>
+        <div>Medico: <b>Dr.ssa Carolina Potenza</b></div>
+        <div>Ambulatorio: <b>Sarconi / Moliterno</b></div>
+        <div>Cellulare / WhatsApp: <b>338 379 05 64</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">🎯 Range Target Glicemici</div>
+        <div>Digiuno / Pre-pasto: <b>80 - 130 mg/dl</b></div>
+        <div>Post-prandiale (2h): <b>&lt; 180 mg/dl</b></div>
+        <div>Allerta Ipoglicemia: <b>&lt; 70 mg/dl (Zucchero subito!)</b></div>
+      </div>
+    </div>
+
+    <!-- BOX AVVERTENZE CLINICHE DIABETOLOGICHE -->
+    <div class="target-box">
+      <b>⚠️ INDICAZIONI CLINICHE PER IL CAREGIVER:</b><br>
+      • In caso di <b>glicemia &lt; 70 mg/dl</b> (tremori, debolezza, confusione, sudore freddo): somministrare immediatamente 15g di zuccheri semplici (1 bicchiere di succo di frutta, 3 zollette o 1 bustina di zucchero). Ricontrollare dopo 15 minuti.<br>
+      • In caso di <b>glicemie persistentemente &gt; 200 mg/dl</b>: comunicare il trend alla Dr.ssa Potenza per eventuale revisione delle unità di insulina Xultophy.
+    </div>
+
+    <!-- TABELLA DIARIO CON RIGHE REGISTRATE O FOGLIO COMPILABILE -->
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th style="width: 100px;">Data &amp; Ora</th>
+          <th style="width: 110px; text-align: center;">Glicemia (mg/dl)</th>
+          <th style="width: 170px;">Momento Rilevazione</th>
+          <th style="width: 110px; text-align: center;">Insulina (UI)</th>
+          <th>Note Cliniche &amp; Sintomi Osservati</th>
+          <th style="width: 100px;">Rilevato da</th>
+        </tr>
+      </thead>
+      <tbody id="print-glicemie-body">
+        <!-- Righe caricate dinamicamente da localStorage se presenti, oppure righe modello precompilate per cartaceo -->
+      </tbody>
+    </table>
+
+    <div class="footer-note">
+      <div>Data Emissione / Verifica: <b>17/10/2026</b> • CareAssist Pro Standalone Profile</div>
+      <div>Firma Medico Curante / Diabetologo: _________________________________________</div>
+    </div>
+  </div>
+
+  <script>
+    // Se presenti dati in localStorage di Rosa, popolali automaticamente
+    try {
+      const dbKey = 'careassist_pro_multipaziente_v4';
+      const raw = localStorage.getItem(dbKey);
+      const tbody = document.getElementById('print-glicemie-body');
+      if (raw) {
+        const app = JSON.parse(raw);
+        const rosa = (app.pazienti || []).find(p => p.id === 'paz_rosa');
+        const logs = ((rosa && rosa.registrazioni) || [])
+          .filter(r => r.tipo === 'glicemia')
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        if (logs.length > 0) {
+          tbody.innerHTML = logs.map(r => {
+            const v = parseFloat(r.valore) || 0;
+            let cls = 'val-normale';
+            if (v < 70) cls = 'val-ipo';
+            else if (v > 180) cls = 'val-iper';
+
+            const d = new Date(r.timestamp);
+            const dtStr = d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
+
+            return `
+              <tr>
+                <td><b>${dtStr}</b></td>
+                <td style="text-align:center;"><span class="badge-val ${cls}">${r.valore}</span></td>
+                <td><b>${r.momento || 'Digiuno'}</b></td>
+                <td style="text-align:center;">${r.insulina ? `<b>${r.insulina} UI</b>` : '-'}</td>
+                <td><small>${r.note || 'Regolare'}</small></td>
+                <td><small>${r.operatore || 'Caregiver'}</small></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // Se non ci sono misurazioni registrate o meno di 10, completa con righe vuote pronte per la compilazione manuale
+      if (!tbody.children.length) {
+        let emptyRows = '';
+        const momenti = ['🌅 Mattina a Digiuno', '☀️ Prima di Pranzo', '🍽️ Post-Prandiale (2h)', '🌙 Prima di Cena', '🍲 Post-Cena (2h)', '🌜 Notturno'];
+        for (let i = 0; i < 14; i++) {
+          const m = momenti[i % momenti.length];
+          emptyRows += `
+            <tr>
+              <td style="height:26px; color:#cbd5e1;">___/___ ore ___:___</td>
+              <td style="text-align:center; color:#cbd5e1;">_______ mg/dl</td>
+              <td style="color:#64748b;">${m}</td>
+              <td style="text-align:center; color:#cbd5e1;">___ UI</td>
+              <td style="color:#cbd5e1;">___________________________________________________</td>
+              <td style="color:#cbd5e1;">_____________</td>
+            </tr>
+          `;
+        }
+        tbody.innerHTML = emptyRows;
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  </script>
+</body>
+</html>

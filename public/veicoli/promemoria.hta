@@ -1,0 +1,1282 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>AGENDA PROMEMORIA - C. Milella</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="GestionPromemoriaCM"
+        ID="GestionPromemoria C. Milella"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        WINDOWSTATE="maximize"
+        ICON="assets/img/app_icon.ico"
+        TRUSTED="yes"
+        NAVIGABLE="yes"
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <link rel="stylesheet" href="assets/css/promemoria.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        // Avvio a Tutto Schermo
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e) {}
+
+        /** REGALO CHICCA AGENDA: Modalità ZEN (Easter Egg) */
+        var zenBuffer = "";
+        document.addEventListener('keydown', function(e) {
+            var tag = e.target.tagName;
+            if (e.key && e.key.length === 1 && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+                zenBuffer += e.key.toLowerCase();
+                if (zenBuffer.length > 3) zenBuffer = zenBuffer.substring(zenBuffer.length - 3);
+                if (zenBuffer === "zen") {
+                    AttivaZenMode();
+                    zenBuffer = "";
+                }
+            }
+        });
+
+        function AttivaZenMode() {
+            try { window.SpeakText("Modalità Zen attivata. Respira profondamente. Hai tutto sotto controllo."); } catch(e) {}
+            var style = document.createElement('style');
+            style.id = "zenModeStyle";
+            style.innerHTML = "body, .enterprise-container { background: linear-gradient(-45deg, #a8edea, #fed6e3, #e0c3fc, #8ec5fc) !important; background-size: 400% 400% !important; animation: gradientBG 8s ease infinite !important; }\n" +
+                ".enterprise-main, .danea-editor-panel-enterprise, #kpiDashboard, .form-vertical-container, .grid-wrapper { background: rgba(255,255,255,0.4) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border-color: rgba(255,255,255,0.5) !important; box-shadow: none !important; }\n" +
+                ".dark-theme body, .dark-theme .enterprise-container { background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364) !important; background-size: 400% 400% !important; animation: gradientBG 8s ease infinite !important; }\n" +
+                ".dark-theme .enterprise-main, .dark-theme .danea-editor-panel-enterprise, .dark-theme #kpiDashboard, .dark-theme .form-vertical-container, .dark-theme .grid-wrapper { background: rgba(15,23,42,0.4) !important; }\n" +
+                "@keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }\n" +
+                ".enterprise-grid th, .enterprise-grid td { background: transparent !important; }\n" +
+                ".enterprise-grid tr:nth-child(even), .enterprise-grid tr:nth-child(odd) { background: transparent !important; }\n" +
+                ".enterprise-grid tr:hover { background: rgba(255,255,255,0.5) !important; }";
+            document.head.appendChild(style);
+            
+            setTimeout(function() {
+                var s = document.getElementById("zenModeStyle");
+                if (s) s.parentNode.removeChild(s);
+                try { window.SpeakText("Modalità Zen disattivata. Torniamo operativi."); } catch(e) {}
+            }, 12000);
+        }
+    </script>
+    <style>
+        /* --- PROMEMORIA PREMIUM UI REFRESH --- */
+        
+        /* 1. Calendario Premium */
+        .cal-day-modern, .cal-day, .calendar-day {
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+        .cal-day-modern:hover, .cal-day:hover, .calendar-day:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.08);
+            border-color: #3b82f6;
+            z-index: 10;
+        }
+        .dark-theme .cal-day-modern, .dark-theme .cal-day, .dark-theme .calendar-day { background: #1e293b; border-color: #334155; }
+        .dark-theme .cal-day-modern:hover, .dark-theme .cal-day:hover, .dark-theme .calendar-day:hover { border-color: #60a5fa; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+        /* Badge Pillole Consegna nel calendario */
+        .cal-event-badge {
+            border-radius: 50px !important;
+            padding: 4px 10px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+            font-size: 11px !important;
+            letter-spacing: 0.3px;
+        }
+
+        /* 2. Dettaglio Form (Sidebar Destra) */
+        .danea-editor-panel-enterprise {
+            background: #f1f5f9 !important;
+            border-left: 1px solid #e2e8f0 !important;
+        }
+        .dark-theme .danea-editor-panel-enterprise { background: #0f172a !important; border-left-color: #334155 !important; }
+        
+        .form-vertical-container {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        .dark-theme .form-vertical-container {
+            background: #1e293b; border-color: #334155; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        input[type="text"], select, textarea {
+            background: #f8fafc !important;
+            border-radius: 12px !important;
+            border: 1.5px solid #e2e8f0 !important;
+            transition: all 0.3s ease !important;
+            padding: 12px 14px !important;
+        }
+        .dark-theme input[type="text"], .dark-theme select, .dark-theme textarea {
+            background: #0f172a !important; border-color: #334155 !important; color: #f8fafc !important;
+        }
+        input[type="text"]:focus, select:focus, textarea:focus {
+            background: #ffffff !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+        }
+
+        /* 3. Statistiche KPI Cards */
+        #kpiDashboard {
+            background: #ffffff !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04) !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 20px !important;
+        }
+        .dark-theme #kpiDashboard {
+            background: #1e293b !important; border-color: #334155 !important;
+        }
+        
+        /* 4. Filtri a Pillola */
+        .quick-filter-btn {
+            border-radius: 50px !important;
+            padding: 8px 16px !important;
+            font-weight: 800 !important;
+            border: 1.5px solid #e2e8f0 !important;
+            background: #ffffff !important;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            color: #475569 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+        }
+        .quick-filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.06) !important;
+        }
+        .quick-filter-btn.active {
+            background: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #0f172a !important;
+            box-shadow: 0 6px 15px rgba(15, 23, 42, 0.2) !important;
+        }
+        .dark-theme .quick-filter-btn { background: #1e293b !important; border-color: #334155 !important; color: #cbd5e1 !important; }
+        .dark-theme .quick-filter-btn.active { background: #3b82f6 !important; border-color: #3b82f6 !important; color: white !important; }
+
+        /* Meteo Glassmorphism */
+        #weatherWidget {
+            background: rgba(255, 255, 255, 0.5) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.7) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .dark-theme #weatherWidget {
+            background: rgba(30, 41, 59, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        /* Bottoni Azione */
+        .ribbon-item { border-radius: 12px; }
+        .ribbon-item:hover { background: #f1f5f9; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .dark-theme .ribbon-item:hover { background: #334155; }
+    </style>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+<script>
+function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            var testoGuida = "========================================\n" +
+                             "   GUIDA ALL'USO - ZENITH LOGISTICA\n" +
+                             "========================================\n\n" +
+                             "1. RICERCA GLOBALE:\n" +
+                             "   Digita nella barra in alto per cercare clienti,\n" +
+                             "   citta, telefoni o qualsiasi articolo in tempo reale.\n\n" +
+                             "2. FILTRI SIDEBAR:\n" +
+                             "   Usa i pulsanti a sinistra per filtrare per Provincia\n" +
+                             "   (Bari, Foggia, Taranto) o Dispositivo (Orologio, Braille...).\n\n" +
+                             "3. COPIA DATI:\n" +
+                             "   Clicca sul tasto verde 'Copia' per salvare la scheda\n" +
+                             "   negli appunti e incollarla dove desideri.\n\n" +
+                             "4. SINCRONIZZAZIONE EXCEL:\n" +
+                             "   Dal menu File premi 'Sincronizza Excel Ora' per\n" +
+                             "   aggiornare i dati con gli ultimi file Danea.\n\n" +
+                             "========================================";
+            
+            alert(testoGuida);
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "block";
+                    m.style.visibility = "visible";
+                }
+            } catch(ex) {}
+        }
+
+        function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.cssText = "display:block !important; visibility:visible !important; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;";
+                }
+            } catch(ex) {}
+        }
+
+        function ChiudiGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "none";
+                    m.style.visibility = "hidden";
+                    m.style.cssText = "display:none !important; visibility:hidden !important;";
+                }
+            } catch(ex) {}
+        }
+
+        function OpenMenu(el) {
+            if (!el) return;
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1 && items[i] !== el) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+            el.style.background = 'rgba(56, 189, 248, 0.25)';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'block';
+                drop.style.visibility = 'visible';
+            }
+        }
+
+        function CloseMenu(el, e) {
+            if (!el) return;
+            e = e || window.event;
+            var target = e ? (e.toElement || e.relatedTarget) : null;
+            try {
+                while (target) {
+                    if (target === el) return;
+                    target = target.parentNode;
+                }
+            } catch(err) {}
+
+            el.style.background = 'transparent';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'none';
+                drop.style.visibility = 'hidden';
+            }
+        }
+
+        function ToggleMenu(el, e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                if (drop.style.display === 'block' && drop.style.visibility === 'visible') {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                    el.style.background = 'transparent';
+                } else {
+                    OpenMenu(el);
+                }
+            }
+        }
+
+        document.onclick = function(e) {
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+        };
+
+        var lastExecTime = 0;
+        function ExecAction(actionName, e) {
+            var now = new Date().getTime();
+            if (now - lastExecTime < 200) return;
+            lastExecTime = now;
+
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            // Close all dropdowns
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+        }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+</script>
+</head>
+<body>
+
+    <div class="enterprise-container">
+        
+        <!-- STRISCIA NERA SUPERIORE (TITOLO MODULO - APPLE STYLE) -->
+        <div class="danea-top-black-bar" onmousedown="StartDrag()" style="height:35px; background:#1a1a1a; color:white; display:flex; align-items:center; padding:0 15px; font-size:11px; font-weight:bold; cursor:move;">
+            <!-- Apple Traffic Lights -->
+            <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:5px; cursor:default;">
+                <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+                <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+                <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+            </div>
+            <img src="assets/img/logo_final.jpg" style="height:22px; margin-left:10px; margin-right:10px; border-radius:3px;">
+            <span class="module-name">Agenda e Promemoria</span>
+            <div style="flex-grow: 1;"></div>
+            <div id="userProfileWidget" style="display:flex; align-items:center; gap:8px; font-size:0.9rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px; margin-right:8px;">AUTENTICAZIONE...</div>
+            <!-- THEME SWITCHER -->
+            <div id="themeToggle" onclick="ToggleTheme()" style="cursor:pointer; font-size:18px; margin-right:12px; color:#fbbf24; transition: transform 0.3s;" title="Cambia Tema">
+                <i class="fa fa-sun-o" id="themeIcon"></i>
+            </div>
+            <div id="titleTime" style="font-size:0.8rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px;">--:--</div>
+        </div>
+
+        <!-- RIGA 0: CLASSIC MENU BAR (PER COERENZA CON FOTO 1) -->
+        <nav class="classic-menu-bar" style="background:#2b2521; color:#e2e8f0; border-bottom:1px solid #1e1815;">
+            <div class="menu-item" onclick="toggleMenu(this, event)" style="color:white; font-weight:700;">
+                <u>F</u>ile
+                <div class="submenu">
+                    <div class="submenu-item" onclick="Nuovo()"><u>N</u>uovo Promemoria <span class="shortcut">Alt+N</span></div>
+                    <div class="submenu-item" onclick="ActionSalva()"><u>S</u>alva Appuntamento <span class="shortcut">Alt+S</span></div>
+                    <div class="submenu-item" onclick="ActionElimina()"><u>E</u>limina Corrente</div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="window.close()"><u>U</u>scita Rapida</div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)" style="color:white; font-weight:700;">
+                <u>M</u>odifica
+                <div class="submenu">
+                    <div class="submenu-item" onclick="document.getElementById('txtRicerca').focus()"><u>C</u>erca Cliente</div>
+                    <div class="submenu-item" onclick="InviaWhatsApp()">Invia <u>W</u>hatsApp</div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="ApriCheckupASL()">🔍 Cerca Storico ASL Puglia</div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)" style="color:white; font-weight:700;">
+                <u>V</u>isualizza
+                <div class="submenu">
+                    <div class="submenu-item" onclick="SwitchView('table')">Vista Elenco</div>
+                    <div class="submenu-item" onclick="SwitchView('postit')">Vista Bacheca Post-it</div>
+                    <div class="submenu-item" onclick="SwitchView('calendar')">Vista Calendario Mensile</div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)" style="color:white; font-weight:700;">
+                <u>A</u>iuto
+                <div class="submenu">
+                    <div class="submenu-item" onclick="ApriGuidaUtente()">📖 Guida Funzionalità</div>
+                    <div class="submenu-item" onclick="alert('Gestione Agenda C. Milella v3.5\nSviluppo Enterprise 2026')">Info Sistema</div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- RIGA 1: RIBBON BAR ENTERPRISE UNIVERSALE -->
+        <header class="danea-ribbon">
+            <div class="ribbon-tabs">
+                <div class="ribbon-tab active" onclick="switchUniversalTab('nav-operazioni', this)">Agenda Operazioni</div>
+                <div class="ribbon-tab" onclick="switchUniversalTab('nav-moduli', this)">Navigazione Moduli</div>
+            </div>
+            
+            <!-- GRUPPO 1: AZIONI LOCALI (Default) -->
+            <div id="nav-operazioni" class="ribbon-items">
+                <button class="ribbon-item" onclick="Nuovo()">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/add-file.png" alt="Nuovo"></div>
+                    <span>Nuovo</span>
+                </button>
+                <button class="ribbon-item" onclick="ActionSalva()">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/save-as.png" alt="Salva"></div>
+                    <span>Salva Info</span>
+                </button>
+                <button class="ribbon-item danger" onclick="ActionElimina()">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/delete-forever.png" alt="Elimina"></div>
+                    <span>Elimina Voce</span>
+                </button>
+                    <button class="ribbon-item" onclick="SwitchView('kanban')">
+                        <div class="icon-img"><img src="https://img.icons8.com/fluency/48/workflow.png" alt="Kanban"></div>
+                        <span>Vista Kanban</span>
+                    </button>
+                    <button class="ribbon-item" onclick="PrintDailyAgenda()">
+                        <div class="icon-img"><img src="https://img.icons8.com/fluency/48/list.png" alt="Agenda"></div>
+                        <span>Agenda Oggi</span>
+                    </button>
+                    <div class="ribbon-separator"></div>
+                    <button class="ribbon-item" onclick="ActionStampaFoglioViaggio()">
+                        <div class="icon-img"><img src="https://img.icons8.com/fluency/48/print.png" alt="Foglio"></div>
+                        <span>Foglio Viaggio</span>
+                    </button>
+                    <button class="ribbon-item" onclick="ActionCalcolaPercorsoGiorno()">
+                        <div class="icon-img"><img src="https://img.icons8.com/fluency/48/map.png" alt="Percorso"></div>
+                        <span>Ottimizza Giro</span>
+                    </button>
+                    <div class="ribbon-separator"></div>
+                <button class="ribbon-item danger" onclick="document.getElementById('btnChiudi').click()">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt="Esci"></div>
+                    <span>Chiudi Modulo</span>
+                </button>
+            </div>
+
+            <!-- GRUPPO 2: MODULI (Universale) -->
+            <div id="nav-moduli" class="ribbon-items" style="display:none;">
+                <button class="ribbon-item" onclick="NavigaModulo('dashboard.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/home.png" alt="Start"></div>
+                    <span>Start</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('anagrafica.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/address-book.png" alt="Anagrafica"></div>
+                    <span>Anagrafica</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('articoli.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/box.png" alt="Articoli"></div>
+                    <span>Articoli</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('consegne.hta')">
+                    <div class="icon-img"><img src="assets/img/icona_consegne_trasparente.png" alt="Consegne" style="width:40px; height:auto;"></div>
+                    <span>Consegne</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('storico.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/time-machine.png" alt="Storico"></div>
+                    <span>Storico</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('presenze.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/stopwatch.png" alt="Presenze"></div>
+                    <span>Presenze</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('promemoria.hta')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/calendar--v1.png" alt="Agenda"></div>
+                    <span>Agenda</span>
+                </button>
+                <div class="ribbon-separator"></div>
+                <button class="ribbon-item danger" id="btnChiudi">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt="Chiudi"></div>
+                    <span>Spegni Sistema</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- RIGA 2: DARK NAVIGATION BAR (FASCIA BLU) -->
+        <nav class="danea-nav-bar">
+            <div class="nav-left">
+                <span class="nav-breadcrumb">Agenda e Promemoria</span>
+                <div class="view-toggle-group" style="display:inline-flex; margin-left: 20px; gap: 5px;">
+                    <button id="btnViewTable" class="view-toggle-btn" onclick="SwitchView('table')"><i class="fa fa-table"></i> Vista Tabella</button>
+                    <button id="btnViewPostit" class="view-toggle-btn" onclick="SwitchView('postit')"><i class="fa fa-th-large"></i> Vista Post-it 📌</button>
+                    <button id="btnViewCalendar" class="view-toggle-btn" onclick="SwitchView('calendar')"><i class="fa fa-calendar"></i> Vista Calendario 📅</button>
+                    <button id="btnViewTimeline" class="view-toggle-btn" onclick="SwitchView('timeline')"><i class="fa fa-clock-o"></i> Vista Giorno ⏰</button>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="danea-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="txtRicerca" placeholder="Cerca appuntamento (Ctrl+F)...">
+                </div>
+                <div class="nav-tools">
+                    <button title="Raggruppa"><i class="fa fa-tasks"></i> Raggruppa</button>
+                    <button title="Filtra"><i class="fa fa-filter"></i> Filtra</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- AREA CENTRALE CON TABELLA E FILTRI -->
+        <div class="enterprise-main">
+            <div class="grid-section">
+            
+            <!-- NUOVA BARRA FILTRI RAPIDI AVANZATI -->
+            <div class="filters-bar-container" style="padding: 12px 20px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; overflow-x: auto; flex-shrink: 0;">
+                <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; display: flex; align-items: center; gap: 6px; white-space: nowrap;"><i class="fa fa-filter" style="color:#3b82f6;"></i> FILTRA VISTA:</span>
+                
+                <button class="quick-filter-btn active" id="filterBtn_ALL" onclick="SetSmartFilter('ALL')">TUTTI <span class="filter-count-badge" id="cnt_ALL">0</span></button>
+                <button class="quick-filter-btn" id="filterBtn_TODAY" onclick="SetSmartFilter('TODAY')">📅 SOLO OGGI <span class="filter-count-badge" id="cnt_TODAY">0</span></button>
+                <button class="quick-filter-btn" id="filterBtn_WAIT" onclick="SetSmartFilter('WAIT')">⏳ IN ATTESA <span class="filter-count-badge" id="cnt_WAIT">0</span></button>
+                
+                <div style="width:1px; height:20px; background:#e2e8f0; margin: 0 5px;"></div>
+                
+                <button class="quick-filter-btn filter-type" style="border-color:#fb923c; color:#9a3412;" id="filterBtn_COMM" onclick="SetSmartFilter('COMM')">🤝 COMMERCIALE <span class="filter-count-badge" id="cnt_COMM">0</span></button>
+                <button class="quick-filter-btn filter-type" style="border-color:#60a5fa; color:#1e40af;" id="filterBtn_TECN" onclick="SetSmartFilter('TECN')">🛠️ TECNICO <span class="filter-count-badge" id="cnt_TECN">0</span></button>
+                <button class="quick-filter-btn filter-type" style="border-color:#c084fc; color:#6b21a8;" id="filterBtn_CONS" onclick="SetSmartFilter('CONS')">📦 CONSEGNA <span class="filter-count-badge" id="cnt_CONS">0</span></button>
+                
+                <div style="flex:1;"></div>
+                <div id="topStats" style="font-size:12px; font-weight:800; color:#475569; display:flex; align-items:center; gap:10px;"></div>
+            </div>
+
+                <div class="grid-wrapper" id="tableView">
+                    <table class="enterprise-grid">
+                        <thead>
+                            <tr>
+                                <th class="chk-col"><input type="checkbox" id="chkSelectAll" onclick="ToggleSelectAll(this.checked)" class="batch-chk"></th>
+                                <th style="width:30px">ID</th>
+                                <th style="width:120px">Stato</th>
+                                <th style="width:100px">Data</th>
+                                <th style="width:70px">Ora</th>
+                                <th style="width:250px">Cliente</th>
+                                <th>Note / ISTRUZIONI</th>
+                                <th style="width:120px; text-align:center">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lstPromemoriaCards">
+                            <!-- Righe popolate via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="postit-wrapper" id="postitView" style="display: none;">
+                    <div class="postit-board" id="postitBoard">
+                        <!-- Popolato via JS con i Post-it -->
+                    </div>
+                </div>
+
+                <div class="kanban-wrapper" id="kanbanView" style="display: none;">
+                    <div class="kanban-column" ondragover="KanbanDragOver(event)" ondragleave="KanbanDragLeave(event)" ondrop="KanbanDrop(event, 'In attesa')">
+                        <div class="kanban-header">📌 IN ATTESA <span id="cntKanbanWait" class="badge">0</span></div>
+                        <div class="kanban-list" id="kanbanWait"></div>
+                    </div>
+                    <div class="kanban-column" ondragover="KanbanDragOver(event)" ondragleave="KanbanDragLeave(event)" ondrop="KanbanDrop(event, 'In corso')">
+                        <div class="kanban-header">⏳ IN CORSO <span id="cntKanbanDoing" class="badge">0</span></div>
+                        <div class="kanban-list" id="kanbanDoing"></div>
+                    </div>
+                    <div class="kanban-column" ondragover="KanbanDragOver(event)" ondragleave="KanbanDragLeave(event)" ondrop="KanbanDrop(event, 'Completato')">
+                        <div class="kanban-header">✅ COMPLETATI <span id="cntKanbanDone" class="badge">0</span></div>
+                        <div class="kanban-list" id="kanbanDone"></div>
+                    </div>
+                </div>
+
+                <!-- KPI & COMMAND DASHBOARD -->
+                <div id="kpiDashboard" style="display:flex; align-items:center; justify-content:space-between; background:var(--kpi-bg); padding:15px 30px; border-radius:16px; margin: 0 15px 15px 15px; border:1px solid var(--danea-border); font-family:'Inter',sans-serif; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                    
+                    <!-- WEATHER WIDGET -->
+                    <div id="weatherWidget" style="display:flex; align-items:center; gap:12px; min-width:180px; padding:10px; background:rgba(255,255,255,0.1); border-radius:12px;">
+                        <div id="weatherIcon" style="font-size:32px;">🌡️</div>
+                        <div>
+                            <div id="weatherTemp" style="font-size:22px; font-weight:900; line-height:1;">--°C</div>
+                            <div style="font-size:11px; color:var(--text-dim); font-weight:700; text-transform:uppercase; margin-top:2px;">Bari, IT</div>
+                        </div>
+                    </div>
+
+                    <!-- KPI PROGRESS RINGS -->
+                    <div style="display:flex; gap:40px; align-items:center;">
+                        <!-- Ring 1: Oggi -->
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="position:relative; width:50px; height:50px;">
+                                <svg width="50" height="50">
+                                    <circle cx="25" cy="25" r="22" stroke="rgba(0,0,0,0.05)" stroke-width="4" fill="transparent" />
+                                    <circle id="ringOggi" class="progress-ring-circle" cx="25" cy="25" r="22" stroke="#3b82f6" stroke-width="5" fill="transparent" stroke-dasharray="138.23" stroke-dashoffset="138.23" />
+                                </svg>
+                                <div id="kpiOggi" style="position:absolute; top:0; left:0; width:50px; height:50px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:var(--danea-text);">0</div>
+                            </div>
+                            <div>
+                                <div style="font-size:10px; color:var(--text-dim); font-weight:800; text-transform:uppercase;">Totali Oggi</div>
+                                <div style="font-size:13px; font-weight:700;">Impegni</div>
+                            </div>
+                        </div>
+
+                        <!-- Ring 2: Urgente -->
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="position:relative; width:50px; height:50px;">
+                                <svg width="50" height="50">
+                                    <circle cx="25" cy="25" r="22" stroke="rgba(0,0,0,0.05)" stroke-width="4" fill="transparent" />
+                                    <circle id="ringUrgente" class="progress-ring-circle" cx="25" cy="25" r="22" stroke="#ef4444" stroke-width="5" fill="transparent" stroke-dasharray="138.23" stroke-dashoffset="138.23" />
+                                </svg>
+                                <div id="kpiUrgente" style="position:absolute; top:0; left:0; width:50px; height:50px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#ef4444;">0</div>
+                            </div>
+                            <div>
+                                <div style="font-size:10px; color:var(--text-dim); font-weight:800; text-transform:uppercase;">In Scadenza</div>
+                                <div style="font-size:13px; font-weight:700;">Urgenti</div>
+                            </div>
+                        </div>
+
+                        <!-- Ring 3: Fatti -->
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="position:relative; width:50px; height:50px;">
+                                <svg width="50" height="50">
+                                    <circle cx="25" cy="25" r="22" stroke="rgba(0,0,0,0.05)" stroke-width="4" fill="transparent" />
+                                    <circle id="ringFatti" class="progress-ring-circle" cx="25" cy="25" r="22" stroke="#10b981" stroke-width="5" fill="transparent" stroke-dasharray="138.23" stroke-dashoffset="138.23" />
+                                </svg>
+                                <div id="kpiFatti" style="position:absolute; top:0; left:0; width:50px; height:50px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#10b981;">0</div>
+                            </div>
+                            <div>
+                                <div style="font-size:10px; color:var(--text-dim); font-weight:800; text-transform:uppercase;">Completati</div>
+                                <div style="font-size:13px; font-weight:700;">Conclusi</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REFRESH BTN -->
+                    <button onclick="CaricaLista(); FetchWeather();" style="background:transparent; border:none; cursor:pointer; color:var(--text-dim); font-size:18px;" title="Aggiorna Dashboard"><i class="fa fa-refresh"></i></button>
+                </div>
+
+                <div class="calendar-wrapper-modern" id="calendarView" style="display: none;">
+                    <div class="calendar-modern-header">
+                        <button onclick="ChangeMonth(-1)" class="cal-nav-btn"><i class="fa fa-chevron-left"></i> Prec</button>
+                        <h2 id="lblCalendarMonth" onclick="ShowMonthPicker()" title="Clicca per scegliere Mese ed Anno" style="cursor:pointer; transition: all 0.2s ease;" onmouseover="this.style.color='#3b82f6'; this.style.textDecoration='underline';" onmouseout="this.style.color='#003366'; this.style.textDecoration='none';">Maggio 2026</h2>
+                        <button onclick="ChangeMonth(1)" class="cal-nav-btn">Succ <i class="fa fa-chevron-right"></i></button>
+                    </div>
+                    <div class="calendar-modern-body">
+                        <div class="cal-weekdays">
+                            <div class="cal-weekday">Lun</div>
+                            <div class="cal-weekday">Mar</div>
+                            <div class="cal-weekday">Mer</div>
+                            <div class="cal-weekday">Gio</div>
+                            <div class="cal-weekday">Ven</div>
+                            <div class="cal-weekday">Sab</div>
+                            <div class="cal-weekday sunday">Dom</div>
+                        </div>
+                        <div class="cal-days-grid" id="calendarDaysGrid">
+                            <!-- Giorni popolati via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="timelineView" style="display: none; height: 100%; width: 100%; flex-direction: column;">
+                    <div class="calendar-modern-header" style="margin-bottom: 25px; flex-shrink: 0; padding: 10px 20px; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                        <button onclick="ChangeTimelineDay(-1)" class="cal-nav-btn" style="background:#f1f5f9; border-radius:8px;"><i class="fa fa-chevron-left"></i> Prec</button>
+                        <div style="text-align:center;">
+                            <div style="font-size:10px; font-weight:800; color:#3b82f6; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Pianificazione Giornaliera</div>
+                            <h2 id="lblTimelineDate" style="color:#1e293b; margin:0; font-size:20px; font-weight:900; text-transform: capitalize;">Oggi</h2>
+                        </div>
+                        <button onclick="ChangeTimelineDay(1)" class="cal-nav-btn" style="background:#f1f5f9; border-radius:8px;">Succ <i class="fa fa-chevron-right"></i></button>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: row; flex: 1; min-height: 0; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin: 0 15px 15px 15px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        <div class="timeline-wrapper" id="timelineGrid" style="flex: 1; overflow-y: auto;">
+                            <!-- Popolato via JS -->
+                        </div>
+                        <div class="timeline-sidebar">
+                            <div class="sidebar-header">📋 DA PIANIFICARE</div>
+                            <div id="timelinePendingList" class="sidebar-list">
+                                <!-- Popolato via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM ACTION BAR -->
+                <footer class="danea-action-bar" style="display:flex; align-items:center; gap:10px;">
+                    <button onclick="Nuovo()"><i class="fa fa-plus-circle" style="color:green"></i> Nuovo</button>
+                    <button onclick="ActionSalva()"><i class="fa fa-pencil" style="color:blue"></i> Modifica</button>
+                    <button id="btnBatchDone" onclick="ActionBatchComplete()" style="background:#f0fdf4; border-color:#22c55e; color:#15803d; display:none;"><i class="fa fa-check-square-o"></i> Segna come Fatti</button>
+                    
+                    <!-- CESTINO COME DROP ZONE -->
+                    <div id="trashZone" style="background:#fef2f2; border:2px dashed #ef4444; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding: 5px 15px; color:#ef4444; font-weight:bold; transition:all 0.3s; margin-left:10px;" onclick="OpenTrashModal()" ondragover="TrashDragOver(event)" ondragleave="TrashDragLeave(event)" ondrop="TrashDrop(event)">
+                        <i class="fa fa-trash" style="font-size:18px; margin-right:5px;" id="trashIcon"></i> CESTINO
+                    </div>
+
+                    <div class="bar-separator"></div>
+                    <button id="btnAgendaPDF"><i class="fa fa-print"></i> Stampa</button>
+                    <button id="btnEsportaPDF"><i class="fa fa-file-pdf-o"></i> Esporta</button>
+                    <button><i class="fa fa-file-excel-o" style="color:green"></i> Excel</button>
+                </footer>
+            </div>
+
+            <!-- SCHEDA DETTAGLIO MODELLO DANEA (ORA LATERALE) -->
+            <div class="danea-editor-panel-enterprise" id="sidePanelDetail">
+                 <button class="toggle-sidebar-btn" id="btnToggleSide" onclick="ToggleSidebar()" title="Nascondi/Mostra Pannello"><i class="fa fa-chevron-right" id="iconToggleSide"></i></button>
+                 <div class="editor-main-header">
+                    <div style="display:flex; align-items:center;">
+                        <div class="danea-id-box">ID: <span id="lblID">NUOVO</span></div>
+                        <h2 style="color:#003366; margin:0; font-size:16px">Dettaglio</h2>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <span title="In Attesa" style="font-size:12px; font-weight:800; color:#b45309; background:#fffbeb; border:1px solid #fde047; padding:4px 10px; border-radius:50px; display:inline-flex; align-items:center; gap:4px; font-family:'Inter',sans-serif;">⏳ <span id="cntAttesa">0</span></span>
+                        <span title="Fatti" style="font-size:12px; font-weight:800; color:#15803d; background:#f0fdf4; border:1px solid #bbf7d0; padding:4px 10px; border-radius:50px; display:inline-flex; align-items:center; gap:4px; font-family:'Inter',sans-serif;">✅ <span id="cntFatti">0</span></span>
+                    </div>
+                </div>
+                <div class="form-vertical-container">
+                    <div class="sidebar-section-header"><i class="fa fa-truck"></i> Logistica e Assegnazione</div>
+                    <div class="form-group">
+                        <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>ASSEGNATO A / MEZZO</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                        <div style="display:flex; gap:5px; align-items: stretch;">
+                            <input type="text" id="txtAssegnato" list="listMezzi" placeholder="Es: Mezzo A, Mario Rossi..." style="flex:1">
+                            <button type="button" onclick="ApriGestioneMezzi()" title="Gestisci Mezzi/Autisti" style="width:38px; height:38px; background:#64748b; color:white; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: background 0.2s;">
+                                <i class="fa fa-cog" style="font-size:16px;"></i>
+                            </button>
+                        </div>
+                        <datalist id="listMezzi">
+                            <!-- Popolato dinamicamente -->
+                        </datalist>
+                    </div>
+
+                    <div class="sidebar-section-header"><i class="fa fa-user"></i> Anagrafica Cliente</div>
+                    <div class="form-group">
+                        <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>CLIENTE / DENOMINAZIONE</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                        <input type="text" id="cmbCliente" list="listClienti" placeholder="Seleziona cliente...">
+                        <datalist id="listClienti"></datalist>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>INDIRIZZO E MAPPA</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="txtIndirizzo" placeholder="Indirizzo..." style="flex:1">
+                            <button class="mini-btn-map" onclick="ApriStreetView()" title="Geolocalizza"><i class="fa fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>LOCALITÀ</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="txtLocalita" placeholder="Città..." style="flex:1">
+                            <input type="text" id="txtProvincia" placeholder="PR" style="width:50px; text-align:center;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>TELEFONO RECAPITO</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="txtTelefono" placeholder="Recapito..." style="flex:1">
+                            <button class="mini-btn-wa" onclick="InviaWhatsApp()" title="Invia WhatsApp"><i class="fa fa-whatsapp"></i></button>
+                        </div>
+                    </div>
+                    <div class="sidebar-section-header"><i class="fa fa-calendar"></i> Programmazione Appuntamento</div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:1">
+                            <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>DATA</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                            <input type="text" id="txtData" placeholder="GG/MM/AAAA" readonly onclick="ApriCalendario('txtData')">
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>ORA</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                            <input type="text" id="cmbOra" placeholder="--:--" readonly onclick="ApriTimePicker()">
+                        </div>
+                    </div>
+                
+                <div class="form-group">
+                    <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>TIPOLOGIA ATTIVITÀ <i class="fa fa-info-circle" style="color:#3b82f6; cursor:help;" title="Filtra gli appuntamenti in base alla natura dell'intervento"></i></span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                    <select id="cmbTipologia">
+                        <option value="Generico">📌 Appuntamento Generico</option>
+                        <option value="Commerciale">🤝 Commerciale / Vendita</option>
+                        <option value="Tecnico">🛠️ Sopralluogo Tecnico</option>
+                        <option value="Consegna">📦 Consegna Logistica</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>STATO APPUNTAMENTO</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                    <select id="cmbStato" onchange="UpdateStatusColor(this.value)">
+                        <option value="In attesa">In attesa</option>
+                        <option value="In corso">In corso</option>
+                        <option value="Completato">Completato</option>
+                        <option value="Annullato">Annullato</option>
+                    </select>
+                </div>
+                
+                <!-- MONITORAGGIO A.S.L. -->
+                <div class="asl-monitor-box" style="margin-top: 15px;">
+                    <div class="sidebar-section-header" style="margin-top: 0; margin-bottom: 8px;"><i class="fa fa-university"></i> Monitoraggio A.S.L. (6 Anni)</div>
+                    <div id="aslStatusBadge" class="asl-badge state-libero">LIBERO / IDONEO</div>
+                    
+                    <div style="display:flex; gap:10px; margin-bottom: 10px;">
+                        <div class="form-group" style="flex:1; margin-bottom:0;">
+                            <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>ULTIMA EROGAZIONE</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                            <input type="text" id="txtDataASL" placeholder="GG/MM/AAAA" style="width: 100%;" onchange="UpdateASLLogic()">
+                        </div>
+                        <div class="form-group" style="flex:1; margin-bottom:0;">
+                            <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>SCADENZA 6 ANNI</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                            <input type="text" id="lblScadenzaASL" class="locked" readonly style="width: 100%;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 10px; margin-bottom: 10px;">
+                        <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>CODICI ISO / NOTE RESIDUI</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                        <input type="text" id="txtCodiciASL" placeholder="Es. residui, carrozzina..." style="width: 100%;" onchange="UpdateASLLogic()">
+                    </div>
+                    
+                    <div id="aslCheckupList" style="margin-top: 10px; max-height:120px; overflow-y:auto; margin-bottom: 10px;"></div>
+                    
+                    <button type="button" class="asl-action-btn" onclick="PlanRecall6Years()">Programma Ricontatto (6 Anni)</button>
+                </div>
+                
+                <div class="sidebar-section-header"><i class="fa fa-sticky-note"></i> Note Operative</div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span>NOTE / ISTRUZIONI RAPIDE</span> <i class="fa fa-floppy-o" onclick="ActionSalva()" title="Salva rapido" style="color:#3b82f6; cursor:pointer; font-size:12px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.25)';" onmouseout="this.style.transform='scale(1)';"></i></label>
+                    <textarea id="txtNote" placeholder="Aggiungi dettagli..." style="height:120px;"></textarea>
+                </div>
+                    
+                    <!-- AZIONE SPECIALE CONVERSIONE -->
+                    <button type="button" onclick="ActionConvertiInConsegna()" style="width:100%; background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); color: white; font-weight: 800; text-transform: uppercase; padding: 14px; border: none; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; margin-top: 5px;">
+                        <i class="fa fa-truck" style="font-size: 16px; margin-right: 10px;"></i> Converti in Consegna
+                    </button>
+                    
+                    <!-- CARD GUIDA RAPIDA DI PROMEMORIA -->
+                    <div class="quick-guide-card-reminder" onclick="ApriGuidaUtente()" title="Clicca per aprire la guida a tutto schermo" style="margin-top: 15px; padding: 12px 15px; background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 12px; color: #1e3a8a; font-family: 'Inter', sans-serif; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='#dbeafe'; this.style.borderColor='#93c5fd';" onmouseout="this.style.background='#eff6ff'; this.style.borderColor='#bfdbfe';">
+                        <div style="font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                            <span>💡 GUIDA RAPIDA AGENDA</span>
+                            <span style="font-size: 9px; color: #2563eb; background: #ffffff; padding: 2px 6px; border-radius: 8px; border: 1px solid #dbeafe; font-weight: 800;">APRI 🔍</span>
+                        </div>
+                        <ul style="margin: 0; padding-left: 16px; font-size: 10px; line-height: 1.45; font-weight: 600; list-style-type: disc;">
+                            <li style="margin-bottom: 4px;"><b>Vista Sinistra:</b> Calendario/Elenco. Trascina le voci (Kanban) o clicca sui giorni per riprogrammare.</li>
+                            <li style="margin-bottom: 4px;"><b>Pannello Destro:</b> Compila mezzo, cliente, indirizzo (mappa), telefono (WhatsApp) e date.</li>
+                            <li><b>Salvataggio:</b> Tasto <i>"Salva Info"</i> o icone 💾 per registrare. <b>(Clicca qui per ingrandire)</b></li>
+                        </ul>
+                    </div>
+                    
+                    <div style="display:none;">
+                        <input type="text" id="txtProvincia">
+                        <select id="fltStato"><option value="">- Tutti -</option></select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODALE GUIDA FUNZIONALITÀ DETTAGLIATA -->
+    <div id="modalGuida" class="system-modal-overlay">
+        <div class="system-modal-box">
+            <div class="system-modal-header">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <i class="fa fa-book" style="font-size:22px;"></i>
+                    <div style="font-size:18px; font-weight:800; letter-spacing:0.5px;">GUIDA FUNZIONALITÀ MASCHERA</div>
+                </div>
+                <style>
+        /* MODALI DI SISTEMA ENTERPRISE */
+        .system-modal {
+            display: none; position: fixed; top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(15,23,42,0.6); 
+            z-index: 9999; justify-content: center; align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        .system-modal-content {
+            background: white; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .system-modal-header { padding: 15px 20px; color: white; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-family: 'Outfit', sans-serif; }
+        .system-modal-body { padding: 20px; }
+        
+                    .dark-theme .hover-actions { background: rgba(15,23,42,0.9); }
+                    #weatherWidget { transition: background 0.3s; }
+                    .dark-theme #weatherWidget { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+                    /* ASL MONITOR WIDGET STYLES */
+    .asl-monitor-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 20px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+    .asl-badge { text-align: center; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 800; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s; }
+    .asl-badge.state-libero { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.1); }
+    .asl-badge.state-parziale { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; box-shadow: 0 2px 6px rgba(161, 98, 7, 0.1); }
+    .asl-badge.state-bloccato { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; box-shadow: 0 2px 6px rgba(185, 28, 28, 0.1); }
+    .asl-action-btn { width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; margin-top: 5px; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2); }
+    .asl-action-btn:hover { background: #2563eb; transform: translateY(-1px); }
+    .asl-action-btn:active { transform: translateY(0); }
+    input.locked { background: #f1f5f9; color: #64748b; font-weight: 700; cursor: not-allowed; border: 1px dashed #cbd5e1; }
+</style>
+                <button onclick="document.getElementById('modalGuida').style.display='none'" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; cursor:pointer; font-weight:900;">✕</button>
+            </div>
+            <div class="system-modal-body">
+                <div class="help-item">
+                    <div class="help-title">🚀 Motore Geografico & Percorso</div>
+                    <div class="help-desc">Cliccando sull'icona Mappa accanto all'indirizzo, il sistema calcola istantaneamente la rotta ottimale da Via Monte Grappa 128 (Bari) verso il cliente, visualizzando il percorso su Leaflet con stima di KM e Minuti reali.</div>
+                </div>
+                <div class="help-item">
+                    <div class="help-title">💬 WhatsApp Smart Template</div>
+                    <div class="help-desc">L'icona WhatsApp attiva un compositore automatico. Legge Nome, Data e Ora fissata e pre-compila una notifica cortese pronta da inoltrare in un clic senza digitare il testo.</div>
+                </div>
+                <div class="help-item">
+                    <div class="help-title">🔔 Daemon Avvisi (Push Alert)</div>
+                    <div class="help-desc">Ogni minuto un vigile elettronico controlla l'agenda. Se mancano meno di 45 minuti ad un evento programmato per oggi, farà esplodere un banner rosso lampeggiante in alto emettendo un bip audio di pre-allarme.</div>
+                </div>
+                <div class="help-item">
+                    <div class="help-title">📦 Conversione Automatica Consegne</div>
+                    <div class="help-desc">Premendo il tastone blu in basso, le info del promemoria migrano istantaneamente nella tabella Consegne e il programma ti trasporta alla pianificazione logistica senza doppie inserzioni.</div>
+                </div>
+                <div class="help-item">
+                    <div class="help-title">🔍 Filtri Smart In-Memory</div>
+                    <div class="help-desc">I tasti ovali sopra la griglia eseguono query istantanee sul tabellone. Puoi isolare Solo Oggi, gli In Attesa, o esplodere la vista per categorie cromatiche (Commerciale/Tecnico) senza ricariche lente del database.</div>
+                </div>
+                <div class="help-item" style="border-left-color:#f59e0b;">
+                    <div class="help-title">🎨 Legenda Colori a Scomparsa</div>
+                    <div class="help-desc">I Post-it cambiano colore in base alla Tipologia scelta. Trovi la guida rapida dei significati cromatici passando semplicemente il mouse sopra l'icona (i) accanto alla tendina "Tipologia Attività".</div>
+                </div>
+            </div>
+            <div class="system-modal-footer">
+                <button onclick="document.getElementById('modalGuida').style.display='none'" style="background:#1e293b; color:white; border:none; padding:10px 25px; border-radius:8px; font-weight:bold; cursor:pointer;">CHIUDI GUIDA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALENDARI E MODALI TIME PICKER -->
+    <div id="calendarOverlay" class="calendar-overlay">
+        <div class="calendar-modal"><div class="calendar-header"><button class="calendar-nav-btn" id="btnCalPrev">◀</button><h3 id="lblCalMeseAnno">Mese Anno</h3><button class="calendar-nav-btn" id="btnCalNext">▶</button></div><div id="gridCalendario"></div><div class="calendar-footer"><button class="btn-cal-action" id="btnCalOggi">OGGI</button><button class="btn-cal-action" id="btnCalChiudi">CHIUDI</button></div></div>
+    </div>
+    <div id="timePickerOverlay" class="calendar-overlay">
+        <div class="calendar-modal" style="width: 250px;">
+            <div class="calendar-header"><h3>Scegli Ora</h3></div>
+            <div class="slot-wrapper">
+                <div class="slot-highlight"></div>
+                <div id="gridOre" class="tp-grid" style="flex: 1;"></div>
+                <div id="gridMinuti" class="tp-grid" style="flex: 1;"></div>
+            </div>
+            <div class="calendar-footer"><button class="btn-cal-action" id="btnTimeChiudi" onclick="ChiudiTimePicker()">Chiudi</button></div>
+        </div>
+    </div>
+    
+    <!-- SELETTORE MESE MODALE (VIGNETTA PRO) PER CALENDARIO -->
+    <div id="monthPickerOverlay" class="calendar-overlay">
+        <div class="calendar-modal" style="width:450px; background: rgba(255, 255, 255, 0.95); animation: modalContentSlide 0.3s ease-out;">
+            <div class="calendar-header" style="background: #005a9e; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-radius: 16px 16px 0 0; margin: -26px -26px 20px -26px;">
+                <button class="calendar-nav-btn" onclick="ChangeYearPicker(-1)" style="background: rgba(255,255,255,0.2); color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 14px; font-weight: 900; cursor:pointer;">◀</button>
+                <span id="pickerYearTitle" style="font-size: 18px; color: white; font-weight: 800; font-family: 'Inter', sans-serif;">2026</span>
+                <button class="calendar-nav-btn" onclick="ChangeYearPicker(1)" style="background: rgba(255,255,255,0.2); color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 14px; font-weight: 900; cursor:pointer;">▶</button>
+            </div>
+            <div class="month-grid-container" style="padding: 10px 0 20px 0;">
+                <div class="month-btn-wrapper" id="monthGrid" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                    <!-- Generato dinamicamente via JS -->
+                </div>
+            </div>
+            <div class="calendar-footer" style="margin-top: 10px; padding-top: 15px; border-top: 1px solid #e2e8f0; display: flex; justify-content: center;">
+                <button class="btn-cal-action" onclick="CloseMonthPicker()" style="width: 100%; border-color: #94a3b8; color: #64748b; font-weight: 800; padding: 10px 0;">ANNULLA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENITORI PER HOVER E CONTEXT MENU -->
+    <div id="customTooltip"></div>
+    <div id="contextMenu">
+        <div class="context-menu-item" onclick="SetStatoDaContext('In attesa')">⏳ Imposta come In Attesa</div>
+        <div class="context-menu-item" onclick="SetStatoDaContext('Completato')" style="color:#16a34a;">✅ Segna come Completato</div>
+        <div class="context-menu-item" onclick="SetStatoDaContext('Annullato')" style="color:#dc2626;">❌ Annulla Appuntamento</div>
+    </div>
+
+    <script src="assets/js/promemoria_hta.js?v=2.2"></script>
+
+    <!-- MODALE CESTINO -->
+    <div id="trashModal" class="calendar-overlay" style="display:none; z-index:20000;">
+        <div class="calendar-modal" style="width: 500px;">
+            <div class="calendar-header" style="background:#ef4444; color:white;">
+                <h3 style="color:white; margin:0;"><i class="fa fa-trash"></i> Cestino Appuntamenti</h3>
+            </div>
+            <div id="trashList" style="max-height: 400px; overflow-y: auto; padding: 15px; background: #fff;">
+                <!-- JS List -->
+            </div>
+            <div class="calendar-footer" style="display:flex; justify-content:space-between; padding: 15px; background: #f8fafc;">
+                <button class="btn-cal-action" onclick="SvuotaCestino()" style="color:#ef4444; border-color:#ef4444;">SVUOTA TUTTO</button>
+                <button class="btn-cal-action" onclick="document.getElementById('trashModal').style.display='none'">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE GESTIONE MEZZI E AUTISTI -->
+    <div id="modalMezzi" class="system-modal">
+        <div class="system-modal-content" style="max-width:450px;">
+            <div class="system-modal-header" style="background: var(--slate-900);">
+                <span><i class="fa fa-truck"></i> GESTIONE MEZZI E AUTISTI</span>
+                <button onclick="document.getElementById('modalMezzi').style.display='none'" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">✕</button>
+            </div>
+            <div class="system-modal-body" style="padding:20px;">
+                <p style="font-size:11px; color:#64748b; margin-bottom:15px;">Aggiungi nuovi autisti o mezzi, oppure rimuovi quelli obsoleti dalla lista.</p>
+                
+                <div id="listaMezziGestione" style="max-height:200px; overflow-y:auto; margin-bottom:20px; border:1px solid #e2e8f0; border-radius:10px; background:#f8fafc;">
+                    <!-- Righe generate da JS -->
+                </div>
+ 
+                <div class="form-group">
+                    <label>NUOVO MEZZO / NOME AUTISTA</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="txtNuovoMezzo" placeholder="Es: CAMION 3..." style="flex:1; text-transform:uppercase;">
+                        <button class="asl-action-btn" style="width:auto; padding:0 20px; margin:0;" onclick="AggiungiNuovoMezzo()"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE BIG DATA ASL -->
+    <div id="modalASL" class="system-modal">
+        <div class="system-modal-content" style="max-width:600px;">
+            <div class="system-modal-header" style="background: #3b82f6; color:white;">
+                <span><i class="fa fa-university"></i> REGISTRO STORICO A.S.L. PUGLIA</span>
+                <button onclick="document.getElementById('modalASL').style.display='none'" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">✕</button>
+            </div>
+            <div class="system-modal-body" style="padding:20px; position:relative;">
+                <div style="position:relative; margin-bottom:15px;">
+                    <label style="display:block; font-size:11px; font-weight:bold; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Cerca Anagrafica Cliente</label>
+                    <input type="text" id="txtSearchASL" onkeyup="SearchASLModal(this.value)" placeholder="Scrivi cognome e nome..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1; box-sizing:border-box;">
+                    <div id="suggASLModal" style="display:none; position:absolute; top:55px; left:0; right:0; background:white; border:1px solid #cbd5e1; border-radius:6px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); z-index:99; max-height:200px; overflow-y:auto;">
+                        <!-- Suggerimenti dinamicamente popolati -->
+                    </div>
+                </div>
+                <div id="aslModalResult" style="max-height:300px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:8px; padding:10px; background:#f8fafc; min-height:100px;">
+                    <div style="text-align:center; color:#94a3b8; font-size:12px; padding:30px 0;">Digita il nome del cliente per visualizzare lo storico delle erogazioni ausili.</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="asl-action-btn" onclick="ImportASL_CSV()" style="flex:1; background:#fbbf24; color:#000; border-color:#d97706; font-weight:bold; margin:0;">IMPORTA CSV</button>
+                    <button class="asl-action-btn" onclick="document.getElementById('modalASL').style.display='none'" style="flex:1; background:#64748b; margin:0;">CHIUDI</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/accessibility.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+<!-- MODAL GUIDA ALL'USO (MSHTA REFLOW COMPATIBLE) -->
+<div id="helpModalOverlay" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;">
+    <div style="position:absolute; top:50%; left:50%; margin-top:-260px; margin-left:-320px; width:640px; background:#0f172a; border:2px solid #38bdf8; border-radius:16px; box-shadow:0 0 35px rgba(56, 189, 248, 0.4); padding:25px; color:#f8fafc; font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;">
+        <!-- Header Modal -->
+        <div style="border-bottom:1px solid #38bdf8; padding-bottom:12px; margin-bottom:15px; position:relative;">
+            <div style="font-family:'Outfit', sans-serif; font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.5px;">
+                &#128216; GUIDA ALL'USO - ZENITH MATERIALI
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Manuale Rapido Operativo &amp; Scorciatoie</div>
+            <div onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="cursor:pointer; position:absolute; top:0; right:0; width:30px; height:30px; background:#1e293b; border:1px solid #38bdf8; border-radius:50%; text-align:center; line-height:28px; color:#f8fafc; font-weight:bold; font-size:1.2rem; user-select:none;">&times;</div>
+        </div>
+
+        <!-- Content Modal -->
+        <div style="height:350px; overflow-y:auto; padding-right:5px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                <tr>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#fbbf24; font-size:0.88rem; margin-bottom:6px;">
+                                &#128269; 1. Ricerca Globale Istantanea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Digita nel campo in alto per filtrare in tempo reale clienti, città, telefoni o specifiche attrezzature assegnate.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#38bdf8; font-size:0.88rem; margin-bottom:6px;">
+                                &#128205; 2. Filtri Provincia &amp; Articolo
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Usa la barra laterale sinistra per isolare velocemente le province (Bari, Foggia, Taranto) o i dispositivi (Orologio, Sveglia, Braille).
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#34d399; font-size:0.88rem; margin-bottom:6px;">
+                                &#128203; 3. Pulsanti Copia Dati
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Clicca sul tasto verde <b>Copia</b> per salvare la scheda cliente negli appunti e trasferirla nei promemoria o report.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#a78bfa; font-size:0.88rem; margin-bottom:6px;">
+                                &#128259; 4. Sincronizzazione Danea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Dal menu <b>File</b> o <b>Strumenti</b> premi <i>Sincronizza Excel Ora</i> per ricaricare le anagrafiche aggiornate.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; padding:12px; border-radius:10px; font-size:0.8rem; color:#cbd5e1;">
+                <b style="color:#38bdf8;">&#9889; Suggerimento Rapido:</b> Per resettare tutti i filtri attivi e tornare alla vista completa, seleziona <b>TUTTE LE PROVINCE</b> ed <b>ELENCO COMPLETO</b> dalla sidebar a sinistra.
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); text-align:right;">
+            <span style="font-size:0.75rem; color:#94a3b8; float:left; margin-top:8px;">Sistema Zenith Materiali v1.0 &bull; C. Milella 2026</span>
+            <button onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="background:#0284c7; color:white; border:1px solid #38bdf8; padding:8px 24px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; font-family:'Outfit', sans-serif;">HO CAPITO</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

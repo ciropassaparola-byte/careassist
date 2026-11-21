@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flotta Veicoli & Spese - Mobile Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --primary: #0284c7;
+      --primary-glow: rgba(2, 132, 199, 0.2);
+      --accent-gold: #f59e0b;
+      --success: #059669;
+      --danger: #dc2626;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --segugio-blue: #0f3d6c;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
+    body {
+      background: #f0f4f8;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 12px 14px 90px;
+      overflow-x: hidden;
+    }
+    
+    /* TOP HEADER */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: #e8f4fc;
+      border: 1.5px solid #d0e8f8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+    }
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--segugio-blue);
+      line-height: 1.1;
+    }
+    .brand-sub { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .btn-suite {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 11.5px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
+      border: 1px solid #38bdf8;
+    }
+
+    /* SUMMARY TILES (SEGUGIO COCKPIT) */
+    .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+    .stat-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 12px 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    }
+    .stat-card.primary { border-top: 3.5px solid #0284c7; }
+    .stat-card.warning { border-top: 3.5px solid #f59e0b; }
+    .stat-card.danger { border-top: 3.5px solid #dc2626; }
+    .stat-card.success { border-top: 3.5px solid #059669; }
+    .stat-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.3px;
+    }
+    .stat-val { font-size: 20px; font-weight: 900; color: var(--segugio-blue); font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; }
+    .stat-sub { font-size: 10px; color: #64748b; margin-top: 3px; font-weight: 600; }
+
+    /* TABS SCORREVOLI IN ALTO STILE SEGUGIO */
+    .tabs-bar {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      margin-bottom: 14px;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .tab-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0369a1;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+
+    /* SECTIONS */
+    .section-view { display: none; animation: fadeIn 0.3s ease; }
+    .section-view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* CARDS LIST STILE SEGUGIO */
+    .item-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .item-card:active {
+      transform: scale(0.985);
+      border-color: #7dd3fc;
+    }
+    .item-left { display: flex; flex-direction: column; gap: 3px; }
+    .item-title { font-size: 14.5px; font-weight: 800; color: var(--segugio-blue); letter-spacing: -0.2px; }
+    .item-date { font-size: 11.5px; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+    .item-cost { font-size: 17px; font-weight: 900; font-family: 'Outfit', sans-serif; text-align: right; }
+    .item-cost.positive { color: #059669; }
+    .item-cost.negative { color: #dc2626; }
+    .item-tag {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 5px;
+      width: fit-content;
+    }
+    .tag-blue { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .tag-green { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .tag-amber { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+
+    /* ACTION BUTTONS */
+    .btn-quick-add {
+      width: 100%;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #fff;
+      border: 1.5px solid #38bdf8;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 13px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; width: 100%; max-width: 440px; padding: 18px; box-shadow: 0 12px 35px rgba(0,0,0,0.2); }
+    .modal-title { font-size: 16px; font-weight: 800; color: var(--segugio-blue); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 800; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
+    .form-control { width: 100%; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 11px 13px; color: #0f172a; font-size: 13.5px; font-weight: 600; outline: none; }
+    .form-control:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 10px rgba(2, 132, 199, 0.2); }
+    .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+    .modal-btn { flex: 1; padding: 11px; border-radius: 10px; font-weight: 800; font-size: 13px; border: none; cursor: pointer; text-align: center; }
+    .modal-btn.cancel { background: #e2e8f0; color: #475569; }
+    .modal-btn.save { background: var(--primary); color: #fff; }
+
+    /* BOTTOM BAR */
+    .mobile-bottom-bar {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 440px;
+      height: 64px;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 22px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 8px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+      z-index: 999;
+    }
+    .bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      text-decoration: none;
+      font-size: 10.5px;
+      font-weight: 700;
+      gap: 3px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      flex: 1;
+      height: 100%;
+      transition: all 0.2s;
+    }
+    .bar-item .icon { font-size: 20px; line-height: 1; }
+    .bar-item.active, .bar-item:hover { color: #0284c7; }
+    .bar-item.center-action { position: relative; top: -12px; }
+    .bar-item.center-action .btn-circle-add {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border: 3px solid #ffffff;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4);
+      cursor: pointer;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="/suite_security_gate.js?v=1"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="top-header">
+    <div class="brand">
+      <div class="brand-icon">­ƒÜù</div>
+      <div>
+        <div class="brand-title">Flotta & Veicoli</div>
+        <div class="brand-sub">Controllo Spese &bull; <span style="color:#f59e0b; font-weight:800;">­ƒææ CIRO MILELLA</span></div>
+      </div>
+    </div>
+    <a href="/launcher.html" class="btn-suite">­ƒææ Ciro Milella</a>
+  </header>
+
+  <!-- STATS TILES LIVE -->
+  <div class="summary-grid">
+    <div class="stat-card primary">
+      <div class="stat-label"><span>­ƒÆÂ</span> Rimborsi ACI</div>
+      <div class="stat-val" id="stat-rimborsi">Ôé¼ 2.201,61</div>
+      <div class="stat-sub">Totale Anno 2026</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-label"><span>Ôø¢</span> Carburante</div>
+      <div class="stat-val" id="stat-carburante">Ôé¼ 547,14</div>
+      <div class="stat-sub">Spesa Lavoro</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-label"><span>­ƒöº</span> Manutenzioni</div>
+      <div class="stat-val" id="stat-spese">Ôé¼ 827,00</div>
+      <div class="stat-sub">Officina & Tagliandi</div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-label"><span>­ƒôê</span> Guadagno Netto</div>
+      <div class="stat-val" style="color:#34d399;" id="stat-netto">+Ôé¼ 827,48</div>
+      <div class="stat-sub">Utile Rimborsi Netto</div>
+    </div>
+  </div>
+
+  <!-- TABS NAV A SCORRIMENTO -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" data-tab="spese" onclick="switchView('spese', this)">­ƒöº Registro Spese</button>
+    <button class="tab-btn" data-tab="rifornimenti" onclick="switchView('rifornimenti', this)">Ôø¢ Rifornimenti Benzina</button>
+    <button class="tab-btn" data-tab="rimborsi" onclick="switchView('rimborsi', this)">­ƒôè Rimborsi Chilometrici</button>
+    <button class="tab-btn" data-tab="scadenze" onclick="switchView('scadenze', this)">­ƒôà Scadenze Documenti</button>
+  </div>
+
+  <!-- VISTA 1: SPESE & INTERVENTI -->
+  <div id="view-spese" class="section-view active">
+    <!-- BARRA AZIONI SCANSIONE SMART RICEVUTA MECCANICO -->
+    <label style="background: #e8f4fc; border: 1.5px dashed #0284c7; border-radius: 16px; padding: 12px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: #0284c7; font-size: 12.5px; font-weight: 800; box-shadow: 0 2px 8px rgba(2,132,199,0.1);">
+      <span style="font-size:18px;">­ƒôÀ</span> Scansiona Ricevuta / Fattura Meccanico
+      <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="scansionaFatturaSpesa(event)">
+    </label>
+
+    <button class="btn-quick-add" onclick="apriModalSpesa()">Ô×ò Aggiungi Nuova Spesa / Tagliando</button>
+    <div id="list-spese">
+      <!-- Generato dinamicamente -->
+    </div>
+  </div>
+
+  <!-- VISTA 2: RIFORNIMENTI -->
+  <div id="view-rifornimenti" class="section-view">
+    <!-- BARRA AZIONI SCANSIONE SMART FOTOCAMERA -->
+    <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+      <div style="font-size: 11px; font-weight: 800; color: #0f3d6c; text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
+        <span>­ƒôÀ</span> Riconoscimento Smart da Fotocamera
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <label style="flex:1; background: #e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding: 10px 8px; border-radius: 12px; font-size: 11.5px; font-weight: 800; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span>­ƒô©</span> Cruscotto (Km)
+          <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="scansionaCruscotto(event)">
+        </label>
+        <label style="flex:1; background: #fef3c7; color:#b45309; border:1px solid #fde68a; padding: 10px 8px; border-radius: 12px; font-size: 11.5px; font-weight: 800; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span>­ƒº¥</span> Scontrino Pompa
+          <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="scansionaScontrino(event)">
+        </label>
+      </div>
+    </div>
+
+    <button class="btn-quick-add" style="background:linear-gradient(135deg, #f97316 0%, #ea580c 100%); border:1px solid #fdba74; box-shadow:0 4px 14px rgba(249,115,22,0.35);" onclick="apriModalRifornimento()">Ôø¢ Segna Nuovo Rifornimento</button>
+    <div id="list-rifornimenti">
+      <!-- Generato dinamicamente -->
+    </div>
+  </div>
+
+  <!-- VISTA 3: RIMBORSI MENSILI -->
+  <div id="view-rimborsi" class="section-view">
+    <div id="list-rimborsi">
+      <!-- Rimborsi per mese -->
+    </div>
+  </div>
+
+  <!-- VISTA 4: SCADENZE DOCUMENTI -->
+  <div id="view-scadenze" class="section-view">
+    <button class="btn-quick-add" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); margin-bottom: 14px;" onclick="apriModalModificaScadenze()">Ô£Å´©Å Modifica Date & Stato Scadenze</button>
+    <div id="list-scadenze">
+      <!-- Generato dinamicamente da app.js -->
+    </div>
+  </div>
+
+  <!-- MODALE AGGIUNGI SPESA -->
+  
+  <!-- ==========================================================================
+       MODALE 1: SPESE E INTERVENTI D'OFFICINA
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-spesa">
+    <div class="modal-card">
+      <div class="modal-title">
+        <span>­ƒöº Registra Spesa / Intervento</span>
+        <button type="button" style="background:none; border:none; color:#fff; font-size:22px; cursor:pointer;" onclick="chiudiModali()">Ô£ò</button>
+      </div>
+
+      <!-- SCANNER RICEVUTA MECCANICO -->
+      <label style="background: linear-gradient(135deg, rgba(14,165,233,0.18) 0%, rgba(2,132,199,0.18) 100%); border: 1.5px dashed rgba(56,189,248,0.45); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: #38bdf8; font-size: 12px; font-weight: 800;">
+        <span style="font-size:16px;">­ƒôÀ</span> Scansiona Fattura / Ricevuta Meccanico
+        <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="scansionaFatturaSpesa(event)">
+      </label>
+
+      <form onsubmit="salvaSpesa(event)">
+        <div class="form-group">
+          <label>Data Intervento *</label>
+          <input type="date" class="form-control" id="form-spesa-data" required>
+        </div>
+        <div class="form-group">
+          <label>Descrizione / Tipo *</label>
+          <input type="text" class="form-control" id="form-spesa-desc" placeholder="Es. Tagliando Completo, Cambio Gomme, Olio..." required>
+        </div>
+        <div class="form-group">
+          <label>Costo Totale (Ôé¼) *</label>
+          <input type="number" step="0.01" class="form-control" id="form-spesa-costo" placeholder="Es. 150.00" required>
+        </div>
+        <div class="form-group">
+          <label>Officina o Note</label>
+          <input type="text" class="form-control" id="form-spesa-note" placeholder="Es. Officina Autorizzata, Gommista...">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="modal-btn cancel" onclick="chiudiModali()">Annulla</button>
+          <button type="submit" class="modal-btn save">Salva Spesa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODALE 2: RIFORNIMENTI CARBURANTE
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-rifornimento">
+    <div class="modal-card">
+      <div class="modal-title">
+        <span>Ôø¢ Registra Rifornimento Carburante</span>
+        <button type="button" style="background:none; border:none; color:#fff; font-size:22px; cursor:pointer;" onclick="chiudiModali()">Ô£ò</button>
+      </div>
+
+      <!-- SCANNER SMART FOTOCAMERA CRUSCOTTO E SCONTRINO -->
+      <div style="background: linear-gradient(135deg, rgba(14,165,233,0.14) 0%, rgba(245,158,11,0.14) 100%); border: 1.5px dashed rgba(56,189,248,0.45); border-radius: 14px; padding: 10px 12px; margin-bottom: 14px;">
+        <div style="font-size: 11px; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 7px; display:flex; align-items:center; gap:5px;">
+          ­ƒôÀ Scansione Rapida Fotocamera
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <label style="flex:1; background: #0284c7; color:#fff; padding: 8px 6px; border-radius: 10px; font-size: 11px; font-weight: 700; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span>­ƒô©</span> Cruscotto (Km)
+            <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="scansionaCruscotto(event)">
+          </label>
+          <label style="flex:1; background: #d97706; color:#fff; padding: 8px 6px; border-radius: 10px; font-size: 11px; font-weight: 700; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span>­ƒº¥</span> Scontrino Pompa
+            <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="scansionaScontrino(event)">
+          </label>
+        </div>
+      </div>
+
+      <form onsubmit="salvaRifornimento(event)">
+        <div class="form-group">
+          <label>Data *</label>
+          <input type="date" class="form-control" id="form-rif-data" required>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex:1;">
+            <label>Importo (Ôé¼) *</label>
+            <input type="number" step="0.01" class="form-control" id="form-rif-costo" placeholder="Es. 50.00" required oninput="ricalcolaLitriRif()">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Km Attuali</label>
+            <input type="number" class="form-control" id="form-rif-km" placeholder="Es. 125400">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex:1;">
+            <label>Prezzo/L (Ôé¼)</label>
+            <input type="number" step="0.001" class="form-control" id="form-rif-prezzo-litro" placeholder="Es. 1.789" oninput="ricalcolaLitriRif()">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Litri Erogati</label>
+            <input type="number" step="0.01" class="form-control" id="form-rif-litri" placeholder="Es. 27.95">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Distributore / Note</label>
+          <input type="text" class="form-control" id="form-rif-note" placeholder="Es. Eni Station, IP, Q8...">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="modal-btn cancel" onclick="chiudiModali()">Annulla</button>
+          <button type="submit" class="modal-btn save" style="background:#f59e0b;">Ôø¢ Registra</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       BARRA DI NAVIGAZIONE INFERIORE (BOTTOM FLOATING NAVIGATION BAR)
+       ========================================================================== -->
+  <nav class="mobile-bottom-bar">
+    <button type="button" class="bar-item" onclick="window.history.back()" title="Vai Indietro">
+      <span class="icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </span>
+      <span>Indietro</span>
+    </button>
+    
+    <a href="/launcher.html" class="bar-item active" title="Home Suite Milella">
+      <span class="icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </span>
+      <span>Home Suite</span>
+    </a>
+
+    <div class="bar-item center-action">
+      <button type="button" class="btn-circle-add" onclick="apriModalSpesa()" title="Aggiungi Nuova Spesa">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </button>
+      <span style="font-size:10px; font-weight:800; color:#38bdf8; margin-top:3px;">Nuovo</span>
+    </div>
+
+    <button type="button" class="bar-item" onclick="location.reload()" title="Ricarica Dati">
+      <span class="icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+      </span>
+      <span>Ricarica</span>
+    </button>
+
+    <button type="button" class="bar-item" onclick="switchView('scadenze', document.querySelector('[data-tab=scadenze]'))" title="Scadenze & Allarmi">
+      <span class="icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </span>
+      <span>Scadenze</span>
+    </button>
+  </nav>
+
+  
+  <!-- ==========================================================================
+       MODALE 3: MODIFICA SCADENZE E DOCUMENTI AUTO
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-scadenze">
+    <div class="modal-card" style="border-radius:24px; padding:22px; max-width:480px; box-shadow:0 15px 45px rgba(15,39,76,0.18);">
+      <div class="modal-title" style="margin-bottom:18px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:40px; height:40px; border-radius:50%; background:#e0f2fe; display:flex; align-items:center; justify-content:center; color:#0284c7; font-size:20px;">­ƒôà</div>
+          <div>
+            <div style="font-family:'Outfit',sans-serif; font-size:17px; font-weight:800; color:#0f3d6c;">Modifica Scadenze Documenti</div>
+            <div style="font-size:11px; color:#64748b; font-weight:600;">Aggiorna date, enti e stato dei documenti</div>
+          </div>
+        </div>
+        <button type="button" style="background:#f1f5f9; border:none; color:#64748b; font-size:18px; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;" onclick="chiudiModali()">Ô£ò</button>
+      </div>
+
+      <form onsubmit="salvaScadenzeForm(event)">
+        <!-- 1. ASSICURAZIONE AUTO -->
+        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:14px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:18px;">­ƒÜù</span>
+              <strong style="color:#0f3d6c; font-size:13.5px; font-weight:800;">Assicurazione Auto</strong>
+            </div>
+            <span style="font-size:10.5px; font-weight:800; color:#059669; background:#ecfdf5; border:1px solid #a7f3d0; padding:2px 8px; border-radius:10px;">RCA</span>
+          </div>
+          <div class="form-group" style="margin-bottom:8px;">
+            <label style="font-size:10.5px; font-weight:800; color:#475569; text-transform:uppercase;">Data Scadenza Polizza</label>
+            <input type="date" class="form-control" id="form-scad-ass-data" style="font-weight:700; color:#0f172a; padding:8px 12px; border-radius:10px; border:1.5px solid #cbd5e1;" required>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <div class="form-group" style="flex:1; margin-bottom:0;">
+              <label style="font-size:10px; font-weight:700; color:#64748b;">Stato</label>
+              <input type="text" class="form-control" id="form-scad-ass-stato" style="font-size:12px; padding:7px 10px; border-radius:10px;" placeholder="es. In Regola">
+            </div>
+            <div class="form-group" style="flex:2; margin-bottom:0;">
+              <label style="font-size:10px; font-weight:700; color:#64748b;">Dettaglio / Compagnia</label>
+              <input type="text" class="form-control" id="form-scad-ass-nota" style="font-size:12px; padding:7px 10px; border-radius:10px;" placeholder="es. Guida senza pensieri">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. REVISIONE PERIODICA -->
+        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:14px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:18px;">­ƒöì</span>
+              <strong style="color:#0f3d6c; font-size:13.5px; font-weight:800;">Revisione Ministeriale</strong>
+            </div>
+            <span style="font-size:10.5px; font-weight:800; color:#0284c7; background:#e0f2fe; border:1px solid #bae6fd; padding:2px 8px; border-radius:10px;">Motorizzazione</span>
+          </div>
+          <div class="form-group" style="margin-bottom:8px;">
+            <label style="font-size:10.5px; font-weight:800; color:#475569; text-transform:uppercase;">Data Prossimo Controllo</label>
+            <input type="date" class="form-control" id="form-scad-rev-data" style="font-weight:700; color:#0f172a; padding:8px 12px; border-radius:10px; border:1.5px solid #cbd5e1;" required>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <div class="form-group" style="flex:1; margin-bottom:0;">
+              <label style="font-size:10px; font-weight:700; color:#64748b;">Stato</label>
+              <input type="text" class="form-control" id="form-scad-rev-stato" style="font-size:12px; padding:7px 10px; border-radius:10px;" placeholder="es. In Regola">
+            </div>
+            <div class="form-group" style="flex:2; margin-bottom:0;">
+              <label style="font-size:10px; font-weight:700; color:#64748b;">Centro Revisioni / Note</label>
+              <input type="text" class="form-control" id="form-scad-rev-nota" style="font-size:12px; padding:7px 10px; border-radius:10px;" placeholder="es. Centro Autorizzato">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. BOLLO AUTO -->
+        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:14px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:18px;">­ƒÅÀ´©Å</span>
+              <strong style="color:#0f3d6c; font-size:13.5px; font-weight:800;">Bollo Auto Annuale</strong>
+            </div>
+            <span style="font-size:10.5px; font-weight:800; color:#d97706; background:#fef3c7; border:1px solid #fde68a; padding:2px 8px; border-radius:10px;">Tassa ACI</span>
+          </div>
+          <div class="form-group" style="margin-bottom:8px;">
+            <label style="font-size:10.5px; font-weight:800; color:#475569; text-transform:uppercase;">Termine Ultimo Pagamento</label>
+            <input type="date" class="form-control" id="form-scad-bollo-data" style="font-weight:700; color:#0f172a; padding:8px 12px; border-radius:10px; border:1.5px solid #cbd5e1;" required>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <div class="form-group" style="flex:1; margin-bottom:0;">
+              <label style="font-size:10px; font-weight:700; color:#64748b;">Stato</label>
+              <input type="text" class="form-control" id="form-scad-bollo-stato" style="font-size:12px; padding:7px 10px; border-radius:10px;" placeholder="es. Pagato">
+            </div>
+            <div class="form-group" style="flex:2; margin-bottom:0;">
+              <label style="font-size:10px; font-weight:700; color:#64748b;">Ente / Note</label>
+              <input type="text" class="form-control" id="form-scad-bollo-nota" style="font-size:12px; padding:7px 10px; border-radius:10px;" placeholder="es. Regione Basilicata / ACI">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="modal-btn cancel" style="flex:1; border-radius:12px; padding:12px; background:#f1f5f9; color:#475569; font-weight:700; border:none; cursor:pointer;" onclick="chiudiModali()">Annulla</button>
+          <button type="submit" class="modal-btn save" style="flex:2; border-radius:12px; padding:12px; font-weight:800; font-size:13.5px; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#fff; border:none; box-shadow:0 4px 14px rgba(2,132,199,0.35); cursor:pointer;">­ƒÆ¥ Salva Modifiche</button>
+        </div>
+      </form>
+    </div>
+  </div>>
+  <script src="app.js?v=153"></script>
+
+  <!-- MODALE PROGRESSO OCR VEICOLI -->
+  <div id="veicoli-ocr-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(5,10,22,0.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:999999; align-items:center; justify-content:center; padding:16px;">
+    <div style="background: linear-gradient(145deg, #0f1c30 0%, #070d18 100%); border: 1px solid rgba(56,189,248,0.35); border-radius: 22px; padding: 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+      <div style="font-size:2.4rem; margin-bottom:8px;" id="veicoli-ocr-icon">­ƒöì</div>
+      <h3 style="color:#ffffff; font-size:1.15rem; font-weight:700; margin-bottom:4px;" id="veicoli-ocr-title">Analisi Foto in Corso...</h3>
+      <p style="color:#94a3b8; font-size:0.8rem; margin-bottom:12px;" id="veicoli-ocr-sub">Lettura automatica dati con intelligenza ottica...</p>
+      <div style="display:inline-block; width:28px; height:28px; border:3px solid rgba(56,189,248,0.3); border-radius:50%; border-top-color:#38bdf8; animation: spin 0.8s linear infinite; margin-bottom:10px;"></div>
+    </div>
+  </div>
+
+</body>
+</html>

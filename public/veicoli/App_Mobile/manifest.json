@@ -1,0 +1,21 @@
+{
+  "name": "Logistica PRO",
+  "short_name": "LogisticaPRO",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#030408",
+  "theme_color": "#ff6b00",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/img/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/img/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

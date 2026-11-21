@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Guida alla Distribuzione in Rete - Sistema Logistica</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="GuidaDistribuzione"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SCROLL="yes"
+        SYSMENU="yes"
+        WINDOWSTATE="normal"
+    />
+    <script>
+        var w = 850; var h = 900;
+        window.resizeTo(w, h);
+        window.moveTo((screen.width - w) / 2, (screen.height - h) / 2);
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8fafc; margin: 0; color: #1e293b; padding-bottom: 50px; }
+        .header { background: #005a9e; color: white; padding: 40px; text-align: center; border-bottom: 5px solid #ffba00; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header h1 { margin: 0; font-size: 32px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        .header p { margin: 10px 0 0 0; opacity: 0.9; font-size: 16px; }
+        
+        .container { max-width: 750px; margin: 30px auto; padding: 0 20px; }
+        
+        .visual-schema { width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 40px; border: 4px solid #fff; }
+        
+        .card { background: white; border-radius: 12px; padding: 30px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .card h2 { color: #005a9e; margin-top: 0; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+        .card h2 span { background: #ffba00; color: #000; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        
+        .step-list { list-style: none; padding: 0; }
+        .step-list li { padding: 15px 0; border-bottom: 1px dashed #e2e8f0; display: flex; gap: 15px; }
+        .step-list li:last-child { border-bottom: none; }
+        .step-list b { color: #005a9e; }
+        
+        .alert-box { background: #fffbeb; border-left: 5px solid #f59e0b; padding: 20px; border-radius: 4px; color: #92400e; font-size: 14px; margin-top: 20px; }
+        
+        .btn-close { position: absolute; top: 15px; right: 20px; background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-close:hover { background: white; color: #005a9e; }
+        
+        code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; color: #b73e35; }
+    </style>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+</head>
+<body>
+    <button class="btn-close" onclick="window.close()">CHIUDI X</button>
+
+    <div class="header">
+        <h1 style="display:none;">Manuale di Distribuzione</h1>
+
+        <p>Configurazione del Sistema Logistica in Rete Multi-Utente</p>
+    </div>
+
+    <div class="container">
+        <!-- SCHEMA VISIVO -->
+        <img src="network_setup_schema_1776282918066.png" alt="Schema Rete" class="visual-schema">
+
+        <!-- INTRO -->
+        <div class="card">
+            <h2><span>1</span> Il Modello di Rete</h2>
+            <p>Il software � progettato secondo l'architettura <b>Shared File Service</b>. Questo significa che il database centrale (.accdb) pu� essere interrogato simultaneamente da pi� PC connessi alla stessa rete locale.</p>
+            <div class="alert-box">
+                <b>INFO:</b> Windows gestisce automaticamente il traffico dati tramite il motore MS Jet/ACE, garantendo che i dati non si perdano durante i salvataggi contemporanei.
+            </div>
+        </div>
+
+        <!-- FASE 1 -->
+        <div class="card">
+            <h2><span>2</span> Preparazione Server</h2>
+            <ul class="step-list">
+                <li>
+                    <div>
+                        <b>Cartella Centrale:</b> Sposta l'intera cartella <code>Sistema_Logistica_C_Milella</code> su un percorso condiviso (es. un server aziendale o un PC principale).
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <b>Permessi Windows:</b> Clicca con il tasto destro sulla cartella -> <i>Propriet�</i> -> <i>Condivisione</i>. Assicurati che gli utenti della rete abbiano permessi di <b>Lettura e Scrittura</b> (necessari per aggiornare il DB).
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- FASE 2 -->
+        <div class="card">
+            <h2><span>3</span> Configurazione Utenti (Client)</h2>
+            <p>Non � necessario installare il software sui PC dei colleghi. Segui questi passi per ogni postazione:</p>
+            <ul class="step-list">
+                <li>
+                    <div>
+                        <b>Percorso di Rete:</b> Apri <i>Esplora File</i> e naviga fino alla cartella condivisa sul server.
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <b>Collegamento Desktop:</b> Individua il file <code>login.html</code>, clicca con il destro e seleziona <i>Invia a -> Desktop (crea collegamento)</i>.
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <b>Esecuzione:</b> Il collega potr� ora avviare il gestionale direttamente dal suo desktop. Tutti i dati salvati confluiranno nel database centrale.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- CONCLUSIONE -->
+        <div style="text-align: center; opacity: 0.6; font-size: 13px; margin-top: 50px;">
+            Sistema Logistica C. Milella - Documentazione Tecnica v1.0<br>
+            � 2026 - Tutti i diritti riservati
+        </div>
+    </div>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+</body>
+</html>
+
+

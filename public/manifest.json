@@ -1,0 +1,25 @@
+{
+  "name": "Suite Gestionale Aziendale C. Milella",
+  "short_name": "Suite Milella",
+  "description": "Piattaforma Aziendale Unificata C. Milella - Logistica, Flotta, Sanità, Nutrizione & Attrezzi",
+  "start_url": "/launcher.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#040914",
+  "theme_color": "#040914",
+  "icons": [
+    {
+      "src": "/cm_logo_gold.ico",
+      "sizes": "256x256",
+      "type": "image/x-icon",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

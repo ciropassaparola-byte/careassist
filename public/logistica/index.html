@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Logistica & Consegne Ausili - C. Milella</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-glow: rgba(2, 132, 199, 0.2);
+      --accent-gold: #f59e0b;
+      --success: #059669;
+      --danger: #dc2626;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --segugio-blue: #0f3d6c;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+      padding-bottom: 96px;
+    }
+
+    .container {
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* TOP HEADER */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      padding: 14px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+      border: 1px solid #bae6fd;
+      flex-shrink: 0;
+    }
+    .header-title-box h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .header-title-box p {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 2px;
+    }
+    .badge-crown {
+      color: #d97706;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .header-status {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .cloud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+    .cloud-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.4; transform: scale(0.9); }
+    }
+    .clock-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* KPI METRICS GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 10px 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+      transition: transform 0.15s;
+    }
+    .kpi-card:active {
+      transform: scale(0.97);
+    }
+    .kpi-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .kpi-lbl {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 4px;
+    }
+    .kpi-card.kpi-primary .kpi-val { color: var(--primary); }
+    .kpi-card.kpi-warning .kpi-val { color: var(--accent-gold); }
+    .kpi-card.kpi-success .kpi-val { color: var(--success); }
+
+    /* FILTRI E RICERCA */
+    .search-filter-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.02);
+    }
+    .search-input-wrapper {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .search-input-wrapper svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      height: 42px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0 12px 0 38px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .filter-pills::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .filter-pill.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    /* CARD CONSEGNE */
+    .delivery-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .delivery-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      transition: transform 0.15s, border-color 0.2s;
+      position: relative;
+    }
+    .delivery-card.status-consegnato {
+      border-left: 5px solid var(--success);
+    }
+    .delivery-card.status-in_consegna {
+      border-left: 5px solid var(--primary);
+    }
+    .delivery-card.status-in_programma {
+      border-left: 5px solid var(--accent-gold);
+    }
+
+    .card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    .dest-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.25;
+    }
+    .status-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      flex-shrink: 0;
+    }
+    .badge-in_programma {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+    .badge-in_consegna {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    .badge-consegnato {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .ausilio-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+    .ausilio-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .ausilio-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.25;
+    }
+
+    .info-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 600;
+    }
+    .info-item svg {
+      width: 14px;
+      height: 14px;
+      color: #64748b;
+      flex-shrink: 0;
+    }
+
+    .note-box {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 11.5px;
+      color: #92400e;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .signature-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f0fdf4;
+      border: 1px dashed #86efac;
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+    .sig-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sig-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #15803d;
+      text-transform: uppercase;
+    }
+    .sig-signer {
+      font-size: 12px;
+      font-weight: 700;
+      color: #166534;
+    }
+    .sig-img {
+      height: 38px;
+      max-width: 90px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 6px;
+      padding: 2px 4px;
+      border: 1px solid #bbf7d0;
+    }
+
+    /* ACTION BUTTONS */
+    .action-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .btn-act {
+      height: 38px;
+      border-radius: 12px;
+      border: none;
+      font-size: 11.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      padding: 0 10px;
+    }
+    .btn-act:active {
+      transform: scale(0.96);
+    }
+    .btn-maps {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    .btn-phone {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+    }
+    .btn-wa {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+    .btn-sign {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
+    }
+    .btn-signed {
+      background: #f8fafc;
+      color: #059669;
+      border: 1px solid #bbf7d0;
+      cursor: default;
+    }
+    .btn-more {
+      width: 38px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      padding: 0;
+      border-radius: 12px;
+    }
+
+    /* MODALE CANVAS FIRMA TOUCH */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-sheet {
+      background: #ffffff;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      border: 1.5px solid #e2e8f0;
+      overflow: hidden;
+      animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSlide {
+      from { transform: translateY(20px) scale(0.97); }
+      to { transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .btn-close-modal {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .modal-body {
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      background: #f8fafc;
+      transition: all 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    /* CANVAS FIRMA */
+    .canvas-wrapper {
+      background: #ffffff;
+      border: 2px dashed #94a3b8;
+      border-radius: 16px;
+      position: relative;
+      margin-bottom: 12px;
+      overflow: hidden;
+      touch-action: none;
+    }
+    #signatureCanvas {
+      width: 100%;
+      height: 180px;
+      display: block;
+      cursor: crosshair;
+    }
+    .canvas-hint {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      pointer-events: none;
+      user-select: none;
+    }
+    .canvas-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .btn-clear-sig {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      padding-top: 10px;
+    }
+    .btn-save-confirm {
+      flex: 1;
+      height: 44px;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border: none;
+      border-radius: 14px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+      transition: transform 0.15s;
+    }
+    .btn-save-confirm:active {
+      transform: scale(0.98);
+    }
+    .btn-cancel-modal {
+      height: 44px;
+      padding: 0 16px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* BOLLA / RICEVUTA STAMPA MODALE */
+    .receipt-box {
+      border: 2px solid #0f172a;
+      border-radius: 14px;
+      padding: 16px;
+      background: #ffffff;
+      font-size: 12px;
+      color: #0f172a;
+      line-height: 1.4;
+    }
+    .receipt-header {
+      text-align: center;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .receipt-logo {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .receipt-sub {
+      font-size: 10.5px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .receipt-field {
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .receipt-lbl {
+      font-weight: 700;
+      color: #475569;
+    }
+    .receipt-val {
+      font-weight: 800;
+      text-align: right;
+    }
+    .receipt-sig-box {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+      text-align: center;
+    }
+    .receipt-sig-box img {
+      max-height: 55px;
+      margin: 4px auto;
+      display: block;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      background: var(--card-bg);
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 20px;
+      padding: 36px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    .empty-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .empty-desc {
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+  </style>
+
+  <!-- UNIFIED MOBILE BAR STYLES -->
+  <style id="suite-unified-mobile-bar-style">
+    .mobile-bottom-bar {
+      position: fixed !important;
+      bottom: 12px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: calc(100% - 24px) !important;
+      max-width: 440px !important;
+      height: 64px !important;
+      background: #ffffff !important;
+      border: 1.5px solid #e2e8f0 !important;
+      border-radius: 22px !important;
+      display: flex !important;
+      justify-content: space-around !important;
+      align-items: center !important;
+      padding: 0 8px !important;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+      z-index: 999999 !important;
+      box-sizing: border-box !important;
+    }
+    .mobile-bottom-bar .bar-item {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #64748b !important;
+      text-decoration: none !important;
+      font-size: 10.5px !important;
+      font-weight: 700 !important;
+      gap: 3px !important;
+      cursor: pointer !important;
+      background: none !important;
+      border: none !important;
+      flex: 1 !important;
+      height: 100% !important;
+      transition: all 0.2s !important;
+      -webkit-tap-highlight-color: transparent !important;
+      padding: 0 !important;
+    }
+    .mobile-bottom-bar .bar-item:active,
+    .mobile-bottom-bar .bar-item.active {
+      color: #0284c7 !important;
+    }
+    .mobile-bottom-bar .bar-item .icon {
+      font-size: 20px !important;
+      line-height: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .mobile-bottom-bar .bar-item.center-action {
+      position: relative !important;
+      top: -12px !important;
+    }
+    .mobile-bottom-bar .bar-item.center-action .btn-circle-add {
+      width: 52px !important;
+      height: 52px !important;
+      border-radius: 50% !important;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+      border: 3px solid #ffffff !important;
+      color: #ffffff !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 24px !important;
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4) !important;
+      cursor: pointer !important;
+      transition: transform 0.15s !important;
+    }
+    .mobile-bottom-bar .bar-item.center-action .btn-circle-add:active {
+      transform: scale(0.92) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- APP HEADER -->
+    <header class="app-header">
+      <div class="header-info">
+        <div class="header-logo">📦</div>
+        <div class="header-title-box">
+          <h1>Logistica & Consegne</h1>
+          <p>
+            <span>Ausili Sanitari</span>
+            <span>•</span>
+            <span class="badge-crown">👑 Ciro Milella</span>
+          </p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="cloud-pill">
+          <span class="cloud-dot"></span>
+          <span>Online H24</span>
+        </div>
+        <span class="clock-text" id="liveClock">--:--:--</span>
+      </div>
+    </header>
+
+    <!-- KPI STATS -->
+    <section class="kpi-grid">
+      <div class="kpi-card kpi-primary">
+        <div class="kpi-val" id="kpiTotale">0</div>
+        <div class="kpi-lbl">Totali</div>
+      </div>
+      <div class="kpi-card kpi-warning">
+        <div class="kpi-val" id="kpiOggi">0</div>
+        <div class="kpi-lbl">In Corso</div>
+      </div>
+      <div class="kpi-card kpi-success">
+        <div class="kpi-val" id="kpiConsegnate">0</div>
+        <div class="kpi-lbl">Completate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="kpiAusili">0</div>
+        <div class="kpi-lbl">In Carico</div>
+      </div>
+    </section>
+
+    <!-- RICERCA E FILTRI -->
+    <section class="search-filter-box">
+      <div class="search-input-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Cerca paziente, comune o ausilio..." oninput="applicaFiltri()">
+      </div>
+      <div class="filter-pills">
+        <button type="button" class="filter-pill active" onclick="setFiltro('tutte', this)">📦 Tutte</button>
+        <button type="button" class="filter-pill" onclick="setFiltro('oggi', this)">📅 Oggi</button>
+        <button type="button" class="filter-pill" onclick="setFiltro('in_consegna', this)">🚚 In Viaggio</button>
+        <button type="button" class="filter-pill" onclick="setFiltro('consegnato', this)">✅ Consegnate</button>
+      </div>
+    </section>
+
+    <!-- ELENCO DELLE CONSEGNE -->
+    <main class="delivery-list" id="deliveryListContainer">
+      <!-- Rendering dinamico via JS -->
+    </main>
+  </div>
+
+  <!-- MODALE FIRMA DIGITALE TOUCH -->
+  <div class="modal-overlay" id="modalSignature">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">✍️ Ricevuta di Consegna & Firma</div>
+        <button type="button" class="btn-close-modal" onclick="chiudiModale('modalSignature')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:10px 14px; margin-bottom:14px;">
+          <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Assistito / Destinatario</div>
+          <div id="sigDestinatarioNome" style="font-size:14.5px; font-weight:800; color:#0f172a;">--</div>
+          <div id="sigAusilioNome" style="font-size:12.5px; font-weight:600; color:#0284c7; margin-top:2px;">--</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nome Firmatario / Grado Parentela</label>
+          <input type="text" id="sigFirmatarioInput" class="form-input" placeholder="Es. Rosa Cavalcante o Figlio/Caregiver">
+        </div>
+
+        <label class="form-label">Firma Touch sullo schermo</label>
+        <div class="canvas-wrapper">
+          <canvas id="signatureCanvas"></canvas>
+          <div class="canvas-hint">✍️ Traccia la firma con il dito qui sopra</div>
+        </div>
+
+        <div class="canvas-actions">
+          <button type="button" class="btn-clear-sig" onclick="pulisciCanvasFirma()">🔄 Pulisci Firma</button>
+          <span style="font-size:11px; color:#64748b; font-weight:600;">Data: <span id="sigDataOggi">--</span></span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel-modal" onclick="chiudiModale('modalSignature')">Annulla</button>
+          <button type="button" class="btn-save-confirm" onclick="salvaFirmaConsegna()">✅ Conferma & Salva</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE ➕ NUOVA CONSEGNA AUSILIO -->
+  <div class="modal-overlay" id="modalNewDelivery">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">➕ Nuova Spedizione / Consegna</div>
+        <button type="button" class="btn-close-modal" onclick="chiudiModale('modalNewDelivery')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="newDeliveryForm" onsubmit="creaNuovaConsegna(event)">
+          <div class="form-group">
+            <label class="form-label">Destinatario / Paziente *</label>
+            <input type="text" id="newDest" class="form-input" placeholder="Nome e Cognome Assistito" required>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label class="form-label">Comune (Prov) *</label>
+              <input type="text" id="newComune" class="form-input" placeholder="Es. Bari (BA)" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cellulare / WA</label>
+              <input type="tel" id="newTel" class="form-input" placeholder="Es. 338 123 4567">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Indirizzo di Consegna *</label>
+            <input type="text" id="newIndirizzo" class="form-input" placeholder="Es. Via Roma, 12 - Piano 1" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo di Ausilio / Dispositivo *</label>
+            <select id="newAusilioTipo" class="form-select" onchange="impostaNomeAusilioPredefinito(this.value)" required>
+              <option value="letto">🛏️ Letto Motorizzato + Materasso</option>
+              <option value="carrozzina">♿ Carrozzina Pieghevole / Comoda</option>
+              <option value="sollevatore">🏋️ Sollevatore Clinico Elettrico</option>
+              <option value="ossigeno">💨 Concentratore di Ossigeno</option>
+              <option value="deambulatore">🚶 Deambulatore / Rollator</option>
+              <option value="altro">📦 Altro Ausilio / Fornitura</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Descrizione Dettagliata Ausilio</label>
+            <input type="text" id="newAusilioNome" class="form-input" value="🛏️ Letto Motorizzato Ortopedico 3 Snodi + Materasso" required>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label class="form-label">Data Prevista *</label>
+              <input type="date" id="newData" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Orario / Fascia</label>
+              <input type="time" id="newOrario" class="form-input" value="10:30">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Note Tecniche & Collaudo</label>
+            <textarea id="newNote" class="form-textarea" rows="2" placeholder="Es. Montaggio sponde, collaudo telecomando, piano terra..."></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel-modal" onclick="chiudiModale('modalNewDelivery')">Annulla</button>
+            <button type="submit" class="btn-save-confirm">💾 Pianifica Consegna</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE RICEVUTA BOLLA PDF -->
+  <div class="modal-overlay" id="modalReceipt">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div class="modal-title">📄 Ricevuta di Presa in Carico</div>
+        <button type="button" class="btn-close-modal" onclick="chiudiModale('modalReceipt')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="receipt-box" id="receiptPrintArea">
+          <div class="receipt-header">
+            <div class="receipt-logo">SUITE AZIENDALE C. MILELLA</div>
+            <div class="receipt-sub">Servizi di Logistica & Configurazione Ausili Sanitari</div>
+          </div>
+          <div class="receipt-field">
+            <span class="receipt-lbl">Codice Spedizione:</span>
+            <span class="receipt-val" id="rcpCodice">--</span>
+          </div>
+          <div class="receipt-field">
+            <span class="receipt-lbl">Data e Ora:</span>
+            <span class="receipt-val" id="rcpData">--</span>
+          </div>
+          <div class="receipt-field">
+            <span class="receipt-lbl">Destinatario:</span>
+            <span class="receipt-val" id="rcpDest">--</span>
+          </div>
+          <div class="receipt-field">
+            <span class="receipt-lbl">Indirizzo:</span>
+            <span class="receipt-val" id="rcpIndirizzo">--</span>
+          </div>
+          <div class="receipt-field">
+            <span class="receipt-lbl">Ausilio Consegnato:</span>
+            <span class="receipt-val" id="rcpAusilio">--</span>
+          </div>
+          <div class="receipt-field">
+            <span class="receipt-lbl">Note Tecniche:</span>
+            <span class="receipt-val" id="rcpNote">--</span>
+          </div>
+          <div class="receipt-sig-box">
+            <span class="receipt-lbl">Firma per Ricevuta e Conformità Ausilio:</span>
+            <img id="rcpSigImg" src="" alt="Firma">
+            <div style="font-size:11px; font-weight:700; color:#15803d;" id="rcpSignerName">--</div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="margin-top:14px;">
+          <button type="button" class="btn-cancel-modal" onclick="chiudiModale('modalReceipt')">Chiudi</button>
+          <button type="button" class="btn-save-confirm" onclick="window.print()">🖨️ Stampa Ricevuta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARRA DI NAVIGAZIONE INFERIORE UNIFORME -->
+  <nav class="mobile-bottom-bar" id="logistica-mobile-bar" aria-label="Navigazione Suite">
+    <button type="button" class="bar-item" onclick="window.history.length > 1 ? window.history.back() : window.location.href='/launcher.html'" title="Torna Indietro">
+      <span class="icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </span>
+      <span>Indietro</span>
+    </button>
+    
+    <a href="/launcher.html" class="bar-item" title="Home Suite Milella">
+      <span class="icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </span>
+      <span>Home Suite</span>
+    </a>
+
+    <div class="bar-item center-action">
+      <button type="button" class="btn-circle-add" onclick="apriModaleNuovaConsegna()" title="Nuova Consegna Ausilio">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </button>
+      <span style="font-size:10px; font-weight:800; color:#0284c7; margin-top:3px;">Nuovo</span>
+    </div>
+
+    <button type="button" class="bar-item" onclick="caricaDatiConsegne(true)" title="Ricarica Dati">
+      <span class="icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+      </span>
+      <span>Ricarica</span>
+    </button>
+
+    <button type="button" class="bar-item" onclick="filtraSoloFirme()" title="Ricevute Firmate">
+      <span class="icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </span>
+      <span>Firme</span>
+    </button>
+  </nav>
+
+  <!-- JAVASCRIPT APPLICATIVO LOGISTICA MOBILE -->
+  <script>
+    const STORAGE_KEY = 'milella_logistica_consegne_v1';
+    let databaseConsegne = [];
+    let filtroAttuale = 'tutte';
+    let activeDeliveryForSig = null;
+
+    // Inizializzazione Orologio
+    function updateClock() {
+      const now = new Date();
+      const el = document.getElementById('liveClock');
+      if (el) el.textContent = now.toLocaleTimeString('it-IT');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Caricamento Dati (Cloud API + Cache Offline LocalStorage)
+    async function caricaDatiConsegne(forceRefresh = false) {
+      // 1. Prova prima LocalStorage per render immediato
+      const cached = localStorage.getItem(STORAGE_KEY);
+      if (cached && !forceRefresh) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed.consegne)) {
+            databaseConsegne = parsed.consegne;
+            renderConsegne();
+            aggiornaKpi();
+          }
+        } catch(e) {}
+      }
+
+      // 2. Fetch da server API
+      try {
+        const res = await fetch('/api/logistica/consegne');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.consegne)) {
+            databaseConsegne = data.consegne;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            renderConsegne();
+            aggiornaKpi();
+          }
+        }
+      } catch(err) {
+        console.warn('Uso cache locale consegne:', err);
+      }
+    }
+
+    // Salvataggio su Server e LocalStorage
+    async function salvaDatiSuServer() {
+      const payload = { consegne: databaseConsegne };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      try {
+        await fetch('/api/logistica/consegne', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) {
+        console.error('Errore sincronizzazione cloud:', e);
+      }
+      renderConsegne();
+      aggiornaKpi();
+    }
+
+    // KPI METRICHE
+    function aggiornaKpi() {
+      const oggiStr = new Date().toISOString().split('T')[0];
+      const tot = databaseConsegne.length;
+      const oggi = databaseConsegne.filter(c => c.data === oggiStr && c.stato !== 'consegnato').length;
+      const consegnate = databaseConsegne.filter(c => c.stato === 'consegnato').length;
+      const inCarico = databaseConsegne.filter(c => c.stato !== 'consegnato').length;
+
+      document.getElementById('kpiTotale').textContent = tot;
+      document.getElementById('kpiOggi').textContent = oggi;
+      document.getElementById('kpiConsegnate').textContent = consegnate;
+      document.getElementById('kpiAusili').textContent = inCarico;
+    }
+
+    // FILTRI & RICERCA
+    function setFiltro(tipo, btn) {
+      filtroAttuale = tipo;
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderConsegne();
+    }
+
+    function filtraSoloFirme() {
+      setFiltro('consegnato', null);
+      const pills = document.querySelectorAll('.filter-pills .filter-pill');
+      if (pills[3]) pills[3].classList.add('active');
+    }
+
+    function applicaFiltri() {
+      renderConsegne();
+    }
+
+    // RENDERING LISTA
+    function renderConsegne() {
+      const container = document.getElementById('deliveryListContainer');
+      const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      const oggiStr = new Date().toISOString().split('T')[0];
+
+      let filtrate = databaseConsegne.filter(c => {
+        // Filtro per pill
+        if (filtroAttuale === 'oggi' && c.data !== oggiStr) return false;
+        if (filtroAttuale === 'in_consegna' && c.stato !== 'in_consegna') return false;
+        if (filtroAttuale === 'consegnato' && c.stato !== 'consegnato') return false;
+
+        // Ricerca testo
+        if (search) {
+          const matchDest = (c.destinatario || '').toLowerCase().includes(search);
+          const matchComune = (c.comune || '').toLowerCase().includes(search);
+          const matchIndirizzo = (c.indirizzo || '').toLowerCase().includes(search);
+          const matchAusilio = (c.ausilio || '').toLowerCase().includes(search);
+          if (!matchDest && !matchComune && !matchIndirizzo && !matchAusilio) return false;
+        }
+        return true;
+      });
+
+      if (filtrate.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <div class="empty-title">Nessuna consegna trovata</div>
+            <div class="empty-desc">Nessuna spedizione corrisponde ai filtri selezionati. Clicca sul tasto <b>➕ Nuovo</b> per aggiungerne una.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtrate.map(c => {
+        const isConsegnato = c.stato === 'consegnato';
+        const isInConsegna = c.stato === 'in_consegna';
+        
+        let statoBadgeHtml = '';
+        if (isConsegnato) {
+          statoBadgeHtml = '<span class="status-badge badge-consegnato">✓ Consegnato</span>';
+        } else if (isInConsegna) {
+          statoBadgeHtml = '<span class="status-badge badge-in_consegna">🚚 In Consegna</span>';
+        } else {
+          statoBadgeHtml = '<span class="status-badge badge-in_programma">⏳ In Programma</span>';
+        }
+
+        // WhatsApp Messaggio preimpostato
+        const waMsg = encodeURIComponent(
+          `Gentile ${c.destinatario}, la informiamo che la consegna dell'ausilio sanitario "${c.ausilio}" è prevista per ${c.data === oggiStr ? 'oggi' : c.data} intorno alle ore ${c.orario}. Per qualsiasi esigenza siamo a sua disposizione. Staff Logistica C. Milella`
+        );
+        const telSanitized = (c.telefono || '').replace(/[^0-9]/g, '');
+        const waUrl = `https://wa.me/39${telSanitized}?text=${waMsg}`;
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((c.indirizzo || '') + ', ' + (c.comune || ''))}`;
+
+        let signaturePreviewHtml = '';
+        if (isConsegnato && c.firma) {
+          const dataFmt = c.dataFirma ? new Date(c.dataFirma).toLocaleString('it-IT') : 'Data registrata';
+          signaturePreviewHtml = `
+            <div class="signature-preview">
+              <div class="sig-details">
+                <span class="sig-label">Firmato per Ricevuta</span>
+                <span class="sig-signer">${escapeHtml(c.firmatario || c.destinatario)}</span>
+                <span style="font-size:10px; color:#15803d;">${dataFmt}</span>
+              </div>
+              <img src="${c.firma}" class="sig-img" alt="Firma">
+            </div>
+          `;
+        }
+
+        return `
+          <div class="delivery-card status-${c.stato}">
+            <div class="card-top-row">
+              <div>
+                <div class="dest-title">${escapeHtml(c.destinatario)}</div>
+                <div style="font-size:11px; font-weight:700; color:#64748b; margin-top:2px;">ID: ${c.id}</div>
+              </div>
+              ${statoBadgeHtml}
+            </div>
+
+            <div class="ausilio-box">
+              <span class="ausilio-icon">${getIconaAusilio(c.tipoAusilio)}</span>
+              <span class="ausilio-text">${escapeHtml(c.ausilio)}</span>
+            </div>
+
+            <div class="info-row">
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span><b>${escapeHtml(c.comune)}</b> - ${escapeHtml(c.indirizzo)}</span>
+              </div>
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>Consegna: <b>${formattaData(c.data)}</b> ore <b>${c.orario || '10:00'}</b></span>
+              </div>
+            </div>
+
+            ${c.note ? `
+              <div class="note-box">
+                <span>⚠️</span>
+                <span>${escapeHtml(c.note)}</span>
+              </div>
+            ` : ''}
+
+            ${signaturePreviewHtml}
+
+            <div class="action-bar">
+              <a href="${mapsUrl}" target="_blank" class="btn-act btn-maps" title="Naviga con Google Maps">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                <span>Naviga</span>
+              </a>
+
+              <a href="tel:${c.telefono}" class="btn-act btn-phone" title="Chiama Assistito">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <span>Chiama</span>
+              </a>
+
+              <a href="${waUrl}" target="_blank" class="btn-act btn-wa" title="Invia Avviso WhatsApp">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                <span>WA</span>
+              </a>
+
+              ${!isConsegnato ? `
+                <button type="button" class="btn-act btn-sign" onclick="apriModaleFirma('${c.id}')" title="Firma Consegna Touch">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  <span>Firma</span>
+                </button>
+              ` : `
+                <button type="button" class="btn-act btn-signed" onclick="apriRicevutaBolla('${c.id}')" title="Vedi Ricevuta PDF">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                  <span>Bolla</span>
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // HELPER ICONA AUSILIO
+    function getIconaAusilio(tipo) {
+      switch(tipo) {
+        case 'letto': return '🛏️';
+        case 'carrozzina': return '♿';
+        case 'sollevatore': return '🏋️';
+        case 'ossigeno': return '💨';
+        case 'deambulatore': return '🚶';
+        default: return '📦';
+      }
+    }
+
+    function formattaData(str) {
+      if (!str) return '';
+      const parts = str.split('-');
+      if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      return str;
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // MODALE GESTIONE
+    function apriModale(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('active');
+    }
+    function chiudiModale(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('active');
+    }
+
+    // MODALE NUOVA CONSEGNA
+    function apriModaleNuovaConsegna() {
+      document.getElementById('newData').value = new Date().toISOString().split('T')[0];
+      apriModale('modalNewDelivery');
+    }
+
+    function impostaNomeAusilioPredefinito(val) {
+      const map = {
+        'letto': '🛏️ Letto Motorizzato Ortopedico 3 Snodi + Materasso Antidecubito',
+        'carrozzina': '♿ Carrozzina Pieghevole Standard Seduta 43cm',
+        'sollevatore': '🏋️ Sollevatore Clinico Elettrico con Imbracatura',
+        'ossigeno': '💨 Concentratore di Ossigeno 5L/min + Cannule',
+        'deambulatore': '🚶 Deambulatore Rollator 4 Ruote con Freni',
+        'altro': '📦 Dispositivo Medico / Fornitura Sanitaria'
+      };
+      if (map[val]) {
+        document.getElementById('newAusilioNome').value = map[val];
+      }
+    }
+
+    function creaNuovaConsegna(e) {
+      e.preventDefault();
+      const nuova = {
+        id: 'c-' + Date.now().toString().slice(-4),
+        destinatario: document.getElementById('newDest').value.trim(),
+        comune: document.getElementById('newComune').value.trim(),
+        indirizzo: document.getElementById('newIndirizzo').value.trim(),
+        telefono: document.getElementById('newTel').value.trim(),
+        tipoAusilio: document.getElementById('newAusilioTipo').value,
+        ausilio: document.getElementById('newAusilioNome').value.trim(),
+        data: document.getElementById('newData').value,
+        orario: document.getElementById('newOrario').value || '10:00',
+        stato: 'in_programma',
+        priorita: 'media',
+        note: document.getElementById('newNote').value.trim(),
+        firma: null,
+        firmatario: '',
+        dataFirma: null,
+        creatoIl: new Date().toISOString()
+      };
+
+      databaseConsegne.unshift(nuova);
+      salvaDatiSuServer();
+      chiudiModale('modalNewDelivery');
+      document.getElementById('newDeliveryForm').reset();
+    }
+
+    // GESTIONE CANVAS FIRMA TOUCH
+    let canvas, ctx, isDrawing = false;
+    function initCanvas() {
+      canvas = document.getElementById('signatureCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      resizeCanvas();
+      
+      // Eventi Touch e Mouse unificati tramite Pointer Events
+      canvas.addEventListener('pointerdown', startDrawing);
+      canvas.addEventListener('pointermove', draw);
+      canvas.addEventListener('pointerup', stopDrawing);
+      canvas.addEventListener('pointercancel', stopDrawing);
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * 2;
+      canvas.height = rect.height * 2;
+      ctx.scale(2, 2);
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.8;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+      e.preventDefault();
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      e.preventDefault();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function pulisciCanvasFirma() {
+      if (!canvas || !ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function apriModaleFirma(consegnaId) {
+      activeDeliveryForSig = databaseConsegne.find(c => c.id === consegnaId);
+      if (!activeDeliveryForSig) return;
+
+      document.getElementById('sigDestinatarioNome').textContent = activeDeliveryForSig.destinatario;
+      document.getElementById('sigAusilioNome').textContent = activeDeliveryForSig.ausilio;
+      document.getElementById('sigFirmatarioInput').value = activeDeliveryForSig.destinatario;
+      document.getElementById('sigDataOggi').textContent = new Date().toLocaleDateString('it-IT');
+
+      apriModale('modalSignature');
+      setTimeout(() => {
+        resizeCanvas();
+        pulisciCanvasFirma();
+      }, 150);
+    }
+
+    function salvaFirmaConsegna() {
+      if (!activeDeliveryForSig) return;
+      const firmatario = document.getElementById('sigFirmatarioInput').value.trim() || activeDeliveryForSig.destinatario;
+      const sigDataUrl = canvas.toDataURL('image/png');
+
+      activeDeliveryForSig.firma = sigDataUrl;
+      activeDeliveryForSig.firmatario = firmatario;
+      activeDeliveryForSig.dataFirma = new Date().toISOString();
+      activeDeliveryForSig.stato = 'consegnato';
+
+      salvaDatiSuServer();
+      chiudiModale('modalSignature');
+    }
+
+    // MODALE RICEVUTA PDF
+    function apriRicevutaBolla(consegnaId) {
+      const c = databaseConsegne.find(x => x.id === consegnaId);
+      if (!c) return;
+
+      document.getElementById('rcpCodice').textContent = c.id;
+      document.getElementById('rcpData').textContent = c.dataFirma ? new Date(c.dataFirma).toLocaleString('it-IT') : c.data;
+      document.getElementById('rcpDest').textContent = c.destinatario;
+      document.getElementById('rcpIndirizzo').textContent = `${c.comune} - ${c.indirizzo}`;
+      document.getElementById('rcpAusilio').textContent = c.ausilio;
+      document.getElementById('rcpNote').textContent = c.note || 'Conforme all\'ordine e collaudato.';
+      document.getElementById('rcpSigImg').src = c.firma || '';
+      document.getElementById('rcpSignerName').textContent = c.firmatario || c.destinatario;
+
+      apriModale('modalReceipt');
+    }
+
+    // AVVIO ALL'ACCESSO
+    window.addEventListener('DOMContentLoaded', () => {
+      initCanvas();
+      caricaDatiConsegne();
+    });
+  </script>
+</body>
+</html>
+

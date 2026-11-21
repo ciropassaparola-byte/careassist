@@ -1,0 +1,509 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>CareAssist Pro - Prospetto Terapeutico Editabile: Aldo Zamparino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm 12mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 20px 10px;
+      font-size: 9pt;
+      line-height: 1.35;
+    }
+
+    .no-print-toolbar {
+      max-width: 920px;
+      margin: 0 auto 16px auto;
+      background: #ffffff;
+      padding: 14px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45);
+    }
+    .btn-save {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+      transition: all 0.15s ease;
+    }
+    .btn-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
+    }
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border: 1.5px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .banner-edit-hint {
+      background: #eff6ff;
+      border: 1px solid #93c5fd;
+      color: #1e40af;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sheet-page {
+      max-width: 920px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 26px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2.5px solid #0284c7;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .brand-title {
+      font-size: 18pt;
+      font-weight: 900;
+      color: #0369a1;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand-sub {
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .doc-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1.5px solid #0284c7;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 9pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: right;
+    }
+
+    .anagrafica-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: 1.4fr 1.3fr 1.3fr;
+      gap: 12px;
+      font-size: 8.5pt;
+    }
+    .anag-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .anag-col b {
+      color: #0f172a;
+    }
+    .anag-title {
+      font-weight: 800;
+      font-size: 7.5pt;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+
+    .med-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+      margin-bottom: 14px;
+    }
+    .med-table th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 800;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .med-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+    .med-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .badge-ora {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 8.5pt;
+      border: 1.5px dashed #0284c7;
+      cursor: text;
+    }
+    .badge-ora:focus {
+      outline: 2px solid #0284c7;
+      background: #ffffff;
+    }
+    .editable-cell {
+      border: 1px dashed transparent;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .editable-cell:hover {
+      border-color: #93c5fd;
+      background: #f0fdf4;
+    }
+    .editable-cell:focus {
+      outline: 2px solid #0284c7;
+      background: #ffffff;
+      border-color: #0284c7;
+    }
+
+    .pill-utilita {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 8pt;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 3px;
+    }
+    .chk-ricetta {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #64748b;
+      border-radius: 4px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    .footer-note {
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8pt;
+      color: #64748b;
+      margin-top: 10px;
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      font-weight: 600;
+      font-size: 13px;
+      display: none;
+      z-index: 9999;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print-toolbar, .banner-edit-hint {
+        display: none !important;
+      }
+      .badge-ora {
+        border: none !important;
+        background: #e0f2fe !important;
+      }
+      .editable-cell {
+        border: none !important;
+        background: transparent !important;
+      }
+      .sheet-page {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA STRUMENTI SUPERIORE A SCHERMO -->
+  <div class="no-print-toolbar">
+    <div>
+      <div style="font-weight: 800; font-size: 15px; color: #0284c7;">📝 Scheda Terapeutica Editabile: Aldo Zamparino (Anni 91)</div>
+      <div style="font-size: 12px; color: #64748b;">Clicca direttamente su orari, note o descrizioni per modificarli. I dati restano salvati nel browser.</div>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button type="button" class="btn-save" onclick="salvaModifiche()">💾 Salva Modifiche</button>
+      <button type="button" class="btn-action" onclick="window.print()">🖨️ Stampa Scheda A4</button>
+      <button type="button" class="btn-outline" onclick="ripristinaDefault()">↺ Ripristina Originale</button>
+      <a href="PROSPETTO_FARMACI_ANGELA.html" class="btn-outline">👵 Scheda Angela</a>
+      <a href="PROSPETTO_FARMACI_ROSA.html" class="btn-outline">👵 Scheda Rosa</a>
+    </div>
+  </div>
+
+  <div class="sheet-page">
+    <div class="banner-edit-hint">
+      <span>✏️ <b>Modalità Modifica attiva:</b> Clicca direttamente su <b>Orario</b>, <b>Fascia</b>, <b>Farmaco</b> o <b>Note Cliniche</b> per modificarli liberamente. Premi poi <b>Salva Modifiche</b>.</span>
+    </div>
+
+    <!-- BANNER DI CONTROLLO IDENTITÀ ASSISTITO (SICUREZZA CLINICA) -->
+    <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 10px; padding: 10px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 28px;">👴</span>
+        <div>
+          <div style="font-size: 16pt; font-weight: 900; color: #1e40af; letter-spacing: -0.3px;">
+            SCHEDA ASSISTITO: Aldo Zamparino
+          </div>
+          <div style="font-size: 8.5pt; color: #1e3a8a; font-weight: 600;">
+            Nato il 06/01/1935 (91 anni) • Via Giovanni Modugno 25, Bari • Medico: Dott. Roberto Scarcia
+          </div>
+        </div>
+      </div>
+      <div style="text-align: right; background: #ffffff; border: 1.5px solid #93c5fd; border-radius: 6px; padding: 4px 10px; font-size: 8pt; font-weight: 800; color: #1d4ed8;">
+        ✅ CONTROLLO IDENTITÀ ASSISTITO
+      </div>
+    </div>
+
+    <div class="doc-header">
+      <div>
+        <div class="brand-title">CareAssist Pro</div>
+        <div class="brand-sub">Sistema Informativo Integrato Assistenza Territoriale &amp; Domiciliare</div>
+      </div>
+      <div class="doc-badge">
+        SCHEDA TERAPEUTICA — Aldo Zamparino
+      </div>
+    </div>
+
+    <!-- ANAGRAFICA ASSISTITO, MEDICO & FARMACIA -->
+    <div class="anagrafica-box">
+      <div class="anag-col">
+        <div class="anag-title">Assistito</div>
+        <div>Nome: <b>Aldo Zamparino</b> (Anni 91)</div>
+        <div>Data Nascita: <b>06/01/1935</b></div>
+        <div>Residenza: <b>Via Giovanni Modugno, 25 - Bari</b></div>
+        <div>Condizione: <b>Paziente Allettato (Assistito Domiciliare)</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">Medico Curante (MMG)</div>
+        <div>Medico: <b>Dott. Roberto Scarcia</b></div>
+        <div>Studio: <b>Via Muciaccia 11, Bari</b></div>
+        <div>Tel. Studio: <b>080 557 44 90</b></div>
+        <div>Email Ricette: <b>scarcia.roberto@alice.it</b></div>
+      </div>
+      <div class="anag-col">
+        <div class="anag-title">Farmacia &amp; Caregiver</div>
+        <div>Farmacia: <b>Farmacia Dott. MACARIO</b></div>
+        <div>Indirizzo: <b>Via G. Petroni, 69/b - Bari (080 542 8061)</b></div>
+        <div>Coniuge/Caregiver: <b>Mazzicone Angela</b></div>
+        <div>Recapiti: <b>338 944 96 10 / 338 306 69 05</b></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="font-weight: 800; font-size: 10.5pt; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px;">
+        Elenco Terapie Farmacologiche con Rispettiva Utilità Clinica
+      </div>
+      <div style="font-size: 8pt; color: #64748b; font-style: italic;">
+        Quadri clinici: Cardiopatia/Aritmia — Epilessia/Neurologia — IPB — Ipotensione/Umore
+      </div>
+    </div>
+
+    <!-- TABELLA FARMACI CON RISPETTIVA UTILITÀ -->
+    <table class="med-table" id="tabella-farmaci-aldo">
+      <thead>
+        <tr>
+          <th style="width: 15%;">Orario / Fascia</th>
+          <th style="width: 25%;">Farmaco &amp; Dosaggio</th>
+          <th style="width: 18%;">Principio Attivo</th>
+          <th style="width: 34%;">Utilità Clinica &amp; Finalità Terapeutica</th>
+          <th style="width: 8%; text-align: center;">Ricetta</th>
+        </tr>
+      </thead>
+      <tbody id="body-terapie">
+        <tr>
+          <td><span class="badge-ora editable-cell" contenteditable="true">07:30</span><br><small class="editable-cell" contenteditable="true" style="color:#64748b;">Digiuno (1 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true"><b>Pantoprazolo Teva 40 mg</b><br><small>1 cpr gastroresistente (Conf. 28 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true">Pantoprazolo sodico</td>
+          <td class="editable-cell" contenteditable="true"><span class="pill-utilita">🛡️ Gastroprotezione</span><br>Protegge la mucosa gastrica dall'azione lesiva delle terapie orali croniche a lungo termine.</td>
+          <td style="text-align: center;"><input type="checkbox" class="chk-ricetta"></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora editable-cell" contenteditable="true">08:30</span><br><small class="editable-cell" contenteditable="true" style="color:#64748b;">Colazione (1 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true"><b>Bisoprololo Teva / Sandoz 1,25 mg</b><br><small>1 cpr rivestita con film (Conf. 28 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true">Bisoprololo fumarato</td>
+          <td class="editable-cell" contenteditable="true"><span class="pill-utilita" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">❤️ Cardio / Aritmie</span><br>Beta-bloccante: regolarizza la frequenza cardiaca ed evita picchi pressori e tachicardia.</td>
+          <td style="text-align: center;"><input type="checkbox" class="chk-ricetta"></td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td><span class="badge-ora editable-cell" contenteditable="true" style="background:#f3e8ff; color:#6b21a8; border: 1.5px solid #c084fc;">09:00</span><br><small class="editable-cell" contenteditable="true" style="color:#7e22ce; font-weight:700;">Mattina (1 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true"><b>VIMPAT 100 mg (Lacosamide)</b><br><span style="display:inline-block; background:#ede9fe; color:#5b21b6; padding:1px 6px; border-radius:4px; font-size:7.5pt; font-weight:800; margin-top:2px;">1ª Somministrazione (1 cpr)</span></td>
+          <td class="editable-cell" contenteditable="true">Lacosamide</td>
+          <td class="editable-cell" contenteditable="true"><span class="pill-utilita" style="background:#f3e8ff; color:#7e22ce; border-color:#d8b4fe;">🧠 Antiepilettico / Neurologico</span><br>Posologia complessiva: <b>4 cpr/die (400 mg)</b>. Prevenzione crisi parziali/focali.</td>
+          <td style="text-align: center;"><input type="checkbox" class="chk-ricetta"></td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td><span class="badge-ora editable-cell" contenteditable="true" style="background:#f3e8ff; color:#6b21a8; border: 1.5px solid #c084fc;">13:30</span><br><small class="editable-cell" contenteditable="true" style="color:#7e22ce; font-weight:700;">Pranzo (1 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true"><b>VIMPAT 100 mg (Lacosamide)</b><br><span style="display:inline-block; background:#ede9fe; color:#5b21b6; padding:1px 6px; border-radius:4px; font-size:7.5pt; font-weight:800; margin-top:2px;">2ª Somministrazione (1 cpr)</span></td>
+          <td class="editable-cell" contenteditable="true">Lacosamide</td>
+          <td class="editable-cell" contenteditable="true"><span class="pill-utilita" style="background:#f3e8ff; color:#7e22ce; border-color:#d8b4fe;">🧠 Mantenimento Costante</span><br>Dose intermedia del pranzo per mantenere costante il livello plasmatico terapeutico.</td>
+          <td style="text-align: center;"><input type="checkbox" class="chk-ricetta"></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora editable-cell" contenteditable="true">20:00</span><br><small class="editable-cell" contenteditable="true" style="color:#c2410c; font-weight:700;">Cena (1 capsula)</small></td>
+          <td class="editable-cell" contenteditable="true"><b>SILODYX 8 mg (Silodosina)</b><br><small>1 capsula rigida (Conf. 30 capsule)</small></td>
+          <td class="editable-cell" contenteditable="true">Silodosina</td>
+          <td class="editable-cell" contenteditable="true"><span class="pill-utilita" style="background:#ffedd5; color:#c2410c; border-color:#fdba74;">💧 Urologia / IPB</span><br><b>Da assumere a stomaco pieno durante o subito dopo la cena</b> con abbondante acqua per favorire lo svuotamento vescicale notturno.</td>
+          <td style="text-align: center;"><input type="checkbox" class="chk-ricetta"></td>
+        </tr>
+        <tr style="background:#fdf2f8;">
+          <td><span class="badge-ora editable-cell" contenteditable="true" style="background:#7e22ce; color:#ffffff; border: 1.5px solid #581c87;">20:30</span><br><small class="editable-cell" contenteditable="true" style="color:#6b21a8; font-weight:800;">Dopo Cena (2 cpr!)</small></td>
+          <td class="editable-cell" contenteditable="true"><b>VIMPAT 100 mg (Lacosamide)</b><br><span style="display:inline-block; background:#dc2626; color:#ffffff; padding:2px 8px; border-radius:4px; font-size:8pt; font-weight:900; margin-top:2px;">⚠️ 3ª Somministrazione (2 COMPRESSE INSIEME)</span></td>
+          <td class="editable-cell" contenteditable="true">Lacosamide (200 mg serali)</td>
+          <td class="editable-cell" contenteditable="true"><span class="pill-utilita" style="background:#f3e8ff; color:#7e22ce; border-color:#d8b4fe;">🧠 Copertura Notturna 200 mg</span><br><b>Dose serale rinforzata (2 compresse = 200 mg)</b> per garantire la massima stabilità neuronale e prevenzione crisi durante la notte.</td>
+          <td style="text-align: center;"><input type="checkbox" class="chk-ricetta"></td>
+        </tr>
+        <tr>
+          <td><span class="badge-ora editable-cell" contenteditable="true">21:30</span><br><small class="editable-cell" contenteditable="true" style="color:#64748b;">Prima del riposo (1 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true"><b>Quetiapina Teva 25 mg</b><br><small>1 cpr rivestita con film (Conf. 30 cpr)</small></td>
+          <td class="editable-cell" contenteditable="true">Quetiapina</td>
+          <td class="editable-cell" contenteditable="true"><span class="pill-utilita" style="background:#e0e7ff; color:#4338ca; border-color:#c7d2fe;">🌙 Modulatore del Sonno &amp; Umore</span><br>Antipsicotico atipico a basso dosaggio: controlla l'agitazione notturna senile e favorisce un sonno ristoratore.</td>
+          <td style="text-align: center;"><input type="checkbox" class="chk-ricetta"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:8.5pt; color:#334155; line-height:1.45;">
+      <b>📋 Note di Gestione Assistenziale per i Colleghi &amp; Familiari:</b><br>
+      <span class="editable-cell" contenteditable="true">
+        Paziente allettato con protocollo di rotazione posturale obbligatoria q2h (ogni 2 ore) e monitoraggio parametri (Pressione, Frequenza, SpO2).<br>
+        Somministrazione farmaci orali rigorosamente a paziente in posizione semi-seduta (Fowler 30°-45°) per prevenire complicanze da disfagia o polmonite <i>ab ingestis</i>.
+      </span>
+    </div>
+
+    <div class="footer-note">
+      <div>Generato con <b>CareAssist Pro</b> — Fascicolo Sanitario Territoriale</div>
+      <div>Data Stampa: <b>16 Ottobre 2026</b></div>
+      <div>Firma Richiedente / Medico: ____________________________</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast-msg">Modifiche salvate con successo!</div>
+
+  <script>
+    const STORAGE_KEY = 'careassist_aldo_prospetto_html';
+
+    // Carica eventuali modifiche salvate in precedenza
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTbody = localStorage.getItem(STORAGE_KEY);
+      if (savedTbody) {
+        document.getElementById('body-terapie').innerHTML = savedTbody;
+      }
+    });
+
+    function salvaModifiche() {
+      const tbody = document.getElementById('body-terapie').innerHTML;
+      localStorage.setItem(STORAGE_KEY, tbody);
+      mostraToast('✅ Modifiche orari e terapie salvate!');
+    }
+
+    function ripristinaDefault() {
+      if (confirm('Vuoi davvero ripristinare la tabella originale predefinita?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    }
+
+    function mostraToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerHTML = msg;
+      t.style.display = 'block';
+      setTimeout(() => {
+        t.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

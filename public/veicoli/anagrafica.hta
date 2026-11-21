@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Logistica Consegne - C. Milella</title>
+    <hta:application 
+        id="oHTA"
+        applicationname="ZenithAnagrafica"
+        border="none"
+        innerborder="no"
+        caption="no"
+        sysmenu="yes"
+        maximizebutton="yes"
+        minimizebutton="yes"
+        scroll="no"
+        windowstate="maximize"
+        navigable="yes"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/anagrafica.css">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script src="assets/js/anagrafica_ux.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+<script>
+function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            var testoGuida = "========================================\n" +
+                             "   GUIDA ALL'USO - ZENITH LOGISTICA\n" +
+                             "========================================\n\n" +
+                             "1. RICERCA GLOBALE:\n" +
+                             "   Digita nella barra in alto per cercare clienti,\n" +
+                             "   citta, telefoni o qualsiasi articolo in tempo reale.\n\n" +
+                             "2. FILTRI SIDEBAR:\n" +
+                             "   Usa i pulsanti a sinistra per filtrare per Provincia\n" +
+                             "   (Bari, Foggia, Taranto) o Dispositivo (Orologio, Braille...).\n\n" +
+                             "3. COPIA DATI:\n" +
+                             "   Clicca sul tasto verde 'Copia' per salvare la scheda\n" +
+                             "   negli appunti e incollarla dove desideri.\n\n" +
+                             "4. SINCRONIZZAZIONE EXCEL:\n" +
+                             "   Dal menu File premi 'Sincronizza Excel Ora' per\n" +
+                             "   aggiornare i dati con gli ultimi file Danea.\n\n" +
+                             "========================================";
+            
+            alert(testoGuida);
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "block";
+                    m.style.visibility = "visible";
+                }
+            } catch(ex) {}
+        }
+
+        function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.cssText = "display:block !important; visibility:visible !important; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;";
+                }
+            } catch(ex) {}
+        }
+
+        function ChiudiGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "none";
+                    m.style.visibility = "hidden";
+                    m.style.cssText = "display:none !important; visibility:hidden !important;";
+                }
+            } catch(ex) {}
+        }
+
+        function OpenMenu(el) {
+            if (!el) return;
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1 && items[i] !== el) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+            el.style.background = 'rgba(56, 189, 248, 0.25)';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'block';
+                drop.style.visibility = 'visible';
+            }
+        }
+
+        function CloseMenu(el, e) {
+            if (!el) return;
+            e = e || window.event;
+            var target = e ? (e.toElement || e.relatedTarget) : null;
+            try {
+                while (target) {
+                    if (target === el) return;
+                    target = target.parentNode;
+                }
+            } catch(err) {}
+
+            el.style.background = 'transparent';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'none';
+                drop.style.visibility = 'hidden';
+            }
+        }
+
+        function ToggleMenu(el, e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                if (drop.style.display === 'block' && drop.style.visibility === 'visible') {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                    el.style.background = 'transparent';
+                } else {
+                    OpenMenu(el);
+                }
+            }
+        }
+
+        document.onclick = function(e) {
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+        };
+
+        var lastExecTime = 0;
+        function ExecAction(actionName, e) {
+            var now = new Date().getTime();
+            if (now - lastExecTime < 200) return;
+            lastExecTime = now;
+
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            // Close all dropdowns
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+        }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+</script>
+</head>
+<body>
+    <div class="zenith-bg-mesh"></div>
+
+    <div class="crm-container">
+        <!-- PERFECT ZENITH MENUBAR (NO-DRAG & ELECTRON COMPATIBLE) -->
+    <nav class="zenith-menubar" style="-webkit-app-region: no-drag !important; background:#0f172a; border-bottom:1.5px solid #38bdf8; padding:4px 18px; position:relative; z-index:99999;">
+        <ul class="menu-root" style="-webkit-app-region: no-drag !important; list-style:none; margin:0; padding:0; display:flex; gap:10px; align-items:center;">
+            <li class="menu-item" -webkit-app-region="no-drag" onmouseenter="OpenMenu(this)" onmouseleave="CloseMenu(this, event)" onmouseout="CloseMenu(this, event)" onclick="ToggleMenu(this, event)" style="-webkit-app-region: no-drag !important; position:relative; display:inline-block; padding:6px 14px; cursor:pointer; border-radius:8px; user-select:none;">
+                <span style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:800; font-size:0.85rem; font-family:'Outfit', sans-serif;"><i class="fa fa-folder-open" style="color:#38bdf8; margin-right:6px;"></i> File</span>
+                <ul class="dropdown" style="-webkit-app-region: no-drag !important; display:none; visibility:hidden; position:absolute; top:100%; left:0; min-width:240px; background:#0f172a; border:1.5px solid #38bdf8; box-shadow:0 10px 30px rgba(0,0,0,0.8); border-radius:10px; padding:6px 0; margin:0; list-style:none; z-index:100000;">
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('ricarica', event); return false;" onclick="ExecAction('ricarica', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block; border-bottom:1px solid rgba(255,255,255,0.06);"><i class="fa fa-refresh" style="color:#fbbf24; width:20px;"></i> Ricarica Dati</li>
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('sync', event); return false;" onclick="ExecAction('sync', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block; border-bottom:1px solid rgba(255,255,255,0.06);"><i class="fa fa-file-excel-o" style="color:#fbbf24; width:20px;"></i> Sincronizza Excel Ora</li>
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('close', event); return false;" onclick="ExecAction('close', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block;"><i class="fa fa-sign-out" style="color:#fbbf24; width:20px;"></i> Esci e Torna alla Dashboard</li>
+                </ul>
+            </li>
+            <li class="menu-item" -webkit-app-region="no-drag" onmouseenter="OpenMenu(this)" onmouseleave="CloseMenu(this, event)" onmouseout="CloseMenu(this, event)" onclick="ToggleMenu(this, event)" style="-webkit-app-region: no-drag !important; position:relative; display:inline-block; padding:6px 14px; cursor:pointer; border-radius:8px; user-select:none;">
+                <span style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:800; font-size:0.85rem; font-family:'Outfit', sans-serif;"><i class="fa fa-bar-chart" style="color:#38bdf8; margin-right:6px;"></i> Statistiche</span>
+                <ul class="dropdown" style="-webkit-app-region: no-drag !important; display:none; visibility:hidden; position:absolute; top:100%; left:0; min-width:240px; background:#0f172a; border:1.5px solid #38bdf8; box-shadow:0 10px 30px rgba(0,0,0,0.8); border-radius:10px; padding:6px 0; margin:0; list-style:none; z-index:100000;">
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('stats', event); return false;" onclick="ExecAction('stats', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block; border-bottom:1px solid rgba(255,255,255,0.06);"><i class="fa fa-line-chart" style="color:#fbbf24; width:20px;"></i> Apri Report & KPI Statistiche</li>
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('province_all', event); return false;" onclick="ExecAction('province_all', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block;"><i class="fa fa-globe" style="color:#fbbf24; width:20px;"></i> Mostra Tutte le Province</li>
+                </ul>
+            </li>
+            <li class="menu-item" -webkit-app-region="no-drag" onmouseenter="OpenMenu(this)" onmouseleave="CloseMenu(this, event)" onmouseout="CloseMenu(this, event)" onclick="ToggleMenu(this, event)" style="-webkit-app-region: no-drag !important; position:relative; display:inline-block; padding:6px 14px; cursor:pointer; border-radius:8px; user-select:none;">
+                <span style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:800; font-size:0.85rem; font-family:'Outfit', sans-serif;"><i class="fa fa-wrench" style="color:#38bdf8; margin-right:6px;"></i> Strumenti</span>
+                <ul class="dropdown" style="-webkit-app-region: no-drag !important; display:none; visibility:hidden; position:absolute; top:100%; left:0; min-width:240px; background:#0f172a; border:1.5px solid #38bdf8; box-shadow:0 10px 30px rgba(0,0,0,0.8); border-radius:10px; padding:6px 0; margin:0; list-style:none; z-index:100000;">
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('sync', event); return false;" onclick="ExecAction('sync', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block; border-bottom:1px solid rgba(255,255,255,0.06);"><i class="fa fa-refresh" style="color:#fbbf24; width:20px;"></i> Sincronizzazione Avanzata</li>
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('reset_filters', event); return false;" onclick="ExecAction('reset_filters', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block;"><i class="fa fa-filter" style="color:#fbbf24; width:20px;"></i> Reset Filtri</li>
+                </ul>
+            </li>
+            <li class="menu-item" -webkit-app-region="no-drag" onmouseenter="OpenMenu(this)" onmouseleave="CloseMenu(this, event)" onmouseout="CloseMenu(this, event)" onclick="ToggleMenu(this, event)" style="-webkit-app-region: no-drag !important; position:relative; display:inline-block; padding:6px 14px; cursor:pointer; border-radius:8px; user-select:none;">
+                <span style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:800; font-size:0.85rem; font-family:'Outfit', sans-serif;"><i class="fa fa-question-circle" style="color:#38bdf8; margin-right:6px;"></i> Aiuto</span>
+                <ul class="dropdown" style="-webkit-app-region: no-drag !important; display:none; visibility:hidden; position:absolute; top:100%; left:0; min-width:240px; background:#0f172a; border:1.5px solid #38bdf8; box-shadow:0 10px 30px rgba(0,0,0,0.8); border-radius:10px; padding:6px 0; margin:0; list-style:none; z-index:100000;">
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('guida', event); return false;" onclick="ExecAction('guida', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block; border-bottom:1px solid rgba(255,255,255,0.06);"><i class="fa fa-book" style="color:#fbbf24; width:20px;"></i> Guida all'Uso Maschera</li>
+                    <li -webkit-app-region="no-drag" onmouseover="this.style.background='rgba(56,189,248,0.25)';" onmouseout="this.style.background='transparent';" onmousedown="ExecAction('info', event); return false;" onclick="ExecAction('info', event);" style="-webkit-app-region: no-drag !important; color:#f8fafc; font-weight:600; font-size:0.82rem; padding:10px 18px; cursor:pointer; display:block;"><i class="fa fa-info-circle" style="color:#fbbf24; width:20px;"></i> Informazioni Sistema</li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+        <!-- MAIN SPLIT VIEW -->
+        <div class="zenith-main-grid">
+            
+            <!-- SIDE LIST -->
+            <aside class="zenith-side-list" id="sideList">
+                <div class="list-controls">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.2); padding:2px 8px; border-radius:4px; display:flex; align-items:center; gap:6px;">
+                            <span id="lblCounterList" style="font-size:0.7rem; font-weight:800; color:var(--zenith-cyan); letter-spacing:1px; text-transform:uppercase;">CLIENTI: 0</span>
+                        </div>
+                        <div style="display:flex;">
+                            <button class="btn-filter-pill active pill-tutti" style="margin-right:4px;" onclick="filtraStato('TUTTI', this)">TUTTI</button>
+                            <button class="btn-filter-pill pill-ciechi" style="margin-right:4px;" onclick="filtraStato('CIECO', this)">CIECHI</button>
+                            <button class="btn-filter-pill pill-ipovedenti" style="margin-right:4px;" onclick="filtraStato('IPOVEDENTE', this)">IPOVEDENTI</button>
+                            <button class="btn-filter-pill pill-altro" style="margin-right:4px;" onclick="filtraStato('ALTRO', this)">ALTRO</button>
+                            <button class="btn-filter-pill pill-alert" onclick="filtraStato('INCOMPLETO', this)">INCOMPLETI</button>
+                        </div>
+                    </div>
+                    <div class="zenith-search-box">
+                        <i class="fa fa-search"></i>
+                        <input type="text" id="txtRicerca" placeholder="Cerca nome, localit&agrave;, via, telefono..." onkeyup="ricaricaLista(this.value)">
+                    </div>
+                </div>
+                
+                <div class="list-scroll-area" id="cardsContainer">
+                    <!-- Popolato via JS -->
+                </div>
+            </aside>
+
+            <!-- DETAIL PANEL -->
+            <main class="zenith-detail-panel" id="detailPanel">
+                
+                <!-- PLACEHOLDER SELEZIONE -->
+                <div id="selectionPlaceholder" style="width:100%; display:flex; align-items:center; justify-content:center; padding: 20px 0;">
+                    <div class="overview-container">
+                        <div class="overview-header">
+                            <div class="overview-logo" onclick="try{AggiornaOverviewStats();}catch(e){}" style="cursor:pointer;" title="Aggiorna Dati e Statistiche">
+                                <img src="assets/img/app_icon_premium.png?v=2" style="width:100%; height:100%; object-fit:contain; pointer-events:none;" alt="Logo Aurelio Nicolodi" />
+                            </div>
+                            <h2 class="overview-title">C. MILELLA ANAGRAFICA PRO</h2>
+                            <p class="overview-subtitle">Gestione professionale anagrafiche e servizi integrati</p>
+                        </div>
+                        
+                        <!-- BACHECA BENVENUTO E INSIGHT INTELLIGENTI -->
+                        <div class="zenith-greeting-banner" id="zenithGreetingBanner">
+                            <div class="banner-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <div class="banner-text-group" style="display: flex; flex-direction: column; gap: 3px; align-items: flex-start;">
+                                    <div class="banner-primary" id="greetPrimary" style="margin-right: 0; padding: 2px 0;">
+                                        <i class="fa fa-user-circle"></i> Inizializzazione Assistente Zenith...
+                                    </div>
+                                    <div class="banner-slogan" id="greetSlogan" style="font-size: 0.78rem; color: rgba(255,255,255,0.52); font-weight: 600; font-style: italic; margin-left: 32px; line-height: 1.2;">
+                                        Caricamento in corso...
+                                    </div>
+                                </div>
+                                <div class="banner-insights" id="greetInsights">
+                                    Scansione database in corso...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="overview-stats-grid">
+                            <div class="stat-widget">
+                                <div class="stat-icon-circle" style="color:var(--zenith-cyan);"><i class="fa fa-users"></i></div>
+                                <div class="stat-val" id="ovTotClienti">--</div>
+                                <div class="stat-lbl">Rubrica Totale</div>
+                            </div>
+                            <div class="stat-widget">
+                                <div class="stat-icon-circle" style="color:var(--zenith-gold);"><i class="fa fa-low-vision"></i></div>
+                                <div class="stat-val" id="ovSpeciale">--</div>
+                                <div class="stat-lbl">Soggetti Speciali</div>
+                            </div>
+                            <div class="stat-widget">
+                                <div class="stat-icon-circle" style="color:#22c55e;"><i class="fa fa-check-circle"></i></div>
+                                <div class="stat-val" style="font-size:1.4rem; margin:5px 0; display:flex; align-items:center; justify-content:center; gap:8px;">
+                                    <span class="heartbeat-dot"></span> ONLINE
+                                </div>
+                                <div class="stat-lbl">Stato Sistema</div>
+                            </div>
+                        </div>
+                        
+                        <div class="distribution-widget">
+                            <div class="widget-title">
+                                <span class="zenith-tooltip" data-tooltip="Analisi demografica automatica: mostra la suddivisione percentuale dei soggetti registrati in base al grado di invalidità visiva.">
+                                    <i class="fa fa-pie-chart" style="margin-right:8px;"></i>Composizione Tipologia Soggetti
+                                    <i class="fa fa-question-circle" style="margin-left: 6px; font-size: 0.85rem; opacity: 0.7; cursor: help; color: var(--zenith-cyan);"></i>
+                                </span>
+                            </div>
+                            <div class="dist-bar-container">
+                                <div id="barCiechi" class="dist-segment seg-ciechi" style="width: 0%;" title="Ciechi"></div>
+                                <div id="barIpovedenti" class="dist-segment seg-ipovedenti" style="width: 0%;" title="Ipovedenti"></div>
+                                <div id="barNormo" class="dist-segment seg-normo" style="width: 0%;" title="Altri / Normo"></div>
+                            </div>
+                            <div class="dist-legend">
+                                <div class="dist-legend-item item-ciechi" style="margin-right: 10px; margin-bottom: 5px;">
+                                    <span class="legend-color-dot dot-ciechi"></span>
+                                    <span class="legend-lbl lbl-ciechi">CIECHI:</span>
+                                    <span id="lblCountCiechi" class="legend-val">0</span>
+                                    <span id="lblPctCiechi" class="legend-pct pct-ciechi">(0%)</span>
+                                </div>
+                                <div class="dist-legend-item item-ipovedenti" style="margin-right: 10px; margin-bottom: 5px;">
+                                    <span class="legend-color-dot dot-ipovedenti"></span>
+                                    <span class="legend-lbl lbl-ipovedenti">IPOVEDENTI:</span>
+                                    <span id="lblCountIpovedenti" class="legend-val">0</span>
+                                    <span id="lblPctIpovedenti" class="legend-pct pct-ipovedenti">(0%)</span>
+                                </div>
+                                <div class="dist-legend-item item-normo" style="margin-bottom: 5px;">
+                                    <span class="legend-color-dot dot-normo"></span>
+                                    <span class="legend-lbl lbl-normo">ALTRI/NORMO:</span>
+                                    <span id="lblCountNormo" class="legend-val">0</span>
+                                    <span id="lblPctNormo" class="legend-pct pct-normo">(0%)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="distribution-widget geo-widget">
+                            <div class="widget-title">
+                                <span class="zenith-tooltip" data-tooltip="Monitoraggio geografico: individua in tempo reale le 3 località più frequenti nel database e ne calcola la densità operativa.">
+                                    <i class="fa fa-map-marker" style="margin-right:8px;"></i>Principali Zone Operative (Top 3 Località)
+                                    <i class="fa fa-question-circle" style="margin-left: 6px; font-size: 0.85rem; opacity: 0.7; cursor: help; color: var(--zenith-cyan);"></i>
+                                </span>
+                            </div>
+                            <div id="geoListContainer" style="width: 100%;">
+                                <div style="text-align:center; color:#94a3b8; padding:10px; font-style:italic; font-size:0.85rem;">
+                                    Elaborazione dati geografici Zenith...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ANALISI PROVINCE IN TEMPO REALE (IL DOLCE) -->
+                        <div class="distribution-widget province-widget" style="grid-column: 1 / -1; padding: 18px 22px !important;">
+                            <div class="widget-title" style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 15px;">
+                                <span class="zenith-tooltip" data-tooltip="Zenith Data Analytics: analizza dinamicamente la densità del portafoglio clienti divisa per Provincia.">
+                                    <i class="fa fa-bar-chart" style="margin-right:8px; color: var(--zenith-cyan);"></i>Ripartizione Territoriale Clienti (Analisi Province)
+                                    <i class="fa fa-question-circle" style="margin-left: 6px; font-size: 0.85rem; opacity: 0.7; cursor: help; color: var(--zenith-cyan);"></i>
+                                </span>
+                            </div>
+                            <div id="provinceChartContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px 25px; padding: 5px 0;">
+                                <div style="grid-column: 1 / -1; text-align:center; color:#94a3b8; padding:15px; font-style:italic; font-size:0.85rem;">
+                                    <i class="fa fa-spinner fa-spin" style="margin-right:6px;"></i>Elaborazione grafici geografici...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-updates-widget">
+                            <div class="widget-title">
+                                <span class="zenith-tooltip" data-tooltip="Registro delle attività: traccia in tempo reale gli ultimi inserimenti o modifiche effettuate in rubrica dagli operatori.">
+                                    <i class="fa fa-history" style="margin-right:8px;"></i>Ultime Attività Clienti
+                                    <i class="fa fa-question-circle" style="margin-left: 6px; font-size: 0.85rem; opacity: 0.7; cursor: help; color: var(--zenith-cyan);"></i>
+                                </span>
+                            </div>
+                            <div id="recentUpdatesList">
+                                <div style="font-size:0.85rem; color:#64748b; text-align:center; padding:10px; font-style:italic;">
+                                    Caricamento cronologia Zenith in corso...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- BACHECA APPUNTI VELOCI DIREZIONE -->
+                        <div class="zenith-memo-widget">
+                            <div class="memo-title" style="justify-content: space-between;">
+                                <span class="memo-interactive-title" title="Bacheca promemoria rapidi: tutto ciò che scrivi si salva in automatico mentre digiti e rimane memorizzato nel sistema.">
+                                    <i class="fa fa-sticky-note" style="margin-right:8px;"></i>Appunti Veloci Memo
+                                    <i class="fa fa-question-circle" style="margin-left: 6px; font-size: 0.85rem; opacity: 0.8; cursor: help; color: #fb923c;"></i>
+                                </span>
+                                <div style="display:flex; align-items:center;">
+                                    <div class="memo-actions-row">
+                                        <button type="button" class="memo-action-mini-btn" onclick="window.CopiaMemoSuAppunti()" title="Copia Tutto il testo negli appunti"><i class="fa fa-copy"></i> COPIA</button>
+                                        <button type="button" class="memo-action-mini-btn mini-btn-danger" onclick="window.SvuotaMemoHub()" title="Cancella Tutto"><i class="fa fa-trash"></i> SVUOTA</button>
+                                    </div>
+                                    <span class="memo-status"><i class="fa fa-check" id="memoAutoSaveIcon" style="margin-right:4px;"></i>LIVE AUTOSAVE</span>
+                                </div>
+                            </div>
+                            <textarea id="txtZenithMemo" class="memo-textarea" onkeyup="window.SalvaMemoHub()" placeholder="Digita qui i tuoi promemoria temporanei, note veloci o appunti di lavoro. Tutto si salva da solo in tempo reale..."></textarea>
+                        </div>
+                        
+                        <div class="suite-launcher-widget">
+                            <div class="widget-title">
+                                <span class="zenith-tooltip" data-tooltip="Hub Multimodulo: avvia istantaneamente gli altri moduli professionali della suite Zenith senza uscire dal portale.">
+                                    <i class="fa fa-th" style="margin-right:8px;"></i>Accesso Rapido Suite Zenith
+                                    <i class="fa fa-question-circle" style="margin-left: 6px; font-size: 0.85rem; opacity: 0.7; cursor: help; color: var(--zenith-cyan);"></i>
+                                </span>
+                            </div>
+                            <div class="launcher-grid">
+                                <div class="launcher-card lcard-consegne" onclick="NavigaModulo('consegne.hta')">
+                                    <i class="fa fa-truck"></i>
+                                    <span>Gestione Consegne</span>
+                                </div>
+                                <div class="launcher-card lcard-presenze" onclick="NavigaModulo('presenze.hta')">
+                                    <i class="fa fa-calendar-check-o"></i>
+                                    <span>Registro Presenze</span>
+                                </div>
+                                <div class="launcher-card lcard-promemoria" onclick="NavigaModulo('promemoria.hta')">
+                                    <i class="fa fa-bell"></i>
+                                    <span>Promemoria</span>
+                                </div>
+                                <div class="launcher-card lcard-auto" onclick="NavigaModulo('auto.hta')">
+                                    <i class="fa fa-car"></i>
+                                    <span>Gestione Veicoli</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- GUIDA RAPIDA E LEGENDA SISTEMA -->
+                        <div class="system-guide-widget">
+                            <div class="widget-title" onclick="try{window.ToggleGuidaRapida();}catch(e){}" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; width:100%; user-select:none;" title="Espandi/Comprimi Istruzioni Operative">
+                                <span><i class="fa fa-info-circle" style="color:var(--zenith-cyan); margin-right:10px;"></i> GUIDA RAPIDA & LEGENDA SIMBOLI</span>
+                                <i class="fa fa-chevron-down" id="guidaToggleIcon" style="font-size:0.85rem; color:var(--zenith-cyan); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);"></i>
+                            </div>
+                            <div id="guidaContent" style="max-height: 0px; overflow: hidden; opacity: 0; transition: max-height 0.5s ease-in-out, opacity 0.4s ease; transform-origin: top;">
+                                <div class="guide-grid">
+                                    <!-- Workflow Colonna -->
+                                    <div class="guide-col">
+                                        <h4><i class="fa fa-desktop" style="color:var(--zenith-cyan);"></i> Gestione Operativa</h4>
+                                        <ul>
+                                            <li><strong>Selezione & Ricerca:</strong> Utilizza la barra a sinistra per cercare e clicca un cliente per caricarne il profilo completo in scheda.</li>
+                                            <li><strong>Modalità Inserimento:</strong> Il pulsante <strong>Nuovo</strong> nel dock inferiore azzera i campi e ti prepara per registrare un nuovo utente.</li>
+                                            <li><strong>Dirty Tracking (Protezione):</strong> Se modifichi dei dati, il pulsante <strong>Salva</strong> inizierà a pulsare in arancione. Il sistema impedirà l'abbandono accidentale per evitare perdite di dati.</li>
+                                            <li><strong>Autosave Appunti (Memo):</strong> L'area dedicata alle note salva istantaneamente ogni carattere digitato in tempo reale, senza alcuna necessità di salvataggio manuale.</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Legenda Colonna -->
+                                    <div class="guide-col">
+                                        <h4><i class="fa fa-tags" style="color:var(--zenith-cyan);"></i> Legenda Simboli</h4>
+                                        
+                                        <div class="legend-item">
+                                            <div class="legend-label"><span class="guide-dot" style="background:#10b981; color:#10b981;"></span> Profilo Completo</div>
+                                            <span>Il cliente ha tutti i dati fiscali e i contatti mail correttamente compilati.</span>
+                                        </div>
+                                        
+                                        <div class="legend-item">
+                                            <div class="legend-label"><span class="guide-triangle"><i class="fa fa-exclamation"></i></span> Dati Mancanti</div>
+                                            <span>Avviso che segnala la mancanza di Codice Fiscale, Partita IVA, SDI o e-mail.</span>
+                                        </div>
+                                        
+                                        <div class="legend-item">
+                                            <div class="legend-label"><span class="guide-tag">CIECO</span> <span class="guide-tag" style="background:#f59e0b; box-shadow: 0 2px 6px rgba(245,158,11,0.3);">IPOVEDENTE</span></div>
+                                            <span>Tag di priorità per segnalare e gestire correttamente i soggetti speciali.</span>
+                                        </div>
+                                        
+                                        <div class="legend-item">
+                                            <div class="legend-label"><div class="guide-logo-symbol">AN</div> Logo Interattivo</div>
+                                            <span>Clicca il monogramma Nicolodi in alto per ricaricare e aggiornare le statistiche.</span>
+                                        </div>
+                                        
+                                        <div class="legend-item">
+                                            <div class="legend-label"><div class="guide-logo-symbol" style="border-radius:50%; color:#fb923c; border-color:rgba(251,146,60,0.5); font-size:0.8rem;"><i class="fa fa-question-circle"></i></div> Info Tooltip</div>
+                                            <span>Passa il mouse sulle icone con punto interrogativo per scoprire funzioni e dettagli dei segmenti.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THE CARD (Hidden initially) -->
+                <div class="detail-card-glass" id="mainDetailCard" style="display:none;">
+                    <div class="detail-card-header">
+                        <div>
+                            <span style="font-size:0.6rem; font-weight:800; color:var(--zenith-cyan); display:block; letter-spacing:2px;">IDENTITY RECORD</span>
+                            <h2 id="lblDisplayName" style="margin:0; font-size:1.4rem; font-weight:800;">DENOMINAZIONE CLIENTE</h2>
+                        </div>
+                        <div style="text-align:right; display:flex; align-items:center; gap:10px; justify-content:flex-end;">
+                            <i id="btnReminder" class="fa fa-bell" style="color: #f59e0b; cursor: pointer; font-size: 1.2rem; margin-right: 5px; text-shadow: 0 0 10px rgba(245,158,11,0.5);" title="Aggiungi Promemoria" onclick="AggiungiPromemoria()"></i>
+                            <span id="lblReminderBadge" style="display:none; background:#ef4444; color:white; font-size:0.6rem; font-weight:bold; padding:2px 6px; border-radius:10px; position:relative; left:-15px; top:-10px;">0</span>
+                            <span id="lblRankBadge" class="zenith-status-badge" style="display:none; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.3); font-size: 0.7rem; font-weight: 900;"></span>
+                            <span id="lblStatoBadge" class="zenith-status-badge badge-normo">SOGGETTO NORMOVEDENTE</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-card-body">
+                        
+                        <!-- TOP ROW: GOLD CARD & IDENTITY DECK -->
+                        <div style="display: flex; justify-content: space-between; gap: 40px; width: 100%; margin-bottom: 30px;">
+
+                        <!-- LEFT: COMPACT GOLD IDENTITY CARD (C.I.E. FORMAT V2) -->
+                        <div class="detail-photo-section" style="width: 440px; margin: 0; flex-shrink: 0;">
+                            <!-- Compact Gold/White CIE Card Inside Patient Details -->
+                            <div id="compactGoldCard" class="gold-card" style="margin: 0 0 20px 0; width: 100%; max-width: 440px; padding: 16px; border-radius: 20px; border-width: 2.5px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%); position: relative; overflow: hidden; border: 2.5px solid #d97706; text-align: left; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif;">
+                                <div style="position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px; border: 1px solid #fbbf24; border-radius: 16px; pointer-events: none;"></div>
+                                
+                                <!-- Left Column -->
+                                <div style="float: left; width: 49%; box-sizing: border-box; padding-right: 8px; border-right: 1px solid #cbd5e1; text-align: left;">
+                                    <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.4; padding-top: 2px; font-family: 'Segoe UI', Arial, sans-serif;">
+                                        <span style="color: #b45309;"><i class="fa fa-id-card-o" style="margin-right: 4px;"></i>GOLD</span> <span style="color: #1e3a8a;">IDENTITY</span>
+                                    </div>
+                                    
+                                    <div style="margin-top: 8px; overflow: hidden; height: 105px;">
+                                        <!-- Foto Box (Functional drag & drop container) -->
+                                        <div id="imgPhotoFrame" ondragover="event.preventDefault()" ondrop="GestisciDropFoto(event)" style="float: left; width: 82px; height: 102px; border: 2px solid #fbbf24; border-radius: 12px; overflow: hidden; background-color: #f1f5f9; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.12); cursor: pointer;">
+                                            <div id="imgCliente" class="photo-display" style="display:none; width: 100%; height: 100%; background-size: cover; background-position: center center;"></div>
+                                            <div id="photoPlaceholder" class="photo-placeholder" style="font-size: 9px; font-family: 'Segoe UI', Arial, sans-serif; font-weight: bold;">
+                                                <i class="fa fa-camera" style="font-size: 1.4rem; margin-bottom: 4px; opacity: 0.7;"></i>
+                                                TRASCINA FOTO
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Chip, CIE Logo e Sigillo -->
+                                        <div style="margin-left: 92px; padding-top: 2px;">
+                                            <!-- Chip -->
+                                            <div style="width: 32px; height: 26px; background: linear-gradient(135deg, #fef08a 0%, #fbbf24 50%, #ca8a04 100%); border-radius: 4px; border: 1px solid #a16207; position: relative; display: inline-block; vertical-align: middle;">
+                                                <div style="position:absolute; left:25%; top:0; width:1px; height:100%; background:#a16207; opacity:0.6;"></div>
+                                                <div style="position:absolute; left:50%; top:0; width:1px; height:100%; background:#a16207; opacity:0.6;"></div>
+                                                <div style="position:absolute; left:75%; top:0; width:1px; height:100%; background:#a16207; opacity:0.6;"></div>
+                                                <div style="position:absolute; top:35%; left:0; width:100%; height:1px; background:#a16207; opacity:0.6;"></div>
+                                                <div style="position:absolute; top:65%; left:0; width:100%; height:1px; background:#a16207; opacity:0.6;"></div>
+                                            </div>
+                                            <span style="font-size: 12px; font-weight: bold; color: #d97706; margin-left: 3px; display: inline-block; vertical-align: middle;">•))</span>
+                                            
+                                            <!-- CIE Logo ed Aquila Olografica -->
+                                            <div style="margin-top: 8px; display: flex; align-items: center; gap: 6px;">
+                                                <div>
+                                                    <div style="font-size: 13px; font-weight: 900; color: #1e3a8a; line-height: 1; letter-spacing: -0.5px; font-family: 'Segoe UI', Arial, sans-serif;">CIE<span style="color:#22c55e; font-weight: 900;">»</span></div>
+                                                </div>
+                                                <!-- Aquila Olografica -->
+                                                <div style="width: 28px; height: 24px; border-radius: 6px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%); border: 1px solid #cbd5e1; position: relative; overflow: hidden;">
+                                                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: #475569; position: absolute; left: 6px; top: 4px; opacity: 0.4;">
+                                                        <path d="M12 2L2 9l2 11 8 3 8-3 2-11L12 2zm0 4.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5-2.5-1.12-2.5-2.5 1.12-2.5 2.5-2.5zm0 13c-2.67 0-8-1.34-8-4v-1.5c0-2.66 5.33-4 8-4s8 1.34 8 4v1.5c0 2.66-5.33 4-8 4z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 8px; font-family:'Segoe UI', Arial, sans-serif;">
+                                        <div style="font-size: 9px; color: #475569; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">NOME E COGNOME</div>
+                                        <div id="cardNomeCompleto" style="font-size: 15px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.1px; line-height: 1.2; margin-top: 2px; height: 38px; overflow: hidden; font-family:'Segoe UI', Arial, sans-serif;">
+                                            ALESSANDRO BIANCHI
+                                        </div>
+                                        <div style="font-size: 9px; color: #475569; font-weight: bold; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;">CODICE IDENTIFICATIVO</div>
+                                        <div id="cardCodiceId" style="font-size: 12px; font-weight: 800; color: #1e3a8a; letter-spacing: 0.5px; margin-top: 1px; font-family:'Segoe UI', Arial, sans-serif;">
+                                            ID: LI-AB8841-A
+                                        </div>
+                                        <div id="smartTagsContainer" style="margin-top: 5px; display: flex; gap: 4px; flex-wrap: wrap; height: 20px; overflow: hidden;">
+                                            <!-- Smart Tags dynamically loaded -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Column -->
+                                <div style="float: right; width: 49%; box-sizing: border-box; padding-left: 8px; text-align: left; font-family:'Segoe UI', Arial, sans-serif;">
+                                    <!-- Top Logo: G in square + LOGISTICA ITALIA -->
+                                    <div style="overflow: hidden; margin-bottom: 6px;">
+                                        <div style="float: right; text-align: right; display: flex; align-items: center; gap: 4px;">
+                                            <div style="text-align: left;">
+                                                <span style="font-size: 10px; font-weight: 900; color: #1e3a8a; letter-spacing: 0.5px; line-height: 1.3; display: block; font-family:'Segoe UI', Arial, sans-serif;">LOGISTICA</span>
+                                                <span style="font-size: 10px; font-weight: 800; color: #475569; letter-spacing: 0.5px; line-height: 1.3; display: block; font-family:'Segoe UI', Arial, sans-serif;">ITALIA</span>
+                                            </div>
+                                            <div style="width: 24px; height: 24px; background-color: #1e3a8a; border-radius: 4px; line-height: 24px; text-align: center; color: white; font-weight: 900; font-size: 15px; position:relative; font-family:'Segoe UI', Arial, sans-serif;">
+                                                G
+                                                <div style="position: absolute; right: -1px; top: -1px; width: 5px; height: 5px; background-color: #fbbf24; border-radius: 50%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- RECAPITI Section -->
+                                    <div style="font-size: 10px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; font-family:'Segoe UI', Arial, sans-serif;">RECAPITI</div>
+                                    <div style="background-color: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 6px 8px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.02); margin-bottom: 6px;">
+                                        <div style="font-size: 11px; font-weight: bold; color: #334155; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; font-family:'Segoe UI', Arial, sans-serif;">
+                                            <i class="fa fa-map-marker" style="color:#64748b; font-size: 12px; width: 12px; text-align: center;"></i>
+                                            <span style="color:#64748b; font-weight:bold; font-size: 9px;">CITTÀ:</span>
+                                            <span id="cardCitta" style="color:#0f172a; font-weight: 800; font-size: 10.5px;">---</span>
+                                        </div>
+                                        <div style="font-size: 11px; font-weight: bold; color: #334155; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; font-family:'Segoe UI', Arial, sans-serif;">
+                                            <i class="fa fa-phone" style="color:#64748b; font-size: 11px; width: 12px; text-align: center;"></i>
+                                            <span style="color:#64748b; font-weight:bold; font-size: 9px;">TEL:</span>
+                                            <span id="cardTel" style="color:#0f172a; font-weight: 800; font-size: 10.5px;">---</span>
+                                        </div>
+                                        <div style="font-size: 11px; font-weight: bold; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; font-family:'Segoe UI', Arial, sans-serif;">
+                                            <i class="fa fa-envelope" style="color:#64748b; font-size: 10px; width: 12px; text-align: center;"></i>
+                                            <span style="color:#64748b; font-weight:bold; font-size: 9px;">MAIL:</span>
+                                            <span id="cardEmail" style="color:#0f172a; font-weight: 800; font-size: 10.5px;">---</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- STATO & FIRMA Section -->
+                                    <div style="margin-top: 8px; overflow: hidden;">
+                                        <div style="float: left; width: 52%;">
+                                            <div style="font-size: 10px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; font-family:'Segoe UI', Arial, sans-serif;">STATO</div>
+                                            <div id="cardStatoBadge" style="display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 9px; font-weight: bold; text-transform: uppercase; color: #ffffff; text-align: center; min-width: 90px; box-shadow: 0 2px 5px rgba(0,0,0,0.12); border: none; background-color: #10b981; font-family:'Segoe UI', Arial, sans-serif;">
+                                                NORMOVEDENTE
+                                            </div>
+                                            <div style="font-size: 7px; color: #b45309; font-weight: bold; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-family:'Segoe UI', Arial, sans-serif;">
+                                                REPUBBLICA ITALIANA
+                                            </div>
+                                        </div>
+                                        <div style="float: right; width: 46%; text-align: right; padding-top: 2px;">
+                                            <div style="font-size: 8px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px; font-family:'Segoe UI', Arial, sans-serif;">Firma</div>
+                                            <div id="cardSignature" style="font-family: 'Brush Script MT', 'Segoe Script', 'Segoe Print', cursive; font-size: 14px; color: #1d4ed8; font-weight: bold; margin-top: 2px; transform: rotate(-3deg); text-align: center;">
+                                                Alessandro Bianchi
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            
+                            <!-- Action Buttons and Identity Deck under the card -->
+                            <div style="display:flex; flex-direction:column; gap:10px; width: 100%; max-width: 440px;">
+                                <!-- NEW PREMIUM BUTTON -->
+                                <button onclick="SpedisciOra()" style="width: 100%; padding: 15px 0; border-radius: 12px; background: linear-gradient(135deg, #d4af37 0%, #a16207 100%); color: white; font-weight: 900; font-size: 14px; border: 2px solid #fef08a; cursor: pointer; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s;">
+                                    🚀 SPEDISCI ORA PER QUESTO CLIENTE
+                                </button>
+                                
+                                <div style="display:flex; justify-content:center; gap:10px; width: 100%;">
+                                    <button class="dock-btn" onclick="getEl('fileFoto').click()" title="Scegli una foto dal computer" style="height:35px; padding:0 15px; font-size:0.7rem; background:rgba(255,255,255,0.05); flex: 1;">
+                                        <i class="fa fa-folder-open"></i> SFOGLIA FOTO
+                                    </button>
+                                    <button class="dock-btn" onclick="IncollaFotoDaAppunti()" title="Incolla una foto dagli appunti" style="height:35px; padding:0 15px; font-size:0.7rem; background:rgba(255,255,255,0.05); flex: 1;">
+                                        <i class="fa fa-paste"></i> INCOLLA FOTO
+                                    </button>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+
+                        <!-- ZENITH IDENTITY DECK (Moved to Right) -->
+                        <div class="zenith-identity-deck" style="width: 100%; max-width: 440px; margin: 0; padding: 15px;">
+                                <div class="deck-widget">
+                                    <i class="fa fa-calendar-check-o"></i>
+                                    <div class="deck-info">
+                                        <span class="deck-label">Data Emissione</span>
+                                        <span class="deck-value" id="lblDeckDataIns">--/--/--</span>
+                                    </div>
+                                </div>
+                                <div class="deck-widget">
+                                    <i class="fa fa-history"></i>
+                                    <div class="deck-info">
+                                        <span class="deck-label">Ultimo Update</span>
+                                        <span class="deck-value" id="lblDeckDataMod">--/--/--</span>
+                                    </div>
+                                </div>
+                                <div class="integrity-box">
+                                    <div class="integrity-header">
+                                        <span>INTEGRITÀ DATI</span>
+                                        <span id="lblIntegrityPerc">0%</span>
+                                    </div>
+                                    <div class="integrity-bar-bg">
+                                        <div id="integrityBar" class="integrity-bar-fill"></div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; justify-content:center; gap:20px; margin-top:10px;">
+                                    <div class="gold-chip" title="Mostra Identità Digitale" onclick="MostraIdentitaDigitale()" style="width:45px; height:30px; background:linear-gradient(135deg, #fbbf24, #b45309); border-radius:6px; border:1px solid rgba(0,0,0,0.5);"></div>
+                                    <div onclick="MostraIdentitaDigitale()" style="cursor:pointer; width:35px; height:35px; background:rgba(255,255,255,0.05); border-radius:50%; border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center;">
+                                        <i class="fa fa-qrcode" style="color:var(--zenith-cyan);"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div> <!-- CHIUSURA TOP ROW -->
+
+                        <!-- BOTTOM ROW: DATA FIELDS (TABS) -->
+                        <div class="zenith-tabs" style="width: 100%;">
+                            <div style="display: flex; gap: 5px; border-bottom: 2px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 25px;">
+                                <div class="tab-btn active" onclick="SwitchTab('tabAnagrafica', this)"><i class="fa fa-id-card"></i> Dati Principali</div>
+                                <div class="tab-btn" onclick="SwitchTab('tabLogistica', this)"><i class="fa fa-truck"></i> Indirizzi & Logistica</div>
+                                <div class="tab-btn" onclick="SwitchTab('tabNote', this)"><i class="fa fa-file-text"></i> Operativo & Note</div>
+                                <div class="tab-btn" onclick="SwitchTab('tabCrm', this)"><i class="fa fa-history"></i> CRM & Storico</div>
+                            </div>
+                            
+                            <!-- TAB 1: ANAGRAFICA & CONTATTI -->
+                            <div class="tab-content active" id="tabAnagrafica" style="display: flex; flex-direction: column; gap: 35px; width: 100%;">
+                                <div class="zenith-field-group" style="width: 100%;">
+                                    <div class="zenith-field-header">
+                                        <label class="zenith-label">Denominazione Completa <span id="badgeMateriali" style="display:none; margin-left:10px; background:#ffab00; color:#000; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:800; letter-spacing:1px; cursor:pointer;" onclick="alert('Il cliente è presente nell\'elenco Materiali Excel!')" title="Verificato su Excel Materiali"><i class="fa fa-cubes"></i> IN ELENCO MATERIALI</span></label>
+                                        <div class="zenith-field-actions">
+                                            <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtCognomeNome')" title="Modifica"></i>
+                                            <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva tutto"></i>
+                                            <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtCognomeNome')" title="Svuota"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="txtCognomeNome" class="zenith-input" oninput="this.value = this.value.toUpperCase()" style="font-size:1.1rem; font-weight:800; border-color:rgba(6,182,212,0.3);">
+                                </div>
+                                
+                                <div style="display:flex; gap:35px; width: 100%;">
+                                    <div class="zenith-field-group" style="flex: 0.5;">
+                                        <div class="zenith-field-header">
+                                            <label class="zenith-label"><i class="fa fa-fingerprint" style="margin-right:5px; opacity:0.7;"></i> Codice (ID)</label>
+                                            <div class="zenith-field-actions">
+                                                <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="txtId" class="zenith-input" readonly value="NEW" style="text-align: center; letter-spacing: 2px; font-weight: 900; background: rgba(0,0,0,0.3) !important; border: 1px dashed rgba(6, 182, 212, 0.4) !important; color: #38bdf8 !important;">
+                                    </div>
+                                    <div class="zenith-field-group" style="flex: 1.5;">
+                                        <div class="zenith-field-header">
+                                            <label class="zenith-label"><i class="fa fa-wheelchair" style="margin-right:5px; opacity:0.7;"></i> Stato Invalidità</label>
+                                            <div class="zenith-field-actions">
+                                                <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','cmbDisabilita')" title="Modifica"></i>
+                                                <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                                <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','cmbDisabilita')" title="Svuota"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="cmbDisabilita" class="zenith-input" list="listDisabilita" placeholder="Es: Cieco Assoluto, Ipovedente...">
+                                    </div>
+                                </div>
+                                
+                                <div class="zenith-field-group" style="width: 100%;">
+                                    <div class="zenith-field-header">
+                                        <label class="zenith-label"><i class="fa fa-envelope-o" style="margin-right:5px; opacity:0.7;"></i> Email / PEC</label>
+                                        <div class="zenith-field-actions">
+                                            <i class="fa fa-copy q-action" onclick="SmartCopy('txtEmailCliente')" title="Copia Appunti" style="color: #38bdf8;"></i>
+                                            <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtEmailCliente')" title="Modifica"></i>
+                                            <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                            <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtEmailCliente')" title="Svuota"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="txtEmailCliente" class="zenith-input" placeholder="indirizzo@email.it">
+                                </div>
+                                
+                                <div class="zenith-field-group" style="width: 100%;">
+                                    <div class="zenith-field-header">
+                                        <label class="zenith-label"><i class="fa fa-phone" style="margin-right:5px; opacity:0.7;"></i> Telefono / Cellulare</label>
+                                        <div class="zenith-field-actions">
+                                            <i class="fa fa-copy q-action" onclick="SmartCopy('txtTelefoni')" title="Copia Appunti" style="color: #38bdf8;"></i>
+                                            <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtPhoneGhost')" title="Modifica"></i>
+                                            <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                            <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtTelefoni')" title="Svuota tutto"></i>
+                                        </div>
+                                    </div>
+                                    <div class="zenith-tag-container" id="phoneTagContainer" onclick="getEl('txtPhoneGhost').focus()">
+                                        <input type="text" id="txtPhoneGhost" class="tag-input-ghost" placeholder="Scrivi numero..." onkeydown="handlePhoneKey(event)" oninput="handlePhoneInput(this)">
+                                    </div>
+                                    <div class="phone-helper-bar" id="phoneHelperBar">
+                                        <div class="helper-chip add-label-btn" onclick="AggiungiEtichettaPersonalizzata()"><i class="fa fa-plus"></i> AGGIUNGI</div>
+                                    </div>
+                                    <input type="hidden" id="txtTelefoni">
+                                </div>
+                                
+                                <!-- INDIRIZZO PRINCIPALE SPOSTATO QUI PER VELOCITA' DI DATA ENTRY -->
+                                <div class="zenith-field-group" style="width: 100%;">
+                                    <div class="zenith-field-header">
+                                        <label class="zenith-label"><i class="fa fa-home" style="margin-right:5px; opacity:0.7;"></i> Indirizzo di Residenza</label>
+                                        <div class="zenith-field-actions">
+                                            <i class="fa fa-map-marker q-action" style="color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.4); font-size: 0.8rem;" onclick="if(window.ApriMappaCliente) window.ApriMappaCliente()" title="Apri Geocalizzazione in Google Maps"></i>
+                                            <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtResidenza')" title="Modifica"></i>
+                                            <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                            <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtResidenza')" title="Svuota"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="txtResidenza" class="zenith-input" placeholder="Es. Via Roma, 10...">
+                                </div>
+
+                                <div style="display: flex; gap: 20px; width: 100%;">
+                                    <div class="zenith-field-group" style="flex: 2.5;">
+                                        <div class="zenith-field-header">
+                                            <label class="zenith-label"><i class="fa fa-building-o" style="margin-right:5px; opacity:0.7;"></i> Comune</label>
+                                            <div class="zenith-field-actions">
+                                                <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','cmbLocalita')" title="Modifica"></i>
+                                                <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','cmbLocalita')" title="Svuota"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="cmbLocalita" class="zenith-input" list="listLocalita" placeholder="Es. Bari">
+                                    </div>
+                                    <div class="zenith-field-group" style="flex: 1;">
+                                        <div class="zenith-field-header">
+                                            <label class="zenith-label"><i class="fa fa-map-signs" style="margin-right:5px; opacity:0.7;"></i> Prov (Sigla)</label>
+                                            <div class="zenith-field-actions">
+                                                <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','cmbProvincia')" title="Modifica"></i>
+                                                <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','cmbProvincia')" title="Svuota"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="cmbProvincia" class="zenith-input" list="listProvincie" placeholder="BA" style="text-align: center; text-transform: uppercase;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB 2: INDIRIZZI & LOGISTICA -->
+                            <div class="tab-content" id="tabLogistica" style="display: flex; flex-direction: column; gap: 30px; width: 100%;">
+                                <div style="background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.15); border-radius: 16px; padding: 25px; margin-top: 0px;">
+                                    <div class="zenith-field-group" style="width: 100%; margin-top: 0; margin-bottom: 20px;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed rgba(56, 189, 248, 0.3); padding-bottom: 10px;">
+                                            <div style="display: flex; align-items: center;">
+                                                <i class="fa fa-truck" style="color: #38bdf8; margin-right: 8px; font-size: 1.1rem; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);"></i>
+                                                <span style="font-weight: 800; letter-spacing: 1px; color: #38bdf8; font-size: 0.85rem; text-transform: uppercase;">Domicilio di Consegna Fisica</span>
+                                            </div>
+                                            <button type="button" onclick="ClonaIndirizzoResidenza()" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; outline: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(56, 189, 248, 0.2)'" onmouseout="this.style.background='rgba(56, 189, 248, 0.1)'" title="Copia i dati della residenza sopra nei campi sottostanti">
+                                                <i class="fa fa-clone"></i> CLONA DA RESIDENZA
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="zenith-field-group" style="width: 100%;">
+                                        <div class="zenith-field-header">
+                                            <label class="zenith-label"><i class="fa fa-map" style="margin-right:5px; opacity:0.7;"></i> Indirizzo di Consegna Logistica</label>
+                                            <div class="zenith-field-actions">
+                                                <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtLogIndirizzo')" title="Modifica"></i>
+                                                <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                                <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtLogIndirizzo')" title="Svuota"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="txtLogIndirizzo" class="zenith-input" style="border-left: 3px solid #38bdf8; background: rgba(0,0,0,0.2);" placeholder="Lascia vuoto se uguale a Residenza...">
+                                        
+                                        <div style="display: flex; gap: 20px; width: 100%; margin-top: 25px;">
+                                            <div class="zenith-field-group" style="flex: 2.5; margin-bottom: 0;">
+                                                <div class="zenith-field-header">
+                                                    <label class="zenith-label"><i class="fa fa-building-o" style="margin-right:5px; opacity:0.7;"></i> Comune di Consegna</label>
+                                                    <div class="zenith-field-actions">
+                                                        <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtLogComune')" title="Modifica"></i>
+                                                        <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtLogComune')" title="Svuota"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="text" id="txtLogComune" class="zenith-input" style="background: rgba(0,0,0,0.2);" list="listLocalita" placeholder="Città di consegna...">
+                                            </div>
+            
+                                            <div class="zenith-field-group" style="flex: 1; margin-bottom: 0;">
+                                                <div class="zenith-field-header">
+                                                    <label class="zenith-label"><i class="fa fa-map-signs" style="margin-right:5px; opacity:0.7;"></i> Prov (Sigla)</label>
+                                                    <div class="zenith-field-actions">
+                                                        <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtLogProvincia')" title="Modifica"></i>
+                                                        <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtLogProvincia')" title="Svuota"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="text" id="txtLogProvincia" class="zenith-input" style="background: rgba(0,0,0,0.2); text-align: center; text-transform: uppercase;" list="listProvincie" placeholder="BA">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- MAPPA LOGISTICA -->
+                                <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span style="font-weight: 800; color: #10b981; font-size: 0.85rem;"><i class="fa fa-map" style="margin-right: 8px;"></i> MAPPA LOGISTICA ESTERNA</span>
+                                        <span id="distanzaBadge" style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 900; padding: 4px 8px; border-radius: 8px; display: none;"><i class="fa fa-car"></i> <span id="lblDistanza">-- KM</span></span>
+                                    </div>
+                                    <div id="btnApriMappaEsterna" onclick="window.apriMappa()" style="width: 100%; height: 100px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(16, 185, 129, 0.3); background: #0f172a; position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0f172a'">
+                                        <div style="color: #10b981; text-align: center;">
+                                            <i class="fa fa-external-link" style="font-size: 1.5rem; margin-bottom: 8px;"></i><br>
+                                            <span style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase;">Apri Mappa nel Browser</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB 3: OPERATIVO E NOTE -->
+                            <div class="tab-content" id="tabNote" style="display: flex; flex-direction: column; gap: 30px; width: 100%;">
+                                <div style="display: flex; gap: 20px; width: 100%;">
+                                    <div class="zenith-field-group" style="flex: 1;">
+                                        <div class="zenith-field-header">
+                                            <label class="zenith-label"><i class="fa fa-calendar-check-o" style="margin-right:5px; opacity:0.7;"></i> Avvisato il (Stato Pratica)</label>
+                                            <div class="zenith-field-actions">
+                                                <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtAvvisatoIl')" title="Modifica"></i>
+                                                <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                                <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtAvvisatoIl')" title="Svuota"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="txtAvvisatoIl" class="zenith-input" style="border-left: 3px solid var(--zenith-gold); background: rgba(0,0,0,0.2);" placeholder="Es. Chiamato il 15/04...">
+                                    </div>
+    
+                                    <div class="zenith-field-group" style="flex: 1;">
+                                        <div class="zenith-field-header">
+                                            <label class="zenith-label"><i class="fa fa-file-text-o" style="margin-right:5px; opacity:0.7;"></i> Preventivo / Ordine</label>
+                                            <div class="zenith-field-actions">
+                                                <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtPreventivoOrdine')" title="Modifica"></i>
+                                                <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                                <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtPreventivoOrdine')" title="Svuota"></i>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="txtPreventivoOrdine" class="zenith-input" style="border-left: 3px solid var(--zenith-gold); background: rgba(0,0,0,0.2);" placeholder="N. Ordine...">
+                                    </div>
+                                </div>
+
+                                <div class="zenith-field-group" style="width: 100%; margin-bottom:0;">
+                                    <div class="zenith-field-header">
+                                        <label class="zenith-label"><i class="fa fa-pencil-square-o" style="margin-right:5px; opacity:0.7;"></i> Note e Segnalazioni</label>
+                                        <div class="zenith-field-actions">
+                                            <i class="fa fa-pencil q-action" onclick="QuickAction('MOD','txtNote')" title="Modifica"></i>
+                                            <i class="fa fa-save q-action q-save" onclick="QuickAction('SAVE')" title="Salva"></i>
+                                            <i class="fa fa-trash-o q-action q-del" onclick="QuickAction('DEL','txtNote')" title="Svuota"></i>
+                                        </div>
+                                    </div>
+                                    <textarea id="txtNote" class="zenith-input" style="height:80px; resize:none; background: rgba(0,0,0,0.2);" placeholder="Inserisci dettagli, preferenze di consegna o criticità..."></textarea>
+                                </div>
+                                <!-- DRAG AND DROP DOCUMENTI -->
+                                <div class="zenith-field-group" style="width: 100%; margin-bottom:0;">
+                                    <div class="zenith-field-header">
+                                        <label class="zenith-label"><i class="fa fa-folder-open-o" style="margin-right:5px; opacity:0.7;"></i> Archivio Documenti Cliente</label>
+                                    </div>
+                                    <div id="dropzoneDocs" ondragover="event.preventDefault(); this.style.borderColor='#38bdf8'; this.style.background='rgba(56, 189, 248, 0.1)';" ondragleave="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.background='rgba(0,0,0,0.2)';" ondrop="GestisciDropDocumento(event)" style="min-height:80px; border: 2px dashed rgba(255,255,255,0.1); border-radius: 8px; background: rgba(0,0,0,0.2); padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.8rem; text-align: center; cursor: pointer;">
+                                        <i class="fa fa-cloud-upload" style="font-size: 1.5rem; margin-bottom: 5px;"></i>
+                                        <span>Trascina qui file PDF o scansioni (es. Certificati di Invalidità)</span>
+                                        <div id="listaDocumenti" style="width: 100%; margin-top: 10px; display: flex; flex-direction: column; gap: 5px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- TAB 4: CRM E STORICO -->
+                            <div class="tab-content" id="tabCrm" style="display: none; flex-direction: column; gap: 20px; width: 100%;">
+                                <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--glass-border); border-radius: 12px; padding: 20px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                                        <h3 style="margin: 0; color: #fff; font-size: 1rem; font-weight: 800;"><i class="fa fa-history" style="color: #38bdf8; margin-right: 8px;"></i> Timeline Interazioni e Attività</h3>
+                                        <button onclick="AggiungiLogManuale()" style="background: transparent; border: 1px solid #38bdf8; color: #38bdf8; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; cursor: pointer;"><i class="fa fa-plus"></i> AGGIUNGI NOTA</button>
+                                    </div>
+                                    <div id="crmTimelineContainer" style="max-height: 300px; overflow-y: auto; padding-right: 10px; display: flex; flex-direction: column; gap: 10px;">
+                                        <div style="text-align: center; color: #64748b; font-style: italic; font-size: 0.85rem; padding: 20px;">Nessuna interazione registrata in questa sessione.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PANNELLO LOGISTICA INTEGRATA (CONSEGNE) -->
+                    <div id="logisticaWidget" style="background: rgba(6, 182, 212, 0.03); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.03); padding: 25px 40px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(6, 182, 212, 0.15); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(6, 182, 212, 0.3);">
+                                    <i class="fa fa-truck" style="color: var(--zenith-cyan); font-size: 1rem;"></i>
+                                </div>
+                                <h3 style="color: white; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Cronologia Consegne Logistica</h3>
+                            </div>
+                            <div style="background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.25); padding: 5px 14px; border-radius: 20px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);">
+                                <span style="font-size: 0.85rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; transform: translateZ(0); text-shadow: none;">TOTALI EFFETTUATE: <span id="lblTotConsegneCliente" style="font-size: 0.9rem; font-weight: 900; margin-left: 4px; color: #38bdf8;">0</span></span>
+                            </div>
+                        </div>
+                        
+                        <div id="deliveryTimeline" style="display: flex; gap: 16px; overflow-x: auto; padding: 5px 2px 15px 2px;">
+                            <!-- Caricato dinamicamente via JS -->
+                            <div style="color: #94a3b8; font-style: italic; font-size: 0.85rem; padding: 10px 0;">
+                                <i class="fa fa-info-circle" style="margin-right: 6px; color: var(--zenith-cyan);"></i>Nessuna consegna registrata per questo cliente.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RECAPITI DOCK INSIDE CARD -->
+                    <div style="background:rgba(0,0,0,0.2); padding:20px 40px; border-top:1px solid var(--glass-border); display:flex; justify-content:space-between; align-items:center;">
+                        <div id="recapitiList" style="display:flex; gap:10px;">
+                            <!-- Tag recapiti -->
+                        </div>
+                        <div class="signature-area" style="padding:0;">
+                            <div class="signature-label">VALIDATED BY</div>
+                            <div id="lblFirmaTitolare" style="font-size:1.2rem; font-weight:800; color:var(--zenith-cyan);">SYSTEM</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- ACTION DOCK (FLOATING FOOTER) -->
+        <div class="zenith-action-dock">
+            <button class="dock-btn primary" onclick="ActionSvuotaENuovo()">
+                <i class="fa fa-user-plus"></i> NUOVO CLIENTE
+            </button>
+            <button class="dock-btn" id="btnLeggiScheda" onclick="LeggiSchedaVocale()" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981;">
+                <i class="fa fa-bullhorn"></i> LEGGI SCHEDA
+            </button>
+            <div class="separator-v"></div>
+            <button class="dock-btn dock-save" id="btnSalvaAnagrafica" onclick="ActionSalvaRec()">
+                <i class="fa fa-save"></i> SALVA SCHEDA
+            </button>
+            <button class="dock-btn danger" id="btnEliminaCliente" onclick="ActionEliminaRecord()">
+                <i class="fa fa-trash"></i> ELIMINA
+            </button>
+            <div class="separator-v"></div>
+            <button class="dock-btn dock-whatsapp" id="btnWhatsApp" onclick="WhatsAppCliente()">
+                <i class="fa fa-whatsapp"></i> WHATSAPP
+            </button>
+            <button class="dock-btn dock-email" onclick="EmailCliente()">
+                <i class="fa fa-envelope"></i> EMAIL
+            </button>
+            <button class="dock-btn dock-maps" id="btnGoogleMaps" onclick="apriMappa()">
+                <i class="fa fa-external-link"></i> GOOGLE MAPS
+            </button>
+            <button class="dock-btn dock-scantogo" id="btnScanToGo" onclick="GeneraScanToGo()">
+                <i class="fa fa-qrcode"></i> SCAN TO GO
+            </button>
+        </div>
+
+        <!-- HIDDEN ELEMENTS -->
+        <div style="display:none;">
+            <input type="text" id="txtCodFisc"><input type="text" id="txtPIva">
+            <input type="text" id="txtSDI"><input type="text" id="txtPEC">
+            <input type="text" id="txtCivico"><input type="text" id="txtFrazione">
+            <input type="text" id="txtRegione"><input type="text" id="txtCap">
+            <div id="lstTelefonos"></div><input type="file" id="fileFoto">
+            <input type="hidden" id="txtPercorsoFoto">
+            <datalist id="listLocalita"></datalist>
+            <datalist id="listProvincie"></datalist>
+            <datalist id="listDisabilita"></datalist>
+            <button id="btnSalvaAnagrafica_Original" style="display:none;"></button>
+        </div>
+
+        <footer style="height:30px; background:rgba(2,6,23,0.9); border-top:1px solid var(--glass-border); display:flex; align-items:center; padding:0 25px; font-size:9px; color:#64748b; justify-content:space-between;">
+            <span>SISTEMA LOGISTICA MILELLA - LOGISTICA CONSEGNE EDITION 2026</span>
+            <div style="display:flex;">
+                <span id="lblDataInserimentoFooter" style="margin-right: 15px;">CREATED: N.D.</span>
+                <span style="opacity:0.3; margin-right: 15px;">|</span>
+                <span id="lblDataModificaFooter">LAST UPDATE: N.D.</span>
+            </div>
+        </footer>
+
+        <!-- IDENTITY MODAL -->
+        <div id="identityOverlay" class="identity-overlay" onclick="ChiudiIdentita()">
+            <div class="identity-modal" onclick="event.stopImmediatePropagation()">
+                <div style="font-size:0.7rem; font-weight:800; color:var(--zenith-gold); margin-bottom:10px; letter-spacing:2px;">LOGISTICA CONSEGNE DIGITAL IDENTITY</div>
+                <h2 id="qrName" style="margin:0; font-size:1.6rem; color:white;">NOME CLIENTE</h2>
+                <div id="qrId" style="font-size:0.8rem; color:var(--zenith-cyan); margin-top:5px;">ID: 000</div>
+                
+                <div class="qr-frame">
+                    <img id="qrImage" src="" alt="QR Code Identità">
+                </div>
+                
+                <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
+                    Scansiona il codice per acquisire i dati<br>sullo smartphone o sul terminale di consegna.
+                </div>
+                
+                <button class="dock-btn primary" onclick="ChiudiIdentita()" style="margin: 30px auto 0 auto; width:100%; justify-content:center;">
+                    CHIUDI SCHEDA
+                </button>
+            </div>
+        </div>
+
+        <!-- SCAN-TO-GO GPS MODAL (LA CHICCA PRO) -->
+        <div id="scanToGoOverlay" class="identity-overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; width:100%; height:100%; background:rgba(8, 10, 20, 0.92); z-index:99999;" onclick="ChiudiScanToGo()">
+            <div class="identity-modal" style="border: 1px solid rgba(168, 85, 247, 0.3); box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.15); background: linear-gradient(180deg, rgba(23, 15, 45, 0.96), rgba(10, 12, 22, 0.98)); text-align:center;" onclick="event.stopImmediatePropagation()">
+                <div style="font-size:0.7rem; font-weight:900; color:#c084fc; margin-bottom:10px; letter-spacing:3px; text-transform: uppercase; display:inline-flex; align-items:center; gap:6px;"><i class="fa fa-qrcode" style="font-size:1rem;"></i> SCAN-TO-GO DISPATCHER</div>
+                <h2 id="stgClientName" style="margin:0; font-size:1.5rem; color:white; font-weight:800; text-shadow:0 2px 10px rgba(0,0,0,0.5);">DENOMINAZIONE</h2>
+                <div id="stgClientAddress" style="font-size:0.85rem; color:#a855f7; margin-top:8px; font-weight:800; border-bottom: 1px solid rgba(168, 85, 247, 0.15); padding-bottom: 12px; text-transform:uppercase; letter-spacing:0.5px;">VIA ROMA, BARI (BA)</div>
+                
+                <div class="qr-frame" style="width: 240px; height: 240px; margin: 25px auto; border: 3px solid rgba(168, 85, 247, 0.15); padding:16px;">
+                    <img id="stgQrImage" src="" style="width:100%; height:100%; image-rendering: pixelated;" alt="QR Code Navigazione GPS">
+                </div>
+                
+                <div style="font-size:0.82rem; color:#cbd5e1; line-height:1.5; font-weight:600; padding: 0 10px;">
+                    <i class="fa fa-mobile" style="font-size:1.2rem; color:#a855f7; margin-right:5px; vertical-align:middle;"></i> 
+                    L'autista può inquadrare il codice con la fotocamera<br>per attivare il Navigatore GPS sul proprio smartphone!
+                </div>
+                
+                <button class="dock-btn" onclick="ChiudiScanToGo()" style="margin: 25px auto 0 auto; width:100%; justify-content:center; background: linear-gradient(135deg, #7c3aed, #a855f7); border: none; color: white; font-weight:800; font-size: 0.8rem; letter-spacing: 1px; padding: 14px; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3); transition: 0.2s;">
+                    CHIUDI FINESTRA SCAN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/accessibility.js"></script>
+    <script src="assets/js/anagrafica_hta.js?v=15.0"></script>
+<script src="assets/js/hacker_mode.js"></script>
+    <!-- FASE 5: FAB Radial Menu Anagrafica -->
+    <div class="fab-wrapper" id="fabMenuAnagrafica">
+        <div class="fab-item" title="Aggiungi Nuovo" onclick="ToggleFABAnag(); ActionSvuotaENuovo();">➕</div>
+        <div class="fab-item" title="Salva Scheda" onclick="ToggleFABAnag(); ActionSalvaRec();">💾</div>
+        <div class="fab-item" title="Statistiche" onclick="ToggleFABAnag(); MostraStatisticheAvanzate();">📊</div>
+        <div class="fab-main" onclick="ToggleFABAnag()">
+            <span style="pointer-events:none;">⚡</span>
+        </div>
+    </div>
+
+    <!-- FASE 5: Stats Modal -->
+    <div id="statsModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:11000; align-items:center; justify-content:center;">
+        <div style="width:500px; background:#0f111a; border:1px solid #d4af37; border-radius:12px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.8); position:relative; margin: 10% auto;">
+            <h2 style="color:#d4af37; border-bottom:1px solid rgba(212,175,55,0.3); padding-bottom:10px; margin-top:0;">📊 Analisi Demografica Clienti</h2>
+            <span onclick="document.getElementById('statsModal').style.display='none'" style="position:absolute; top:20px; right:20px; cursor:pointer; color:#64748b; font-size:20px;">✖</span>
+            
+            <div style="display:flex; margin-top:20px; align-items:center;">
+                <div id="statsSvgContainer" style="width:150px; height:150px; position:relative;"></div>
+                <div id="statsLegend" style="margin-left:30px; color:#e2e8f0; font-size:14px; line-height:2;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* FASE 5: FAB Radial Menu & SVG Chart */
+        .fab-wrapper { position: fixed; bottom: 30px; right: 30px; z-index: 9999; }
+        .fab-main { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #d4af37, #f3e5ab); box-shadow: 0 4px 15px rgba(212,175,55,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .fab-main:hover { transform: scale(1.1); }
+        .fab-main.active { transform: rotate(45deg); }
+        .fab-item { position: absolute; width: 45px; height: 45px; border-radius: 50%; background: #1e293b; border: 1px solid #d4af37; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: scale(0) translate(0, 0); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: #fff; font-size: 16px; }
+        .fab-wrapper.active .fab-item:nth-child(1) { opacity: 1; transform: scale(1) translate(-70px, -10px); }
+        .fab-wrapper.active .fab-item:nth-child(2) { opacity: 1; transform: scale(1) translate(-50px, -60px); }
+        .fab-wrapper.active .fab-item:nth-child(3) { opacity: 1; transform: scale(1) translate(-10px, -70px); }
+        .fab-item:hover { background: #d4af37; color: #000; }
+        
+        .svg-donut { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .donut-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 8; }
+        .donut-segment { fill: none; stroke-width: 8; transition: stroke-dasharray 1s ease-out; }
+        .segment-c { stroke: #3b82f6; } /* Ciechi */
+        .segment-i { stroke: #f59e0b; } /* Ipovedenti */
+        .segment-a { stroke: #10b981; } /* Altro */
+    </style>
+
+    <script>
+        function ToggleFABAnag() {
+            var wrapper = document.getElementById("fabMenuAnagrafica");
+            if (wrapper.className.indexOf("active") > -1) {
+                wrapper.className = wrapper.className.replace(" active", "");
+            } else {
+                wrapper.className += " active";
+            }
+        }
+        
+        // Override MostraStatistiche from external JS
+        var oldMostraStatistiche = null;
+        setTimeout(function(){
+            if(typeof window.MostraStatistiche === "function") {
+                oldMostraStatistiche = window.MostraStatistiche;
+                window.MostraStatistiche = MostraStatisticheAvanzate;
+            }
+        }, 1000);
+        
+        function MostraStatisticheAvanzate() {
+            document.getElementById("statsModal").style.display = "block";
+            
+            var ciechi = 0, ipovedenti = 0, altro = 0, tot = 0;
+            if(typeof dataClienti !== 'undefined') {
+                tot = dataClienti.length;
+                for(var i=0; i<tot; i++) {
+                    var s = dataClienti[i].Stato.toUpperCase();
+                    if(s.indexOf("CIECO") > -1) ciechi++;
+                    else if(s.indexOf("IPOVEDENTE") > -1) ipovedenti++;
+                    else altro++;
+                }
+            } else {
+                ciechi=45; ipovedenti=30; altro=25; tot=100;
+            }
+            
+            if(tot === 0) tot = 1;
+            
+            var cPct = (ciechi / tot) * 100;
+            var iPct = (ipovedenti / tot) * 100;
+            var aPct = (altro / tot) * 100;
+            
+            var circ = 251.2;
+            var cDash = (cPct / 100) * circ;
+            var iDash = (iPct / 100) * circ;
+            var aDash = (aPct / 100) * circ;
+            
+            var html = "<svg class='svg-donut' viewBox='0 0 100 100'>" +
+                       "<circle class='donut-bg' cx='50' cy='50' r='40'></circle>" +
+                       "<circle class='donut-segment segment-c' cx='50' cy='50' r='40' style='stroke-dasharray: " + cDash + " " + circ + "; stroke-dashoffset: 0;'></circle>" +
+                       "<circle class='donut-segment segment-i' cx='50' cy='50' r='40' style='stroke-dasharray: " + iDash + " " + circ + "; stroke-dashoffset: -" + cDash + ";'></circle>" +
+                       "<circle class='donut-segment segment-a' cx='50' cy='50' r='40' style='stroke-dasharray: " + aDash + " " + circ + "; stroke-dashoffset: -" + (cDash + iDash) + ";'></circle>" +
+                       "</svg>";
+            
+            document.getElementById("statsSvgContainer").innerHTML = html;
+            
+            var legend = "<b>Totale Pazienti: " + tot + "</b><br><br>" +
+                         "🔵 <span style='color:#3b82f6;'>Non Vedenti: " + ciechi + " (" + Math.round(cPct) + "%)</span><br>" +
+                         "🟠 <span style='color:#f59e0b;'>Ipovedenti: " + ipovedenti + " (" + Math.round(iPct) + "%)</span><br>" +
+                         "🟢 <span style='color:#10b981;'>Altro/Nessuna: " + altro + " (" + Math.round(aPct) + "%)</span>";
+                         
+            document.getElementById("statsLegend").innerHTML = legend;
+        }
+    </script>
+
+<script src="./assets/js/global_context.js"></script>
+<!-- MODAL GUIDA ALL'USO (MSHTA REFLOW COMPATIBLE) -->
+<div id="helpModalOverlay" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;">
+    <div style="position:absolute; top:50%; left:50%; margin-top:-260px; margin-left:-320px; width:640px; background:#0f172a; border:2px solid #38bdf8; border-radius:16px; box-shadow:0 0 35px rgba(56, 189, 248, 0.4); padding:25px; color:#f8fafc; font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;">
+        <!-- Header Modal -->
+        <div style="border-bottom:1px solid #38bdf8; padding-bottom:12px; margin-bottom:15px; position:relative;">
+            <div style="font-family:'Outfit', sans-serif; font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.5px;">
+                &#128216; GUIDA ALL'USO - ZENITH MATERIALI
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Manuale Rapido Operativo &amp; Scorciatoie</div>
+            <div onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="cursor:pointer; position:absolute; top:0; right:0; width:30px; height:30px; background:#1e293b; border:1px solid #38bdf8; border-radius:50%; text-align:center; line-height:28px; color:#f8fafc; font-weight:bold; font-size:1.2rem; user-select:none;">&times;</div>
+        </div>
+
+        <!-- Content Modal -->
+        <div style="height:350px; overflow-y:auto; padding-right:5px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                <tr>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#fbbf24; font-size:0.88rem; margin-bottom:6px;">
+                                &#128269; 1. Ricerca Globale Istantanea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Digita nel campo in alto per filtrare in tempo reale clienti, città, telefoni o specifiche attrezzature assegnate.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#38bdf8; font-size:0.88rem; margin-bottom:6px;">
+                                &#128205; 2. Filtri Provincia &amp; Articolo
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Usa la barra laterale sinistra per isolare velocemente le province (Bari, Foggia, Taranto) o i dispositivi (Orologio, Sveglia, Braille).
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#34d399; font-size:0.88rem; margin-bottom:6px;">
+                                &#128203; 3. Pulsanti Copia Dati
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Clicca sul tasto verde <b>Copia</b> per salvare la scheda cliente negli appunti e trasferirla nei promemoria o report.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#a78bfa; font-size:0.88rem; margin-bottom:6px;">
+                                &#128259; 4. Sincronizzazione Danea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Dal menu <b>File</b> o <b>Strumenti</b> premi <i>Sincronizza Excel Ora</i> per ricaricare le anagrafiche aggiornate.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; padding:12px; border-radius:10px; font-size:0.8rem; color:#cbd5e1;">
+                <b style="color:#38bdf8;">&#9889; Suggerimento Rapido:</b> Per resettare tutti i filtri attivi e tornare alla vista completa, seleziona <b>TUTTE LE PROVINCE</b> ed <b>ELENCO COMPLETO</b> dalla sidebar a sinistra.
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); text-align:right;">
+            <span style="font-size:0.75rem; color:#94a3b8; float:left; margin-top:8px;">Sistema Zenith Materiali v1.0 &bull; C. Milella 2026</span>
+            <button onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="background:#0284c7; color:white; border:1px solid #38bdf8; padding:8px 24px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; font-family:'Outfit', sans-serif;">HO CAPITO</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

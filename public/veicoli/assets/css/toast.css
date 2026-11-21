@@ -1,0 +1,74 @@
+/* toast.css - Toast Notifications per Portale Supervisore Gold */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    min-width: 250px;
+    background: #1e2130;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border-left: 5px solid #d4af37;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateX(100%);
+    animation: toastSlideIn 0.3s forwards;
+    pointer-events: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.toast.toast-success { border-left-color: #10b981; }
+.toast.toast-error { border-left-color: #ef4444; }
+.toast.toast-warning { border-left-color: #f59e0b; }
+.toast.toast-info { border-left-color: #3b82f6; }
+
+.toast-closing {
+    animation: toastSlideOut 0.3s forwards;
+}
+
+@keyframes toastSlideIn {
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastSlideOut {
+    to { opacity: 0; transform: translateX(100%); }
+}
+
+.toast-content { flex-grow: 1; margin-right: 15px; }
+.toast-title { font-weight: bold; margin-bottom: 5px; color: #ffe066; }
+.toast.toast-success .toast-title { color: #10b981; }
+.toast.toast-error .toast-title { color: #ef4444; }
+.toast.toast-warning .toast-title { color: #f59e0b; }
+.toast.toast-info .toast-title { color: #3b82f6; }
+.toast-message { color: #cbd5e1; }
+
+.toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #d4af37 0%, #f1c40f 100%);
+    width: 100%;
+    animation: toastProgress linear forwards;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+@keyframes toastProgress {
+    0% { width: 100%; }
+    100% { width: 0%; }
+}

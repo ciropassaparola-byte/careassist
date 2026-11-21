@@ -1,0 +1,25 @@
+[07/06/2026 09:00:16] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Ciro Milella
+[07/06/2026 09:12:24] | USER: ADMIN | ACTION: BROADCAST_ON | DETAILS: Inviato messaggio globale: x Ciro Milella domani in direzione
+[10/06/2026 14:06:56] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Ciro Milella
+[10/06/2026 14:07:45] | USER: ADMIN | ACTION: BROADCAST_OFF | DETAILS: Broadcast globale rimosso
+[13/06/2026 17:30:15] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Ciro Milella
+[13/06/2026 17:31:00] | USER: ADMIN | ACTION: UPDATE_USER | DETAILS: Aggiornato utente: Ciro Milella
+[14/06/2026 18:53:24] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Ciro Milella
+[26/07/2026 20:30:42] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: admin
+[26/07/2026 20:30:45] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Nicola Vinciguerra
+[26/07/2026 20:31:01] | USER: ADMIN | ACTION: UPDATE_USER | DETAILS: Aggiornato utente: Nicola Vinciguerra
+[26/07/2026 20:31:04] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Nicola Vinciguerra
+[26/07/2026 20:31:07] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Michelina Simone
+[26/07/2026 20:31:21] | USER: ADMIN | ACTION: UPDATE_USER | DETAILS: Aggiornato utente: Michelina Simone
+[26/07/2026 20:31:24] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Ciro Milella
+[26/07/2026 20:31:27] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Domenico Marella
+[26/07/2026 20:31:31] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Francesco Introna
+[26/07/2026 20:31:33] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Francesco Introna
+[26/07/2026 20:31:33] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Giuseppe Locorotondo
+[29/08/2026 17:45:04] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Ciro Milella
+[29/08/2026 17:45:07] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Domenico Marella
+[19/09/2026 16:18:38] | USER: ADMIN | ACTION: BROADCAST_ON | DETAILS: Inviato messaggio globale: uffa
+[19/09/2026 16:30:14] | USER: ADMIN | ACTION: BROADCAST_ON | DETAILS: Inviato messaggio globale: ciao
+[28/09/2026 17:06:27] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Francesco Introna
+[28/09/2026 17:06:40] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Ciro Milella
+[05/10/2026 10:33:10] | USER: ADMIN | ACTION: VIEW_USER | DETAILS: Visualizzati dettagli per utente: Giuseppe Locorotondo

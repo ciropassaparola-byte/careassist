@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <script src="assets/js/hta_polyfills.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>REGISTRO PRESENZE - C. Milella</title>
+    <HTA:APPLICATION 
+        APPLICATIONNAME="PresenzeRecuperoCM"
+        ID="PresenzeRecuperoCN"
+        BORDER="none"
+        CAPTION="no"
+        INNERBORDER="no"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="no"
+        SYSMENU="no"
+        SCROLL="no"
+        WINDOWSTATE="maximize"
+        ICON="assets/img/app_icon.ico"
+        TRUSTED="yes"
+        NAVIGABLE="yes"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/accessibility.css">
+    <link rel="stylesheet" href="assets/css/presenze.css">
+    <style>
+        html, body {
+            background-color: #0f172a !important;
+            margin: 0;
+            padding: 0;
+        }
+        .refresh-logo-btn {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s !important;
+            cursor: pointer !important;
+        }
+        .refresh-logo-btn:hover {
+            transform: scale(1.18) rotate(15deg) !important;
+            filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.7)) !important;
+        }
+        .refresh-logo-btn:active {
+            transform: scale(0.9) rotate(360deg) !important;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        /* STILE PULSANTI EXPORT PREMIUM */
+        .btn-group-export {
+            display: flex;
+            gap: 10px;
+            margin-left: 15px;
+            padding-left: 15px;
+            border-left: 1px solid #e2e8f0;
+        }
+        .btn-export-premium {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-export-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            filter: brightness(1.1);
+        }
+        .btn-export-premium:active {
+            transform: translateY(0);
+        }
+        .btn-pdf { background: linear-gradient(135deg, #ff416c, #ff4b2b) !important; }
+        .btn-word { background: linear-gradient(135deg, #2b5876, #4e4376) !important; }
+        .btn-excel { background: linear-gradient(135deg, #1d976c, #93f9b9) !important; color: #064e3b !important; }
+        .btn-excel img, .btn-pdf img, .btn-word img { width: 18px; height: 18px; }
+    </style>
+    <script src="assets/js/apple_window_controls.js"></script>
+    <script>
+        // Avvio a Tutto Schermo
+        try {
+            window.moveTo(0, 0);
+            window.resizeTo(screen.availWidth, screen.availHeight);
+        } catch(e) {}
+    </script>
+    <script src="assets/js/ux_premium.js"></script>
+    <script>
+        if(typeof UXPremium !== 'undefined') {
+            UXPremium.ShowSplash("AVVIO SISTEMA...");
+            window.addEventListener("load", function() {
+                setTimeout(function() { UXPremium.HideSplash(); }, 400);
+            });
+        }
+    </script>
+    <!-- PDF Generation Library Removed (Not supported in IE11) -->
+<script>
+function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            var testoGuida = "========================================\n" +
+                             "   GUIDA ALL'USO - ZENITH LOGISTICA\n" +
+                             "========================================\n\n" +
+                             "1. RICERCA GLOBALE:\n" +
+                             "   Digita nella barra in alto per cercare clienti,\n" +
+                             "   citta, telefoni o qualsiasi articolo in tempo reale.\n\n" +
+                             "2. FILTRI SIDEBAR:\n" +
+                             "   Usa i pulsanti a sinistra per filtrare per Provincia\n" +
+                             "   (Bari, Foggia, Taranto) o Dispositivo (Orologio, Braille...).\n\n" +
+                             "3. COPIA DATI:\n" +
+                             "   Clicca sul tasto verde 'Copia' per salvare la scheda\n" +
+                             "   negli appunti e incollarla dove desideri.\n\n" +
+                             "4. SINCRONIZZAZIONE EXCEL:\n" +
+                             "   Dal menu File premi 'Sincronizza Excel Ora' per\n" +
+                             "   aggiornare i dati con gli ultimi file Danea.\n\n" +
+                             "========================================";
+            
+            alert(testoGuida);
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "block";
+                    m.style.visibility = "visible";
+                }
+            } catch(ex) {}
+        }
+
+        function GetFSO() {
+            if (!window.fso && typeof ActiveXObject !== "undefined") {
+                try { window.fso = new ActiveXObject("Scripting.FileSystemObject"); } catch(e) {}
+            }
+            return window.fso;
+        }
+
+        function GetShell() {
+            if (!window.shell && typeof ActiveXObject !== "undefined") {
+                try { window.shell = new ActiveXObject("WScript.Shell"); } catch(e) {}
+            }
+            return window.shell;
+        }
+
+        function ApriStatistiche() {
+            try {
+                var f = GetFSO();
+                var sh = GetShell();
+                var cDir = ".";
+                try {
+                    cDir = f ? f.GetParentFolderName(window.location.pathname.substring(1)) : ".";
+                } catch(ex) { cDir = "."; }
+                
+                var parentDir = f ? f.GetParentFolderName(cDir) : "..";
+                var statsPath = f ? f.BuildPath(parentDir, "statistiche.html") : "../statistiche.html";
+                
+                if (f && !f.FileExists(statsPath)) {
+                    statsPath = f.BuildPath(parentDir, "statistiche.hta");
+                }
+                if (sh) {
+                    sh.Run('mshta.exe "' + statsPath + '"', 1, false);
+                } else {
+                    window.open(statsPath, "_blank");
+                }
+            } catch(e) {
+                alert("Modulo Statistiche attivo.");
+            }
+        }
+
+        function MostraGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.cssText = "display:block !important; visibility:visible !important; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;";
+                }
+            } catch(ex) {}
+        }
+
+        function ChiudiGuidaModal(e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            try {
+                var m = document.getElementById("helpModalOverlay");
+                if (m) {
+                    m.style.display = "none";
+                    m.style.visibility = "hidden";
+                    m.style.cssText = "display:none !important; visibility:hidden !important;";
+                }
+            } catch(ex) {}
+        }
+
+        
+        function KeepMenuOpen(el) {
+            if (!el) return;
+            var current = el;
+            while (current && current.tagName !== 'BODY') {
+                if (current.className && current.className.indexOf('menu-item') > -1) {
+                    if (current._closeTimer) {
+                        clearTimeout(current._closeTimer);
+                        current._closeTimer = null;
+                    }
+                    break;
+                }
+                current = current.parentNode;
+            }
+        }
+
+        function OpenMenu(el) {
+            if (!el) return;
+            if (el._closeTimer) { clearTimeout(el._closeTimer); el._closeTimer = null; }
+            if (!el) return;
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1 && items[i] !== el) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+            el.style.background = 'rgba(56, 189, 248, 0.25)';
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                drop.style.display = 'block';
+                drop.style.visibility = 'visible';
+            }
+        }
+
+        function CloseMenu(el, e) {
+            if (!el) return;
+            e = e || window.event;
+            var target = e ? (e.toElement || e.relatedTarget) : null;
+            try {
+                while (target) {
+                    if (target === el) return;
+                    target = target.parentNode;
+                }
+            } catch(err) {}
+
+            if (el._closeTimer) clearTimeout(el._closeTimer);
+            el._closeTimer = setTimeout(function() {
+                el.style.background = 'transparent';
+                var drop = el.getElementsByTagName('ul')[0];
+                if (drop) {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                }
+            }, 350);
+        }
+
+        function ToggleMenu(el, e) {
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            var drop = el.getElementsByTagName('ul')[0];
+            if (drop) {
+                if (drop.style.display === 'block' && drop.style.visibility === 'visible') {
+                    drop.style.display = 'none';
+                    drop.style.visibility = 'hidden';
+                    el.style.background = 'transparent';
+                } else {
+                    OpenMenu(el);
+                }
+            }
+        }
+
+        document.onclick = function(e) {
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+        };
+
+        var lastExecTime = 0;
+        function ExecAction(actionName, e) {
+            var now = new Date().getTime();
+            if (now - lastExecTime < 200) return;
+            lastExecTime = now;
+
+            if (e) {
+                if (e.stopPropagation) { try { e.stopPropagation(); } catch(err) {} }
+                e.cancelBubble = true;
+            }
+            if (window.event) window.event.cancelBubble = true;
+
+            // Close all dropdowns
+            var items = document.getElementsByTagName('li');
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].className && items[i].className.indexOf('menu-item') > -1) {
+                    var d = items[i].getElementsByTagName('ul')[0];
+                    if (d) {
+                        d.style.display = 'none';
+                        d.style.visibility = 'hidden';
+                    }
+                    items[i].style.background = 'transparent';
+                }
+            }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+        }
+
+            try {
+                if (actionName === 'ricarica') {
+                    if (typeof LoadData === 'function') LoadData();
+                    else location.reload();
+                } else if (actionName === 'sync') {
+                    if (typeof RunSync === 'function') RunSync();
+                    else alert("Sincronizzazione Excel avviata.");
+                } else if (actionName === 'close') {
+                    try { window.close(); } catch(ex) {}
+                } else if (actionName === 'stats') {
+                    ApriStatistiche();
+                } else if (actionName === 'province_all') {
+                    if (typeof SetProvince === 'function') {
+                        var firstNav = document.querySelector('.nav-item');
+                        SetProvince('ALL', firstNav);
+                    } else if (typeof FilterList === 'function') {
+                        FilterList();
+                    } else {
+                        alert("Vista tutte le province selezionata.");
+                    }
+                } else if (actionName === 'reset_filters') {
+                    var input = document.getElementById("txtSearch");
+                    if (input) input.value = "";
+                    if (typeof FilterList === 'function') FilterList();
+                    else alert("Filtri resettati.");
+                } else if (actionName === 'guida') {
+                    MostraGuidaModal(e);
+                } else if (actionName === 'info') {
+                    alert("Sistema Zenith Logistica v1.0\nSistema Integrato Logistica C. Milella 2026");
+                }
+            } catch(errMain) {
+                alert("Comando eseguito: " + actionName);
+            }
+</script>
+</head>
+<body>
+
+    <div class="enterprise-container" role="main">
+        
+        <!-- STRISCIA NERA SUPERIORE (APPLE STYLE) -->
+        <div class="danea-top-black-bar" onmousedown="StartDrag()" style="height:35px; background:#1a1a1a; color:white; display:flex; align-items:center; padding:0 15px; font-size:11px; font-weight:bold; cursor:move;">
+            <div class="apple-controls" onmousedown="event.cancelBubble=true;" style="margin-left:5px; cursor:default;">
+                <div class="apple-btn close" onclick="CloseWindow()" title="Chiudi"></div>
+                <div class="apple-btn minimize" onclick="MinimizeWindow()" title="Minimizza"></div>
+                <div class="apple-btn maximize" onclick="ToggleMaximize()" title="Espandi/Ripristina"></div>
+            </div>
+            <img src="assets/img/app_icon_premium.png?v=2" class="refresh-logo-btn" style="height:26px; width:auto; margin-left:10px; margin-right:12px; border-radius:4px; vertical-align:middle;" alt="Refresh" onclick="location.reload();" title="Ricarica Maschera">
+
+            <span>REGISTRO PRESENZE E RECUPERO ORE - C. MILELLA</span>
+            <div style="flex-grow: 1;"></div>
+            <div id="userProfileWidget" style="display:flex; align-items:center; gap:8px; font-size:0.9rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px; margin-right:8px;">AUTENTICAZIONE...</div>
+            <div id="titleTime" style="font-size:0.8rem; font-weight:800; color:white; background:rgba(255,255,255,0.05); padding:4px 12px; border-radius:20px;">--:--</div>
+        </div>
+
+        <!-- RIGA 0: CLASSIC MENU BAR -->
+        <nav class="classic-menu-bar" role="navigation" aria-label="Menu principale">
+            <div class="menu-item" onclick="toggleMenu(this, event)" role="menuitem" aria-haspopup="true">
+                <u>F</u>ile
+                <div class="submenu">
+                    <div class="submenu-item" onclick="ActionNuovo()"><u>N</u>uova Registrazione <span class="shortcut">Ctrl+N</span></div>
+                    <div class="submenu-item" onclick="ActionSalva()"><u>S</u>alva Dati Giorno <span class="shortcut">Ctrl+S</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="ActionExport('pdf')"><img src="https://img.icons8.com/color/16/pdf-2.png" style="width:14px; margin-right:5px;" alt="">Esporta in <u>P</u>DF</div>
+                    <div class="submenu-item" onclick="ActionExport('word')"><img src="https://img.icons8.com/color/16/word.png" style="width:14px; margin-right:5px;" alt="">Esporta in <u>W</u>ord</div>
+                    <div class="submenu-item" onclick="ActionExport('excel')"><img src="https://img.icons8.com/color/16/ms-excel.png" style="width:14px; margin-right:5px;" alt="">Esporta in <u>E</u>xcel</div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="ActionEsci()"><u>C</u>hiudi Modulo <span class="shortcut">Alt+F4</span></div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)" role="menuitem" aria-haspopup="true">
+                <u>M</u>odifica
+                <div class="submenu">
+                    <div class="submenu-item" onclick="ActionAnnulla()"><u>A</u>nnulla modifiche correnti</div>
+                    <div class="submenu-item" onclick="ActionNuovo()"><u>S</u>vuota campi form</div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="document.getElementById('lblRoadmapData').click()">Vai a <u>o</u>ggi</div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)" role="menuitem" aria-haspopup="true">
+                <u>V</u>isualizza
+                <div class="submenu">
+                    <div class="submenu-item" onclick="ActionAggiorna()"><u>A</u>ggiorna Maschera <span class="shortcut">F5</span></div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="ShowMonthPicker()"><i class="fa fa-calendar" style="margin-right:8px;" aria-hidden="true"></i>Vai al <u>M</u>ese...</div>
+                    <div class="submenu-divider"></div>
+                    <div class="submenu-item" onclick="alert('Funzione in arrivo: Filtro Ferie')">Mostra solo <u>F</u>erie</div>
+                    <div class="submenu-item" onclick="alert('Funzione in arrivo: Filtro Malattia')">Mostra solo <u>M</u>alattia</div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="toggleMenu(this, event)" role="menuitem" aria-haspopup="true">
+                <u>A</u>iuto
+                <div class="submenu">
+                    <div class="submenu-item" onclick="alert('GUIDA RAPIDA\n\n1. Seleziona il mese in alto.\n2. Clicca su una riga per modificare gli orari.\n3. Salva ogni riga singolarmente o con il tasto Conferma.\n4. Non puoi inserire ore lavorative per date future se non giustificate (Ferie/Malattia/104).')"><u>G</u>uida all'uso</div>
+                    <div class="submenu-item" onclick="alert('SISTEMA PRESENZE V2.0\nDistribuito per C. Milella')"><u>I</u>nformazioni su...</div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- RIGA 1: RIBBON BAR ENTERPRISE UNIVERSALE -->
+        <header class="danea-ribbon" role="toolbar" aria-label="Strumenti operativi">
+            <div class="ribbon-tabs" role="tablist">
+                <div class="ribbon-tab active" onclick="switchUniversalTab('nav-operazioni', this)" role="tab" aria-selected="true">Console Presenze</div>
+                <div class="ribbon-tab" onclick="switchUniversalTab('nav-moduli', this)" role="tab" aria-selected="false">Navigazione Moduli</div>
+            </div>
+            
+            <!-- GRUPPO 1: AZIONI LOCALI (Default) -->
+            <div id="nav-operazioni" class="ribbon-items">
+                <button class="ribbon-item" onclick="EsportaReportPresenze()" aria-label="Esporta registro in PDF">
+                    <div class="icon-img"><img src="https://img.icons8.com/color/48/pdf-2.png" alt=""></div>
+                    <span aria-hidden="true">Stampa PDF</span>
+                </button>
+                <button class="ribbon-item" onclick="ActionExport('word')" aria-label="Esporta registro in formato Word">
+                    <div class="icon-img"><img src="https://img.icons8.com/color/48/word.png" alt=""></div>
+                    <span aria-hidden="true">Esporta Word</span>
+                </button>
+                <button class="ribbon-item" onclick="ActionExport('excel')" aria-label="Esporta registro in formato Excel">
+                    <div class="icon-img"><img src="https://img.icons8.com/color/48/ms-excel.png" alt=""></div>
+                    <span aria-hidden="true">Foglio Excel</span>
+                </button>
+                <button class="ribbon-item" onclick="ApriCartellaDestinazione()" aria-label="Apri cartella destinazione dei salvataggi">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/folder-invoices.png" alt=""></div>
+                    <span aria-hidden="true">Apri Cartella</span>
+                </button>
+                <div class="ribbon-separator"></div>
+                <button class="ribbon-item danger" onclick="Script_BackToDashboard()" aria-label="Chiudi modulo e torna alla dashboard - Scorciatoia Alt+F4">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt=""></div>
+                    <span aria-hidden="true">Chiudi Modulo</span>
+                </button>
+            </div>
+
+            <!-- GRUPPO 2: MODULI (Universale) -->
+            <div id="nav-moduli" class="ribbon-items" style="display:none;">
+                <button class="ribbon-item" onclick="NavigaModulo('dashboard.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/home.png" alt="Start"></div>
+                    <span>Start</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('anagrafica.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/address-book.png" alt="Anagrafica"></div>
+                    <span>Anagrafica</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('articoli.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/box.png" alt="Articoli"></div>
+                    <span>Articoli</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('consegne.html')">
+                    <div class="icon-img"><img src="assets/img/icona_consegne_trasparente.png" alt="Consegne" style="width:40px; height:auto;"></div>
+                    <span>Consegne</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('storico.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/time-machine.png" alt="Storico"></div>
+                    <span>Storico</span>
+                </button>
+                <button class="ribbon-item" onclick="NavigaModulo('presenze.html')">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/stopwatch.png" alt="Presenze"></div>
+                    <span>Presenze</span>
+                </button>
+                <button class="top-bar-btn" id="btnActionWord" title="Esporta in Word">
+                    <img src="https://img.icons8.com/fluency/48/microsoft-word-2019.png">
+                    Esporta Word
+                </button>
+                <button class="top-bar-btn" id="btnAdminGlobal" title="MOSTRA TUTTE LE ORE DI TUTTI I PROFILI" style="background: #fff4e5; border: 1px solid #ffcc80;">
+                    <img src="https://img.icons8.com/fluency/48/checked-user-male.png">
+                    Sblocco Totale Ore
+                </button>
+
+            <div class="separator-v"></div>
+                <button class="ribbon-item danger" id="btnChiudi">
+                    <div class="icon-img"><img src="https://img.icons8.com/fluency/48/shutdown.png" alt="Chiudi"></div>
+                    <span>Spegni Sistema</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- RIGA 2: DARK NAVIGATION BAR (FASCIA BLU MODELLO AGENDA) -->
+        <nav class="danea-nav-bar" role="status">
+            <div class="nav-left">
+                <span class="nav-breadcrumb">REGISTRO PRESENZE E RECUPERO</span>
+            </div>
+            <div class="nav-right" style="display:flex; align-items:center; gap:10px;">
+                <div class="search-container" style="display:flex; align-items:center; background:white; border-radius:4px; padding:2px 5px;">
+                    <i class="fa fa-search" style="color:#666; font-size:12px;" aria-hidden="true"></i>
+                    <label for="txtSearchGiorno" class="sr-only">Cerca giorno</label>
+                    <input type="text" id="txtSearchGiorno" placeholder="Cerca giorno..." style="border:none; height:20px; font-size:11px; width:150px; outline:none; padding-left:5px;">
+                </div>
+                <button class="nav-btn-grey" style="background:#f1f3f6; border:1px solid #ccc; font-size:10px; padding:3px 8px; border-radius:3px; cursor:pointer;" aria-label="Raggruppa dati">
+                    <i class="fa fa-th-list" aria-hidden="true"></i> Raggruppa
+                </button>
+                <button class="nav-btn-grey" style="background:#f1f3f6; border:1px solid #ccc; font-size:10px; padding:3px 8px; border-radius:3px; cursor:pointer;" aria-label="Filtra dati">
+                    <i class="fa fa-filter" aria-hidden="true"></i> Filtra
+                </button>
+            </div>
+        </nav>
+        
+        <!-- AREA MESSAGGI DI SISTEMA (Spostata in alto per massima visibilità) -->
+        <div style="background: #eff6ff; border-bottom: 1px solid #bfdbfe; padding: 10px 15px; font-size: 13px; color: #1e40af; font-weight: 500; display:flex; align-items:center; gap:12px;">
+            <img src="https://img.icons8.com/fluency/48/info.png" style="width:18px;" alt="">
+            <span id="lblStatusMessage">Sistema pronto. Seleziona un giorno dal registro per gestire gli orari.</span>
+        </div>
+
+        <!-- AREA CENTRALE -->
+        <div class="enterprise-main">
+            
+            <!-- SIDEBAR BLU A SINISTRA CON FILTRI E STATISTICHE -->
+            <aside class="danea-side-filters" role="region" aria-label="Riepilogo e Statistiche">
+                
+                <!-- TIMBRATORE VIRTUALE HR -->
+                <div class="filter-group" style="text-align: center; margin-bottom: 20px; border: 2px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 15px; background: rgba(56, 189, 248, 0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <h3 style="color: #38bdf8; margin-bottom: 10px; font-size: 11px;">⏱️ TIMBRATORE RAPIDO</h3>
+                    <button onclick="TimbraOra()" style="width: 100%; padding: 15px 0; border-radius: 50px; background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: white; font-weight: 900; font-size: 13px; border: 2px solid #fca5a5; cursor: pointer; box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s;">
+                        👆 TIMBRA INGRESSO/USCITA
+                    </button>
+                    <div id="lblUltimaTimbratura" style="font-size: 9px; color: #94a3b8; margin-top: 8px; font-style: italic;">
+                        Nessuna timbratura recente
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>RIEPILOGO MENSILE</h3>
+                    <!-- Badge Ore Lavorate: Grande, ad alta visibilità (Smeraldo) -->
+                    <div class="side-badge-stats" aria-live="polite" style="margin-bottom: 12px; background: #002d59;">
+                        <div id="lblBadgeLavorateTot" style="color: #34d399; font-size: 32px; text-shadow: 0 2px 8px rgba(52, 211, 153, 0.3);">0h 00m</div>
+                        <small style="color: #a7f3d0;">Totale Ore Lavorate</small>
+                        <!-- Dynamic progress bar -->
+                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 10px; overflow: hidden;">
+                            <div id="progressMensile" style="width: 0%; height: 100%; background: #34d399; box-shadow: 0 0 8px rgba(52, 211, 153, 0.6); transition: width 0.5s ease;"></div>
+                        </div>
+                        <small id="lblProgressPerc" style="font-size: 8px; margin-top: 4px; color: #34d399; opacity: 0.9; text-transform: uppercase; letter-spacing:0.3px;">0% del Target</small>
+                    </div>
+                    <!-- Badge Recupero: Più piccolo, di supporto (Ambra) -->
+                    <div class="side-badge-stats" aria-live="polite" style="background: #001a33; padding: 12px 15px; border-color: rgba(251, 191, 36, 0.2);">
+                        <div id="lblBadgeCount" style="font-size: 22px; color: #fbbf24; text-shadow: 0 2px 6px rgba(251, 191, 36, 0.2);">0h 00m</div>
+                        <small style="color: #fde68a; font-size: 8px; margin-top: 2px;">Recupero / Eccedenza</small>
+                    </div>
+
+                    <!-- Griglia Mini Statistiche Mensili -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+                        <div style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2); text-align: center;">
+                            <div id="lblStatGiorniLavorati" style="font-size: 15px; font-weight: 800; color: #38bdf8;">0 gg</div>
+                            <small style="font-size: 8px; color: #94a3b8; text-transform: uppercase;">Lavorati</small>
+                        </div>
+                        <div style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2); text-align: center;">
+                            <div id="lblStatFerie" style="font-size: 15px; font-weight: 800; color: #38bdf8;">0 gg</div>
+                            <small style="font-size: 8px; color: #94a3b8; text-transform: uppercase;">Ferie</small>
+                        </div>
+                        <div style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2); text-align: center;">
+                            <div id="lblStatMalattia" style="font-size: 15px; font-weight: 800; color: #a78bfa;">0 gg</div>
+                            <small style="font-size: 8px; color: #94a3b8; text-transform: uppercase;">Malatt. / 104</small>
+                        </div>
+                        <div style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2); text-align: center;">
+                            <div id="lblStatPermessi" style="font-size: 15px; font-weight: 800; color: #f43f5e;">0h 00m</div>
+                            <small style="font-size: 8px; color: #94a3b8; text-transform: uppercase;">Permessi</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>CALENDARIO</h3>
+                    <div class="cal-wrapper">
+                        <div class="cal-header">
+                            <span class="nav-btn" id="btnCalPrev">◀</span>
+                            <span id="calMonthTitle">...</span>
+                            <span class="nav-btn" id="btnCalNext">▶</span>
+                        </div>
+                        <div id="miniCalendar">
+                            <!-- Popolato via JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group" style="display:flex; justify-content:center; padding: 20px 0;">
+                    <div class="analog-clock">
+                        <div class="hand hour" id="clock-hour"></div>
+                        <div class="hand minute" id="clock-minute"></div>
+                        <div class="hand second" id="clock-second"></div>
+                        <div class="center-dot"></div>
+                    </div>
+                </div>
+
+                <div class="filter-group" style="margin-top:auto; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 15px; border-top: 2px solid #34d399;">
+                    <h3 style="color: #34d399;">MATURATO ANNUO</h3>
+                    <!-- Ferie Visual Progress -->
+                    <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin: 15px 0;">
+                        <div id="barFerie" style="width: 75%; height: 100%; background: linear-gradient(90deg, #34d399, #10b981); box-shadow: 0 0 10px rgba(52,211,153,0.5);"></div>
+                    </div>
+                    
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px;">
+                        <span>Tot. Maturato:</span> <b id="lblAnnuoMat" aria-live="polite" style="color:#e2e8f0;">...</b>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px;">
+                        <span>Tot. Fruito:</span> <b id="lblAnnuoFru" aria-live="polite" style="color:#fca5a5;">...</b>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-top:10px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:10px;">
+                        <span>CREDITO RESIDUO:</span> <b id="lblTotaleCredito" style="color:#2ecc71; text-shadow: 0 0 5px rgba(46,204,113,0.4);" aria-live="polite">...</b>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="grid-section">
+                <!-- Selettore Mese in alto alla griglia -->
+                <div class="grid-header-actions">
+                     <div class="month-selector-box">
+                          <label>MESE DI RIFERIMENTO:</label>
+                          <select id="cmbMeseAnno"></select>
+                     </div>
+                     
+                     <!-- FILTRO PROFILI (Visibile solo all'Admin) -->
+                     <div id="adminUserFilterBox" style="display:none; align-items:center; gap:10px; padding:4px 10px; background:white; border:1px solid #ffcc80; border-radius:4px; margin-left:15px;">
+                          <label for="cmbAdminUserFilter" style="font-size:10px; font-weight:800; color:#e67e00;">👤 FILTRO PROFILO:</label>
+                          <select id="cmbAdminUserFilter" style="padding:2px 8px; border:none; font-weight:700; color:#1e293b; background:transparent; outline:none;" onchange="CaricaDatiMese(currentMeseStr)">
+                              <option value="TUTTI">-- TUTTI I PROFILI --</option>
+                          </select>
+                          <button id="btnRepairOrphans" onclick="RepairOrphanRecords()" title="Reclama i record senza nome per questo utente" 
+                                  style="display:none; background: #fff4e5; border: 1px solid #ffcc80; color: #d35400; padding: 2px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 10px; white-space: nowrap;">
+                              🔧 Ripara Orfani
+                          </button>
+                     </div>
+                </div>
+
+                <div class="grid-wrapper">
+                    <table class="enterprise-grid" role="grid" aria-readonly="true">
+                        <thead>
+                            <tr role="row">
+                                <th style="width:40px" role="columnheader">GG</th>
+                                <th style="width:55px" role="columnheader">Sett.</th>
+                                <th style="width:115px; text-align:center" role="columnheader">Azioni</th>
+                                <th style="width:60px" role="columnheader">E1</th>
+                                <th style="width:60px" role="columnheader">U1</th>
+                                <th style="width:60px" role="columnheader">E2</th>
+                                <th style="width:60px" role="columnheader">U2</th>
+                                <th style="width:80px" role="columnheader">Recupero</th>
+                                <th style="width:80px" role="columnheader">Progr.</th>
+                                <th style="width:120px" role="columnheader">PROFILO</th>
+                                <th style="width:auto" role="columnheader">Note / Motivazioni</th>
+                            </tr>
+                        <tbody id="lstPresenzeBody" aria-live="polite">
+                            <!-- Popolato via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- SCHEDA DETTAGLIO ORIZZONTALE (INTEGRATA NELLA GRID SECTION) -->
+                <div class="danea-editor-panel-horizontal" role="region" aria-label="Editor registrazione giorno">
+                     <div class="editor-header-row">
+                        <h2 id="lblInfoGiorno" aria-live="polite">SELEZIONA UN GIORNO DAL REGISTRO...</h2>
+                        <div class="work-summary-box" aria-live="polite">
+                             LAVORATE: <span id="lblOreLavorate">0h 00m</span>
+                             <span id="lblRecuperoOggi" class="mini-badge-rec">0h 00m</span>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-controls-row">
+                        <div class="ctrl-group">
+                            <label>ENTRATA 1</label>
+                            <div class="time-input-wrapper">
+                                <input type="text" id="cmbE1" readonly>
+                                <span class="time-picker-trigger" onclick="OpenTimePicker('cmbE1')" title="Apri selettore orario">🕒</span>
+                            </div>
+                        </div>
+                        <div class="ctrl-group">
+                            <label>USCITA 1</label>
+                            <div class="time-input-wrapper">
+                                <input type="text" id="cmbU1" readonly>
+                                <span class="time-picker-trigger" onclick="OpenTimePicker('cmbU1')" title="Apri selettore orario">🕒</span>
+                            </div>
+                        </div>
+                        <div class="ctrl-group">
+                            <label>ENTRATA 2</label>
+                            <div class="time-input-wrapper">
+                                <input type="text" id="cmbE2" readonly>
+                                <span class="time-picker-trigger" onclick="OpenTimePicker('cmbE2')" title="Apri selettore orario">🕒</span>
+                            </div>
+                        </div>
+                        <div class="ctrl-group">
+                            <label>USCITA 2</label>
+                            <div class="time-input-wrapper">
+                                <input type="text" id="cmbU2" readonly>
+                                <span class="time-picker-trigger" onclick="OpenTimePicker('cmbU2')" title="Apri selettore orario">🕒</span>
+                            </div>
+                        </div>
+                        <div class="ctrl-group">
+                            <label>PERMESSI</label>
+                            <input type="text" id="txtPermessi" class="input-mini">
+                        </div>
+                        <div class="ctrl-group-checks">
+                            <label><input type="checkbox" id="chkFerie"> FERIE</label>
+                            <label><input type="checkbox" id="chkMalattia"> MALAT.</label>
+                            <label><input type="checkbox" id="chkL104"> L.104</label>
+                            <label><input type="checkbox" id="chkRecuperato"> RECU.</label>
+                        </div>
+                        
+                        <div class="ctrl-actions">
+                            <button class="btn-danea-success" id="btnSalva" title="Salva modifiche" aria-label="Conferma e salva modifiche del giorno - Scorciatoia Ctrl+S">
+                                <img src="https://img.icons8.com/fluency/48/save-as.png" style="width:20px;" alt="">
+                                CONFERMA
+                            </button>
+                            <button id="btnLoadStd" onclick="ApplicaOrarioStandard()" title="Carica il tuo orario standard" style="margin-left:5px; background: #f0f7ff; border: 1px solid #005a9e; color: #005a9e; padding: 10px 15px; border-radius: 4px; cursor:pointer; font-weight:bold; font-size:11px; display:inline-flex; align-items:center; gap:5px;">
+                                <img src="https://img.icons8.com/fluency/48/star.png" style="width:18px;"> STANDARD
+                            </button>
+                            <button id="btnCopyPrev" class="btn-danea-purple" onclick="CopiaDaIeri()" title="Copia dati da ultimo giorno registrato" style="margin-left:5px;">
+                                <img src="https://img.icons8.com/fluency/48/copy.png" alt=""> COPIA IERI
+                            </button>
+                            <button class="btn-danea-danger" id="btnElimina" title="Elimina record" style="margin-left:5px; border-color:#e74c3c;" aria-label="Elimina registrazione del giorno">
+                                <img src="https://img.icons8.com/fluency/48/delete-trash.png" style="width:20px;" alt="">
+                            </button>
+                            <button class="btn-danea-cyan" onclick="EsportaReportPresenze()" title="Stampa Riepilogo Mensile Ufficiale A4 / PDF" style="margin-left:5px;">
+                                <img src="https://img.icons8.com/fluency/48/print.png" style="width:18px;" alt=""> STAMPA RIEPILOGO
+                            </button>
+                            <div class="btn-group-export">
+                                <button class="btn-export-premium btn-word" onclick="ActionExport('word')" title="Esporta in Word">
+                                    <img src="https://img.icons8.com/color/48/word.png" alt=""> WORD
+                                </button>
+                                <button class="btn-export-premium btn-excel" onclick="ActionExport('excel')" title="Esporta in Excel">
+                                    <img src="https://img.icons8.com/color/48/ms-excel.png" alt=""> EXCEL
+                                </button>
+                                <button class="btn-export-premium" onclick="ApriCartellaDestinazione()" title="Apri Cartella Destinazione" style="background: linear-gradient(135deg, #e2e8f0, #cbd5e1) !important; color: #1e293b !important; border: 1px solid #cbd5e1 !important;">
+                                    <img src="https://img.icons8.com/fluency/48/folder-invoices.png" alt=""> CARTELLA
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="editor-notes-row" style="display:flex; flex-direction:row; align-items:flex-end; width:100%;">
+                        <div style="flex: 0 0 160px; margin-right: 15px !important;">
+                            <label>PROFILO OPERATORE</label>
+                            <input type="text" id="txtProfiloCorrente" readonly style="background:#f1f5f9; font-weight:600; color:#475569; width:100%">
+                        </div>
+                        <div style="flex: 1; margin-right: 15px !important;">
+                            <label>NOTE UFFICIALI (Excel)</label>
+                            <input type="text" id="txtNote" placeholder="Es. Supporto tecnico per evento X..." style="width:100%">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="color:#d97706; font-weight:bold;">NOTE PERSONALI (NO Excel) 🔒</label>
+                            <input type="text" id="txtNotePrivate" placeholder="Es. Recupero ore il giorno seguente..." style="width:100%; border:1px solid #ffcc80;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATUS BAR RIMOSSA DA QUI PER EVITARE OVERLAP -->
+            </div>
+
+        </div>
+
+        <!-- Bottone invisibile per trigger -->
+        <button id="btnPDF" style="display:none;"></button>
+
+        <!-- SELETTORE MESE MODALE (VIGNETTA PRO) -->
+        <div id="monthPickerOverlay" class="tp-overlay">
+            <div class="tp-modal" style="width:450px; background: #f8fafc;">
+                <div class="tp-header" style="background: #005a9e; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+                    <button class="year-nav-btn" onclick="ChangeYearPicker(-1)">◀</button>
+                    <span id="pickerYearTitle" style="font-size: 18px;">2026</span>
+                    <button class="year-nav-btn" onclick="ChangeYearPicker(1)">▶</button>
+                </div>
+                <div class="month-grid-container">
+                    <div class="month-btn-wrapper" id="monthGrid">
+                        <!-- Generato dinamicamente via JS -->
+                    </div>
+                </div>
+                <div class="tp-footer" style="padding: 10px; background: #fff; border-top: 1px solid #e2e8f0;">
+                    <button class="btn-tp-cancel" onclick="CloseMonthPicker()" style="width: 100%; border-color: #94a3b8; color: #64748b;">ANNULLA</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELETTORE ORARIO MODAL (ENTERPRISE STYLE) -->
+        <div id="tpOverlay" class="tp-overlay">
+            <div class="tp-modal">
+                <div class="tp-header">SELEZIONE ORARIO</div>
+                <div class="tp-body">
+                    <div class="tp-col">
+                        <div class="tp-col-title">ORE</div>
+                        <div class="tp-scroll" id="tp-hours">
+                            <!-- Popolato via JS -->
+                        </div>
+                    </div>
+                    <div class="tp-col">
+                        <div class="tp-col-title">MINUTI</div>
+                        <div class="tp-scroll" id="tp-minutes">
+                            <!-- Popolato via JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="tp-footer">
+                    <button class="btn-tp-cancel" onclick="CloseTimePicker()">ANNULLA</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/js/presenze_hta.js?v=4.0"></script>
+
+    <script src="assets/js/accessibility.js"></script>
+<script src="assets/js/hacker_mode.js"></script>
+
+<script src="./assets/js/global_context.js"></script>
+<!-- MODAL GUIDA ALL'USO (MSHTA REFLOW COMPATIBLE) -->
+<div id="helpModalOverlay" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2, 6, 23, 0.88); z-index:200000;">
+    <div style="position:absolute; top:50%; left:50%; margin-top:-260px; margin-left:-320px; width:640px; background:#0f172a; border:2px solid #38bdf8; border-radius:16px; box-shadow:0 0 35px rgba(56, 189, 248, 0.4); padding:25px; color:#f8fafc; font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;">
+        <!-- Header Modal -->
+        <div style="border-bottom:1px solid #38bdf8; padding-bottom:12px; margin-bottom:15px; position:relative;">
+            <div style="font-family:'Outfit', sans-serif; font-size:1.2rem; font-weight:800; color:#38bdf8; letter-spacing:0.5px;">
+                &#128216; GUIDA ALL'USO - ZENITH MATERIALI
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Manuale Rapido Operativo &amp; Scorciatoie</div>
+            <div onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="cursor:pointer; position:absolute; top:0; right:0; width:30px; height:30px; background:#1e293b; border:1px solid #38bdf8; border-radius:50%; text-align:center; line-height:28px; color:#f8fafc; font-weight:bold; font-size:1.2rem; user-select:none;">&times;</div>
+        </div>
+
+        <!-- Content Modal -->
+        <div style="height:350px; overflow-y:auto; padding-right:5px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                <tr>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#fbbf24; font-size:0.88rem; margin-bottom:6px;">
+                                &#128269; 1. Ricerca Globale Istantanea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Digita nel campo in alto per filtrare in tempo reale clienti, città, telefoni o specifiche attrezzature assegnate.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:50%; padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#38bdf8; font-size:0.88rem; margin-bottom:6px;">
+                                &#128205; 2. Filtri Provincia &amp; Articolo
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Usa la barra laterale sinistra per isolare velocemente le province (Bari, Foggia, Taranto) o i dispositivi (Orologio, Sveglia, Braille).
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#34d399; font-size:0.88rem; margin-bottom:6px;">
+                                &#128203; 3. Pulsanti Copia Dati
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Clicca sul tasto verde <b>Copia</b> per salvare la scheda cliente negli appunti e trasferirla nei promemoria o report.
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:6px; vertical-align:top;">
+                        <div style="background:#1e293b; border:1px solid rgba(255,255,255,0.1); padding:12px; border-radius:10px;">
+                            <div style="font-family:'Outfit', sans-serif; font-weight:800; color:#a78bfa; font-size:0.88rem; margin-bottom:6px;">
+                                &#128259; 4. Sincronizzazione Danea
+                            </div>
+                            <div style="font-size:0.78rem; color:#cbd5e1; line-height:1.4;">
+                                Dal menu <b>File</b> o <b>Strumenti</b> premi <i>Sincronizza Excel Ora</i> per ricaricare le anagrafiche aggiornate.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; padding:12px; border-radius:10px; font-size:0.8rem; color:#cbd5e1;">
+                <b style="color:#38bdf8;">&#9889; Suggerimento Rapido:</b> Per resettare tutti i filtri attivi e tornare alla vista completa, seleziona <b>TUTTE LE PROVINCE</b> ed <b>ELENCO COMPLETO</b> dalla sidebar a sinistra.
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); text-align:right;">
+            <span style="font-size:0.75rem; color:#94a3b8; float:left; margin-top:8px;">Sistema Zenith Materiali v1.0 &bull; C. Milella 2026</span>
+            <button onmousedown="ChiudiGuidaModal(event); return false;" onclick="ChiudiGuidaModal(event);" style="background:#0284c7; color:white; border:1px solid #38bdf8; padding:8px 24px; border-radius:8px; font-weight:800; font-size:0.85rem; cursor:pointer; font-family:'Outfit', sans-serif;">HO CAPITO</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

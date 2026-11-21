@@ -1,0 +1,27 @@
+===========================================================
+    GUIDA AL RIPRISTINO DEL SISTEMA (BACKUP)
+===========================================================
+
+Se stai leggendo questo file dentro un archivio .ZIP, 
+attieniti scrupolosamente a queste istruzioni:
+
+1. NON avviare il programma direttamente dallo ZIP.
+   Il sistema HTA richiede l'accesso a file esterni (CSS, 
+   Immagini, Database) che non possono essere letti 
+   correttamente se compressi.
+
+2. ESTRAI IL CONTENUTO.
+   - Clicca con il tasto destro sul file .ZIP
+   - Seleziona "Estrai tutto..."
+   - Scegli una cartella sul desktop (es. "Sistema_Ripristinato")
+   - Attendi il completamento dell'operazione.
+
+3. AVVIA DALLA CARTELLA ESTRATTA.
+   Una volta terminata l'estrazione, apri la nuova cartella 
+   e clicca su "== CLICCA QUI PER INIZIARE ==.bat" 
+   o apri direttamente "login.hta".
+
+-----------------------------------------------------------
+Backup generato automaticamente dal Sistema Logistica
+Data: Check del nome file per il timestamp.
+-----------------------------------------------------------

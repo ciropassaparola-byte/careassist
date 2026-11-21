@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario Attrezzi - C. Milella</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="html5-qrcode.min.js" type="text/javascript"></script>
+    <script src="qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="top-nav">
+            <div class="logo">
+                <span class="logo-icon">🛠️</span>
+                <h1>INVENTARIO <span>ATTREZZI</span></h1>
+        <div style="font-size: 0.8rem; font-weight: 800; color: #f59e0b; margin-top: 2px;">👑 CIRO MILELLA</div>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button id="btnOpenBackupFolder" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'" title="Apri cartella dei salvataggi">
+                    Apri Cartella
+                </button>
+                <button id="btnBackupInventarioApp" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 12px; font-size: 13px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); transition: all 0.3s; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    📁 FULL BACKUP .ZIP
+                </button>
+                <button class="btn" id="btnCronologia" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+                    🕒 Cronologia
+                </button>
+                <button class="btn btn-danger" id="shutdownBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Torna al Menu
+                </button>
+            </div>
+        </header>
+
+        <main class="main-layout">
+            <!-- SIDEBAR -->
+            <aside class="sidebar glass-panel">
+                <h2 class="section-title" id="formTitle">Nuovo Attrezzo</h2>
+                
+                <form id="addForm" class="add-form">
+                    <input type="hidden" id="editItemId" value="">
+                    <div class="input-group">
+                        <label for="attrezzoNome">Nome Attrezzo</label>
+                        <input type="text" id="attrezzoNome" placeholder="Es. Smerigliatrice Bosch" required autocomplete="off">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="attrezzoPosizione" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                            <span>Posizione</span>
+                            <button type="button" id="btnManageLocations" style="background:none; border:none; color:#d4af37; cursor:pointer; font-size:13px; font-weight:600; transition: color 0.2s;" onmouseover="this.style.color='#f3e5ab'" onmouseout="this.style.color='#d4af37'">Gestisci ⚙️</button>
+                        </label>
+                        <select id="attrezzoPosizione">
+                            <!-- Opzioni caricate dinamicamente -->
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="attrezzoQuantita">Quantità</label>
+                        <input type="number" id="attrezzoQuantita" value="1" min="1" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="attrezzoCategoria">Categoria</label>
+                        <select id="attrezzoCategoria">
+                            <option value="Elettroutensili">Elettroutensili</option>
+                            <option value="Manuali" selected>Attrezzi Manuali</option>
+                            <option value="Misurazione">Misurazione</option>
+                            <option value="Consumabili">Consumabili (viti, chiodi, ecc.)</option>
+                            <option value="Giardinaggio">Giardinaggio</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="attrezzoStato">Stato</label>
+                        <select id="attrezzoStato">
+                            <option value="Disponibile" selected>🟢 Disponibile</option>
+                            <option value="In Prestito">🟠 In Prestito</option>
+                            <option value="In Manutenzione">🔴 In Manutenzione</option>
+                            <option value="Dismesso">⚫ Dismesso</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo condizionale Prestiti -->
+                    <div class="input-group" id="prestitoGroup" style="display: none; animation: zoomIn 0.3s ease-out;">
+                        <label for="attrezzoPrestatoA" style="color: #fb923c;">A chi l'hai prestato?</label>
+                        <input type="text" id="attrezzoPrestatoA" placeholder="Es. Mario Rossi" autocomplete="off" style="border-color: rgba(251, 146, 60, 0.5);">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="attrezzoNote">Note / Dettagli</label>
+                        <input type="text" id="attrezzoNote" placeholder="Es. Ripiano 3, Scatola Geox" autocomplete="off">
+                    </div>
+
+                    <div class="input-group file-group">
+                        <label for="attrezzoFoto">📸 Foto (Galleria o Scatta da Cellulare)</label>
+                        <div class="file-upload-wrapper" id="fileWrapper">
+                            <input type="file" id="attrezzoFoto" accept="image/*" capture="environment">
+                            <div class="file-upload-visual">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                <span id="fileName">Scatta foto o scegli immagine...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary" id="saveBtn" style="flex:1;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                            SALVA
+                        </button>
+                        <button type="button" class="btn btn-danger" id="cancelEditBtn" style="display:none; padding:10px;">
+                            ✖
+                        </button>
+                    </div>
+                </form>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <section class="content-area">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">🛠️</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statTotale">0</span>
+                            <span class="stat-label">Attrezzi Totali</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: #4ade80;">🟢</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statDisponibili" style="color: #4ade80;">0</span>
+                            <span class="stat-label">Disponibili</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: #fb923c;">🤝</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statPrestiti" style="color: #fb923c;">0</span>
+                            <span class="stat-label">In Prestito</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: #ef4444;">🔧</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statManutenzione" style="color: #ef4444;">0</span>
+                            <span class="stat-label">Da Riparare</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="filters-container glass-panel" style="padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                    <div class="search-wrapper" style="flex:1; min-width: 200px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); height: 45px;">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="ricerca" placeholder="Cerca..." autocomplete="off">
+                    </div>
+                    
+                    <button class="btn btn-primary" id="btnScanQR" style="height: 45px; background: rgba(0,0,0,0.3); border: 1px solid rgba(212,175,55,0.5); padding: 0 15px;" title="Scansiona QR Code">
+                        📷 Scan QR
+                    </button>
+                    
+                    <button class="btn" id="btnPrintQRLabels" style="height: 45px; background: linear-gradient(135deg, rgba(212,175,55,0.25), rgba(245,158,11,0.3)); border: 1px solid #d4af37; color: #fef08a; padding: 0 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'" title="Stampa Foglio Etichette con QR Code per Scaffali e Valigette">
+                        🖨️ Stampa Etichette QR
+                    </button>
+                    
+                    <select id="filterCategoria" class="filter-select">
+                        <option value="">Tutte le Categorie</option>
+                        <option value="Elettroutensili">Elettroutensili</option>
+                        <option value="Manuali">Attrezzi Manuali</option>
+                        <option value="Misurazione">Misurazione</option>
+                        <option value="Consumabili">Consumabili</option>
+                        <option value="Giardinaggio">Giardinaggio</option>
+                        <option value="Altro">Altro</option>
+                    </select>
+
+                    <select id="filterStato" class="filter-select">
+                        <option value="">Tutti gli Stati</option>
+                        <option value="Disponibile">🟢 Disponibile</option>
+                        <option value="In Prestito">🟠 In Prestito</option>
+                        <option value="In Manutenzione">🔴 In Manutenzione</option>
+                        <option value="Dismesso">⚫ Dismesso</option>
+                    </select>
+
+                    <button class="btn btn-primary" id="btnExportCSV" style="height: 45px; margin-left: auto;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Export CSV
+                    </button>
+                </div>
+
+                <div class="grid" id="listaAttrezzi">
+                    <!-- Cards will be injected here via JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Location Manager Modal -->
+    <div id="locationModal" class="modal-overlay">
+        <div class="modal-content glass-panel" style="width: 420px; max-width: 90vw; padding: 25px;">
+            <h3 style="margin-top:0; color:#d4af37; display:flex; justify-content:space-between; font-size:18px; margin-bottom: 20px;">
+                Gestisci Posizioni
+                <button id="btnCloseLocationModal" style="background:none; border:none; color:#cbd5e1; cursor:pointer; font-size:20px; line-height:1;">✖</button>
+            </h3>
+            
+            <div style="margin-bottom: 20px; display:flex; gap: 10px;">
+                <input type="text" id="newLocationInput" placeholder="Aggiungi nuova (es. Soffitta)" autocomplete="off" style="flex:1; padding:12px 15px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.3); color:#fff; outline:none; font-family:inherit;">
+                <button id="btnAddLocation" class="btn btn-primary" style="padding: 0 20px; min-width:unset;">➕</button>
+            </div>
+            
+            <div id="locationsList" style="max-height: 280px; overflow-y:auto; background:rgba(0,0,0,0.15); border-radius:10px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+                <!-- Lista dinamica -->
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="modal-overlay">
+        <div class="modal-content glass-panel" style="width: 500px; max-width: 90vw; padding: 25px;">
+            <h3 style="margin-top:0; color:#d4af37; display:flex; justify-content:space-between; font-size:18px; margin-bottom: 20px;">
+                Cronologia Attrezzi
+                <button id="btnCloseHistoryModal" style="background:none; border:none; color:#cbd5e1; cursor:pointer; font-size:20px; line-height:1;">✖</button>
+            </h3>
+            <div id="historyList" style="max-height: 400px; overflow-y:auto; background:rgba(0,0,0,0.15); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:10px; font-size: 0.9rem;">
+                <!-- Lista dinamica cronologia -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanner Modal -->
+    <div id="scannerModal" class="modal-overlay">
+        <div class="modal-content glass-panel" style="width: 400px; max-width: 90vw; padding: 25px; text-align: center;">
+            <h3 style="margin-top:0; color:#d4af37; font-size:18px; margin-bottom: 15px;">Inquadra QR Code</h3>
+            <div id="reader" style="width:100%; border-radius:10px; overflow:hidden;"></div>
+            <button id="btnCloseScanner" class="btn btn-danger" style="margin-top:20px;">Annulla</button>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div id="customModal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <h3 id="modalTitle">Conferma</h3>
+            <p id="modalMessage">Sei sicuro?</p>
+            <div class="modal-actions">
+                <button id="modalBtnCancel" class="btn btn-danger">Annulla</button>
+                <button id="modalBtnConfirm" class="btn btn-primary">Conferma</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Zoom Modal -->
+    <div id="imageModal" class="modal-overlay" style="z-index:10000; align-items:center; justify-content:center; cursor:zoom-out; background:rgba(0,0,0,0.85);">
+        <img id="enlargedImage" src="" style="max-width:90vw; max-height:90vh; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.8); border: 2px solid var(--gold-primary); animation: zoomIn 0.3s ease-out;">
+    </div>
+
+    <!-- Modal Stampa Etichette QR Code A4 -->
+    <div id="modalPrintLabels" class="modal-overlay" style="z-index: 10001; align-items: flex-start; justify-content: center; padding: 30px 15px; overflow-y: auto;">
+        <div class="modal-content glass-panel" style="max-width: 960px; width: 100%; border: 1px solid #d4af37; box-shadow: 0 20px 60px rgba(0,0,0,0.8); border-radius: 20px; overflow: hidden; background: #0f172a; padding: 0;">
+            <!-- Modal Header (non stampato) -->
+            <div class="no-print" style="padding: 18px 24px; background: rgba(15,23,42,0.95); border-bottom: 1px solid rgba(212,175,55,0.3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 24px;">🖨️</span>
+                    <div>
+                        <h3 style="margin: 0; color: #f8fafc; font-size: 1.2rem; font-weight: 700;">Stampa Foglio Etichette QR Code A4</h3>
+                        <p style="margin: 2px 0 0 0; font-size: 12px; color: #94a3b8;">Etichette pronte per essere ritagliate e applicate su cassette attrezzi, scaffali e furgoni</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="selectPrintFilterPos" style="background: rgba(30,41,59,0.8); color: #fff; border: 1px solid #d4af37; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; outline: none; cursor: pointer;">
+                        <option value="all">📍 Tutte le Posizioni</option>
+                    </select>
+                    <button id="btnExecutePrint" style="background: linear-gradient(135deg, #fef08a, #d4af37, #b45309); color: #0b0f19; border: none; padding: 9px 20px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 15px rgba(212,175,55,0.4); display: flex; align-items: center; gap: 6px;">
+                        🖨️ STAMPA ADESIVI (A4)
+                    </button>
+                    <button id="btnClosePrintLabels" style="background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 50%; width: 34px; height: 34px; font-weight: bold; cursor: pointer; font-size: 16px;">✕</button>
+                </div>
+            </div>
+
+            <!-- Area Etichette Stampabili -->
+            <div id="labelsPrintContainer" style="padding: 20px; background: #0b0f19; max-height: 75vh; overflow-y: auto;">
+                <div id="labelsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+                    <!-- Etichette generate dinamicamente da JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Notifica</div>
+
+    <script src="app.js?v=15"></script>
+    <script>
+        // Funzione globale per aprire l'immagine
+        window.openImageModal = function(src) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('enlargedImage');
+            img.src = src;
+            modal.classList.add('show'); // Ecco l'errore: andava usata la classe 'show' e non display='flex'
+        };
+
+        // Chiudi la modale cliccando fuori o sull'immagine stessa
+        document.getElementById('imageModal').addEventListener('click', function() {
+            this.classList.remove('show');
+        });
+
+        // Event delegation INFALLIBILE
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('listaAttrezzi').addEventListener('click', function(e) {
+                const wrapper = e.target.closest('.card-img-wrapper') || e.target.closest('.card-img');
+                if (wrapper) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const img = wrapper.tagName === 'IMG' ? wrapper : wrapper.querySelector('img');
+                    if (img) {
+                        window.openImageModal(img.src);
+                    }
+                }
+            });
+        });
+    </script>
+    <style>
+        /* Forza il cursore a lente di ingrandimento su tutte le immagini */
+        .card-img-wrapper, .card-img {
+            cursor: zoom-in !important;
+            z-index: 10;
+        }
+        
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Stili di Stampa Ufficiali Etichette QR Code */
+        @media print {
+            body * { visibility: hidden !important; }
+            #modalPrintLabels, #modalPrintLabels * { visibility: visible !important; }
+            #modalPrintLabels {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+            }
+            .no-print { display: none !important; }
+            #labelsPrintContainer {
+                background: #fff !important;
+                padding: 0 !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+            #labelsGrid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 5mm !important;
+                padding: 8mm !important;
+            }
+            .label-sticker-card {
+                background: #fff !important;
+                color: #000 !important;
+                border: 1.5px solid #222 !important;
+                border-radius: 8px !important;
+                padding: 10px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                box-shadow: none !important;
+            }
+            .label-sticker-title { color: #000 !important; }
+            .label-sticker-sub { color: #444 !important; }
+            .label-sticker-badge { background: #eee !important; color: #111 !important; border: 1px solid #ccc !important; }
+        }
+    </style>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('ServiceWorker registration successful'))
+                    .catch(err => console.log('ServiceWorker registration failed: ', err));
+            });
+        }
+    </script>
+
+  <!-- Universal Suite Mobile Bottom Navigation -->
+  <script src="/suite_nav.js"></script>
+</body>
+</html>
