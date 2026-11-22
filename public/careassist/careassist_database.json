@@ -1,5 +1,5 @@
 {
-  "activePazienteId": "paz_rosa",
+  "activePazienteId": "paz_1793216119572",
   "pazienti": [
     {
       "id": "paz_aldo",
@@ -3901,6 +3901,13 @@
         }
       ],
       "registrazioni": [
+        {
+          "id": "esc_1795370640166",
+          "timestamp": "2026-11-22T18:04:00.165Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 19:04 il farmaco \"XULTOPHY penna\" delle ore 17:30 risulta non ancora spuntato (+94 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
         {
           "id": "esc_1795332000608",
           "timestamp": "2026-11-22T07:20:00.486Z",
@@ -9043,7 +9050,7 @@
           ]
         }
       ],
-      "lastModified": 1795346030974
+      "lastModified": 1795370823089
     },
     {
       "id": "paz_mariacarmela",
@@ -9649,14 +9656,14 @@
       "lastModified": 1795332864124
     }
   ],
-  "lastModified": 1795350771807,
+  "lastModified": 1795370823089,
   "lastModifiedDevice": "pc",
   "lastModifiedBy": {
     "nome": "Ciro Milella (Admin)",
     "ruolo": "admin",
-    "paziente": "Rosa Annunziata Cavalcante",
-    "ora": "13:32",
-    "timestamp": 1795350771807
+    "paziente": "Ciro Milella",
+    "ora": "19:07",
+    "timestamp": 1795370823089
   },
   "ultimoGiornoOperativo": "2026-11-22",
   "aldoVimpatInizializzato2026": true,
@@ -10727,7 +10734,7 @@
     "attivo": true,
     "livelloMinimo": "75%",
     "dispositivo": "PC Postazione",
-    "ora": "13:32:43",
+    "ora": "19:04:04",
     "motivo": "Allarme Terapia in Corso / Scaduta"
   },
   "_auditAntiFurbiVolume": [

@@ -3902,6 +3902,13 @@
       ],
       "registrazioni": [
         {
+          "id": "esc_1795370640166",
+          "timestamp": "2026-11-22T18:04:00.165Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 19:04 il farmaco \"XULTOPHY penna\" delle ore 17:30 risulta non ancora spuntato (+94 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
           "id": "esc_1795332000608",
           "timestamp": "2026-11-22T07:20:00.486Z",
           "tipo": "nota_turno",
@@ -9043,7 +9050,7 @@
           ]
         }
       ],
-      "lastModified": 1795346030974
+      "lastModified": 1795370823089
     },
     {
       "id": "paz_mariacarmela",
@@ -10738,5 +10745,5 @@
       "esito": "Ripristinato forzatamente al 75%-100%"
     }
   ],
-  "ultimoAggiornamento": "2026-11-22T13:32:55.038Z"
+  "ultimoAggiornamento": "2026-11-22T18:07:19.577Z"
 }
