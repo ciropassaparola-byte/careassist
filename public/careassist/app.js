@@ -35023,19 +35023,37 @@ window.richiediPinAdminPerCancellazione = function (motivoAzione) {
 
     m.innerHTML = `
       <div style="background:#ffffff; border-radius:20px; max-width:400px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,0.5); overflow:hidden; border:2px solid #ef4444; animation:modalPopIn 0.25s ease;">
-        <div style="background:linear-gradient(135deg, #b91c1c 0%, #991b1b 100%); color:#ffffff; padding:18px 22px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="background:linear-gradient(135deg, #b91c1c 0%, #991b1b 100%); color:#ffffff; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="font-size:26px;">🔒</span>
             <div>
-              <h3 style="margin:0; font-size:16px; font-weight:800; color:#fff;">Autorizzazione Amministratore</h3>
-              <p style="margin:2px 0 0; font-size:11.5px; opacity:0.9;">Cartella Sanitaria Protetta</p>
+              <h3 style="margin:0; font-size:15.5px; font-weight:800; color:#fff;">Autorizzazione Amministratore</h3>
+              <p style="margin:2px 0 0; font-size:11px; opacity:0.9;">Cartella Sanitaria Protetta</p>
             </div>
           </div>
-          <button id="admin-pin-close-btn" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer; line-height:1;">&times;</button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="btn-voce-admin-modal" type="button" onclick="leggiAutorizzazioneAdminVoceElsa()" title="Ascolta spiegazione con voce naturale Elsa Neural" style="background:#fef08a; color:#854d0e; border:none; padding:5px 10px; border-radius:10px; font-weight:800; font-size:11px; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 2px 8px rgba(0,0,0,0.25); transition:all 0.2s ease;">
+              <span id="ico-voce-admin-modal">🗣️</span> <span id="txt-voce-admin-modal">Ascolta con Elsa Neural</span>
+            </button>
+            <button id="admin-pin-close-btn" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer; line-height:1;">&times;</button>
+          </div>
         </div>
 
-        <div style="padding:22px; text-align:center;">
-          <p style="margin:0 0 14px; font-size:13.5px; color:#334155; line-height:1.5;">
+        <div style="padding:18px 20px; text-align:center;">
+          <div style="background:#fefce8; border:1px solid #facc15; border-radius:12px; padding:10px 12px; margin-bottom:14px; text-align:left; display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">
+            <div>
+              <div style="font-weight:900; color:#854d0e; display:flex; align-items:center; gap:5px; font-size:12px; margin-bottom:3px;">
+                <span>💡</span> A COSA SERVE
+              </div>
+              <div style="font-size:11.5px; color:#a16207; line-height:1.4;">
+                Protegge i registri clinici e le terapie da eliminazioni accidentali. La cancellazione definitiva è irreversibile e allinea anche il Cloud.
+              </div>
+            </div>
+            <button type="button" onclick="leggiAutorizzazioneAdminVoceElsa()" style="background:#ca8a04; color:#fff; border:none; padding:5px 8px; border-radius:6px; font-weight:800; font-size:10.5px; cursor:pointer; display:flex; align-items:center; gap:3px; flex-shrink:0;">
+              <span>🔊</span> Voce
+            </button>
+          </div>
+          <p style="margin:0 0 14px; font-size:13px; color:#334155; line-height:1.45; font-weight:600;">
             ${motivoAzione || 'Per eliminare registrazioni dal diario clinico è richiesta la password o il PIN Amministratore:'}
           </p>
 
