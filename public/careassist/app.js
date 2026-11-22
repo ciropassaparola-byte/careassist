@@ -34960,6 +34960,49 @@ window.nascondiBannerDosiPendenti = function() {
 // ==============================================================================
 // BLOCCO DI SICUREZZA: VERIFICA PIN / PASSWORD ADMIN PER CANCELLAZIONE DIARIO
 // ==============================================================================
+// Gestione voce Elsa Neural per maschera Autorizzazione Amministratore / Cestino
+var _isAdminPinVoceInCorso = false;
+window.leggiAutorizzazioneAdminVoceElsa = function(motivo) {
+  var btn = document.getElementById('btn-voce-admin-modal');
+  var ico = document.getElementById('ico-voce-admin-modal');
+  var txt = document.getElementById('txt-voce-admin-modal');
+
+  function impostaStato(inRiproduzione) {
+    if (inRiproduzione) {
+      if (ico) ico.textContent = '⏹️';
+      if (txt) txt.textContent = 'Interrompi';
+      if (btn) { btn.style.background = '#ffffff'; btn.style.color = '#dc2626'; }
+    } else {
+      if (ico) ico.textContent = '🗣️';
+      if (txt) txt.textContent = 'Ascolta Guida Elsa';
+      if (btn) { btn.style.background = '#fef08a'; btn.style.color = '#854d0e'; }
+    }
+  }
+
+  if (_isAdminPinVoceInCorso) {
+    if (typeof fermaVoceHDGlobale === 'function') fermaVoceHDGlobale();
+    _isAdminPinVoceInCorso = false;
+    impostaStato(false);
+    if (typeof showToast === 'function') showToast('⏹️ Voce interrotta');
+    return;
+  }
+
+  var testo = "A cosa serve questa richiesta di autorizzazione. " +
+    "La cartella sanitaria e il diario clinico sono protetti per garantire l'integrità e la tracciabilità delle cure. " +
+    "L'eliminazione definitiva di elementi o lo svuotamento totale del cestino è un'operazione irreversibile che cancella i dati anche dal Cloud. " +
+    "Per procedere con la cancellazione definitiva, digita la password o il PIN amministratore, come ad esempio S O S 9 9 9, e premi il pulsante rosso Sblocca ed Elimina. " +
+    "Se non desideri procedere o vuoi conservare i dati nel cestino, tocca semplicemente il pulsante Annulla.";
+
+  _isAdminPinVoceInCorso = true;
+  impostaStato(true);
+  if (typeof showToast === 'function') showToast('🗣️ Riproduzione vocale Elsa Neural in corso...');
+
+  riproduciVoceNaturaleHD(testo, function() {
+    _isAdminPinVoceInCorso = false;
+    impostaStato(false);
+  });
+};
+
 window.richiediPinAdminPerCancellazione = function (motivoAzione) {
   return new Promise(function (resolve) {
     var modalId = 'modal-admin-pin-auth';

@@ -1,5 +1,5 @@
 // Service Worker per CareAssist Pro: 100% Funzionamento Offline Domiciliare + Notifiche a Schermo Spento
-const CACHE_NAME = 'careassist-pro-v436-auto-allign';
+const CACHE_NAME = 'careassist-pro-v437-elsa-admin-pin';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
