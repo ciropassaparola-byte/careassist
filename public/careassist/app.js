@@ -34800,6 +34800,48 @@ window.forceUpdateCareAssistApp = function () {
 // ==========================================
 // GUIDA OPERATORE INIZIO TURNO & SINCRONIZZAZIONE
 // ==========================================
+// Gestione voce Elsa Neural per Istruzioni Inizio Turno Operatore
+var _isTurnoVoceInCorso = false;
+window.leggiIstruzioniTurnoVoceElsa = function() {
+  var btn = document.getElementById('btn-voce-turno-modal');
+  var ico = document.getElementById('ico-voce-turno-modal');
+  var txt = document.getElementById('txt-voce-turno-modal');
+
+  function impostaStato(inRiproduzione) {
+    if (inRiproduzione) {
+      if (ico) ico.textContent = '⏹️';
+      if (txt) txt.textContent = 'Interrompi';
+      if (btn) { btn.style.background = '#ef4444'; btn.style.color = '#fff'; }
+    } else {
+      if (ico) ico.textContent = '🗣️';
+      if (txt) txt.textContent = 'Ascolta con Elsa Neural';
+      if (btn) { btn.style.background = '#fef08a'; btn.style.color = '#854d0e'; }
+    }
+  }
+
+  if (_isTurnoVoceInCorso) {
+    if (typeof fermaVoceHDGlobale === 'function') fermaVoceHDGlobale();
+    _isTurnoVoceInCorso = false;
+    impostaStato(false);
+    if (typeof showToast === 'function') showToast('⏹️ Voce interrotta');
+    return;
+  }
+
+  var testo = "A cosa serve questa scheda e come utilizzare l'applicazione da smartphone all'inizio del proprio turno. " +
+    "Regola numero uno: inizia sempre con ricarica. Appena apri l'applicazione all'inizio del tuo turno di lavoro, tocca sempre il pulsante verde Ricarica e Allinea Ora. In questo modo scarichi istantaneamente dal Cloud tutte le somministrazioni e le annotazioni registrate dai colleghi o dal computer prima del tuo arrivo. " +
+    "Regola numero due: segna le terapie subito. Registra medicinali e pasti appena somministrati. Se lo fai subito, la famiglia, il medico e il turno successivo vedranno lo stato aggiornato in tempo reale. " +
+    "Stato del Cloud: la spia verde in alto indica che l'archivio è perfettamente sincronizzato. Se vedi colore arancione o rosso, tocca la barra per forzare l'allineamento.";
+
+  _isTurnoVoceInCorso = true;
+  impostaStato(true);
+  if (typeof showToast === 'function') showToast('🗣️ Riproduzione vocale Elsa Neural in corso...');
+
+  riproduciVoceNaturaleHD(testo, function() {
+    _isTurnoVoceInCorso = false;
+    impostaStato(false);
+  });
+};
+
 window.apriGuidaInizioTurnoOperatore = function() {
   var modalId = 'modal-guida-turno-operatore';
   var exist = document.getElementById(modalId);
@@ -34833,6 +34875,19 @@ window.apriGuidaInizioTurnoOperatore = function() {
       </div>
 
       <div style="padding:20px; font-size:14px; color:#334155; line-height:1.5;">
+        <div style="background:#fefce8; border:1px solid #facc15; border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">
+          <div>
+            <div style="font-weight:900; color:#854d0e; display:flex; align-items:center; gap:6px; margin-bottom:4px; font-size:13px;">
+              <span>💡</span> A COSA SERVE QUESTA GUIDA
+            </div>
+            <div style="font-size:12.5px; color:#a16207; line-height:1.45;">
+              Fornisce all'operatore in servizio le direttive operative vincolanti per mantenere l'archivio clinico e le scorte farmacia sincronizzate in tempo reale col Cloud, prevenendo doppi scarichi o registrazioni perse.
+            </div>
+          </div>
+          <button type="button" onclick="leggiIstruzioniTurnoVoceElsa()" style="background:#ca8a04; color:#fff; border:none; padding:6px 10px; border-radius:8px; font-weight:800; font-size:11px; cursor:pointer; display:flex; align-items:center; gap:4px; flex-shrink:0;">
+            <span>🔊</span> Voce Elsa
+          </button>
+        </div>
         <div style="background:#ecfdf5; border:1px solid #10b981; border-radius:12px; padding:12px; margin-bottom:16px;">
           <div style="font-weight:800; color:#065f46; display:flex; align-items:center; gap:6px; margin-bottom:4px;">
             <span>🔄</span> REGOLA N. 1: INIZIA SEMPRE CON "RICARICA"
@@ -34864,7 +34919,7 @@ window.apriGuidaInizioTurnoOperatore = function() {
           <button onclick="document.getElementById('${modalId}').remove(); if(typeof forceUpdateCareAssistApp==='function') forceUpdateCareAssistApp();" style="flex:1; background:#0f766e; color:#fff; border:none; padding:12px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
             <span>🔄</span> Ricarica e Allinea Ora
           </button>
-          <button onclick="document.getElementById('${modalId}').remove()" style="background:#e2e8f0; color:#334155; border:none; padding:12px 16px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer;">
+          <button onclick="if(typeof fermaVoceHDGlobale==='function') fermaVoceHDGlobale(); _isTurnoVoceInCorso=false; document.getElementById('${modalId}').remove()" style="background:#e2e8f0; color:#334155; border:none; padding:12px 16px; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer;">
             Ho Capito
           </button>
         </div>
