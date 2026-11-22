@@ -4413,7 +4413,7 @@ function renderCestino() {
 
     return '<div class="cestino-item" style="border-color:' + (isChecked ? '#38bdf8; background:#f0f9ff;' : '#e2e8f0; background:#ffffff;') + '">' +
       '<div style="padding-right:8px; display:flex; align-items:center;">' +
-      '  <input type="checkbox" class="cestino-item-checkbox" value="' + e.id + '" ' + (isChecked ? 'checked' : '') + ' onchange="cestinoToggleItemSelezione('' + e.id + '', this.checked)" style="width:20px; height:20px; cursor:pointer; accent-color:#0284c7;">' +
+      '  <input type="checkbox" class="cestino-item-checkbox" value="' + e.id + '" ' + (isChecked ? 'checked' : '') + ' onchange="cestinoToggleItemSelezione(\'' + e.id + '\', this.checked)" style="width:20px; height:20px; cursor:pointer; accent-color:#0284c7;">' +
       '</div>' +
       '<div class="cestino-item-ico">' + t.icona + '</div>' +
       '<div class="cestino-item-body">' +
@@ -4425,8 +4425,8 @@ function renderCestino() {
       (e.dettaglio ? '<div class="cestino-item-dett">' + cestinoEsc(e.dettaglio) + '</div>' : '') +
       '</div>' +
       '<div class="cestino-item-azioni">' +
-      '<button type="button" class="btn cestino-btn-ripristina" onclick="cestinoRipristina('' + e.id + '')">↩️ Ripristina</button>' +
-      '<button type="button" class="btn cestino-btn-elimina" onclick="cestinoEliminaDefinitivo('' + e.id + '')" title="Elimina definitivamente questo elemento">🗑️ Elimina definitivamente</button>' +
+      '<button type="button" class="btn cestino-btn-ripristina" onclick="cestinoRipristina(\'' + e.id + '\')">↩️ Ripristina</button>' +
+      '<button type="button" class="btn cestino-btn-elimina" onclick="cestinoEliminaDefinitivo(\'' + e.id + '\')" title="Elimina definitivamente questo elemento">🗑️ Elimina definitivamente</button>' +
       '</div></div>';
   }).join('');
 
