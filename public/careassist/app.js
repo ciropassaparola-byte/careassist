@@ -4477,7 +4477,7 @@ async function cestinoEliminaSelezionati() {
     return;
   }
 
-  var authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore (SOS999) per eliminare definitivamente ' + count + ' elementi selezionati dal Cestino:');
+  var authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore per eliminare definitivamente ' + count + ' elementi selezionati dal Cestino:');
   if (!authAdmin) {
     showToast('Operazione annullata: password Admin non fornita.', 'warning');
     return;
@@ -4577,7 +4577,7 @@ function cestinoRipristina(id) {
 }
 
 async function cestinoEliminaDefinitivo(id) {
-  var authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore (SOS999) per eliminare definitivamente questo elemento dal Cestino:');
+  var authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore per eliminare definitivamente questo elemento dal Cestino:');
   if (!authAdmin) {
     showToast('Operazione annullata: password Admin non fornita.', 'warning');
     return;
@@ -4616,7 +4616,7 @@ async function cestinoEliminaDefinitivo(id) {
 }
 
 async function cestinoSvuota() {
-  var authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore (SOS999) per svuotare DEFINITIVAMENTE l\'intero Cestino:');
+  var authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore per svuotare DEFINITIVAMENTE l\'intero Cestino:');
   if (!authAdmin) {
     showToast('Operazione annullata: password Admin non fornita.', 'warning');
     return;
@@ -34990,7 +34990,7 @@ window.leggiAutorizzazioneAdminVoceElsa = function(motivo) {
   var testo = "A cosa serve questa richiesta di autorizzazione. " +
     "La cartella sanitaria e il diario clinico sono protetti per garantire l'integrità e la tracciabilità delle cure. " +
     "L'eliminazione definitiva di elementi o lo svuotamento totale del cestino è un'operazione irreversibile che cancella i dati anche dal Cloud. " +
-    "Per procedere con la cancellazione definitiva, digita la password o il PIN amministratore, come ad esempio S O S 9 9 9, e premi il pulsante rosso Sblocca ed Elimina. " +
+    "Per procedere con la cancellazione definitiva, è richiesta la password o il PIN dell'Amministratore. Se non possiedi questa autorizzazione, contatta l'amministratore per completare l'operazione. " +
     "Se non desideri procedere o vuoi conservare i dati nel cestino, tocca semplicemente il pulsante Annulla.";
 
   _isAdminPinVoceInCorso = true;
@@ -35053,12 +35053,15 @@ window.richiediPinAdminPerCancellazione = function (motivoAzione) {
               <span>🔊</span> Voce
             </button>
           </div>
-          <p style="margin:0 0 14px; font-size:13px; color:#334155; line-height:1.45; font-weight:600;">
+          <p style="margin:0 0 10px; font-size:13px; color:#334155; line-height:1.45; font-weight:600;">
             ${motivoAzione || 'Per eliminare registrazioni dal diario clinico è richiesta la password o il PIN Amministratore:'}
           </p>
+          <div style="margin-bottom:14px; font-size:11.5px; color:#64748b; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:6px 10px;">
+            🔒 Se non disponi delle credenziali autorizzate, <b>contatta l'Amministratore di sistema</b>.
+          </div>
 
           <div style="margin-bottom:16px;">
-            <input type="password" id="admin-pin-input-field" placeholder="Inserisci Password o PIN (es. SOS999)" 
+            <input type="password" id="admin-pin-input-field" placeholder="Inserisci Password o PIN Amministratore" 
               style="width:100%; box-sizing:border-box; padding:12px 14px; font-size:16px; font-weight:700; text-align:center; border:2px solid #cbd5e1; border-radius:12px; outline:none; transition:0.2s;"
               autocomplete="off" />
             <div id="admin-pin-error-msg" style="display:none; color:#dc2626; font-size:12px; font-weight:700; margin-top:6px;">
@@ -35180,7 +35183,7 @@ window.chiediTipoEliminazioneDiario = function(conteggio, pazienteNome) {
                 <span style="font-size:22px;">🔒</span>
                 <div>
                   <div style="color:#dc2626; font-weight:900;">Elimina Definitivamente</div>
-                  <div style="font-size:11px; color:#991b1b; font-weight:600;">Richiede Password / PIN Admin (SOS999)</div>
+                  <div style="font-size:11px; color:#991b1b; font-weight:600;">Richiede Autorizzazione Amministratore (Contattare l'Admin)</div>
                 </div>
               </div>
               <span style="font-size:16px;">➔</span>
@@ -35206,7 +35209,7 @@ window.chiediTipoEliminazioneDiario = function(conteggio, pazienteNome) {
 
     document.getElementById('btn-scelta-definitivo').onclick = async function() {
       m.remove();
-      var auth = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore (SOS999) per eliminare definitivamente:');
+      var auth = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore per eliminare definitivamente:');
       if (auth) {
         resolve('definitivo');
       } else {
