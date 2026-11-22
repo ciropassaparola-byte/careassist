@@ -31839,7 +31839,17 @@ function renderMobileNativeView(terapie, p) {
               var totScat = ptObj ? (parseInt(ptObj.scatoleTotali || ptObj.scatoleSpettantiAnno, 10) || 12) : 12;
               var ritScat = ptObj ? (parseInt(ptObj.scatoleRitirate || ptObj.scatoleRitirateTotali, 10) || 0) : 0;
               var resScat = Math.max(0, totScat - ritScat);
-              var dtScad = ptObj ? (ptObj.dataScadenza || ptObj.dataScadenzaAnno || '22/02/2027') : '22/02/2027';
+              var dtScadRaw = ptObj ? (ptObj.dataScadenza || ptObj.dataScadenzaAnno || '2027-02-22') : '2027-02-22';
+              var dtScad = dtScadRaw;
+              if (dtScadRaw && typeof dtScadRaw === 'string') {
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dtScadRaw)) {
+                  var pParts = dtScadRaw.split('-');
+                  dtScad = pParts[2] + '-' + pParts[1] + '-' + pParts[0];
+                } else if (/^\d{4}\/\d{2}\/\d{2}$/.test(dtScadRaw)) {
+                  var pParts2 = dtScadRaw.split('/');
+                  dtScad = pParts2[2] + '-' + pParts2[1] + '-' + pParts2[0];
+                }
+              }
               return '<div style="margin-top:5px; display:inline-flex; align-items:center; gap:5px; flex-wrap:wrap;">' +
                 '<span style="background:#0284c7; color:#ffffff; font-weight:800; font-size:10px; padding:2px 7px; border-radius:6px; box-shadow:0 1px 3px rgba(2,132,199,0.3);">🏛️ Farmacia Territoriale ASL</span>' +
                 '<span style="background:#eff6ff; color:#1e40af; border:1px solid #93c5fd; font-weight:800; font-size:10px; padding:2px 6px; border-radius:6px;">📦 Spettano: <b>' + resScat + '</b> / ' + totScat + ' scatole</span>' +

@@ -1,5 +1,5 @@
 // Service Worker per CareAssist Pro: 100% Funzionamento Offline Domiciliare + Notifiche a Schermo Spento
-const CACHE_NAME = 'careassist-pro-v426-header-chiudi-perfetto';
+const CACHE_NAME = 'careassist-pro-v427-fix-data-scadenza';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

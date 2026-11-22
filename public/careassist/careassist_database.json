@@ -1,5 +1,5 @@
 {
-  "activePazienteId": "paz_1793216119572",
+  "activePazienteId": "paz_aldo",
   "pazienti": [
     {
       "id": "paz_aldo",
@@ -24,11 +24,9 @@
           "modo": "A DIGIUNO, 30 min prima di colazione (Protezione gastrica)",
           "cprPerScatola": 28,
           "scorta": 38,
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T21:20:21.450Z",
-          "fattoOggiTimestamp": 1795242618845,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimoRitiro": "2026-11-07T21:20:21.450Z"
         },
         {
           "id": 1794085262569,
@@ -43,7 +41,7 @@
           "scorta": 83,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 89,
           "unitaDoseDie": 1,
@@ -56,9 +54,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693432,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 103,
@@ -69,12 +65,10 @@
           "dosaggio": "100 mg (1 capsula)",
           "modo": "A colazione con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
-          "scorta": 530,
-          "fattoOggi": true,
+          "scorta": 532,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T19:46:40.008Z",
-          "fattoOggiTimestamp": 1795245693432,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimoRitiro": "2026-11-07T19:46:40.008Z"
         },
         {
           "id": 1032,
@@ -85,12 +79,10 @@
           "dosaggio": "100 mg (1 capsula)",
           "modo": "A pranzo con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
-          "scorta": 530,
-          "fattoOggi": true,
+          "scorta": 532,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T19:46:40.008Z",
-          "fattoOggiTimestamp": 1795245693432,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimoRitiro": "2026-11-07T19:46:40.008Z"
         },
         {
           "id": 104,
@@ -101,7 +93,7 @@
           "dosaggio": "8 mg (1 capsula)",
           "modo": "A CENA, a stomaco pieno con acqua (Ipertrofia prostatica / diuresi)",
           "cprPerScatola": 30,
-          "scorta": 20,
+          "scorta": 19,
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
         },
@@ -114,7 +106,7 @@
           "dosaggio": "200 mg (2 capsule insieme)",
           "modo": "Dopo cena (Dose serale cumulativa di 2 capsule = 200 mg)",
           "cprPerScatola": 56,
-          "scorta": 533,
+          "scorta": 532,
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
           "ultimoRitiro": "2026-11-07T19:46:40.008Z"
@@ -1394,6 +1386,34 @@
           "tipo": "nota_turno",
           "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
           "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 10:22 il farmaco \"Bisoprololo Teva/Sandoz 1,25 mg\" delle ore 08:30 risulta non ancora spuntato (+112 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
+          "id": "log_1795291204670",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-21T20:00:04.670Z",
+          "farmacoId": 104,
+          "farmaco": "SILODYX 8 mg (Silodosina)",
+          "dosaggio": "8 mg (1 capsula)",
+          "orarioPrevisto": "20:00",
+          "orarioReale": "21:00",
+          "minutiRitardo": 60,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 1 ore e 0 min! Orario previsto: 20:00 - Orario effettivo assunzione: 21:00. Rimanenza scorta: 19 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795291221492",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-21T20:00:21.492Z",
+          "farmacoId": 105,
+          "farmaco": "VIMPAT 100 mg (3ª dose serale)",
+          "dosaggio": "200 mg (2 capsule insieme)",
+          "orarioPrevisto": "20:30",
+          "orarioReale": "21:00",
+          "minutiRitardo": 30,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 30 minuti! Orario previsto: 20:30 - Orario effettivo assunzione: 21:00. Rimanenza scorta: 532 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -1633,7 +1653,7 @@
           ]
         }
       },
-      "lastModified": 1795284197295
+      "lastModified": 1795329702254
     },
     {
       "id": "paz_angela",
@@ -1661,7 +1681,7 @@
           "scorta": 13,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 21,
           "unitaDoseDie": 1,
@@ -1674,9 +1694,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795244414714,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 202,
@@ -1689,10 +1707,8 @@
           "cprPerScatola": 28,
           "scorta": 15,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 203,
@@ -1705,10 +1721,8 @@
           "cprPerScatola": 30,
           "scorta": 17,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 208,
@@ -1721,11 +1735,9 @@
           "cprPerScatola": 1,
           "scorta": 0.37,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "cadenzaTipo": "quindicinale_15_30",
-          "ultimaDoseSomministrata": 0.06666666666666667,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 0.06666666666666667
         },
         {
           "id": 204,
@@ -1738,10 +1750,8 @@
           "cprPerScatola": 30,
           "scorta": 18,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 205,
@@ -1754,11 +1764,9 @@
           "cprPerScatola": 30,
           "scorta": 228,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T20:18:10.813Z",
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimoRitiro": "2026-11-07T20:18:10.813Z"
         },
         {
           "id": 206,
@@ -1771,10 +1779,8 @@
           "cprPerScatola": 20,
           "scorta": 8,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 207,
@@ -1785,13 +1791,20 @@
           "dosaggio": "40 mg (1 compressa)",
           "modo": "La sera dopo cena o prima di dormire (Statina: controllo del colesterolo e lipidi)",
           "cprPerScatola": 28,
-          "scorta": 18,
+          "scorta": 17,
           "farmacia": "Farmacia MACARIO",
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
         }
       ],
       "registrazioni": [
+        {
+          "id": "esc_1795290793584",
+          "timestamp": "2026-11-21T19:53:13.471Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 20:53 il farmaco \"Aplactin 40 mg (Pravastatina)\" delle ore 20:30 risulta non ancora spuntato (+23 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
         {
           "id": "esc_1795247407712",
           "timestamp": "2026-11-21T07:50:06.784Z",
@@ -3052,6 +3065,20 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 0 minuti! Orario previsto: 20:30 - Orario effettivo assunzione: 20:30. Rimanenza scorta: 20 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795291153404",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-21T19:59:13.404Z",
+          "farmacoId": 207,
+          "farmaco": "Aplactin 40 mg (Pravastatina)",
+          "dosaggio": "40 mg (1 compressa)",
+          "orarioPrevisto": "20:30",
+          "orarioReale": "20:59",
+          "minutiRitardo": 29,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 29 minuti! Orario previsto: 20:30 - Orario effettivo assunzione: 20:59. Rimanenza scorta: 17 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -3204,7 +3231,7 @@
       "lifestyle": "1.2",
       "goal": "mantenimento",
       "diagnosi": "Ipertensione arteriosa sistemica in polichemioterapia • Sindrome delle Apnee Ostruttive nel Sonno (OSAS) con indicazione ausilio CPAP notturna • Dislipidemia / Ipercolesterolemia • Iperuricemia con rischio gotta • Ipovitaminosi D3 (in integrazione ciclica con DIBASE) • Reflusso gastroesofageo / gastrite",
-      "lastModified": 1794389548165
+      "lastModified": 1795291153405
     },
     {
       "id": "paz_rosa",
@@ -3230,10 +3257,8 @@
           "cprPerScatola": 30,
           "scorta": 10,
           "farmacia": "Farmacia Girasole Picconi",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795244484227,
-          "fattoOggiGiorno": "2026-11-21"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 312,
@@ -3246,10 +3271,8 @@
           "cprPerScatola": 10,
           "scorta": 0,
           "farmacia": "Farmacia Girasole Picconi",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795244487203,
-          "fattoOggiGiorno": "2026-11-21"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794119789330,
@@ -3264,7 +3287,7 @@
           "scorta": 18.5,
           "giorniAlert": 7,
           "cadenzaTipo": "",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 25,
           "unitaDoseDie": 1,
@@ -3277,9 +3300,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 0.5,
-          "fattoOggiTimestamp": 1795244490265,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 0.5
         },
         {
           "id": 1794119271026,
@@ -3294,7 +3315,7 @@
           "scorta": 25,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 60,
           "unitaDoseDie": 1,
@@ -3307,9 +3328,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794120216740,
@@ -3324,7 +3343,7 @@
           "scorta": 7,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 13,
           "unitaDoseDie": 1,
@@ -3337,9 +3356,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794119856922,
@@ -3354,7 +3371,7 @@
           "scorta": 48,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 70,
           "unitaDoseDie": 1,
@@ -3367,9 +3384,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 2,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 2
         },
         {
           "id": 1794119962919,
@@ -3384,7 +3399,7 @@
           "scorta": 18,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 24,
           "unitaDoseDie": 1,
@@ -3397,9 +3412,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794118995873,
@@ -3414,7 +3427,7 @@
           "scorta": 72,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 77,
           "unitaDoseDie": 1,
@@ -3427,9 +3440,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794119202709,
@@ -3444,7 +3455,7 @@
           "scorta": 55,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 60,
           "unitaDoseDie": 1,
@@ -3457,9 +3468,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794120309246,
@@ -3474,7 +3483,7 @@
           "scorta": 55,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 60,
           "unitaDoseDie": 1,
@@ -3487,9 +3496,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794119857233,
@@ -3504,7 +3511,7 @@
           "scorta": 48,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 70,
           "unitaDoseDie": 1,
@@ -3517,9 +3524,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 2,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 2
         },
         {
           "id": 1793458294388,
@@ -3534,7 +3539,7 @@
           "scorta": 29,
           "giorniAlert": 7,
           "cadenzaTipo": "",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 28,
           "unitaDoseDie": 1,
@@ -3547,9 +3552,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1793524442695,
@@ -3564,7 +3567,7 @@
           "scorta": 3.52,
           "giorniAlert": 15,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "penna",
           "penneScorta": 3.52,
           "unitaDoseDie": 36,
@@ -3585,9 +3588,7 @@
           },
           "ultimaDoseSomministrata": 1,
           "ultimoSitoIniezione": "Addome Destro",
-          "ultimoRitiro": "2026-11-08T06:19:10.720Z",
-          "fattoOggiTimestamp": 1795284208817,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimoRitiro": "2026-11-08T06:19:10.720Z"
         }
       ],
       "registrazioni": [
@@ -7032,7 +7033,7 @@
           "cadenzaDataInizio": null,
           "cadenzaMeseAnnuale": null,
           "cadenzaGiornoAnnuale": null,
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaModificaTimestamp": 1795186999523,
           "tipoFormulazione": "compressa",
           "canaleDistribuzione": "territoriale_asl",
@@ -7140,12 +7141,17 @@
               "cprAggiunte": 90,
               "note": "4° Ritiro ASL ufficiale (16/11/2026)"
             }
-          ],
-          "fattoOggiTimestamp": 1795284265993,
-          "fattoOggiGiorno": "2026-11-21"
+          ]
         }
       ],
       "registrazioni": [
+        {
+          "id": "esc_1795329702937",
+          "timestamp": "2026-11-22T06:41:42.908Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 07:41 il farmaco \"Entecavir Sandoz 0,5 mg\" delle ore 07:00 risulta non ancora spuntato (+41 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
         {
           "id": "vision_scorta_1795255010990",
           "tipo": "scorta_caricata",
@@ -8586,7 +8592,7 @@
           "scorta": 35,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 41,
           "unitaDoseDie": 1,
@@ -8599,9 +8605,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794159380065,
@@ -8616,7 +8620,7 @@
           "scorta": 16,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 35,
           "unitaDoseDie": 1,
@@ -8629,9 +8633,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795245693433,
-          "fattoOggiGiorno": "2026-11-21"
+          "ultimaDoseSomministrata": 1
         }
       ],
       "registrazioni": [
@@ -9080,16 +9082,16 @@
       "lastModified": 1794389658760
     }
   ],
-  "lastModified": 1795284265993,
+  "lastModified": 1795329702254,
   "lastModifiedDevice": "pc",
   "lastModifiedBy": {
     "nome": "Ciro Milella (Admin)",
     "ruolo": "admin",
-    "paziente": "Ciro Milella",
-    "ora": "19:04",
-    "timestamp": 1795284265993
+    "paziente": "Aldo Zamparino",
+    "ora": "07:41",
+    "timestamp": 1795329702254
   },
-  "ultimoGiornoOperativo": "2026-11-21",
+  "ultimoGiornoOperativo": "2026-11-22",
   "aldoVimpatInizializzato2026": true,
   "rosaInitializedOnce": true,
   "rosaTerapiaFoto20261017": true,
@@ -10148,17 +10150,17 @@
     }
   ],
   "_liveAlertTest": {
-    "ts": 1793471903415,
-    "da": "Smartphone (a Display Spento)",
-    "ora": "19:38:23",
-    "paziente": "Rosa Annunziata Cavalcante",
-    "msg": "Allarme a Display Spento verificato con successo alle 19:38:23"
+    "ts": 1795291141337,
+    "da": "PC",
+    "ora": "20:59:01",
+    "paziente": "Angela Mazzicone",
+    "msg": "Allarme a Display Spento verificato con successo alle 20:59:01"
   },
   "_statoAntiFurbiVolume": {
     "attivo": true,
     "livelloMinimo": "75%",
     "dispositivo": "PC Postazione",
-    "ora": "19:04:25",
+    "ora": "21:00:14",
     "motivo": "Allarme Terapia in Corso / Scaduta"
   },
   "_auditAntiFurbiVolume": [
