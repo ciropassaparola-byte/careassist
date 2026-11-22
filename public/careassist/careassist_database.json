@@ -7382,7 +7382,7 @@
       "lifestyle": "1.2",
       "goal": "mantenimento",
       "diagnosi": "Diabete mellito tipo 2 in terapia insulinica e orale (Xultophy, Diamicron, Forxiga) • Cardiopatia ipertensiva / scompenso cardiaco (Congescor, Triatec, Lasix, Forxiga) • Prevenzione eventi aterotrombotici / antiaggregazione piastrinica (Averelix Clopidogrel) • Morbo di Parkinson / parkinsonismo (Sinemet) • Iperuricemia / gotta (Adenuric) • Osteoartrosi con dolore cronico (Arcoxia) • Ipovitaminosi D (Fedivelle) • Dislipidemia / Ipercolesterolemia (Sivastin)",
-      "lastModified": 1795340613387,
+      "lastModified": 1795342563844,
       "cartelleCroniche": {
         "diabete": {
           "chiave": "diabete",
@@ -9633,14 +9633,14 @@
       "lastModified": 1795332864124
     }
   ],
-  "lastModified": 1795340613387,
+  "lastModified": 1795342563844,
   "lastModifiedDevice": "pc",
   "lastModifiedBy": {
     "nome": "Ciro Milella (Admin)",
     "ruolo": "admin",
     "paziente": "Rosa Annunziata Cavalcante",
-    "ora": "10:43",
-    "timestamp": 1795340613387
+    "ora": "11:16",
+    "timestamp": 1795342563844
   },
   "ultimoGiornoOperativo": "2026-11-22",
   "aldoVimpatInizializzato2026": true,

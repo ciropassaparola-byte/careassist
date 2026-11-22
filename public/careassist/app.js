@@ -417,10 +417,14 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     .replace(/\s+/g, ' ')
     .trim();
 
-  // Determina base URL assoluta corretta (se siamo in locale o cloud)
+  // Endpoint TTS Neurale Elsa: locale relativo se su localhost o cloud origin, altrimenti CAREASSIST_CLOUD_MASTER_URL
   var ttsBase = '';
   try {
-    if (typeof getCareAssistSyncBase === 'function') ttsBase = getCareAssistSyncBase();
+    if (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      ttsBase = ''; // usa direttamente il server locale su porta 3000
+    } else if (typeof getCareAssistSyncBase === 'function') {
+      ttsBase = getCareAssistSyncBase();
+    }
   } catch(e) {}
   const apiUrl = (ttsBase ? ttsBase : '') + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(t);
 
