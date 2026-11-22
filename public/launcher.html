@@ -2667,7 +2667,101 @@
         }
     }
 
+    let _audioElsaCloudAttivo = null;
+    let _isVoceCloudInCorso = false;
+
+    function fermaVoceCloudRegia() {
+        if (_audioElsaCloudAttivo) {
+            try {
+                _audioElsaCloudAttivo.pause();
+                _audioElsaCloudAttivo.currentTime = 0;
+            } catch(e){}
+            _audioElsaCloudAttivo = null;
+        }
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+        _isVoceCloudInCorso = false;
+        aggiornaStatoBtnVoceCloud(false);
+    }
+
+    function aggiornaStatoBtnVoceCloud(inCorso) {
+        const btn = document.getElementById('btnVoceCloudRegia');
+        const ico = document.getElementById('icoVoceCloudRegia');
+        const txt = document.getElementById('txtVoceCloudRegia');
+        if (!btn) return;
+        if (inCorso) {
+            if (ico) ico.textContent = '⏹️';
+            if (txt) txt.textContent = 'Interrompi Voce';
+            btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+            btn.style.borderColor = '#f87171';
+        } else {
+            if (ico) ico.textContent = '🔊';
+            if (txt) txt.textContent = '💡 A cosa serve (Voce Elsa)';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            btn.style.borderColor = '#34d399';
+        }
+    }
+
+    function toggleVoceACosaServeCloud() {
+        if (_isVoceCloudInCorso) {
+            fermaVoceCloudRegia();
+            return;
+        }
+
+        const testoSpiegazione = "A cosa serve il Selettore Canali Cloud e Locale. " +
+            "Render offre 5 gigabyte gratuiti ogni mese per ciascun account. " +
+            "Grazie a questa cabina di regia puoi gestire fino a quattro account differenti, " +
+            "sfruttando un totale di 20 gigabyte di traffico mensile senza costi. " +
+            "Pulsante Attiva con un Clic: quando a dicembre o a fine mese vorrai passare da un account all'altro, " +
+            "ti basterà aprire questa maschera e cliccare il pulsante corrispondente. " +
+            "La Suite memorizzerà la scelta all'istante senza dover riconfigurare nulla a mano. " +
+            "Inoltre, grazie al database condiviso, tutte le terapie e le somministrazioni rimarranno perfettamente allineate su ogni canale.";
+
+        fermaVoceCloudRegia();
+        _isVoceCloudInCorso = true;
+        aggiornaStatoBtnVoceCloud(true);
+
+        const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione);
+        const audio = new Audio(apiUrl);
+        _audioElsaCloudAttivo = audio;
+
+        audio.onended = function() {
+            fermaVoceCloudRegia();
+        };
+
+        audio.onerror = function() {
+            // Fallback sintesi browser se offline o server non raggiungibile
+            if ('speechSynthesis' in window) {
+                const utter = new SpeechSynthesisUtterance(testoSpiegazione);
+                utter.lang = 'it-IT';
+                utter.rate = 1.0;
+                const voices = window.speechSynthesis.getVoices();
+                const vIt = voices.find(v => v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+                if (vIt) utter.voice = vIt;
+                utter.onend = function() { fermaVoceCloudRegia(); };
+                utter.onerror = function() { fermaVoceCloudRegia(); };
+                window.speechSynthesis.speak(utter);
+            } else {
+                fermaVoceCloudRegia();
+            }
+        };
+
+        audio.play().catch(function() {
+            // Se autoplay viene bloccato, tenta sintesi vocale locale
+            if ('speechSynthesis' in window) {
+                const utter = new SpeechSynthesisUtterance(testoSpiegazione);
+                utter.lang = 'it-IT';
+                utter.onend = function() { fermaVoceCloudRegia(); };
+                window.speechSynthesis.speak(utter);
+            } else {
+                fermaVoceCloudRegia();
+            }
+        });
+    }
+
     function chiudiCloudModal() {
+        fermaVoceCloudRegia();
         const modal = document.getElementById('cloudSwitcherModal');
         if (modal) modal.style.display = 'none';
     }
