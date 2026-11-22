@@ -1439,6 +1439,10 @@
 
             <!-- RIGA 2: GRIGLIA AZIONI RAPIDE ORDINATA (2 COLONNE SU SMARTPHONE, RIGA SU DESKTOP) -->
             <div class="top-command-grid-actions">
+                <button id="btnVoceGuidaGlobaleSuite" onclick="toggleVoceGuidaGlobaleSuite()" class="top-action-chip" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; font-weight:800; border:1px solid #34d399; box-shadow:0 3px 12px rgba(16,185,129,0.35); cursor:pointer;" title="Ascolta con Elsa Neural la presentazione generale e cosa serve la Suite">
+                    <span id="icoVoceGuidaGlobale" class="chip-icon">🔊</span>
+                    <span id="txtVoceGuidaGlobale" class="chip-label">💡 A cosa serve (Elsa)</span>
+                </button>
                 <button id="btnAnagraficaPazientiSuite" onclick="apriAnagraficaCentraleModal()" class="top-action-chip chip-pazienti admin-only-btn" style="display:none;">
                     <span class="chip-icon">👥</span>
                     <span class="chip-label">Anagrafica Pazienti</span>
@@ -2706,6 +2710,91 @@
             btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
             btn.style.borderColor = '#34d399';
         }
+    }
+
+    let _audioElsaGlobaleAttivo = null;
+    let _isVoceGlobaleInCorso = false;
+
+    function fermaVoceGlobaleSuite() {
+        if (_audioElsaGlobaleAttivo) {
+            try {
+                _audioElsaGlobaleAttivo.pause();
+                _audioElsaGlobaleAttivo.currentTime = 0;
+            } catch(e){}
+            _audioElsaGlobaleAttivo = null;
+        }
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+        _isVoceGlobaleInCorso = false;
+        aggiornaStatoBtnVoceGlobale(false);
+    }
+
+    function aggiornaStatoBtnVoceGlobale(inCorso) {
+        const btn = document.getElementById('btnVoceGuidaGlobaleSuite');
+        const ico = document.getElementById('icoVoceGuidaGlobale');
+        const txt = document.getElementById('txtVoceGuidaGlobale');
+        if (!btn) return;
+        if (inCorso) {
+            if (ico) ico.textContent = '⏹️';
+            if (txt) txt.textContent = 'Interrompi Voce';
+            btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+            btn.style.borderColor = '#f87171';
+        } else {
+            if (ico) ico.textContent = '🔊';
+            if (txt) txt.textContent = '💡 A cosa serve (Elsa)';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            btn.style.borderColor = '#34d399';
+        }
+    }
+
+    function toggleVoceGuidaGlobaleSuite() {
+        if (_isVoceGlobaleInCorso) {
+            fermaVoceGlobaleSuite();
+            return;
+        }
+
+        const testoPresentazione = "Benvenuto nella Suite Gestionale Aziendale Ciro Milella. " +
+            "A cosa serve questa piattaforma: è un centro operativo unificato che racchiude in un unico ambiente " +
+            "tutte le attività quotidiane: la gestione clinica e farmacologica di CareAssist Pro con orari, dosaggi e scorte, " +
+            "il monitoraggio dei parametri vitali e del benessere con Progetto Salute, " +
+            "il controllo scadenze e costi della Flotta Veicoli, il ricettario nutrizionale e l'inventario degli attrezzi. " +
+            "Grazie alla sincronizzazione intelligente tra computer, chiavetta USB e Cloud, " +
+            "tutti i dati registrati dagli operatori o dal personale sono sempre allineati in tempo reale su qualsiasi dispositivo.";
+
+        fermaVoceGlobaleSuite();
+        _isVoceGlobaleInCorso = true;
+        aggiornaStatoBtnVoceGlobale(true);
+
+        const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazione);
+        const audio = new Audio(apiUrl);
+        _audioElsaGlobaleAttivo = audio;
+
+        audio.onended = function() {
+            fermaVoceGlobaleSuite();
+        };
+
+        audio.onerror = function() {
+            if ('speechSynthesis' in window) {
+                const utter = new SpeechSynthesisUtterance(testoPresentazione);
+                utter.lang = 'it-IT';
+                utter.onend = function() { fermaVoceGlobaleSuite(); };
+                window.speechSynthesis.speak(utter);
+            } else {
+                fermaVoceGlobaleSuite();
+            }
+        };
+
+        audio.play().catch(function() {
+            if ('speechSynthesis' in window) {
+                const utter = new SpeechSynthesisUtterance(testoPresentazione);
+                utter.lang = 'it-IT';
+                utter.onend = function() { fermaVoceGlobaleSuite(); };
+                window.speechSynthesis.speak(utter);
+            } else {
+                fermaVoceGlobaleSuite();
+            }
+        });
     }
 
     function toggleVoceACosaServeCloud() {
