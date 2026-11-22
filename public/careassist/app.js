@@ -1561,8 +1561,7 @@ function getPazienteCiroInit() {
         dataScadenza: '2027-02-22',
         protocollo: '011BQ1X145RHL',
         scatoleTotali: 12,
-        scatoleRitirate: 12,
-        scatoleResidue: 0,
+        scatoleRitirate: 10, scatoleResidue: 2,
         centroPrescrittore: 'U.O. Malattie Infettive ed Epatologia - Policlinico di Bari (Dr. M. Milella / Prof.ssa A. Saracino)',
         sedeRitiro: 'Farmacia Territoriale ASL Bari - Ex CTO',
         note: '1 cpr/die a digiuno (almeno 2h prima o dopo i pasti) - PHT Distribuzione Diretta HBV',
@@ -1626,15 +1625,14 @@ if (!AppData || !AppData.pazienti || AppData.pazienti.length === 0) {
       if (entecavir && (!entecavir.pianoTerapeutico || !entecavir.canaleDistribuzione)) {
         entecavir.canaleDistribuzione = 'territoriale_asl';
         entecavir.cprPerScatola = 30;
-        if (!entecavir.scorta || entecavir.scorta < 110) entecavir.scorta = 111;
+        if (!entecavir.scorta) entecavir.scorta = 107;
         entecavir.ultimoRitiro = '2026-11-16';
         entecavir.pianoTerapeutico = {
           attivo: true,
           dataScadenza: '2027-02-22',
           protocollo: '011BQ1X145RHL',
           scatoleTotali: 12,
-          scatoleRitirate: 12,
-          scatoleResidue: 0,
+          scatoleRitirate: 10, scatoleResidue: 2,
           centroPrescrittore: 'U.O. Malattie Infettive ed Epatologia - Policlinico di Bari (Dr. M. Milella / Prof.ssa A. Saracino)',
           sedeRitiro: 'Farmacia Territoriale ASL Bari - Ex CTO',
           note: '1 cpr/die a digiuno (almeno 2h prima o dopo i pasti) - PHT Distribuzione Diretta HBV',
@@ -2134,15 +2132,14 @@ if (!AppData || !AppData.pazienti || AppData.pazienti.length === 0) {
     ciroAllinea.terapie = ciroAllinea.terapie || [];
     let tEnt = ciroAllinea.terapie.find(t => (t.farmaco || '').toLowerCase().includes('entecavir'));
     if (tEnt) {
-      tEnt.scorta = 111;
+      tEnt.scorta = 107;
       tEnt.ultimoRitiro = '2026-11-16';
       tEnt.canaleDistribuzione = 'territoriale_asl';
       tEnt.pianoTerapeutico = tEnt.pianoTerapeutico || {};
       let pt = tEnt.pianoTerapeutico;
       pt.attivo = true;
       pt.scatoleTotali = 12;
-      pt.scatoleRitirate = 12;
-      pt.scatoleResidue = 0;
+      pt.scatoleRitirate = 10; pt.scatoleResidue = 2;
       pt.dataScadenza = '2027-02-22';
       pt.protocollo = '011BQ1X145RHL';
       pt.centroPrescrittore = 'U.O. Malattie Infettive ed Epatologia - Policlinico di Bari (Dr. M. Milella / Prof.ssa A. Saracino)';
@@ -2174,8 +2171,7 @@ if (!AppData || !AppData.pazienti || AppData.pazienti.length === 0) {
         dataPrescrizioneInizio: "2026-02-23",
         dataScadenzaAnno: "2027-02-22",
         prossimaVisitaAmbulatoriale: "2027-02-23",
-        scatoleRitirateTotali: 12,
-        scatoleResidueDaRitirare: 0,
+        scatoleRitirateTotali: 10, scatoleResidueDaRitirare: 2,
         puntoRitiro: "Farmacia Territoriale ASL Bari Ex CTO",
         storicoRitiri: [
           { data: "2026-02-23", scatole: 3, puntoRitiro: "Farmacia Territoriale ASL Bari Ex CTO", note: "1° Tranche" },
@@ -25141,8 +25137,7 @@ function getPianoTerapeuticoAttivo(paziente) {
         dataPrescrizioneInizio: "2026-02-23",
         dataScadenzaAnno: "2027-02-22",
         prossimaVisitaAmbulatoriale: "2027-02-23",
-        scatoleRitirateTotali: 12,
-        scatoleResidueDaRitirare: 0,
+        scatoleRitirateTotali: 10, scatoleResidueDaRitirare: 2,
         puntoRitiro: "Farmacia Territoriale ASL Bari Ex CTO",
         storicoRitiri: [
           { data: "2026-02-23", scatole: 3, puntoRitiro: "Farmacia Territoriale ASL Bari Ex CTO", note: "1° Tranche" },

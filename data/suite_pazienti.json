@@ -69,7 +69,7 @@
           "dosaggio": "100 mg (1 capsula)",
           "modo": "A colazione con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
-          "scorta": 529,
+          "scorta": 528,
           "fattoOggi": true,
           "ultimaDoseSomministrata": 1,
           "ultimoRitiro": "2026-11-07T19:46:40.008Z",
@@ -85,10 +85,12 @@
           "dosaggio": "100 mg (1 capsula)",
           "modo": "A pranzo con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
-          "scorta": 529,
-          "fattoOggi": false,
+          "scorta": 528,
+          "fattoOggi": true,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T19:46:40.008Z"
+          "ultimoRitiro": "2026-11-07T19:46:40.008Z",
+          "fattoOggiTimestamp": 1795350608745,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 104,
@@ -112,7 +114,7 @@
           "dosaggio": "200 mg (2 capsule insieme)",
           "modo": "Dopo cena (Dose serale cumulativa di 2 capsule = 200 mg)",
           "cprPerScatola": 56,
-          "scorta": 529,
+          "scorta": 528,
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
           "ultimoRitiro": "2026-11-07T19:46:40.008Z"
@@ -1521,6 +1523,20 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 0 minuti! Orario previsto: 08:30 - Orario effettivo assunzione: 08:30. Rimanenza scorta: 529 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795350608745",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T12:30:08.745Z",
+          "farmacoId": 1032,
+          "farmaco": "VIMPAT 100 mg (2ª dose)",
+          "dosaggio": "100 mg (1 capsula)",
+          "orarioPrevisto": "13:30",
+          "orarioReale": "13:30",
+          "minutiRitardo": 0,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 0 minuti! Orario previsto: 13:30 - Orario effettivo assunzione: 13:30. Rimanenza scorta: 528 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -1760,7 +1776,7 @@
           ]
         }
       },
-      "lastModified": 1795332657878
+      "lastModified": 1795350608745
     },
     {
       "id": "paz_angela",
@@ -1846,11 +1862,13 @@
           "dosaggio": "50.000 U.I. in 2,5 ml flaconcino monodose",
           "modo": "Assunzione orale periodica con un po' di cibo grasso [Ogni 15 giorni: il 15 e il 30 del mese]",
           "cprPerScatola": 1,
-          "scorta": 0.37,
+          "scorta": 0.3,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": false,
+          "fattoOggi": true,
           "cadenzaTipo": "quindicinale_15_30",
-          "ultimaDoseSomministrata": 0.06666666666666667
+          "ultimaDoseSomministrata": 0.06666666666666667,
+          "fattoOggiTimestamp": 1795348884299,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 204,
@@ -1861,10 +1879,12 @@
           "dosaggio": "100 mg (1 cpr gastroresistente)",
           "modo": "A metà o fine pranzo con abbondante acqua (Antiaggregante piastrinico salvacuore)",
           "cprPerScatola": 30,
-          "scorta": 17,
+          "scorta": 16,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": false,
-          "ultimaDoseSomministrata": 1
+          "fattoOggi": true,
+          "ultimaDoseSomministrata": 1,
+          "fattoOggiTimestamp": 1795348888898,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 205,
@@ -1875,11 +1895,13 @@
           "dosaggio": "300 mg (1 compressa)",
           "modo": "Dopo pranzo (Uricosurico: riduzione e controllo dell'acido urico e prevenzione gotta)",
           "cprPerScatola": 30,
-          "scorta": 227,
+          "scorta": 226,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": false,
+          "fattoOggi": true,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T20:18:10.813Z"
+          "ultimoRitiro": "2026-11-07T20:18:10.813Z",
+          "fattoOggiTimestamp": 1795350704436,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 206,
@@ -3306,6 +3328,48 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 58 minuti! Orario previsto: 09:00 - Orario effettivo assunzione: 09:58. Rimanenza scorta: 15 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795348884299",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T12:01:24.299Z",
+          "farmacoId": 208,
+          "farmaco": "DIBASE 50.000 U.I. / 2,5 ml (Colecalciferolo)",
+          "dosaggio": "50.000 U.I. in 2,5 ml flaconcino monodose",
+          "orarioPrevisto": "10:00",
+          "orarioReale": "13:01",
+          "minutiRitardo": 181,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 3 ore e 1 min! Orario previsto: 10:00 - Orario effettivo assunzione: 13:01. Rimanenza scorta: 0.3 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795348888898",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T12:01:28.898Z",
+          "farmacoId": 204,
+          "farmaco": "Cardioaspirin 100 mg (Acido Acetilsalicilico)",
+          "dosaggio": "100 mg (1 cpr gastroresistente)",
+          "orarioPrevisto": "13:00",
+          "orarioReale": "13:01",
+          "minutiRitardo": 1,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 1 minuti! Orario previsto: 13:00 - Orario effettivo assunzione: 13:01. Rimanenza scorta: 16 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795350704436",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T12:31:44.435Z",
+          "farmacoId": 205,
+          "farmaco": "Allopurinolo Teva Italia 300 mg",
+          "dosaggio": "300 mg (1 compressa)",
+          "orarioPrevisto": "13:30",
+          "orarioReale": "13:31",
+          "minutiRitardo": 1,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 1 minuti! Orario previsto: 13:30 - Orario effettivo assunzione: 13:31. Rimanenza scorta: 226 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -3458,7 +3522,7 @@
       "lifestyle": "1.2",
       "goal": "mantenimento",
       "diagnosi": "Ipertensione arteriosa sistemica in polichemioterapia • Sindrome delle Apnee Ostruttive nel Sonno (OSAS) con indicazione ausilio CPAP notturna • Dislipidemia / Ipercolesterolemia • Iperuricemia con rischio gotta • Ipovitaminosi D3 (in integrazione ciclica con DIBASE) • Reflusso gastroesofageo / gastrite",
-      "lastModified": 1795337887485
+      "lastModified": 1795350713590
     },
     {
       "id": "paz_rosa",
@@ -3665,10 +3729,10 @@
           "quantitaQuota": 1,
           "modo": "A pranzo con acqua (Antiaggregante piastrinico / prevenzione cardiovascolare) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 71,
+          "scorta": 70,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": false,
+          "fattoOggi": true,
           "tipoFormulazione": "compressa",
           "penneScorta": 77,
           "unitaDoseDie": 1,
@@ -3681,7 +3745,9 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1
+          "ultimaDoseSomministrata": 1,
+          "fattoOggiTimestamp": 1795350768553,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 1794119202709,
@@ -3693,10 +3759,10 @@
           "quantitaQuota": 1,
           "modo": "Al mattino con acqua (Diabete / cuore / reni) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 54,
+          "scorta": 53,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": false,
+          "fattoOggi": true,
           "tipoFormulazione": "compressa",
           "penneScorta": 60,
           "unitaDoseDie": 1,
@@ -3709,7 +3775,9 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1
+          "ultimaDoseSomministrata": 1,
+          "fattoOggiTimestamp": 1795350771805,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 1794120309246,
@@ -7132,6 +7200,34 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 0 minuti! Orario previsto: 10:30 - Orario effettivo assunzione: 10:30. Rimanenza scorta: 16 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795350768554",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T12:32:48.553Z",
+          "farmacoId": 1794118995873,
+          "farmaco": "AVERELIX 75 mg",
+          "dosaggio": "75 mg (1 cpr)",
+          "orarioPrevisto": "13:29",
+          "orarioReale": "13:32",
+          "minutiRitardo": 3,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 3 minuti! Orario previsto: 13:29 - Orario effettivo assunzione: 13:32. Rimanenza scorta: 70 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795350771805",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T12:32:51.805Z",
+          "farmacoId": 1794119202709,
+          "farmaco": "FORXIGA 10 mg",
+          "dosaggio": "10 mg (1 cpr)",
+          "orarioPrevisto": "13:30",
+          "orarioReale": "13:32",
+          "minutiRitardo": 2,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 2 minuti! Orario previsto: 13:30 - Orario effettivo assunzione: 13:32. Rimanenza scorta: 53 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -7382,7 +7478,7 @@
       "lifestyle": "1.2",
       "goal": "mantenimento",
       "diagnosi": "Diabete mellito tipo 2 in terapia insulinica e orale (Xultophy, Diamicron, Forxiga) • Cardiopatia ipertensiva / scompenso cardiaco (Congescor, Triatec, Lasix, Forxiga) • Prevenzione eventi aterotrombotici / antiaggregazione piastrinica (Averelix Clopidogrel) • Morbo di Parkinson / parkinsonismo (Sinemet) • Iperuricemia / gotta (Adenuric) • Osteoartrosi con dolore cronico (Arcoxia) • Ipovitaminosi D (Fedivelle) • Dislipidemia / Ipercolesterolemia (Sivastin)",
-      "lastModified": 1795342563844,
+      "lastModified": 1795350771807,
       "cartelleCroniche": {
         "diabete": {
           "chiave": "diabete",
@@ -10642,5 +10738,5 @@
       "esito": "Ripristinato forzatamente al 75%-100%"
     }
   ],
-  "ultimoAggiornamento": "2026-11-22T11:46:40.493Z"
+  "ultimoAggiornamento": "2026-11-22T12:58:40.159Z"
 }
