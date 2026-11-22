@@ -4368,6 +4368,8 @@ function apriModalCestino() {
   }
 }
 
+var _cestinoSelezionati = new Set();
+
 function renderCestino() {
   const box = document.getElementById('cestino-lista');
   if (!box) return;
@@ -4375,16 +4377,44 @@ function renderCestino() {
   cestinoAggiornaBadge();
   const btnSvuota = document.getElementById('cestino-btn-svuota');
   if (btnSvuota) btnSvuota.style.display = lista.length ? 'inline-flex' : 'none';
+
+  // Rimuovi eventuali id selezionati non più presenti
+  const idsEsistenti = new Set(lista.map(x => x.id));
+  _cestinoSelezionati.forEach(id => {
+    if (!idsEsistenti.has(id)) _cestinoSelezionati.delete(id);
+  });
+
   if (!lista.length) {
     box.innerHTML = '<div class="cestino-vuoto"><div style="font-size:42px;">✨</div><b>Il Cestino è vuoto</b><span>Tutto ciò che elimini (farmaci, visite, note, cartelle) compare qui e resta recuperabile per ' + CESTINO_GIORNI + ' giorni.</span></div>';
+    aggiornaBarraAzioniSelezioneCestino();
     return;
   }
-  box.innerHTML = lista.map(function (e) {
+
+  // Barra di Selezione Multipla con Checkbox "Seleziona Tutti"
+  let toolbarHtml = '<div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">' +
+    '<div style="display:flex; align-items:center; gap:8px;">' +
+    '  <input type="checkbox" id="cestino-check-all" onchange="cestinoToggleSelezionaTutti(this.checked)" style="width:19px; height:19px; cursor:pointer; accent-color:#0284c7;">' +
+    '  <label for="cestino-check-all" style="font-size:12.5px; font-weight:800; color:#334155; cursor:pointer; user-select:none;">Seleziona tutti gli elementi (' + lista.length + ')</label>' +
+    '</div>' +
+    '<div id="cestino-azioni-selezione" style="display:none; align-items:center; gap:8px;">' +
+    '  <span id="cestino-conteggio-sel" style="font-size:12px; font-weight:800; color:#0284c7; background:#e0f2fe; padding:4px 10px; border-radius:20px;">0 selezionati</span>' +
+    '  <button type="button" onclick="cestinoEliminaSelezionati()" class="btn" style="background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color:#ffffff; border:none; padding:7px 16px; border-radius:10px; font-size:12.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(220,38,38,0.3);">' +
+    '    <span>🗑️</span> <span>Elimina selezionati</span>' +
+    '  </button>' +
+    '</div>' +
+    '</div>';
+
+  let itemsHtml = lista.map(function (e) {
     const t = CESTINO_TIPI[e.tipo] || { icona: '🗂️', nome: e.tipo || 'Elemento' };
     const ts = e.ts || Date.now();
     const giorniRimasti = Math.max(0, Math.ceil((ts + CESTINO_GIORNI * 86400000 - Date.now()) / 86400000));
     const quando = new Date(ts).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-    return '<div class="cestino-item">' +
+    const isChecked = _cestinoSelezionati.has(e.id);
+
+    return '<div class="cestino-item" style="border-color:' + (isChecked ? '#38bdf8; background:#f0f9ff;' : '#e2e8f0; background:#ffffff;') + '">' +
+      '<div style="padding-right:8px; display:flex; align-items:center;">' +
+      '  <input type="checkbox" class="cestino-item-checkbox" value="' + e.id + '" ' + (isChecked ? 'checked' : '') + ' onchange="cestinoToggleItemSelezione('' + e.id + '', this.checked)" style="width:20px; height:20px; cursor:pointer; accent-color:#0284c7;">' +
+      '</div>' +
       '<div class="cestino-item-ico">' + t.icona + '</div>' +
       '<div class="cestino-item-body">' +
       '<div class="cestino-item-titolo">' + cestinoEsc(e.etichetta || 'Elemento eliminato') + '</div>' +
@@ -4395,10 +4425,97 @@ function renderCestino() {
       (e.dettaglio ? '<div class="cestino-item-dett">' + cestinoEsc(e.dettaglio) + '</div>' : '') +
       '</div>' +
       '<div class="cestino-item-azioni">' +
-      '<button type="button" class="btn cestino-btn-ripristina" onclick="cestinoRipristina(\'' + e.id + '\')">↩️ Ripristina</button>' +
-      '<button type="button" class="btn cestino-btn-elimina" onclick="cestinoEliminaDefinitivo(\'' + e.id + '\')" title="Elimina definitivamente questo elemento">🗑️ Elimina definitivamente</button>' +
+      '<button type="button" class="btn cestino-btn-ripristina" onclick="cestinoRipristina('' + e.id + '')">↩️ Ripristina</button>' +
+      '<button type="button" class="btn cestino-btn-elimina" onclick="cestinoEliminaDefinitivo('' + e.id + '')" title="Elimina definitivamente questo elemento">🗑️ Elimina definitivamente</button>' +
       '</div></div>';
   }).join('');
+
+  box.innerHTML = toolbarHtml + itemsHtml;
+  aggiornaBarraAzioniSelezioneCestino();
+}
+
+function cestinoToggleItemSelezione(id, checked) {
+  if (checked) {
+    _cestinoSelezionati.add(id);
+  } else {
+    _cestinoSelezionati.delete(id);
+  }
+  aggiornaBarraAzioniSelezioneCestino();
+}
+
+function cestinoToggleSelezionaTutti(checked) {
+  const lista = (AppData && Array.isArray(AppData._cestino)) ? AppData._cestino : [];
+  if (checked) {
+    lista.forEach(e => _cestinoSelezionati.add(e.id));
+  } else {
+    _cestinoSelezionati.clear();
+  }
+  const checkboxes = document.querySelectorAll('.cestino-item-checkbox');
+  checkboxes.forEach(cb => { cb.checked = checked; });
+  aggiornaBarraAzioniSelezioneCestino();
+}
+
+function aggiornaBarraAzioniSelezioneCestino() {
+  const count = _cestinoSelezionati.size;
+  const barra = document.getElementById('cestino-azioni-selezione');
+  const txt = document.getElementById('cestino-conteggio-sel');
+  const checkAll = document.getElementById('cestino-check-all');
+  const lista = (AppData && Array.isArray(AppData._cestino)) ? AppData._cestino : [];
+
+  if (barra) {
+    barra.style.display = count > 0 ? 'inline-flex' : 'none';
+  }
+  if (txt) {
+    txt.textContent = count + (count === 1 ? ' elemento selezionato' : ' elementi selezionati');
+  }
+  if (checkAll && lista.length) {
+    checkAll.checked = count === lista.length;
+    checkAll.indeterminate = count > 0 && count < lista.length;
+  }
+}
+
+async function cestinoEliminaSelezionati() {
+  const count = _cestinoSelezionati.size;
+  if (!count) {
+    showToast('Nessun elemento selezionato.', 'warning');
+    return;
+  }
+
+  var authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore (SOS999) per eliminare definitivamente ' + count + ' elementi selezionati dal Cestino:');
+  if (!authAdmin) {
+    showToast('Operazione annullata: password Admin non fornita.', 'warning');
+    return;
+  }
+
+  try {
+    let ok = false;
+    try {
+      if (typeof customConfirm === 'function') {
+        ok = await customConfirm(
+          'Elimina Selezionati',
+          'Verranno cancellati DEFINITIVAMENTE ' + count + ' elementi selezionati dal Cestino. Questa operazione è irreversibile.',
+          '⛔',
+          'Elimina ' + count + ' elementi'
+        );
+      } else {
+        ok = confirm('Vuoi eliminare definitivamente i ' + count + ' elementi selezionati? Non saranno più recuperabili.');
+      }
+    } catch (confErr) {
+      ok = confirm('Vuoi eliminare definitivamente i ' + count + ' elementi selezionati? Non saranno più recuperabili.');
+    }
+    if (!ok) return;
+
+    const lista = (AppData && Array.isArray(AppData._cestino)) ? AppData._cestino : [];
+    AppData._cestino = lista.filter(function(x) { return !_cestinoSelezionati.has(x.id); });
+    _cestinoSelezionati.clear();
+    saveDb();
+    renderCestino();
+    if (typeof cestinoAggiornaBadge === 'function') cestinoAggiornaBadge();
+    showToast(count + ' elementi eliminati definitivamente dal Cestino.', 'success');
+  } catch (err) {
+    console.error('Errore eliminazione elementi selezionati:', err);
+    showToast('Errore durante l\'eliminazione.', 'danger');
+  }
 }
 
 function cestinoRipristina(id) {
@@ -4443,7 +4560,6 @@ function cestinoRipristina(id) {
       }
       messaggio = '"' + e.etichetta + '" ripristinato per ' + (p.nome || 'l\'assistito') + '.';
     }
-
     AppData._cestino = lista.filter(function (x) { return x.id !== id; });
     saveDb();
     renderCestino();
@@ -4492,6 +4608,7 @@ async function cestinoEliminaDefinitivo(id) {
     }
     if (!ok) return;
     AppData._cestino = lista.filter(function (x) { return x.id !== id; });
+    _cestinoSelezionati.delete(id);
     saveDb();
     renderCestino();
     if (typeof cestinoAggiornaBadge === 'function') cestinoAggiornaBadge();
@@ -4532,6 +4649,7 @@ async function cestinoSvuota() {
     }
     if (!ok) return;
     AppData._cestino = [];
+    _cestinoSelezionati.clear();
     saveDb();
     renderCestino();
     if (typeof cestinoAggiornaBadge === 'function') cestinoAggiornaBadge();
@@ -4541,6 +4659,10 @@ async function cestinoSvuota() {
     showToast('Errore svuotamento cestino.', 'danger');
   }
 }
+
+window.cestinoToggleItemSelezione = cestinoToggleItemSelezione;
+window.cestinoToggleSelezionaTutti = cestinoToggleSelezionaTutti;
+window.cestinoEliminaSelezionati = cestinoEliminaSelezionati;
 window.apriModalCestino = apriModalCestino;
 window.renderCestino = renderCestino;
 window.cestinoRipristina = cestinoRipristina;
