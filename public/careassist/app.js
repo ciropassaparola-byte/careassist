@@ -18444,9 +18444,25 @@ window.addEventListener('DOMContentLoaded', () => {
   }, 2000);
 
   // Sincronizza all'istante non appena l'utente tocca lo schermo o torna sulla scheda del browser
-  window.addEventListener('focus', () => { sincronizzaDbDalServer(); });
+  // AUTO-SINCRONIZZAZIONE ISTANTANEA ALL'APERTURA, SBLOCCO O RITORNO SULL'APP
+  window.addEventListener('focus', () => {
+    sincronizzaDbDalServer(function(success) {
+      if (success && typeof showSyncToast === 'function') {
+        showSyncToast('Allineamento Cloud completato ✓', true);
+      }
+    });
+  });
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) sincronizzaDbDalServer();
+    if (!document.hidden) {
+      sincronizzaDbDalServer(function(success) {
+        if (success && typeof showSyncToast === 'function') {
+          showSyncToast('Allineamento Cloud completato ✓', true);
+        }
+      });
+    }
+  });
+  window.addEventListener('pageshow', () => {
+    sincronizzaDbDalServer();
   });
 
   // Monitoraggio continuo in tempo reale (Data/Orologio ogni secondo, Postura ogni secondo, Terapie globali)
@@ -36925,3 +36941,13 @@ function ascoltaScheda118Vocale() {
   }
 }
 window.ascoltaScheda118Vocale = ascoltaScheda118Vocale;
+
+
+// AUTO-SPEGNIMENTO PULITO SERVER SE CAREASSIST VIENE CHIUSO SU PC LOCALE
+window.addEventListener('beforeunload', function () {
+  try {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      navigator.sendBeacon('/api/shutdown');
+    }
+  } catch(e) {}
+});

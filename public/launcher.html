@@ -2560,7 +2560,17 @@
             }, 600);
         });
 
-        // NOTA: Lo spegnimento del server viene effettuato esclusivamente tramite l'apposito pulsante 'SPEGNI SISTEMA' con conferma.
+        // AUTO-SPEGNIMENTO PULITO INVISIBILE ALLA CHIUSURA DELLA FINESTRA
+        window.addEventListener('beforeunload', function () {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                try {
+                    // Invia beacon istantaneo al server locale prima che la finestra si chiuda
+                    navigator.sendBeacon('/api/shutdown');
+                } catch(e) {}
+            }
+        });
+        
+        // NOTA: Lo spegnimento del server viene effettuato sia automaticamente alla chiusura della finestra sia con conferma dal pulsante.
 
         // Auto-fullscreen rimosso per consentire flessibilita' e finestra standard
     </script>
