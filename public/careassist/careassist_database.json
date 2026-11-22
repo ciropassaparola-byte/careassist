@@ -1,5 +1,5 @@
 {
-  "activePazienteId": "paz_aldo",
+  "activePazienteId": "paz_1793216119572",
   "pazienti": [
     {
       "id": "paz_aldo",
@@ -23,10 +23,12 @@
           "dosaggio": "40 mg (1 cpr gastroresistente)",
           "modo": "A DIGIUNO, 30 min prima di colazione (Protezione gastrica)",
           "cprPerScatola": 28,
-          "scorta": 38,
-          "fattoOggi": false,
+          "scorta": 37,
+          "fattoOggi": true,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T21:20:21.450Z"
+          "ultimoRitiro": "2026-11-07T21:20:21.450Z",
+          "fattoOggiTimestamp": 1795330457104,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 1794085262569,
@@ -38,7 +40,7 @@
           "quantitaQuota": 1,
           "modo": "A colazione (Controllo frequenza cardiaca e pressione)",
           "cprPerScatola": 28,
-          "scorta": 83,
+          "scorta": 82,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -65,7 +67,7 @@
           "dosaggio": "100 mg (1 capsula)",
           "modo": "A colazione con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
-          "scorta": 532,
+          "scorta": 530,
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
           "ultimoRitiro": "2026-11-07T19:46:40.008Z"
@@ -79,7 +81,7 @@
           "dosaggio": "100 mg (1 capsula)",
           "modo": "A pranzo con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
-          "scorta": 532,
+          "scorta": 530,
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
           "ultimoRitiro": "2026-11-07T19:46:40.008Z"
@@ -106,7 +108,7 @@
           "dosaggio": "200 mg (2 capsule insieme)",
           "modo": "Dopo cena (Dose serale cumulativa di 2 capsule = 200 mg)",
           "cprPerScatola": 56,
-          "scorta": 532,
+          "scorta": 530,
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
           "ultimoRitiro": "2026-11-07T19:46:40.008Z"
@@ -120,12 +122,19 @@
           "dosaggio": "25 mg (1 cpr rivestita)",
           "modo": "Prima di coricarsi con acqua (Modulatore umore e sonno)",
           "cprPerScatola": 30,
-          "scorta": 21,
+          "scorta": 20,
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
         }
       ],
       "registrazioni": [
+        {
+          "id": "esc_1795330435929",
+          "timestamp": "2026-11-22T06:53:55.928Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 07:53 il farmaco \"Pantoprazolo 40 mg\" delle ore 07:30 risulta non ancora spuntato (+23 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
         {
           "id": "esc_1795290793525",
           "timestamp": "2026-11-21T19:53:13.471Z",
@@ -1414,6 +1423,72 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 30 minuti! Orario previsto: 20:30 - Orario effettivo assunzione: 21:00. Rimanenza scorta: 532 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795330457104",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T06:54:17.103Z",
+          "farmacoId": 101,
+          "farmaco": "Pantoprazolo 40 mg",
+          "dosaggio": "40 mg (1 cpr gastroresistente)",
+          "orarioPrevisto": "07:30",
+          "orarioReale": "07:54",
+          "minutiRitardo": 24,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 24 minuti! Orario previsto: 07:30 - Orario effettivo assunzione: 07:54. Rimanenza scorta: 37 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_sz03c",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T08:30:00.000Z",
+          "farmacoId": 1794085262569,
+          "farmaco": "Bisoprololo Teva/Sandoz 1,25 mg",
+          "dosaggio": "1,25 mg (1 cpr)",
+          "orarioPrevisto": "08:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 08:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 82 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_risgk",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T08:30:00.000Z",
+          "farmacoId": 103,
+          "farmaco": "VIMPAT 100 mg (1ª dose)",
+          "dosaggio": "100 mg (1 capsula)",
+          "orarioPrevisto": "08:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 08:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 531 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_l5e5a",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T13:30:00.000Z",
+          "farmacoId": 1032,
+          "farmaco": "VIMPAT 100 mg (2ª dose)",
+          "dosaggio": "100 mg (1 capsula)",
+          "orarioPrevisto": "13:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 13:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 530 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_bsz3z",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T21:30:00.000Z",
+          "farmacoId": 106,
+          "farmaco": "Quetiapina Teva 25 mg",
+          "dosaggio": "25 mg (1 cpr rivestita)",
+          "orarioPrevisto": "21:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 21:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 20 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -1653,7 +1728,7 @@
           ]
         }
       },
-      "lastModified": 1795329702254
+      "lastModified": 1795330463493
     },
     {
       "id": "paz_angela",
@@ -1705,7 +1780,7 @@
           "dosaggio": "300 mg / 12,5 mg (1 cpr rivestita)",
           "modo": "Al mattino dopo colazione con acqua (Antipertensivo combinato per la pressione arteriosa)",
           "cprPerScatola": 28,
-          "scorta": 15,
+          "scorta": 14,
           "farmacia": "Farmacia MACARIO",
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
@@ -1719,7 +1794,7 @@
           "dosaggio": "25 mg (1 compressa)",
           "modo": "Al mattino (Diuretico dell'ansa per eliminazione liquidi in eccesso ed edemi)",
           "cprPerScatola": 30,
-          "scorta": 17,
+          "scorta": 16,
           "farmacia": "Farmacia MACARIO",
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
@@ -1748,7 +1823,7 @@
           "dosaggio": "100 mg (1 cpr gastroresistente)",
           "modo": "A metà o fine pranzo con abbondante acqua (Antiaggregante piastrinico salvacuore)",
           "cprPerScatola": 30,
-          "scorta": 18,
+          "scorta": 17,
           "farmacia": "Farmacia MACARIO",
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
@@ -1762,7 +1837,7 @@
           "dosaggio": "300 mg (1 compressa)",
           "modo": "Dopo pranzo (Uricosurico: riduzione e controllo dell'acido urico e prevenzione gotta)",
           "cprPerScatola": 30,
-          "scorta": 228,
+          "scorta": 227,
           "farmacia": "Farmacia MACARIO",
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
@@ -1777,7 +1852,7 @@
           "dosaggio": "80 mg/ml (Gel orale / Bustina)",
           "modo": "1 ora dopo i pasti o al bisogno (Antiacido gastroprotettore contro bruciore e reflusso)",
           "cprPerScatola": 20,
-          "scorta": 8,
+          "scorta": 7,
           "farmacia": "Farmacia MACARIO",
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
@@ -3079,6 +3154,71 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 29 minuti! Orario previsto: 20:30 - Orario effettivo assunzione: 20:59. Rimanenza scorta: 17 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_ypek5",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T08:30:00.000Z",
+          "farmacoId": 202,
+          "farmaco": "Irbesartan/Idroclorotiazide Teva 300 mg/12,5 mg",
+          "dosaggio": "300 mg / 12,5 mg (1 cpr rivestita)",
+          "orarioPrevisto": "08:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 08:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 14 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_k8ddf",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T09:00:00.000Z",
+          "farmacoId": 203,
+          "farmaco": "Lasix 25 mg (Furosemide)",
+          "dosaggio": "25 mg (1 compressa)",
+          "orarioPrevisto": "09:00",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 09:00 confermata e allineata alle scorte (-1 cpr). Rimanenza: 16 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_x6ftn",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T13:00:00.000Z",
+          "farmacoId": 204,
+          "farmaco": "Cardioaspirin 100 mg (Acido Acetilsalicilico)",
+          "dosaggio": "100 mg (1 cpr gastroresistente)",
+          "orarioPrevisto": "13:00",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 13:00 confermata e allineata alle scorte (-1 cpr). Rimanenza: 17 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_gkq91",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T13:30:00.000Z",
+          "farmacoId": 205,
+          "farmaco": "Allopurinolo Teva Italia 300 mg",
+          "dosaggio": "300 mg (1 compressa)",
+          "orarioPrevisto": "13:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 13:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 227 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_0jun6",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T15:30:00.000Z",
+          "farmacoId": 206,
+          "farmaco": "Riopan 80 mg/ml (Magaldrato)",
+          "dosaggio": "80 mg/ml (Gel orale / Bustina)",
+          "orarioPrevisto": "15:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 15:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 7 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -3312,7 +3452,7 @@
           "quantitaQuota": 1,
           "modo": "Al mattino (Diuretico: edemi / scompenso) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 30,
-          "scorta": 25,
+          "scorta": 24,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3340,7 +3480,7 @@
           "quantitaQuota": 1,
           "modo": "A colazione (Beta-bloccante: frequenza cardiaca) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 7,
+          "scorta": 6,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3368,7 +3508,7 @@
           "quantitaQuota": 2,
           "modo": "30 min prima dei pasti a stomaco vuoto con acqua (Parkinson) - ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 50,
-          "scorta": 48,
+          "scorta": 44,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3396,7 +3536,7 @@
           "quantitaQuota": 1,
           "modo": "A stomaco pieno (Antinfiammatorio: dolore artrosi) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 20,
-          "scorta": 18,
+          "scorta": 17,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3424,7 +3564,7 @@
           "quantitaQuota": 1,
           "modo": "A pranzo con acqua (Antiaggregante piastrinico / prevenzione cardiovascolare) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 72,
+          "scorta": 71,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3452,7 +3592,7 @@
           "quantitaQuota": 1,
           "modo": "Al mattino con acqua (Diabete / cuore / reni) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 55,
+          "scorta": 54,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3480,7 +3620,7 @@
           "quantitaQuota": 1,
           "modo": "A GIORNI ALTERNI con Sivastin - dopo pranzo con acqua (Acido urico / gotta) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 55,
+          "scorta": 54,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3508,7 +3648,7 @@
           "quantitaQuota": 2,
           "modo": "30 min prima dei pasti a stomaco vuoto con acqua (Parkinson) - ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 50,
-          "scorta": 48,
+          "scorta": 44,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -3536,7 +3676,7 @@
           "quantitaQuota": 1,
           "modo": "A GIORNI ALTERNI con Adenuric - la sera prima di dormire (Statina: colesterolo) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 29,
+          "scorta": 28,
           "giorniAlert": 7,
           "cadenzaTipo": "",
           "fattoOggi": false,
@@ -6655,6 +6795,123 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 1 ore e 33 min! Orario previsto: 17:30 - Orario effettivo assunzione: 19:03. Rimanenza scorta: 3.52 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_mwtfr",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T08:30:00.000Z",
+          "farmacoId": 1794119271026,
+          "farmaco": "LASIX 25 mg",
+          "dosaggio": "25 mg (1 cpr)",
+          "orarioPrevisto": "08:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 08:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 24 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_b60kx",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T10:00:00.000Z",
+          "farmacoId": 1794120216740,
+          "farmaco": "CONGESCOR 2,5 mg",
+          "dosaggio": "2,5 mg (1 cpr)",
+          "orarioPrevisto": "10:00",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 10:00 confermata e allineata alle scorte (-1 cpr). Rimanenza: 6 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_4sr36",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T10:00:00.000Z",
+          "farmacoId": 1794119856922,
+          "farmaco": "SINEMET 100+25 mg (1ª dose: 2 cpr - ore 10:00)",
+          "dosaggio": "100/25 mg (2 cpr)",
+          "orarioPrevisto": "10:00",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 10:00 confermata e allineata alle scorte (-2 cpr). Rimanenza: 46 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_6z0pq",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T10:30:00.000Z",
+          "farmacoId": 1794119962919,
+          "farmaco": "ARCOXIA 90 mg",
+          "dosaggio": "90 mg (1 cpr)",
+          "orarioPrevisto": "10:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 10:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 17 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_b4kpv",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T13:29:00.000Z",
+          "farmacoId": 1794118995873,
+          "farmaco": "AVERELIX 75 mg",
+          "dosaggio": "75 mg (1 cpr)",
+          "orarioPrevisto": "13:29",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 13:29 confermata e allineata alle scorte (-1 cpr). Rimanenza: 71 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_1oqb4",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T13:30:00.000Z",
+          "farmacoId": 1794119202709,
+          "farmaco": "FORXIGA 10 mg",
+          "dosaggio": "10 mg (1 cpr)",
+          "orarioPrevisto": "13:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 13:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 54 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_wgqle",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T16:00:00.000Z",
+          "farmacoId": 1794120309246,
+          "farmaco": "ADENURIC 80 mg",
+          "dosaggio": "80 mg (1 cpr)",
+          "orarioPrevisto": "16:00",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 16:00 confermata e allineata alle scorte (-1 cpr). Rimanenza: 54 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_a2jg4",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T16:00:00.000Z",
+          "farmacoId": 1794119857233,
+          "farmaco": "SINEMET 100+25 mg (2ª dose: 2 cpr - ore 16:00)",
+          "dosaggio": "100/25 mg (2 cpr)",
+          "orarioPrevisto": "16:00",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 16:00 confermata e allineata alle scorte (-2 cpr). Rimanenza: 44 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_9r4i5",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T16:00:00.000Z",
+          "farmacoId": 1793458294388,
+          "farmaco": "SIVASTIN 20 mg",
+          "dosaggio": "20 mg (1 cpr)",
+          "orarioPrevisto": "16:00",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 16:00 confermata e allineata alle scorte (-1 cpr). Rimanenza: 28 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -7024,7 +7281,7 @@
           "quantitaQuota": 1,
           "modo": "Una volta al giorno a digiuno (almeno 2 ore prima o 2 ore dopo un pasto) – Antivirale specifico inibitore nucleosidico della trascrittasi inversa per il trattamento dell'infezione cronica da virus dell'epatite B (HBV).",
           "cprPerScatola": 30,
-          "scorta": 109,
+          "scorta": 108,
           "giorniAlert": 10,
           "cadenzaTipo": "giornaliera",
           "cadenzaGiorniSpecifici": null,
@@ -7033,7 +7290,7 @@
           "cadenzaDataInizio": null,
           "cadenzaMeseAnnuale": null,
           "cadenzaGiornoAnnuale": null,
-          "fattoOggi": false,
+          "fattoOggi": true,
           "ultimaModificaTimestamp": 1795186999523,
           "tipoFormulazione": "compressa",
           "canaleDistribuzione": "territoriale_asl",
@@ -7141,7 +7398,9 @@
               "cprAggiunte": 90,
               "note": "4° Ritiro ASL ufficiale (16/11/2026)"
             }
-          ]
+          ],
+          "fattoOggiTimestamp": 1795330483708,
+          "fattoOggiGiorno": "2026-11-22"
         }
       ],
       "registrazioni": [
@@ -7433,6 +7692,20 @@
           "minutiRitardo": 724,
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 12 ore e 4 min! Orario previsto: 07:00 - Orario effettivo assunzione: 19:04. Rimanenza scorta: 109 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795330483708",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T06:54:43.708Z",
+          "farmacoId": 1793544102871,
+          "farmaco": "Entecavir Sandoz 0,5 mg",
+          "dosaggio": "0,5 mg (1 cpr)",
+          "orarioPrevisto": "07:00",
+          "orarioReale": "07:54",
+          "minutiRitardo": 54,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 54 minuti! Orario previsto: 07:00 - Orario effettivo assunzione: 07:54. Rimanenza scorta: 108 cpr.",
           "operatore": "Ciro Milella (Admin)"
         }
       ],
@@ -8534,7 +8807,7 @@
           ]
         }
       ],
-      "lastModified": 1795284265993
+      "lastModified": 1795330483709
     },
     {
       "id": "paz_mariacarmela",
@@ -8589,7 +8862,7 @@
           "quantitaQuota": 1,
           "modo": "Al mattino con acqua • Beta-bloccante per ipertensione arteriosa, angina pectoris e aritmie.",
           "cprPerScatola": 42,
-          "scorta": 35,
+          "scorta": 34,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -8617,7 +8890,7 @@
           "quantitaQuota": 1,
           "modo": "Al mattino a colazione (ACE-inibitore / Pressione e insufficienza cardiaca) • ACE-inibitore: controllo ottimale dell'ipertensione e rimodellamento miocardico.",
           "cprPerScatola": 28,
-          "scorta": 16,
+          "scorta": 15,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -9052,6 +9325,32 @@
           "timestamp": "2026-11-08T17:35:56.463Z",
           "desc": "Carico Farmacia: Ritiro di 1 scatola di Triatec 5 mg (+28 cpr). Nuova scorta: 35 cpr.",
           "operatore": "Operatore OSS / Famiglia"
+        },
+        {
+          "id": "log_recup_1795330463492_yth2a",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T08:30:00.000Z",
+          "farmacoId": 1794145563718,
+          "farmaco": "ATENOLOLO HEXAL",
+          "dosaggio": "50 mg (1 cpr)",
+          "orarioPrevisto": "08:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 08:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 34 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_recup_1795330463492_44ml3",
+          "tipo": "farmaco_recuperato",
+          "timestamp": "2026-11-21T08:30:00.000Z",
+          "farmacoId": 1794159380065,
+          "farmaco": "Triatec 5 mg",
+          "dosaggio": "5 mg (1 cpr)",
+          "orarioPrevisto": "08:30",
+          "orarioReale": "Recuperata alle 07:54",
+          "azione": "somministrazione_retroattiva",
+          "dettaglio": "✅ Somministrazione di Ieri (21/11/2026) ore 08:30 confermata e allineata alle scorte (-1 cpr). Rimanenza: 15 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [],
@@ -9082,14 +9381,14 @@
       "lastModified": 1794389658760
     }
   ],
-  "lastModified": 1795329702254,
+  "lastModified": 1795330483709,
   "lastModifiedDevice": "pc",
   "lastModifiedBy": {
     "nome": "Ciro Milella (Admin)",
     "ruolo": "admin",
-    "paziente": "Aldo Zamparino",
-    "ora": "07:41",
-    "timestamp": 1795329702254
+    "paziente": "Ciro Milella",
+    "ora": "07:54",
+    "timestamp": 1795330483709
   },
   "ultimoGiornoOperativo": "2026-11-22",
   "aldoVimpatInizializzato2026": true,
@@ -10160,7 +10459,7 @@
     "attivo": true,
     "livelloMinimo": "75%",
     "dispositivo": "PC Postazione",
-    "ora": "21:00:14",
+    "ora": "07:54:39",
     "motivo": "Allarme Terapia in Corso / Scaduta"
   },
   "_auditAntiFurbiVolume": [
