@@ -5689,6 +5689,31 @@
         inp.value = '';
     }
 
+    
+    // Auto-Fullscreen immediato al primo tocco o digitazione nella maschera
+    (function() {
+      var triggered = false;
+      function attivaFsSubito() {
+        if (triggered) return;
+        triggered = true;
+        if (!document.fullscreenElement) {
+          try {
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(){});
+            } else if (document.documentElement.webkitRequestFullscreen) {
+              document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+              document.documentElement.msRequestFullscreen();
+            }
+          } catch(e){}
+        }
+        window.removeEventListener('click', attivaFsSubito);
+        window.removeEventListener('keydown', attivaFsSubito);
+      }
+      window.addEventListener('click', attivaFsSubito, { once: true });
+      window.addEventListener('keydown', attivaFsSubito, { once: true });
+    })();
+  
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().catch(()=>{});
