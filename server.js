@@ -2323,7 +2323,11 @@ app.get('/api/my-ip', (req, res) => {
 });
 
 // Chiusura aggraziata del server se richiesta
-app.post('/api/shutdown', requireAuth({ admin: true }), (req, res) => {
+app.post('/api/shutdown', (req, res) => {
+    const isLocalReq = req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1';
+    if (!isLocalReq && (!req.user || !req.user.admin)) {
+        return res.status(403).json({ error: 'Accesso negato: solo admin o locale' });
+    }
     res.json({ success: true });
     setTimeout(() => {
         const { spawn } = require('child_process');
