@@ -1,5 +1,5 @@
 {
-  "activePazienteId": "paz_1794120705837",
+  "activePazienteId": "paz_angela",
   "pazienti": [
     {
       "id": "paz_aldo",
@@ -1830,10 +1830,12 @@
           "dosaggio": "25 mg (1 compressa)",
           "modo": "Al mattino (Diuretico dell'ansa per eliminazione liquidi in eccesso ed edemi)",
           "cprPerScatola": 30,
-          "scorta": 16,
+          "scorta": 15,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": false,
-          "ultimaDoseSomministrata": 1
+          "fattoOggi": true,
+          "ultimaDoseSomministrata": 1,
+          "fattoOggiTimestamp": 1795337887485,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 208,
@@ -1909,6 +1911,13 @@
         }
       ],
       "registrazioni": [
+        {
+          "id": "esc_1795337873035",
+          "timestamp": "2026-11-22T08:57:53.033Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 09:57 il farmaco \"Lasix 25 mg (Furosemide)\" delle ore 09:00 risulta non ancora spuntato (+57 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
         {
           "id": "esc_1795290793584",
           "timestamp": "2026-11-21T19:53:13.471Z",
@@ -3283,6 +3292,20 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 2 minuti! Orario previsto: 08:30 - Orario effettivo assunzione: 08:32. Rimanenza scorta: 13 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795337887485",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T08:58:07.484Z",
+          "farmacoId": 203,
+          "farmaco": "Lasix 25 mg (Furosemide)",
+          "dosaggio": "25 mg (1 compressa)",
+          "orarioPrevisto": "09:00",
+          "orarioReale": "09:58",
+          "minutiRitardo": 58,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 58 minuti! Orario previsto: 09:00 - Orario effettivo assunzione: 09:58. Rimanenza scorta: 15 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -3435,7 +3458,7 @@
       "lifestyle": "1.2",
       "goal": "mantenimento",
       "diagnosi": "Ipertensione arteriosa sistemica in polichemioterapia • Sindrome delle Apnee Ostruttive nel Sonno (OSAS) con indicazione ausilio CPAP notturna • Dislipidemia / Ipercolesterolemia • Iperuricemia con rischio gotta • Ipovitaminosi D3 (in integrazione ciclica con DIBASE) • Reflusso gastroesofageo / gastrite",
-      "lastModified": 1795332724613
+      "lastModified": 1795337887485
     },
     {
       "id": "paz_rosa",
@@ -9562,14 +9585,14 @@
       "lastModified": 1795332864124
     }
   ],
-  "lastModified": 1795332864124,
+  "lastModified": 1795337887485,
   "lastModifiedDevice": "pc",
   "lastModifiedBy": {
     "nome": "Ciro Milella (Admin)",
     "ruolo": "admin",
-    "paziente": "Gabriele Francesco Stoppelli",
-    "ora": "08:34",
-    "timestamp": 1795332864124
+    "paziente": "Angela Mazzicone",
+    "ora": "09:58",
+    "timestamp": 1795337887485
   },
   "ultimoGiornoOperativo": "2026-11-22",
   "aldoVimpatInizializzato2026": true,
@@ -10640,7 +10663,7 @@
     "attivo": true,
     "livelloMinimo": "75%",
     "dispositivo": "PC Postazione",
-    "ora": "08:34:14",
+    "ora": "09:57:56",
     "motivo": "Allarme Terapia in Corso / Scaduta"
   },
   "_auditAntiFurbiVolume": [

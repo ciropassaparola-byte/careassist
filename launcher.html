@@ -1717,7 +1717,7 @@
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
                             careassist-r6lq.onrender.com
                         </div>
-                        <button onclick="selezionaProfiloCloud('https://careassist-r6lq.onrender.com')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r6lq.onrender.com', 'Profilo 1 (Master)')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -1741,7 +1741,7 @@
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
                             milella-suite-iv93.onrender.com
                         </div>
-                        <button onclick="selezionaProfiloCloud('https://milella-suite-iv93.onrender.com')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://milella-suite-iv93.onrender.com', 'Profilo 2 (Riserva A)')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -1765,7 +1765,7 @@
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
                             milella-suite.onrender.com
                         </div>
-                        <button onclick="selezionaProfiloCloud('https://milella-suite.onrender.com')" style="background:linear-gradient(135deg,#d4af37,#aa7c11); color:#0b0f19; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(212,175,55,0.3); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://milella-suite.onrender.com', 'Profilo 3 (Riserva B)')" style="background:linear-gradient(135deg,#d4af37,#aa7c11); color:#0b0f19; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(212,175,55,0.3); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -1789,7 +1789,7 @@
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
                             milella-suite-p4.onrender.com
                         </div>
-                        <button onclick="selezionaProfiloCloud('https://milella-suite-p4.onrender.com')" style="background:linear-gradient(135deg,#a855f7,#7e22ce); color:#fff; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(168,85,247,0.3); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://milella-suite-p4.onrender.com', 'Profilo 4 (Riserva C)')" style="background:linear-gradient(135deg,#a855f7,#7e22ce); color:#fff; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(168,85,247,0.3); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -1813,7 +1813,7 @@
                         <div style="font-size:11px; color:#64748b; font-family:monospace;">
                             http://localhost:3000
                         </div>
-                        <button onclick="selezionaProfiloCloud('http://localhost:3000')" style="background:linear-gradient(135deg,#0284c7,#0369a1); color:#fff; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(2,132,199,0.3); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('http://localhost:3000', 'Server Locale USB')" style="background:linear-gradient(135deg,#0284c7,#0369a1); color:#fff; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(2,132,199,0.3); flex-shrink:0;">
                             Passa a Locale ➔
                         </button>
                     </div>
@@ -2843,6 +2843,42 @@
                 }
             }
         }
+    }
+
+        function mostraNotificaEleganteSuite(titolo, messaggio, icona) {
+        const id = 'toastSuiteMilella';
+        let t = document.getElementById(id);
+        if (!t) {
+            t = document.createElement('div');
+            t.id = id;
+            t.style.cssText = 'position:fixed; bottom:28px; right:28px; z-index:999999; background:linear-gradient(135deg, rgba(15,28,48,0.96) 0%, rgba(7,13,24,0.98) 100%); border:1.5px solid rgba(34,197,94,0.6); box-shadow:0 15px 40px rgba(0,0,0,0.7), 0 0 25px rgba(34,197,94,0.3); border-radius:18px; padding:14px 20px; display:flex; align-items:center; gap:14px; color:#fff; font-family:"Outfit", sans-serif; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); transition:all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); transform:translateY(30px); opacity:0; pointer-events:none;';
+            document.body.appendChild(t);
+        }
+        t.innerHTML = '<div style="font-size:24px; line-height:1; filter:drop-shadow(0 2px 8px rgba(34,197,94,0.4));">' + (icona || '⚡') + '</div>' +
+                      '<div>' +
+                      '<div style="font-size:13.5px; font-weight:900; color:#4ade80; letter-spacing:0.3px;">' + titolo + '</div>' +
+                      '<div style="font-size:12px; color:#cbd5e1; margin-top:2px; font-weight:600;">' + messaggio + '</div>' +
+                      '</div>';
+        
+        t.style.pointerEvents = 'auto';
+        t.style.transform = 'translateY(0)';
+        t.style.opacity = '1';
+
+        clearTimeout(window._timerToastSuite);
+        window._timerToastSuite = setTimeout(() => {
+            t.style.transform = 'translateY(30px)';
+            t.style.opacity = '0';
+            t.style.pointerEvents = 'none';
+        }, 3200);
+    }
+
+    function impostaCanaleCloudAttivo(url, nomeCanale) {
+        try {
+            localStorage.setItem('milella_preferred_cloud', url);
+        } catch(e){}
+        chiudiCloudModal();
+        mostraNotificaEleganteSuite('CANALE AGGIORNATO CON SUCCESSO', nomeCanale + ' attivato e pronto all\'uso!', '✨');
+        try { aggiornaIndicatoriCanaleInUso(); } catch(e){}
     }
 
     function selezionaProfiloCloud(url) {
