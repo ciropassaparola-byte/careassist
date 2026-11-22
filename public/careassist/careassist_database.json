@@ -1,5 +1,5 @@
 {
-  "activePazienteId": "paz_angela",
+  "activePazienteId": "paz_rosa",
   "pazienti": [
     {
       "id": "paz_aldo",
@@ -3575,10 +3575,10 @@
           "quantitaQuota": 1,
           "modo": "A colazione (Beta-bloccante: frequenza cardiaca) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 28,
-          "scorta": 6,
+          "scorta": 5,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": false,
+          "fattoOggi": true,
           "tipoFormulazione": "compressa",
           "penneScorta": 13,
           "unitaDoseDie": 1,
@@ -3591,7 +3591,9 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1
+          "ultimaDoseSomministrata": 1,
+          "fattoOggiTimestamp": 1795339132885,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 1794119856922,
@@ -3603,10 +3605,10 @@
           "quantitaQuota": 2,
           "modo": "30 min prima dei pasti a stomaco vuoto con acqua (Parkinson) - ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 50,
-          "scorta": 44,
+          "scorta": 42,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": false,
+          "fattoOggi": true,
           "tipoFormulazione": "compressa",
           "penneScorta": 70,
           "unitaDoseDie": 1,
@@ -3619,7 +3621,9 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 2
+          "ultimaDoseSomministrata": 2,
+          "fattoOggiTimestamp": 1795339139706,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 1794119962919,
@@ -3631,10 +3635,10 @@
           "quantitaQuota": 1,
           "modo": "A stomaco pieno (Antinfiammatorio: dolore artrosi) ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 20,
-          "scorta": 17,
+          "scorta": 16,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": false,
+          "fattoOggi": true,
           "tipoFormulazione": "compressa",
           "penneScorta": 24,
           "unitaDoseDie": 1,
@@ -3647,7 +3651,9 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1
+          "ultimaDoseSomministrata": 1,
+          "fattoOggiTimestamp": 1795339857096,
+          "fattoOggiGiorno": "2026-11-22"
         },
         {
           "id": 1794118995873,
@@ -3743,7 +3749,7 @@
           "quantitaQuota": 2,
           "modo": "30 min prima dei pasti a stomaco vuoto con acqua (Parkinson) - ⚠️ Orario/dose da confermare col medico",
           "cprPerScatola": 50,
-          "scorta": 44,
+          "scorta": 42,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
           "fattoOggi": false,
@@ -7084,6 +7090,48 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 3 minuti! Orario previsto: 08:30 - Orario effettivo assunzione: 08:33. Rimanenza scorta: 23 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795339132885",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T09:18:52.884Z",
+          "farmacoId": 1794120216740,
+          "farmaco": "CONGESCOR 2,5 mg",
+          "dosaggio": "2,5 mg (1 cpr)",
+          "orarioPrevisto": "10:00",
+          "orarioReale": "10:18",
+          "minutiRitardo": 18,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 18 minuti! Orario previsto: 10:00 - Orario effettivo assunzione: 10:18. Rimanenza scorta: 5 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795339139706",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T09:18:59.706Z",
+          "farmacoId": 1794119856922,
+          "farmaco": "SINEMET 100+25 mg (1ª dose: 2 cpr - ore 10:00)",
+          "dosaggio": "100/25 mg (2 cpr)",
+          "orarioPrevisto": "10:00",
+          "orarioReale": "10:18",
+          "minutiRitardo": 18,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 18 minuti! Orario previsto: 10:00 - Orario effettivo assunzione: 10:18. Rimanenza scorta: 42 cpr.",
+          "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795339857096",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T09:30:57.095Z",
+          "farmacoId": 1794119962919,
+          "farmaco": "ARCOXIA 90 mg",
+          "dosaggio": "90 mg (1 cpr)",
+          "orarioPrevisto": "10:30",
+          "orarioReale": "10:30",
+          "minutiRitardo": 0,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 0 minuti! Orario previsto: 10:30 - Orario effettivo assunzione: 10:30. Rimanenza scorta: 16 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -7334,7 +7382,7 @@
       "lifestyle": "1.2",
       "goal": "mantenimento",
       "diagnosi": "Diabete mellito tipo 2 in terapia insulinica e orale (Xultophy, Diamicron, Forxiga) • Cardiopatia ipertensiva / scompenso cardiaco (Congescor, Triatec, Lasix, Forxiga) • Prevenzione eventi aterotrombotici / antiaggregazione piastrinica (Averelix Clopidogrel) • Morbo di Parkinson / parkinsonismo (Sinemet) • Iperuricemia / gotta (Adenuric) • Osteoartrosi con dolore cronico (Arcoxia) • Ipovitaminosi D (Fedivelle) • Dislipidemia / Ipercolesterolemia (Sivastin)",
-      "lastModified": 1795332793717,
+      "lastModified": 1795340613387,
       "cartelleCroniche": {
         "diabete": {
           "chiave": "diabete",
@@ -9585,14 +9633,14 @@
       "lastModified": 1795332864124
     }
   ],
-  "lastModified": 1795337887485,
+  "lastModified": 1795340613387,
   "lastModifiedDevice": "pc",
   "lastModifiedBy": {
     "nome": "Ciro Milella (Admin)",
     "ruolo": "admin",
-    "paziente": "Angela Mazzicone",
-    "ora": "09:58",
-    "timestamp": 1795337887485
+    "paziente": "Rosa Annunziata Cavalcante",
+    "ora": "10:43",
+    "timestamp": 1795340613387
   },
   "ultimoGiornoOperativo": "2026-11-22",
   "aldoVimpatInizializzato2026": true,
@@ -10663,7 +10711,7 @@
     "attivo": true,
     "livelloMinimo": "75%",
     "dispositivo": "PC Postazione",
-    "ora": "09:57:56",
+    "ora": "10:30:51",
     "motivo": "Allarme Terapia in Corso / Scaduta"
   },
   "_auditAntiFurbiVolume": [
