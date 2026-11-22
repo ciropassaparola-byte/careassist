@@ -12134,6 +12134,69 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
 
     </div>
   </div>
+
+  <script>
+    function toggleFullScreenCareAssist() {
+      try {
+        if (!document.fullscreenElement) {
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(function(){});
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen().catch(function(){});
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      } catch(e) {}
+    }
+
+    function aggiornaStatoIconaFullScreen() {
+      var ico = document.getElementById('icoFsCareAssist');
+      var lbl = document.getElementById('lblFsCareAssist');
+      if (!ico || !lbl) return;
+      if (document.fullscreenElement) {
+        ico.textContent = '🗗';
+        lbl.textContent = 'Riduci';
+      } else {
+        ico.textContent = '⛶';
+        lbl.textContent = 'Tutto Schermo';
+      }
+    }
+
+    document.addEventListener('fullscreenchange', aggiornaStatoIconaFullScreen);
+    document.addEventListener('webkitfullscreenchange', aggiornaStatoIconaFullScreen);
+    document.addEventListener('mozfullscreenchange', aggiornaStatoIconaFullScreen);
+    document.addEventListener('MSFullscreenChange', aggiornaStatoIconaFullScreen);
+
+    // Auto-apertura a tutto schermo al primo clic/interazione dell'utente nella maschera
+    (function() {
+      var hasTriggeredAutoFs = false;
+      function autoTriggerFs() {
+        if (hasTriggeredAutoFs) return;
+        hasTriggeredAutoFs = true;
+        if (!document.fullscreenElement) {
+          try {
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(function(){});
+            }
+          } catch(e) {}
+        }
+        window.removeEventListener('click', autoTriggerFs);
+        window.removeEventListener('keydown', autoTriggerFs);
+      }
+      window.addEventListener('click', autoTriggerFs, { once: true });
+      window.addEventListener('keydown', autoTriggerFs, { once: true });
+    })();
+  </script>
+
 </body>
 
 </html>
