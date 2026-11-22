@@ -1298,7 +1298,7 @@
     <!-- AZIONI RAPIDE IN HEADER -->
     <div class="top-actions">
       <!-- 0. PULSANTE GUIDA A COSA SERVE (A TUTTA LARGHEZZA SU SMARTPHONE) -->
-      <button type="button" onclick="document.getElementById('modal-guida-turnario').style.display='flex';" ontouchstart="document.getElementById('modal-guida-turnario').style.display='flex';" class="btn btn-cosa-serve" title="A cosa serve il Roster Sanitario Turni H24">
+      <button type="button" onclick="apriModalGuidaTurnario();" ontouchstart="apriModalGuidaTurnario();" class="btn btn-cosa-serve" title="A cosa serve il Roster Sanitario Turni H24">
         <span>💡</span> <span>A cosa serve questa maschera</span>
       </button>
 
@@ -3550,6 +3550,7 @@
 
 
 <!-- MODALE GUIDA CONTESTUALE TURNARIO ROSTER H24 -->
+<!-- MODALE GUIDA CONTESTUALE TURNARIO ROSTER H24 -->
 <div id="modal-guida-turnario" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999999; background:rgba(15,23,42,0.8); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px; box-sizing:border-box;">
   <div style="background:#ffffff; width:100%; max-width:540px; border-radius:20px; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.5); border:2px solid #38bdf8; animation:modalPopIn 0.25s cubic-bezier(0.16,1,0.3,1); display:flex; flex-direction:column; max-height:90vh;">
     
@@ -3561,11 +3562,21 @@
           <h3 style="font-size:15px; font-weight:900; margin:0; color:#ffffff;">Roster Sanitario &amp; Turnario Operatori H24</h3>
         </div>
       </div>
-      <button type="button" onclick="document.getElementById('modal-guida-turnario').style.display='none';" ontouchstart="document.getElementById('modal-guida-turnario').style.display='none';" style="background:rgba(255,255,255,0.2); border:none; color:#ffffff; width:32px; height:32px; border-radius:50%; font-size:16px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+      <button type="button" onclick="chiudiModalGuidaTurnario();" ontouchstart="chiudiModalGuidaTurnario();" style="background:rgba(255,255,255,0.2); border:none; color:#ffffff; width:32px; height:32px; border-radius:50%; font-size:16px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
     </div>
 
     <div style="padding:18px 20px; overflow-y:auto; -webkit-overflow-scrolling:touch; font-size:13px; color:#1e293b; line-height:1.5;">
       
+      <!-- CONTROLLO VOCALE ELSA NEURAL -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:#f0f9ff; border:1.5px solid #bae6fd; border-radius:12px; padding:10px 14px; box-shadow:0 2px 6px rgba(2,132,199,0.06);">
+        <div style="font-size:12px; font-weight:800; color:#0369a1; display:flex; align-items:center; gap:6px;">
+          <span>🤖</span> <span>Assistente Elsa Neural</span>
+        </div>
+        <button type="button" id="btnVoceTurnarioElsa" onclick="toggleVoceGuidaTurnario()" ontouchstart="toggleVoceGuidaTurnario()" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:1px solid #34d399; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(16,185,129,0.3); transition:all 0.2s;">
+          <span id="icoVoceTurnarioElsa">🔊</span> <span id="txtVoceTurnarioElsa">Ascolta con Elsa Neural</span>
+        </button>
+      </div>
+
       <div style="background:#eff6ff; border:1px solid #bfdbfe; border-left:4px solid #0284c7; border-radius:10px; padding:12px 14px; margin-bottom:14px;">
         <div style="font-size:11px; text-transform:uppercase; font-weight:900; color:#0369a1; letter-spacing:0.5px; margin-bottom:4px;">🎯 A cosa serve (Scopo del Turnario)</div>
         <div>Questa schermata gestisce la pianificazione continua e in tempo reale dell'assistenza domiciliare 24 ore su 24 (Mattina, Pomeriggio, Notte). Garantisce la copertura completa dei turni di assistenza per ciascun paziente, controllando il rispetto delle <b>11 ore di riposo obbligatorio</b> (D.Lgs. 66/2003) e dei massimali orari previsti dal CCNL socio-sanitario.</div>
@@ -3598,11 +3609,122 @@
     </div>
 
     <div style="padding:10px 18px; background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end;">
-      <button type="button" onclick="document.getElementById('modal-guida-turnario').style.display='none';" ontouchstart="document.getElementById('modal-guida-turnario').style.display='none';" style="background:#0284c7; color:#ffffff; border:none; padding:8px 20px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer;">Ho capito</button>
+      <button type="button" onclick="chiudiModalGuidaTurnario();" ontouchstart="chiudiModalGuidaTurnario();" style="background:#0284c7; color:#ffffff; border:none; padding:8px 20px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer;">Ho capito</button>
     </div>
 
   </div>
 </div>
+
+<script>
+// ==========================================================================
+// GUIDA VOCALE ELSA NEURAL PER IL ROSTER & TURNARIO H24
+// ==========================================================================
+let _audioTurnarioElsa = null;
+let _isVoceTurnarioInCorso = false;
+
+function apriModalGuidaTurnario() {
+  const m = document.getElementById('modal-guida-turnario');
+  if (m) m.style.display = 'flex';
+}
+
+function chiudiModalGuidaTurnario() {
+  fermaVoceTurnarioElsa();
+  const m = document.getElementById('modal-guida-turnario');
+  if (m) m.style.display = 'none';
+}
+
+function fermaVoceTurnarioElsa() {
+  if (_audioTurnarioElsa) {
+    try {
+      _audioTurnarioElsa.pause();
+      _audioTurnarioElsa.currentTime = 0;
+    } catch(e){}
+    _audioTurnarioElsa = null;
+  }
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.cancel(); } catch(e){}
+  }
+  _isVoceTurnarioInCorso = false;
+  aggiornaStatoBtnVoceTurnario(false);
+}
+
+function aggiornaStatoBtnVoceTurnario(inCorso) {
+  const btn = document.getElementById('btnVoceTurnarioElsa');
+  const ico = document.getElementById('icoVoceTurnarioElsa');
+  const txt = document.getElementById('txtVoceTurnarioElsa');
+  if (!btn) return;
+  if (inCorso) {
+    if (ico) ico.textContent = '⏹️';
+    if (txt) txt.textContent = 'Interrompi Voce';
+    btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+    btn.style.borderColor = '#f87171';
+  } else {
+    if (ico) ico.textContent = '🔊';
+    if (txt) txt.textContent = 'Ascolta con Elsa Neural';
+    btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    btn.style.borderColor = '#34d399';
+  }
+}
+
+function toggleVoceGuidaTurnario() {
+  if (_isVoceTurnarioInCorso) {
+    fermaVoceTurnarioElsa();
+    return;
+  }
+
+  const testo = "A cosa serve il Roster Sanitario e Turnario Operatori H24. " +
+    "Questa schermata gestisce la pianificazione continua e in tempo reale dell'assistenza domiciliare 24 ore su 24, " +
+    "suddivisa tra turni di mattina, pomeriggio e notte. " +
+    "Garantisce la copertura completa e senza scoperture per ciascun assistito, " +
+    "vigilando sul rispetto delle 11 ore di riposo obbligatorio previste dalla legge e sui massimali orari del CCNL socio-sanitario. " +
+    "Funzioni principali: " +
+    "Primo: Griglia turni e copertura in tempo reale, per sapere sempre chi è in servizio. " +
+    "Secondo: Condividi Turni WhatsApp, per inviare l'orario a tutto il personale con un solo tocco. " +
+    "Terzo: Registro consegne cliniche tra turnisti montanti e uscenti, con bilancio ore e straordinari. " +
+    "Quarto: Stampa del foglio turni in formato A4 ed esportazione automatica sul calendario di smartphone Google e Apple.";
+
+  fermaVoceTurnarioElsa();
+  _isVoceTurnarioInCorso = true;
+  aggiornaStatoBtnVoceTurnario(true);
+
+  const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+  const audio = new Audio(apiUrl);
+  _audioTurnarioElsa = audio;
+
+  audio.onended = function() {
+    fermaVoceTurnarioElsa();
+  };
+
+  audio.onerror = function() {
+    if ('speechSynthesis' in window) {
+      const utter = new SpeechSynthesisUtterance(testo);
+      utter.lang = 'it-IT';
+      utter.rate = 1.0;
+      utter.onend = function() { fermaVoceTurnarioElsa(); };
+      utter.onerror = function() { fermaVoceTurnarioElsa(); };
+      window.speechSynthesis.speak(utter);
+    } else {
+      fermaVoceTurnarioElsa();
+    }
+  };
+
+  audio.play().catch(function() {
+    if ('speechSynthesis' in window) {
+      const utter = new SpeechSynthesisUtterance(testo);
+      utter.lang = 'it-IT';
+      utter.rate = 1.0;
+      utter.onend = function() { fermaVoceTurnarioElsa(); };
+      utter.onerror = function() { fermaVoceTurnarioElsa(); };
+      window.speechSynthesis.speak(utter);
+    } else {
+      fermaVoceTurnarioElsa();
+    }
+  });
+}
+window.apriModalGuidaTurnario = apriModalGuidaTurnario;
+window.chiudiModalGuidaTurnario = chiudiModalGuidaTurnario;
+window.toggleVoceGuidaTurnario = toggleVoceGuidaTurnario;
+</script>
 
 </body>
 </html>
