@@ -525,6 +525,27 @@ window.eseguiStrumentoMobile = function(azione, e) {
     }
   }
   </style>
+
+<script>
+window.apriMenuOSSTuttiStrumenti = function(e) {
+  if (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+  }
+  var bs = document.getElementById('modal-menu-oss-bottomsheet');
+  if (bs) {
+    bs.style.setProperty('display', 'flex', 'important');
+    bs.style.display = 'flex';
+    bs.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  } else {
+    var d = document.getElementById('dropdown-menu-oss-top');
+    if (d) d.style.display = (d.style.display === 'block' ? 'none' : 'block');
+  }
+  return false;
+};
+</script>
+
 </head>
 
 <body>
@@ -11440,7 +11461,7 @@ window.eseguiStrumentoMobile = function(azione, e) {
     </button>
 
     <!-- 5. CASSETTO STRUMENTI COMPLETO (TUTTE LE FUNZIONI DEL PC) -->
-    <button type="button" class="bar-item" id="btn-bottombar-menu-oss" onclick="var m=document.getElementById('modal-menu-oss-bottomsheet'); if(m){ m.style.setProperty('display','flex','important'); m.style.display='flex'; m.classList.add('active'); document.body.style.overflow='hidden'; }" title="Apri tutti gli strumenti e registri del PC">
+    <button type="button" class="bar-item" id="btn-bottombar-menu-oss" onclick="window.apriMenuOSSTuttiStrumenti(event);" ontouchend="window.apriMenuOSSTuttiStrumenti(event);" title="Apri tutti gli strumenti e registri del PC">
       <span class="icon" style="font-size:20px; line-height:1;">⚡</span>
       <span style="font-size:10px; font-weight:800; margin-top:2px;">Menu</span>
     </button></nav>
@@ -12054,17 +12075,9 @@ window.eseguiStrumentoMobile = function(azione, e) {
   // Attach directly to Menu button in bottom bar
   var menuBtn = document.getElementById('btn-bottombar-menu-oss');
   if (menuBtn) {
-    var openHandler = function(e) {
-      if (e) { e.preventDefault(); e.stopPropagation(); }
-      bs.style.setProperty('display', 'flex', 'important');
-      bs.style.display = 'flex';
-      bs.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      return false;
-    };
-    menuBtn.addEventListener('click', openHandler, { passive: false });
-    menuBtn.addEventListener('pointerdown', openHandler, { passive: false });
-    menuBtn.addEventListener('touchstart', openHandler, { passive: false });
+    menuBtn.addEventListener('click', function(e) {
+      window.apriMenuOSSTuttiStrumenti(e);
+    });
   }
 })();
 </script>
