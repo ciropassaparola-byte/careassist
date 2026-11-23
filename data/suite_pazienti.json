@@ -24,11 +24,9 @@
           "modo": "A DIGIUNO, 30 min prima di colazione (Protezione gastrica)",
           "cprPerScatola": 28,
           "scorta": 37,
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T21:20:21.450Z",
-          "fattoOggiTimestamp": 1795330457104,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimoRitiro": "2026-11-07T21:20:21.450Z"
         },
         {
           "id": 1794085262569,
@@ -43,7 +41,7 @@
           "scorta": 81,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 89,
           "unitaDoseDie": 1,
@@ -56,9 +54,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795332654614,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 103,
@@ -70,11 +66,9 @@
           "modo": "A colazione con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
           "scorta": 528,
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T19:46:40.008Z",
-          "fattoOggiTimestamp": 1795332657877,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimoRitiro": "2026-11-07T19:46:40.008Z"
         },
         {
           "id": 1032,
@@ -86,11 +80,9 @@
           "modo": "A pranzo con acqua (Controllo neurologico)",
           "cprPerScatola": 56,
           "scorta": 528,
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T19:46:40.008Z",
-          "fattoOggiTimestamp": 1795350608745,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimoRitiro": "2026-11-07T19:46:40.008Z"
         },
         {
           "id": 104,
@@ -1804,7 +1796,7 @@
           "scorta": 12,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 21,
           "unitaDoseDie": 1,
@@ -1817,9 +1809,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795331997628,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 202,
@@ -1832,10 +1822,8 @@
           "cprPerScatola": 28,
           "scorta": 13,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795332724612,
-          "fattoOggiGiorno": "2026-11-22"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 203,
@@ -1848,10 +1836,8 @@
           "cprPerScatola": 30,
           "scorta": 15,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795337887485,
-          "fattoOggiGiorno": "2026-11-22"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 208,
@@ -1864,11 +1850,9 @@
           "cprPerScatola": 1,
           "scorta": 0.3,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "cadenzaTipo": "quindicinale_15_30",
-          "ultimaDoseSomministrata": 0.06666666666666667,
-          "fattoOggiTimestamp": 1795348884299,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 0.06666666666666667
         },
         {
           "id": 204,
@@ -1881,10 +1865,8 @@
           "cprPerScatola": 30,
           "scorta": 16,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795348888898,
-          "fattoOggiGiorno": "2026-11-22"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 205,
@@ -1897,11 +1879,9 @@
           "cprPerScatola": 30,
           "scorta": 226,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
-          "ultimoRitiro": "2026-11-07T20:18:10.813Z",
-          "fattoOggiTimestamp": 1795350704436,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimoRitiro": "2026-11-07T20:18:10.813Z"
         },
         {
           "id": 206,
@@ -1912,7 +1892,7 @@
           "dosaggio": "80 mg/ml (Gel orale / Bustina)",
           "modo": "1 ora dopo i pasti o al bisogno (Antiacido gastroprotettore contro bruciore e reflusso)",
           "cprPerScatola": 20,
-          "scorta": 7,
+          "scorta": 6,
           "farmacia": "Farmacia MACARIO",
           "fattoOggi": false,
           "ultimaDoseSomministrata": 1
@@ -3370,6 +3350,20 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 1 minuti! Orario previsto: 13:30 - Orario effettivo assunzione: 13:31. Rimanenza scorta: 226 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "log_1795371018676",
+          "tipo": "farmaco_ritardo",
+          "timestamp": "2026-11-22T18:10:18.676Z",
+          "farmacoId": 206,
+          "farmaco": "Riopan 80 mg/ml (Magaldrato)",
+          "dosaggio": "80 mg/ml (Gel orale / Bustina)",
+          "orarioPrevisto": "15:30",
+          "orarioReale": "19:10",
+          "minutiRitardo": 220,
+          "azione": "somministrazione",
+          "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 3 ore e 40 min! Orario previsto: 15:30 - Orario effettivo assunzione: 19:10. Rimanenza scorta: 6 cpr.",
+          "operatore": "Ciro Milella (Admin)"
         }
       ],
       "visite": [
@@ -3522,7 +3516,7 @@
       "lifestyle": "1.2",
       "goal": "mantenimento",
       "diagnosi": "Ipertensione arteriosa sistemica in polichemioterapia • Sindrome delle Apnee Ostruttive nel Sonno (OSAS) con indicazione ausilio CPAP notturna • Dislipidemia / Ipercolesterolemia • Iperuricemia con rischio gotta • Ipovitaminosi D3 (in integrazione ciclica con DIBASE) • Reflusso gastroesofageo / gastrite",
-      "lastModified": 1795350713590
+      "lastModified": 1795411763049
     },
     {
       "id": "paz_rosa",
@@ -3548,10 +3542,8 @@
           "cprPerScatola": 30,
           "scorta": 9,
           "farmacia": "Farmacia Girasole Picconi",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795332178156,
-          "fattoOggiGiorno": "2026-11-22"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 312,
@@ -3564,10 +3556,8 @@
           "cprPerScatola": 10,
           "scorta": 0,
           "farmacia": "Farmacia Girasole Picconi",
-          "fattoOggi": true,
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795332183565,
-          "fattoOggiGiorno": "2026-11-22"
+          "fattoOggi": false,
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794119789330,
@@ -3582,7 +3572,7 @@
           "scorta": 18,
           "giorniAlert": 7,
           "cadenzaTipo": "",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 25,
           "unitaDoseDie": 1,
@@ -3595,9 +3585,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 0.5,
-          "fattoOggiTimestamp": 1795332188795,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 0.5
         },
         {
           "id": 1794119271026,
@@ -3612,7 +3600,7 @@
           "scorta": 23,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 60,
           "unitaDoseDie": 1,
@@ -3625,9 +3613,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795332793716,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794120216740,
@@ -3642,7 +3628,7 @@
           "scorta": 5,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 13,
           "unitaDoseDie": 1,
@@ -3655,9 +3641,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795339132885,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794119856922,
@@ -3672,7 +3656,7 @@
           "scorta": 42,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 70,
           "unitaDoseDie": 1,
@@ -3685,9 +3669,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 2,
-          "fattoOggiTimestamp": 1795339139706,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 2
         },
         {
           "id": 1794119962919,
@@ -3702,7 +3684,7 @@
           "scorta": 16,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 24,
           "unitaDoseDie": 1,
@@ -3715,9 +3697,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795339857096,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794118995873,
@@ -3732,7 +3712,7 @@
           "scorta": 70,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 77,
           "unitaDoseDie": 1,
@@ -3745,9 +3725,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795350768553,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794119202709,
@@ -3762,7 +3740,7 @@
           "scorta": 53,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 60,
           "unitaDoseDie": 1,
@@ -3775,9 +3753,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795350771805,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794120309246,
@@ -7613,8 +7589,7 @@
           "cadenzaDataInizio": null,
           "cadenzaMeseAnnuale": null,
           "cadenzaGiornoAnnuale": null,
-          "fattoOggi": true,
-          "saltatoOggi": false,
+          "fattoOggi": false,
           "ultimaModificaTimestamp": 1795346030974,
           "tipoFormulazione": "compressa",
           "canaleDistribuzione": "territoriale_asl",
@@ -9108,7 +9083,7 @@
           "scorta": 33,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 41,
           "unitaDoseDie": 1,
@@ -9121,9 +9096,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795332860923,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         },
         {
           "id": 1794159380065,
@@ -9138,7 +9111,7 @@
           "scorta": 14,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 35,
           "unitaDoseDie": 1,
@@ -9151,9 +9124,7 @@
             "medico": "",
             "motivo": ""
           },
-          "ultimaDoseSomministrata": 1,
-          "fattoOggiTimestamp": 1795332864123,
-          "fattoOggiGiorno": "2026-11-22"
+          "ultimaDoseSomministrata": 1
         }
       ],
       "registrazioni": [
@@ -10745,5 +10716,5 @@
       "esito": "Ripristinato forzatamente al 75%-100%"
     }
   ],
-  "ultimoAggiornamento": "2026-11-22T18:07:19.577Z"
+  "ultimoAggiornamento": "2026-11-23T05:32:54.887Z"
 }
