@@ -3750,10 +3750,37 @@ function toggleVoceGuidaTurnario() {
   };
 
   audio.onerror = function() {
+    if (isLocal && !isPlaying) {
+      console.warn('[Elsa Turni] Server locale non pronto, carico Cloud Elsa Neural...');
+      const cloudAudio = new Audio(cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo));
+      _audioTurnarioElsa = cloudAudio;
+      cloudAudio.onplaying = function() {
+        isPlaying = true;
+        if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+        if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+      };
+      cloudAudio.onended = function() { fermaVoceTurnarioElsa(); };
+      cloudAudio.onerror = function() { avviaFallbackSubito(); };
+      cloudAudio.play().catch(function() { avviaFallbackSubito(); });
+      return;
+    }
     avviaFallbackSubito();
   };
 
   audio.play().catch(function() {
+    if (isLocal && !isPlaying) {
+      const cloudAudio = new Audio(cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo));
+      _audioTurnarioElsa = cloudAudio;
+      cloudAudio.onplaying = function() {
+        isPlaying = true;
+        if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+        if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+      };
+      cloudAudio.onended = function() { fermaVoceTurnarioElsa(); };
+      cloudAudio.onerror = function() { avviaFallbackSubito(); };
+      cloudAudio.play().catch(function() { avviaFallbackSubito(); });
+      return;
+    }
     avviaFallbackSubito();
   });
 }
