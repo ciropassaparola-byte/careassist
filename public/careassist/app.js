@@ -384,6 +384,7 @@ function fermaVoceHDGlobale() {
     } catch (e) { }
     _audioElementCareAssistAttivo = null;
   }
+  // Ferma qualsiasi sintesi vocale di sistema per evitare sovrapposizioni
   if ('speechSynthesis' in window) {
     try {
       window.speechSynthesis.cancel();
@@ -394,7 +395,7 @@ window.fermaVoceHDGlobale = fermaVoceHDGlobale;
 window.fermaVoceSintesiInApp = fermaVoceHDGlobale;
 
 function riproduciVoceNaturaleHD(testo, onEndCallback) {
-  // 1. Ferma tassativamente qualsiasi audio o sintesi pregressa
+  // 1. Zittisci qualsiasi voce o audio precedente
   fermaVoceHDGlobale();
   if (!testo || typeof testo !== 'string') return;
 
@@ -423,15 +424,9 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
   var ttsTesto = t.length > 700 ? t.substring(0, 700) : t;
   var encoded = encodeURIComponent(ttsTesto);
 
-  // COSTRUZIONE URL:
-  // Su PC se il server è su porta 3000 o 8080 o se siamo su Render, determiniamo l'URL primario
+  // URL per la Voce Elsa Neural HD
   var cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encoded;
   var localUrl = '/api/tts-umano?voice=elsa&text=' + encoded;
-
-  // Se siamo online o su Render, cloudUrl è sempre garantito
-  var targetUrl = (window.location && window.location.origin && window.location.origin.indexOf('careassist-r61q.onrender.com') !== -1)
-    ? localUrl
-    : (window.location && (window.location.port === '3000' || window.location.port === '8080') ? localUrl : cloudUrl);
 
   var isEnded = false;
   function handleEnd() {
@@ -443,34 +438,7 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     }
   }
 
-  // Fallback con SpeechSynthesis solo e soltanto se l'audio MP3 fallisce (es. offline senza rete né server locale)
-  function fallbackTTSLocale() {
-    if (isEnded) return;
-    console.warn('[CareAssist] Fallback voce sistema attiva...');
-    if (!('speechSynthesis' in window)) {
-      handleEnd();
-      return;
-    }
-    try {
-      window.speechSynthesis.cancel();
-      var u = new SpeechSynthesisUtterance(t);
-      u.lang = 'it-IT';
-      u.rate = 1.0;
-      var itVoices = (window.speechSynthesis.getVoices() || []).filter(function(v) {
-        return v.lang && v.lang.toLowerCase().indexOf('it') === 0;
-      });
-      var elsaV = itVoices.find(function(v) { return /elsa/i.test(v.name); })
-        || itVoices.find(function(v) { return /cosimo|isabella|alice|chiara|natural/i.test(v.name); })
-        || itVoices[0];
-      if (elsaV) u.voice = elsaV;
-      u.onend = function() { handleEnd(); };
-      u.onerror = function() { handleEnd(); };
-      window.speechSynthesis.speak(u);
-    } catch(e) {
-      handleEnd();
-    }
-  }
-
+  // Creazione Audio esclusivo Elsa Neural
   try {
     var audio = new Audio();
     _audioElementCareAssistAttivo = audio;
@@ -479,39 +447,42 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
       handleEnd();
     };
 
+    // Se per qualsiasi motivo l'audio locale fallisce, prova il Cloud Elsa Neural
     audio.onerror = function(err) {
-      console.warn('[Audio Elsa] Errore su targetUrl:', targetUrl, err);
-      // Se era localUrl, prova cloudUrl; se era cloudUrl, prova fallbackTTSLocale
-      if (targetUrl !== cloudUrl) {
-        targetUrl = cloudUrl;
+      console.warn('[Elsa Neural] Errore su primo URL, tentativo failover Cloud...', err);
+      if (audio.src !== cloudUrl) {
         audio.src = cloudUrl;
-        audio.play().catch(function() {
-          fallbackTTSLocale();
+        audio.play().catch(function(eCloud) {
+          console.warn('[Elsa Neural] Impossibile avviare Cloud:', eCloud);
+          handleEnd();
         });
       } else {
-        fallbackTTSLocale();
+        handleEnd();
       }
     };
 
-    audio.src = targetUrl;
+    // Decidi URL primario: se siamo in locale su 3000 o 8080 prova localUrl, altrimenti direttamente cloudUrl
+    var isLocalServer = (window.location && (window.location.port === '3000' || window.location.port === '8080'));
+    var primaryUrl = isLocalServer ? localUrl : cloudUrl;
+
+    audio.src = primaryUrl;
     var playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(function(errPlay) {
-        console.warn('[Audio Elsa] play() intercettato:', errPlay);
-        if (targetUrl !== cloudUrl) {
-          targetUrl = cloudUrl;
+        console.warn('[Elsa Neural] Primo play fallito, passo a Cloud Elsa:', errPlay);
+        if (audio.src !== cloudUrl) {
           audio.src = cloudUrl;
           audio.play().catch(function() {
-            fallbackTTSLocale();
+            handleEnd();
           });
         } else {
-          fallbackTTSLocale();
+          handleEnd();
         }
       });
     }
-  } catch(errInit) {
-    console.error('[Audio Elsa] Errore init:', errInit);
-    fallbackTTSLocale();
+  } catch(e) {
+    console.error('[Elsa Neural] Errore avvio:', e);
+    handleEnd();
   }
 }
 window.riproduciVoceNaturaleHD = riproduciVoceNaturaleHD;
