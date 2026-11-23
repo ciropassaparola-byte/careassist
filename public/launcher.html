@@ -1667,6 +1667,15 @@
         <div class="qr-promo-card">
             <button class="qr-close-btn" onclick="chiudiQrModal()" title="Chiudi">✕</button>
             <div class="qr-badge-top">⚡ Esperienza Mobile Unificata</div>
+
+            <!-- CONTROLLO VOCALE ELSA NEURAL: A COSA SERVE IL QR CODE -->
+            <div style="display:inline-flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; background:rgba(2,132,199,0.12); border:1.5px solid rgba(56,189,248,0.4); border-radius:20px; padding:6px 14px; box-shadow:0 2px 10px rgba(2,132,199,0.15);">
+                <span style="font-size:12px; font-weight:800; color:#38bdf8;">🤖 Assistente Elsa Neural</span>
+                <button type="button" id="btnVoceQrElsa" onclick="toggleVoceQrElsa(event)" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:1px solid #34d399; padding:4px 12px; border-radius:16px; font-size:11.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(16,185,129,0.3); transition:all 0.2s;">
+                    <span id="icoVoceQrElsa">🔊</span> <span id="txtVoceQrElsa">A cosa serve</span>
+                </button>
+            </div>
+
             <h2 class="qr-hook-title">Porta la Suite <span>Sempre con Te</span></h2>
             <p class="qr-hook-desc">
                 Inquadra il codice con la fotocamera del tuo smartphone: 
@@ -6286,6 +6295,111 @@
     }
 
 </script>
+
+<script>
+// ==============================================================================
+// GUIDA VOCALE ELSA NEURAL PER IL MODALE QR CODE (PORTA LA SUITE SEMPRE CON TE)
+// ==============================================================================
+let _audioQrElsa = null;
+let _isVoceQrInCorso = false;
+
+function fermaVoceQrElsa() {
+    if (_audioQrElsa) {
+        try {
+            _audioQrElsa.pause();
+            _audioQrElsa.currentTime = 0;
+        } catch(e){}
+        _audioQrElsa = null;
+    }
+    if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e){}
+    }
+    _isVoceQrInCorso = false;
+    aggiornaBtnVoceQr(false);
+}
+
+function aggiornaBtnVoceQr(inCorso) {
+    const btn = document.getElementById('btnVoceQrElsa');
+    const ico = document.getElementById('icoVoceQrElsa');
+    const txt = document.getElementById('txtVoceQrElsa');
+    if (!btn) return;
+    if (inCorso) {
+        if (ico) ico.textContent = '⏹️';
+        if (txt) txt.textContent = 'Interrompi';
+        btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+        btn.style.borderColor = '#f87171';
+    } else {
+        if (ico) ico.textContent = '🔊';
+        if (txt) txt.textContent = 'A cosa serve';
+        btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%);';
+        btn.style.borderColor = '#34d399';
+    }
+}
+
+function toggleVoceQrElsa(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (_isVoceQrInCorso) {
+        fermaVoceQrElsa();
+        return;
+    }
+
+    const testo = "A cosa serve questa maschera Porta la Suite Sempre con Te. " +
+        "Questo codice QR ti permette di collegare istantaneamente il tuo smartphone alla Suite Aziendale C. Milella, senza dover installare alcuna applicazione dallo store. " +
+        "Inquadrando il riquadro con la fotocamera del cellulare, accederai subito a tutte le 8 applicazioni gestionali: " +
+        "il diario clinico e terapie di CareAssist Pro, il Turnario H24 degli operatori, il controllo flotta veicoli, l'inventario attrezzi e l'ambulatorio medico. " +
+        "I dati registrati dal telefono e quelli inseriti dal computer su chiavetta si sincronizzano automaticamente in tempo reale tramite connessione protetta.";
+
+    fermaVoceQrElsa();
+    _isVoceQrInCorso = true;
+    aggiornaBtnVoceQr(true);
+
+    const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+    const audio = new Audio(apiUrl);
+    _audioQrElsa = audio;
+
+    audio.onended = function() {
+        fermaVoceQrElsa();
+    };
+
+    audio.onerror = function() {
+        if ('speechSynthesis' in window) {
+            const utter = new SpeechSynthesisUtterance(testo);
+            utter.lang = 'it-IT';
+            utter.rate = 1.0;
+            utter.onend = function() { fermaVoceQrElsa(); };
+            utter.onerror = function() { fermaVoceQrElsa(); };
+            window.speechSynthesis.speak(utter);
+        } else {
+            fermaVoceQrElsa();
+        }
+    };
+
+    audio.play().catch(function() {
+        if ('speechSynthesis' in window) {
+            const utter = new SpeechSynthesisUtterance(testo);
+            utter.lang = 'it-IT';
+            utter.rate = 1.0;
+            utter.onend = function() { fermaVoceQrElsa(); };
+            utter.onerror = function() { fermaVoceQrElsa(); };
+            window.speechSynthesis.speak(utter);
+        } else {
+            fermaVoceQrElsa();
+        }
+    });
+}
+
+// Quando si chiude il modale QR Code, ferma l'audio
+if (typeof chiudiQrModal === 'function') {
+    const _origChiudiQr = chiudiQrModal;
+    chiudiQrModal = function() {
+        fermaVoceQrElsa();
+        _origChiudiQr();
+    };
+}
+window.toggleVoceQrElsa = toggleVoceQrElsa;
+window.fermaVoceQrElsa = fermaVoceQrElsa;
+</script>
+
 </body>
 </html>
 
