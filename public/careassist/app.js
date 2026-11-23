@@ -446,8 +446,8 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
       try { _audioElementCareAssistAttivo.pause(); } catch(e){}
       _audioElementCareAssistAttivo = null;
     }
-    console.warn('[CareAssist] Fallback voce sistema attiva...');
-    parlaFallbackBrowserCareAssist(t, onEndCallback);
+    console.warn('[CareAssist] Fallback voce sistema disabilitato per garantire solo Elsa Neural.');
+    if (typeof onEndCallback === 'function') onEndCallback();
   }
 
   // Timer di tolleranza a 4000ms: non interrompe precocemente il flusso MP3 Elsa Neural
