@@ -18,7 +18,7 @@
         try {
           var isP2 = window.location.hostname.includes('milella-suite-un8j');
           if (isP2) {
-            document.title = "🟢 Suite 2 (5GB) • C. Milella";
+            document.title = "Suite Gestionale Aziendale C. Milella";
             var appleTitle = document.querySelector("meta[name='apple-mobile-web-app-title']");
             if (appleTitle) appleTitle.content = "🟢 Suite 2";
             var fav = document.querySelector("link[rel='icon']");
@@ -26,7 +26,7 @@
             var appleIcon = document.querySelector("link[rel='apple-touch-icon']");
             if (appleIcon) appleIcon.href = "/suite_mc_p2_green.png";
           } else {
-            document.title = "🔵 Suite 1 • C. Milella";
+            document.title = "Suite Gestionale Aziendale C. Milella";
             var appleTitle1 = document.querySelector("meta[name='apple-mobile-web-app-title']");
             if (appleTitle1) appleTitle1.content = "🔵 Suite 1";
             var fav1 = document.querySelector("link[rel='icon']");
@@ -1041,6 +1041,25 @@
 </style>    <script src="/auth_token.js"></script>
     <script src="/qrcode.min.js"></script>
 
+
+
+<style>
+/* NASCONDE COMPLETAMENTE LA BARRA DI SCORRIMENTO LATERALE (SCROLLBAR) */
+html, body, #gateBloccoIngresso, #modalArrivederciSuite {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE e Edge Legacy */
+}
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar, 
+#gateBloccoIngresso::-webkit-scrollbar, 
+#modalArrivederciSuite::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    width: 0px !important;
+    height: 0px !important;
+    display: none !important;
+    background: transparent !important;
+}
+</style>
 
 </head>
 <body>
@@ -2394,14 +2413,36 @@
     </div>
 
     <!-- Modale Conferma Spegnimento -->
-    <div id="confirmModal" onclick="if(event.target===this) this.style.display='none';" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(5,8,15,0.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:9998; flex-direction:column; align-items:center; justify-content:center;">
-        <div style="background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 24px; box-shadow: var(--shadow-glow); max-width: 450px; width: 90%; text-align: center; padding: 2.5rem; animation: fadeDown 0.3s ease-out; position: relative; overflow: hidden;" onclick="event.stopPropagation();">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
-            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: #fff;">Conferma Spegnimento</h2>
-            <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 2rem; line-height: 1.5;">Sei sicuro di voler SPEGNERE l'intero sistema? Questo fermerà il server in background e chiuderà tutte le app collegate.</p>
-            <div style="display: flex; gap: 1rem; justify-content: center;">
-                <button id="btnCancelShutdown" onclick="document.getElementById('confirmModal').style.display='none';" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Annulla</button>
-                <button id="btnConfirmShutdown" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Sì, Spegni</button>
+    
+    <!-- Modale Conferma Spegnimento Luxury C. Milella -->
+    <div id="confirmModal" onclick="if(event.target===this) this.style.display='none';" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(3,6,15,0.85); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:9999999; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; box-sizing:border-box; animation:fadeInGate 0.3s ease-out;">
+        <div style="background:linear-gradient(145deg, #0e172a 0%, #060b14 100%); border:1.8px solid rgba(212,175,55,0.55); border-radius:28px; box-shadow:0 25px 70px rgba(0,0,0,0.9), 0 0 50px rgba(212,175,55,0.22); max-width:460px; width:100%; text-align:center; padding:2rem 2.2rem; position:relative; overflow:hidden;" onclick="event.stopPropagation();">
+            <!-- Barra di Luce Oro Superiore -->
+            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, transparent, #d4af37, #fef08a, #d4af37, transparent);"></div>
+
+            <!-- Marchio Ufficiale Suite -->
+            <div style="width:68px; height:68px; margin:0 auto 1.2rem auto; border-radius:50%; background:linear-gradient(135deg, #1e293b, #0f172a); border:2px solid #d4af37; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(212,175,55,0.35);">
+                <img src="/suite_mc_official_logo.png" onerror="this.src='/icon-512.png'" alt="MC" style="width:100%; height:100%; object-fit:contain; border-radius:50%;">
+            </div>
+
+            <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:2.5px; color:#d4af37; font-weight:800; margin-bottom:4px;">Sicurezza & Chiusura Postazione</div>
+            <h2 style="font-size:1.45rem; font-weight:800; color:#ffffff; margin:0 0 0.8rem 0; letter-spacing:0.5px;">Confermi lo Spegnimento?</h2>
+
+            <p style="color:#cbd5e1; font-size:13.5px; line-height:1.55; margin:0 0 1.8rem 0;">
+                Il sistema eseguirà il <strong>backup automatico e la sincronizzazione di tutti i dati</strong>, arresterà i server in background e chiuderà l'applicazione in sicurezza.
+            </p>
+
+            <div style="display:flex; gap:12px; justify-content:center;">
+                <button type="button" id="btnCancelShutdown" onclick="document.getElementById('confirmModal').style.display='none';" style="flex:1; background:rgba(255,255,255,0.08); color:#e2e8f0; border:1.5px solid rgba(255,255,255,0.2); padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:700; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.16)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+                    Annulla
+                </button>
+                <button type="button" id="btnConfirmShutdown" style="flex:1.2; background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color:#ffffff; border:none; padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(239,68,68,0.45); transition:transform 0.15s, box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:8px;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                    <span>🛑</span> <span>Sì, Spegni Ora</span>
+                </button>
+            </div>
+            
+            <div style="margin-top:1.2rem; font-size:11px; color:#64748b;">
+                Protezione Dati & Crittografia C. Milella Management
             </div>
         </div>
     </div>
@@ -2541,6 +2582,7 @@
         });
 
         const _bCf = document.getElementById('btnConfirmShutdown'); if (_bCf) _bCf.addEventListener('click', async () => {
+            window.__suiteShuttingDown = true;
             confirmModal.style.display = 'none';
             shutdownModal.classList.remove('done');
             shutdownModal.style.display = 'flex';
@@ -6963,6 +7005,33 @@ if (typeof chiudiQrModal === 'function') {
 window.toggleVoceQrElsa = toggleVoceQrElsa;
 window.fermaVoceQrElsa = fermaVoceQrElsa;
 </script>
+
+
+    <!-- PROTEZIONE CHIUSURA INVOLONTARIA ELEGANTE -->
+    <script>
+    (function() {
+        window.__suiteShuttingDown = false;
+        
+        // Intercetta Alt+F4 per aprire la nostra maschera elegante invece del crash browser
+        window.addEventListener('keydown', function(e) {
+            if ((e.altKey && e.key === 'F4') || (e.ctrlKey && (e.key === 'w' || e.key === 'W' || e.key === 'q' || e.key === 'Q'))) {
+                e.preventDefault();
+                e.stopPropagation();
+                const cm = document.getElementById('confirmModal');
+                if (cm) cm.style.display = 'flex';
+                return false;
+            }
+        }, true);
+
+        // Se l'utente clicca un pulsante di spegnimento interno, non interferire
+        const btnConf = document.getElementById('btnConfirmShutdown');
+        if (btnConf) {
+            btnConf.addEventListener('click', function() {
+                window.__suiteShuttingDown = true;
+            });
+        }
+    })();
+    </script>
 
 </body>
 </html>

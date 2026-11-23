@@ -373,24 +373,27 @@ window.applicaFiltriWhatsAppDOM = applicaFiltriWhatsAppDOM;
 // ==============================================================================
 // MOTORE VOCALE NATURALE HD CAREASSIST (Azure Neural HD + Pause Naturali)
 // ==============================================================================
+window._audioElementCareAssistAttivo = null;
 let _audioElementCareAssistAttivo = null;
+let _onEndCallbackCareAssistAttivo = null;
 
 function fermaVoceHDGlobale() {
+  _onEndCallbackCareAssistAttivo = null;
   if (window._audioElementCareAssistAttivo) {
     try {
+      window._audioElementCareAssistAttivo.onended = null;
+      window._audioElementCareAssistAttivo.onerror = null;
       window._audioElementCareAssistAttivo.pause();
       window._audioElementCareAssistAttivo.currentTime = 0;
-      window._audioElementCareAssistAttivo.src = '';
-      window._audioElementCareAssistAttivo.load();
     } catch (e) { }
     window._audioElementCareAssistAttivo = null;
   }
   if (typeof _audioElementCareAssistAttivo !== 'undefined' && _audioElementCareAssistAttivo) {
     try {
+      _audioElementCareAssistAttivo.onended = null;
+      _audioElementCareAssistAttivo.onerror = null;
       _audioElementCareAssistAttivo.pause();
       _audioElementCareAssistAttivo.currentTime = 0;
-      _audioElementCareAssistAttivo.src = '';
-      _audioElementCareAssistAttivo.load();
     } catch(e){}
     _audioElementCareAssistAttivo = null;
   }
@@ -404,9 +407,10 @@ window.fermaVoceHDGlobale = fermaVoceHDGlobale;
 window.fermaVoceSintesiInApp = fermaVoceHDGlobale;
 
 function riproduciVoceNaturaleHD(testo, onEndCallback) {
-  // Ferma sempre e comunque qualsiasi audio precedente
   fermaVoceHDGlobale();
   if (!testo || typeof testo !== 'string') return;
+
+  _onEndCallbackCareAssistAttivo = onEndCallback;
 
   var t = (testo || '')
     .replace(/<[^>]*>/g, ' ')
@@ -418,6 +422,13 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     .replace(/\bcpr\b/gi, 'compresse')
     .replace(/\bml\b/gi, 'millilitri')
     .replace(/\bgg\b/gi, 'giorni')
+    .replace(/\bH24\b/gi, 'ventiquattro ore su ventiquattro')
+    .replace(/&gt;\s*(\d+)\s*h\b/gi, 'oltre $1 ore')
+    .replace(/>\s*(\d+)\s*h\b/gi, 'oltre $1 ore')
+    .replace(/&lt;\s*(\d+)\s*h\b/gi, 'meno di $1 ore')
+    .replace(/<\s*(\d+)\s*h\b/gi, 'meno di $1 ore')
+    .replace(/\bq2h\b/gi, 'ogni due ore')
+    .replace(/\b(\d+)\s*h\b/gi, '$1 ore')
     .replace(/\bSGLT2\b/gi, 'S G L T 2')
     .replace(/\bHbA1c\b/gi, 'emoglobina glicata')
     .replace(/\bUI\b/gi, 'unità internazionali')
@@ -434,7 +445,8 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
   var encoded = encodeURIComponent(ttsTesto);
 
   var cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encoded;
-  var localUrl = '/api/tts-umano?voice=elsa&text=' + encoded;
+  var isLocalServer = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+  var primaryUrl = isLocalServer ? ('/api/tts-umano?voice=elsa&text=' + encoded) : cloudUrl;
 
   var isEnded = false;
   function handleEnd() {
@@ -442,13 +454,15 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     isEnded = true;
     window._audioElementCareAssistAttivo = null;
     _audioElementCareAssistAttivo = null;
-    if (typeof onEndCallback === 'function') {
-      try { onEndCallback(); } catch(e){}
+    var cb = _onEndCallbackCareAssistAttivo;
+    _onEndCallbackCareAssistAttivo = null;
+    if (typeof cb === 'function') {
+      try { cb(); } catch(e){}
     }
   }
 
   try {
-    var audio = new Audio();
+    var audio = new Audio(primaryUrl);
     window._audioElementCareAssistAttivo = audio;
     _audioElementCareAssistAttivo = audio;
 
@@ -457,31 +471,32 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     };
 
     audio.onerror = function(err) {
-      console.warn('[Elsa Neural] Errore primo tentativo:', audio.src, err);
-      if (audio.src !== cloudUrl) {
-        audio.src = cloudUrl;
-        audio.play().catch(function(eCloud) {
-          console.warn('[Elsa Neural] Errore cloud:', eCloud);
-          handleEnd();
-        });
+      if (audio !== window._audioElementCareAssistAttivo) return;
+      console.warn('[Elsa Neural] Errore riproduzione, tentativo cloud:', err);
+      if (primaryUrl !== cloudUrl) {
+        var cloudAudio = new Audio(cloudUrl);
+        window._audioElementCareAssistAttivo = cloudAudio;
+        _audioElementCareAssistAttivo = cloudAudio;
+        cloudAudio.onended = function() { handleEnd(); };
+        cloudAudio.onerror = function() { handleEnd(); };
+        cloudAudio.play().catch(function() { handleEnd(); });
       } else {
         handleEnd();
       }
     };
 
-    var isLocalServer = (window.location && (window.location.port === '3000' || window.location.port === '8090'));
-    var primaryUrl = isLocalServer ? localUrl : cloudUrl;
-
-    audio.src = primaryUrl;
     var playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(function(errPlay) {
+        if (audio !== window._audioElementCareAssistAttivo) return;
         console.warn('[Elsa Neural] Play intercettato:', errPlay);
-        if (audio.src !== cloudUrl) {
-          audio.src = cloudUrl;
-          audio.play().catch(function() {
-            handleEnd();
-          });
+        if (primaryUrl !== cloudUrl) {
+          var cloudAudio = new Audio(cloudUrl);
+          window._audioElementCareAssistAttivo = cloudAudio;
+          _audioElementCareAssistAttivo = cloudAudio;
+          cloudAudio.onended = function() { handleEnd(); };
+          cloudAudio.onerror = function() { handleEnd(); };
+          cloudAudio.play().catch(function() { handleEnd(); });
         } else {
           handleEnd();
         }
@@ -27820,7 +27835,10 @@ function apriModalPassaporto118() {
     '<div id="passaporto-118-printable" style="background:#ffffff; border:2.5px solid #dc2626; border-radius:16px; padding:20px; color:#0f172a; font-family:sans-serif;">' +
     '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; border-bottom:2px solid #fecaca; padding-bottom:14px; margin-bottom:14px;">' +
     '<div>' +
-    '<div style="display:inline-block; background:#dc2626; color:#fff; font-size:11px; font-weight:900; padding:3px 10px; border-radius:999px; letter-spacing:0.6px; text-transform:uppercase;">🚨 SCHEDA EMERGENZA 112 (NUE) / PRONTO SOCCORSO</div>' +
+    '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' +
+      '<div style="display:inline-block; background:#dc2626; color:#fff; font-size:11px; font-weight:900; padding:3px 10px; border-radius:999px; letter-spacing:0.6px; text-transform:uppercase;">🚨 SCHEDA EMERGENZA 112 (NUE) / PRONTO SOCCORSO</div>' +
+      '<button type="button" class="no-print" onclick="mostraGuidaContestuale(\'scheda-112\')" style="background:#eff6ff; color:#0284c7; border:1px solid #93c5fd; padding:3px 9px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="Guida vocale e spiegazione"><span style="font-size:12px;">💡</span> A cosa serve</button>' +
+    '</div>' +
     '<h2 style="margin:6px 0 2px; font-size:24px; font-weight:900; color:#0f172a;">' + cestinoEsc(p.nome) + ' <span style="font-size:17px; color:#475569;">(' + eta + ' anni)</span></h2>' +
     '<div style="font-size:13px; color:#334155; font-weight:600;">📅 Nato/a il: <b>' + dataNascStr + '</b> • 📍 Domicilio: <b>' + cestinoEsc(p.indirizzo || '--') + '</b>' + (p.esenzione ? ' • Esenzione: <b>' + cestinoEsc(p.esenzione) + '</b>' : '') + '</div>' +
     '</div>' +
@@ -28946,6 +28964,72 @@ var GUIDE_CONTESTUALI = {
   }
 };
 
+function compilaTestoVocaleGuida(g) {
+  if (!g) return '';
+  var parti = [];
+  if (g.titolo) parti.push(g.titolo);
+  if (g.scopo) parti.push('A cosa serve. ' + g.scopo);
+  if (Array.isArray(g.comeSiUsa) && g.comeSiUsa.length > 0) {
+    var passi = 'Come si usa. ';
+    g.comeSiUsa.forEach(function(p, idx) {
+      passi += 'Punto ' + (idx + 1) + ': ' + p + '. ';
+    });
+    parti.push(passi);
+  }
+  if (g.utilita) parti.push('Valore e utilità per la struttura: ' + g.utilita);
+
+  return parti.join('. ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&amp;/g, ' e ')
+    .replace(/&/g, ' e ')
+    .replace(/[•▪▸►✓✔✕✖★☆✦]/g, ', ')
+    .replace(/\bmg\b/gi, 'milligrammi')
+    .replace(/\bmcg\b/gi, 'microgrammi')
+    .replace(/\bcpr\b/gi, 'compresse')
+    .replace(/\bml\b/gi, 'millilitri')
+    .replace(/\bgg\b/gi, 'giorni')
+    .replace(/\bH24\b/gi, 'ventiquattro ore su ventiquattro')
+    .replace(/&gt;\s*(\d+)\s*h\b/gi, 'oltre $1 ore')
+    .replace(/>\s*(\d+)\s*h\b/gi, 'oltre $1 ore')
+    .replace(/&lt;\s*(\d+)\s*h\b/gi, 'meno di $1 ore')
+    .replace(/<\s*(\d+)\s*h\b/gi, 'meno di $1 ore')
+    .replace(/\bq2h\b/gi, 'ogni due ore')
+    .replace(/\b(\d+)\s*h\b/gi, '$1 ore')
+    .replace(/\bSGLT2\b/gi, 'S G L T 2')
+    .replace(/\bHbA1c\b/gi, 'emoglobina glicata')
+    .replace(/\bUI\b/gi, 'unità internazionali')
+    .replace(/\b112\b/g, 'uno uno due')
+    .replace(/\bNUE\b/gi, 'Numero Unico Europeo')
+    .replace(/\s*\/\s*/g, ' oppure ')
+    .replace(/\s*-\s*/g, ' - ')
+    .replace(/\.{2,}/g, '. ')
+    .replace(/:s*/g, ': ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+var _audioGuidaPrecaricato = null;
+var _testoAudioPrecaricato = '';
+
+function precaricaAudioGuidaContestuale(chiave) {
+  var g = (typeof GUIDE_CONTESTUALI !== 'undefined' && GUIDE_CONTESTUALI[chiave]) ? GUIDE_CONTESTUALI[chiave] : null;
+  if (!g) return;
+  var testo = compilaTestoVocaleGuida(g);
+  if (!testo || testo === _testoAudioPrecaricato) return;
+
+  var ttsTesto = testo.length > 700 ? testo.substring(0, 700) : testo;
+  var encoded = encodeURIComponent(ttsTesto);
+  var isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+  var url = (isLocal ? '/api/tts-umano' : 'https://careassist-r61q.onrender.com/api/tts-umano') + '?voice=elsa&text=' + encoded;
+
+  try {
+    _testoAudioPrecaricato = testo;
+    _audioGuidaPrecaricato = new Audio(url);
+    _audioGuidaPrecaricato.preload = 'auto';
+    _audioGuidaPrecaricato.load();
+  } catch(e) {}
+}
+
 function mostraGuidaContestuale(chiave) {
   _chiaveGuidaContestualeAttiva = chiave;
   if (typeof fermaVoceHDGlobale === 'function') fermaVoceHDGlobale();
@@ -28976,7 +29060,9 @@ function mostraGuidaContestuale(chiave) {
     '<div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-left:5px solid #0284c7; border-radius:12px; padding:12px 14px; margin-bottom:16px; box-shadow:0 2px 6px rgba(2,132,199,0.06);">' +
     '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">' +
     '  <div style="font-size:11px; text-transform:uppercase; font-weight:900; color:#0369a1; letter-spacing:0.5px;">🎯 A cosa serve (Scopo Clinico &amp; Gestionale)</div>' +
-    '  ' +
+    '  <button type="button" id="btn-ascolta-guida-contestuale" onclick="ascoltaGuidaContestualeVocale()" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#ffffff; border:none; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(2,132,199,0.3);">' +
+    '    <span id="ico-audio-guida-contestuale">🔊</span> <span id="txt-audio-guida-contestuale">Ascolta con Elsa Neural</span>' +
+    '  </button>' +
     '</div>' +
     '<div style="font-size:13.5px; color:#1e293b; line-height:1.5;">' +
     g.scopo +
@@ -29006,9 +29092,13 @@ function mostraGuidaContestuale(chiave) {
 
   corpoEl.innerHTML = scopoHtml + comeSiUsaBox + utilitaBox;
 
-  // Make sure modal-guida-contestuale is visible above other modals!
   modal.style.setProperty('z-index', '2147483647', 'important');
   openModal('modal-guida-contestuale');
+
+  // Precarica IMMEDIATAMENTE l'audio in background: non appena l'utente apre la guida!
+  setTimeout(function() {
+    precaricaAudioGuidaContestuale(chiave);
+  }, 10);
 }
 window.mostraGuidaContestuale = mostraGuidaContestuale;
 
@@ -29016,27 +29106,19 @@ var _chiaveGuidaContestualeAttiva = '';
 var _isGuidaContestualeInRiproduzione = false;
 
 function ascoltaGuidaContestualeVocale() {
-  const btnH = document.getElementById('btn-ascolta-guida-header');
-  const icoH = document.getElementById('ico-audio-guida-header');
-  const txtH = document.getElementById('txt-audio-guida-header');
+  const btnC = document.getElementById('btn-ascolta-guida-contestuale');
+  const icoC = document.getElementById('ico-audio-guida-contestuale');
+  const txtC = document.getElementById('txt-audio-guida-contestuale');
 
   function impostaStatoPulsanti(inRiproduzione) {
     if (inRiproduzione) {
-      if (icoH) icoH.textContent = '⏹️';
-      if (txtH) txtH.textContent = 'Interrompi';
-      if (btnH) {
-        btnH.style.setProperty('background', 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)', 'important');
-        btnH.style.setProperty('border-color', '#fda4af', 'important');
-        btnH.style.setProperty('box-shadow', '0 3px 8px rgba(225,29,72,0.4)', 'important');
-      }
+      if (icoC) icoC.textContent = '⏹️';
+      if (txtC) txtC.textContent = 'Interrompi Voce';
+      if (btnC) btnC.style.background = 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)';
     } else {
-      if (icoH) icoH.textContent = '🔊';
-      if (txtH) txtH.textContent = 'Ascolta Elsa Neural';
-      if (btnH) {
-        btnH.style.setProperty('background', 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 'important');
-        btnH.style.setProperty('border-color', '#34d399', 'important');
-        btnH.style.setProperty('box-shadow', '0 3px 8px rgba(16,185,129,0.35)', 'important');
-      }
+      if (icoC) icoC.textContent = '🔊';
+      if (txtC) txtC.textContent = 'Ascolta con Elsa Neural';
+      if (btnC) btnC.style.background = 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)';
     }
   }
 
@@ -29052,37 +29134,8 @@ function ascoltaGuidaContestualeVocale() {
   const g = (typeof GUIDE_CONTESTUALI !== 'undefined' && GUIDE_CONTESTUALI[_chiaveGuidaContestualeAttiva]) ? GUIDE_CONTESTUALI[_chiaveGuidaContestualeAttiva] : null;
   if (!g) return;
 
-  // Componi un testo discorsivo naturale per l'audio, sanificando simboli grafici (&, •, /, ecc.)
-  let partiTesto = [];
-  if (g.titolo) {
-    partiTesto.push(g.titolo);
-  }
-  if (g.scopo) {
-    partiTesto.push('A cosa serve. ' + g.scopo);
-  }
-  if (Array.isArray(g.comeSiUsa) && g.comeSiUsa.length > 0) {
-    let passi = 'Come si usa. ';
-    g.comeSiUsa.forEach((p, idx) => {
-      passi += 'Punto ' + (idx + 1) + ': ' + p + '. ';
-    });
-    partiTesto.push(passi);
-  }
-  if (g.utilita) {
-    partiTesto.push('Valore e utilità per la struttura: ' + g.utilita);
-  }
+  const testoVoce = compilaTestoVocaleGuida(g);
 
-  let testoVoce = partiTesto.join('. ')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&amp;/g, ' e ')
-    .replace(/&/g, ' e ')
-    .replace(/[•▪▸►✓✔✕✖★☆✦]/g, ', ')
-    .replace(/\s*\/\s*/g, ' oppure ')
-    .replace(/\.{2,}/g, '. ')
-    .replace(/:s*/g, ': ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  // IMPOSTA IMMEDIATAMENTE LO STATO ATTIVO: Diventa Rosso Interrompi
   _isGuidaContestualeInRiproduzione = true;
   impostaStatoPulsanti(true);
   if (typeof showToast === 'function') showToast('🗣️ Elsa Neural in ascolto...');
@@ -29092,12 +29145,33 @@ function ascoltaGuidaContestualeVocale() {
     impostaStatoPulsanti(false);
   };
 
-  if (typeof riproduciVoceNaturaleHD === 'function') {
+  // Riproduzione fulminea: usa direttamente l'audio precaricato senza attendere readyState!
+  if (_audioGuidaPrecaricato && _testoAudioPrecaricato === testoVoce) {
+    fermaVoceHDGlobale();
+    window._audioElementCareAssistAttivo = _audioGuidaPrecaricato;
+    _audioGuidaPrecaricato.currentTime = 0;
+    _audioGuidaPrecaricato.onended = function() {
+      _isGuidaContestualeInRiproduzione = false;
+      impostaStatoPulsanti(false);
+      window._audioElementCareAssistAttivo = null;
+    };
+    _audioGuidaPrecaricato.onerror = function() {
+      riproduciVoceNaturaleHD(testoVoce, resetStato);
+    };
+    var p = _audioGuidaPrecaricato.play();
+    if (p !== undefined) {
+      p.catch(function() {
+        riproduciVoceNaturaleHD(testoVoce, resetStato);
+      });
+    }
+  } else if (typeof riproduciVoceNaturaleHD === 'function') {
     riproduciVoceNaturaleHD(testoVoce, resetStato);
   } else {
     resetStato();
   }
 }
+window.ascoltaGuidaContestualeVocale = ascoltaGuidaContestualeVocale;
+
 
 
 // ==========================================================================
@@ -37072,11 +37146,4 @@ function ascoltaScheda118Vocale() {
 window.ascoltaScheda118Vocale = ascoltaScheda118Vocale;
 
 
-// AUTO-SPEGNIMENTO PULITO SERVER SE CAREASSIST VIENE CHIUSO SU PC LOCALE
-window.addEventListener('beforeunload', function () {
-  try {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      navigator.sendBeacon('/api/shutdown');
-    }
-  } catch(e) {}
-});
+// Chiusura sessione pulita senza spegnimento del server in navigazione
