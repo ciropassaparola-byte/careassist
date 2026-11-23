@@ -11834,6 +11834,17 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
       <button onclick="chiudiModalBollarioScorte()" style="background:rgba(255,255,255,0.15); border:none; color:#ffffff; font-size:20px; border-radius:10px; width:36px; height:36px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:bold;">&times;</button>
     </div>
 
+    
+    <!-- CONTROLLO VOCALE GUIDA ELSA NEURAL BOLLARIO SCORTE -->
+    <div style="background:#f0f9ff; border-bottom:1.5px solid #bae6fd; padding:10px 22px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div style="font-size:12px; font-weight:800; color:#0369a1; display:flex; align-items:center; gap:6px;">
+        <span>🤖</span> <span>Assistente Elsa Neural</span>
+      </div>
+      <button type="button" id="btnVoceBollarioElsa" onclick="toggleVoceBollarioElsa(event)" ontouchstart="toggleVoceBollarioElsa(event)" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:1px solid #34d399; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(16,185,129,0.3); transition:all 0.2s;">
+        <span id="icoVoceBollarioElsa">🔊</span> <span id="txtVoceBollarioElsa">A cosa serve questa maschera</span>
+      </button>
+    </div>
+
     <!-- BODY -->
     <div style="padding:18px 22px; overflow-y:auto; flex:1;">
       
@@ -12317,6 +12328,114 @@ function toggleVoceStrumentiElisa(e) {
 })();
 window.toggleVoceStrumentiElisa = toggleVoceStrumentiElisa;
 window.fermaVoceStrumentiElisa = fermaVoceStrumentiElisa;
+</script>
+
+
+<script>
+// ==============================================================================
+// GUIDA VOCALE ELSA NEURAL PER IL BOLLARIO FARMACI & SEMAFORO SCORTE
+// ==============================================================================
+let _audioBollarioElsa = null;
+let _isVoceBollarioInCorso = false;
+
+function fermaVoceBollarioElsa() {
+  if (_audioBollarioElsa) {
+    try {
+      _audioBollarioElsa.pause();
+      _audioBollarioElsa.currentTime = 0;
+    } catch(e){}
+    _audioBollarioElsa = null;
+  }
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.cancel(); } catch(e){}
+  }
+  _isVoceBollarioInCorso = false;
+  aggiornaBtnVoceBollario(false);
+}
+
+function aggiornaBtnVoceBollario(inCorso) {
+  const btn = document.getElementById('btnVoceBollarioElsa');
+  const ico = document.getElementById('icoVoceBollarioElsa');
+  const txt = document.getElementById('txtVoceBollarioElsa');
+  if (!btn) return;
+  if (inCorso) {
+    if (ico) ico.textContent = '⏹️';
+    if (txt) txt.textContent = 'Interrompi Voce';
+    btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+    btn.style.borderColor = '#f87171';
+  } else {
+    if (ico) ico.textContent = '🔊';
+    if (txt) txt.textContent = 'A cosa serve questa maschera';
+    btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    btn.style.borderColor = '#34d399';
+  }
+}
+
+function toggleVoceBollarioElsa(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  if (_isVoceBollarioInCorso) {
+    fermaVoceBollarioElsa();
+    return;
+  }
+
+  const testo = "A cosa serve il Bollario Farmaci e Semaforo Scorte Intelligente. " +
+    "Questa maschera calcola automaticamente il consumo giornaliero di ciascun farmaco per ogni assistito, " +
+    "indicando con precisione i giorni di autonomia residua e la data esatta di esaurimento. " +
+    "Il semaforo intelligente a tre colori ti avverte per tempo: verde per scorte ottime oltre sette giorni, " +
+    "giallo quando restano da tre a sette giorni, e rosso critico quando il farmaco sta per finire entro quarantotto ore. " +
+    "Da questa schermata puoi aggiornare le compresse a casa con un clic, " +
+    "inviare l'ordine di riordino ricetta direttamente al medico curante su WhatsApp, " +
+    "e stampare il Prospetto Scorte A4 aggiornato da lasciare in cartella o consegnare ai familiari.";
+
+  fermaVoceBollarioElsa();
+  _isVoceBollarioInCorso = true;
+  aggiornaBtnVoceBollario(true);
+
+  const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+  const audio = new Audio(apiUrl);
+  _audioBollarioElsa = audio;
+
+  audio.onended = function() {
+    fermaVoceBollarioElsa();
+  };
+
+  audio.onerror = function() {
+    if ('speechSynthesis' in window) {
+      const utter = new SpeechSynthesisUtterance(testo);
+      utter.lang = 'it-IT';
+      utter.rate = 1.0;
+      utter.onend = function() { fermaVoceBollarioElsa(); };
+      utter.onerror = function() { fermaVoceBollarioElsa(); };
+      window.speechSynthesis.speak(utter);
+    } else {
+      fermaVoceBollarioElsa();
+    }
+  };
+
+  audio.play().catch(function() {
+    if ('speechSynthesis' in window) {
+      const utter = new SpeechSynthesisUtterance(testo);
+      utter.lang = 'it-IT';
+      utter.rate = 1.0;
+      utter.onend = function() { fermaVoceBollarioElsa(); };
+      utter.onerror = function() { fermaVoceBollarioElsa(); };
+      window.speechSynthesis.speak(utter);
+    } else {
+      fermaVoceBollarioElsa();
+    }
+  });
+}
+
+// Interrompi audio se si chiude il modal
+if (typeof chiudiModalBollarioScorte === 'function') {
+  const _origChiudiBollario = chiudiModalBollarioScorte;
+  chiudiModalBollarioScorte = function() {
+    fermaVoceBollarioElsa();
+    _origChiudiBollario();
+  };
+}
+window.toggleVoceBollarioElsa = toggleVoceBollarioElsa;
+window.fermaVoceBollarioElsa = fermaVoceBollarioElsa;
 </script>
 
 </body>
