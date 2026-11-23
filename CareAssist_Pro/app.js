@@ -65,26 +65,43 @@ window.applicaFiltriWhatsAppDOM = applicaFiltriWhatsAppDOM;
 let _audioElementCareAssistAttivo = null;
 
 function fermaVoceHDGlobale() {
-  if (_audioElementCareAssistAttivo) {
+  if (window._audioElementCareAssistAttivo) {
+    try {
+      window._audioElementCareAssistAttivo.pause();
+      window._audioElementCareAssistAttivo.currentTime = 0;
+      window._audioElementCareAssistAttivo.src = '';
+      window._audioElementCareAssistAttivo.load();
+    } catch (e) { }
+    window._audioElementCareAssistAttivo = null;
+  }
+  if (typeof _audioElementCareAssistAttivo !== 'undefined' && _audioElementCareAssistAttivo) {
     try {
       _audioElementCareAssistAttivo.pause();
       _audioElementCareAssistAttivo.currentTime = 0;
-    } catch (e) { }
+      _audioElementCareAssistAttivo.src = '';
+      _audioElementCareAssistAttivo.load();
+    } catch(e){}
     _audioElementCareAssistAttivo = null;
   }
   if ('speechSynthesis' in window) {
-    try { window.speechSynthesis.cancel(); } catch (e) { }
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) { }
   }
 }
 window.fermaVoceHDGlobale = fermaVoceHDGlobale;
 window.fermaVoceSintesiInApp = fermaVoceHDGlobale;
 
 function riproduciVoceNaturaleHD(testo, onEndCallback) {
+  // Ferma sempre e comunque qualsiasi audio precedente
   fermaVoceHDGlobale();
   if (!testo || typeof testo !== 'string') return;
 
-  // Formatta testo con pause naturali, espansioni fonetiche e punteggiatura morbida
-  let t = testo
+  var t = (testo || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&amp;/g, ' e ')
+    .replace(/&/g, ' e ')
+    .replace(/[•▪▸►✓✔✕✖★☆✦]/g, ', ')
     .replace(/\bmg\b/gi, 'milligrammi')
     .replace(/\bmcg\b/gi, 'microgrammi')
     .replace(/\bcpr\b/gi, 'compresse')
@@ -93,40 +110,76 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     .replace(/\bSGLT2\b/gi, 'S G L T 2')
     .replace(/\bHbA1c\b/gi, 'emoglobina glicata')
     .replace(/\bUI\b/gi, 'unità internazionali')
-    .replace(/•/g, ', ')
+    .replace(/\b112\b/g, 'uno uno due')
+    .replace(/\bNUE\b/gi, 'Numero Unico Europeo')
     .replace(/\s*\/\s*/g, ' oppure ')
     .replace(/\s*-\s*/g, ' - ')
+    .replace(/\.{2,}/g, '. ')
+    .replace(/:s*/g, ': ')
     .replace(/\s+/g, ' ')
     .trim();
 
-  // Inserisci pause espressive dopo due punti o punti fermi per ritmo cadenzato e naturale
-  t = t.replace(/:\s*/g, ': ... ').replace(/\.\s*/g, '. ... ');
+  var ttsTesto = t.length > 700 ? t.substring(0, 700) : t;
+  var encoded = encodeURIComponent(ttsTesto);
 
-  // Usa l'endpoint Azure Neural HD con voce Isabella (italiano naturale alta definizione)
-  const apiUrl = '/api/tts-umano?voice=isabella&text=' + encodeURIComponent(t);
-  const audio = new Audio(apiUrl);
-  _audioElementCareAssistAttivo = audio;
+  var cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encoded;
+  var localUrl = '/api/tts-umano?voice=elsa&text=' + encoded;
 
-  audio.onended = function () {
+  var isEnded = false;
+  function handleEnd() {
+    if (isEnded) return;
+    isEnded = true;
+    window._audioElementCareAssistAttivo = null;
     _audioElementCareAssistAttivo = null;
-    if (typeof onEndCallback === 'function') onEndCallback();
-  };
-
-  audio.onerror = function () {
-    console.warn('Fallback a sintesi locale browser per voce');
-    _audioElementCareAssistAttivo = null;
-    if (typeof parlaFallbackBrowserCareAssist === 'function') {
-      parlaFallbackBrowserCareAssist(t);
+    if (typeof onEndCallback === 'function') {
+      try { onEndCallback(); } catch(e){}
     }
-    if (typeof onEndCallback === 'function') onEndCallback();
-  };
+  }
 
-  audio.play().catch(function (err) {
-    console.warn('Riproduzione audio bloccata o fallita, uso WebSpeech:', err);
-    if (typeof parlaFallbackBrowserCareAssist === 'function') {
-      parlaFallbackBrowserCareAssist(t);
+  try {
+    var audio = new Audio();
+    window._audioElementCareAssistAttivo = audio;
+    _audioElementCareAssistAttivo = audio;
+
+    audio.onended = function() {
+      handleEnd();
+    };
+
+    audio.onerror = function(err) {
+      console.warn('[Elsa Neural] Errore primo tentativo:', audio.src, err);
+      if (audio.src !== cloudUrl) {
+        audio.src = cloudUrl;
+        audio.play().catch(function(eCloud) {
+          console.warn('[Elsa Neural] Errore cloud:', eCloud);
+          handleEnd();
+        });
+      } else {
+        handleEnd();
+      }
+    };
+
+    var isLocalServer = (window.location && (window.location.port === '3000' || window.location.port === '8090'));
+    var primaryUrl = isLocalServer ? localUrl : cloudUrl;
+
+    audio.src = primaryUrl;
+    var playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function(errPlay) {
+        console.warn('[Elsa Neural] Play intercettato:', errPlay);
+        if (audio.src !== cloudUrl) {
+          audio.src = cloudUrl;
+          audio.play().catch(function() {
+            handleEnd();
+          });
+        } else {
+          handleEnd();
+        }
+      });
     }
-  });
+  } catch(e) {
+    console.error('[Elsa Neural] Errore:', e);
+    handleEnd();
+  }
 }
 window.riproduciVoceNaturaleHD = riproduciVoceNaturaleHD;
 

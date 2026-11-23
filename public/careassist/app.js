@@ -376,15 +376,24 @@ window.applicaFiltriWhatsAppDOM = applicaFiltriWhatsAppDOM;
 let _audioElementCareAssistAttivo = null;
 
 function fermaVoceHDGlobale() {
-  if (_audioElementCareAssistAttivo) {
+  if (window._audioElementCareAssistAttivo) {
+    try {
+      window._audioElementCareAssistAttivo.pause();
+      window._audioElementCareAssistAttivo.currentTime = 0;
+      window._audioElementCareAssistAttivo.src = '';
+      window._audioElementCareAssistAttivo.load();
+    } catch (e) { }
+    window._audioElementCareAssistAttivo = null;
+  }
+  if (typeof _audioElementCareAssistAttivo !== 'undefined' && _audioElementCareAssistAttivo) {
     try {
       _audioElementCareAssistAttivo.pause();
       _audioElementCareAssistAttivo.currentTime = 0;
       _audioElementCareAssistAttivo.src = '';
-    } catch (e) { }
+      _audioElementCareAssistAttivo.load();
+    } catch(e){}
     _audioElementCareAssistAttivo = null;
   }
-  // Ferma qualsiasi sintesi vocale di sistema per evitare sovrapposizioni
   if ('speechSynthesis' in window) {
     try {
       window.speechSynthesis.cancel();
@@ -395,7 +404,7 @@ window.fermaVoceHDGlobale = fermaVoceHDGlobale;
 window.fermaVoceSintesiInApp = fermaVoceHDGlobale;
 
 function riproduciVoceNaturaleHD(testo, onEndCallback) {
-  // 1. Zittisci qualsiasi voce o audio precedente
+  // Ferma sempre e comunque qualsiasi audio precedente
   fermaVoceHDGlobale();
   if (!testo || typeof testo !== 'string') return;
 
@@ -424,7 +433,6 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
   var ttsTesto = t.length > 700 ? t.substring(0, 700) : t;
   var encoded = encodeURIComponent(ttsTesto);
 
-  // URL per la Voce Elsa Neural HD
   var cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encoded;
   var localUrl = '/api/tts-umano?voice=elsa&text=' + encoded;
 
@@ -432,28 +440,28 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
   function handleEnd() {
     if (isEnded) return;
     isEnded = true;
+    window._audioElementCareAssistAttivo = null;
     _audioElementCareAssistAttivo = null;
     if (typeof onEndCallback === 'function') {
       try { onEndCallback(); } catch(e){}
     }
   }
 
-  // Creazione Audio esclusivo Elsa Neural
   try {
     var audio = new Audio();
+    window._audioElementCareAssistAttivo = audio;
     _audioElementCareAssistAttivo = audio;
 
     audio.onended = function() {
       handleEnd();
     };
 
-    // Se per qualsiasi motivo l'audio locale fallisce, prova il Cloud Elsa Neural
     audio.onerror = function(err) {
-      console.warn('[Elsa Neural] Errore su primo URL, tentativo failover Cloud...', err);
+      console.warn('[Elsa Neural] Errore primo tentativo:', audio.src, err);
       if (audio.src !== cloudUrl) {
         audio.src = cloudUrl;
         audio.play().catch(function(eCloud) {
-          console.warn('[Elsa Neural] Impossibile avviare Cloud:', eCloud);
+          console.warn('[Elsa Neural] Errore cloud:', eCloud);
           handleEnd();
         });
       } else {
@@ -461,15 +469,14 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
       }
     };
 
-    // Decidi URL primario: se siamo in locale su 3000 o 8080 prova localUrl, altrimenti direttamente cloudUrl
-    var isLocalServer = (window.location && (window.location.port === '3000' || window.location.port === '8080'));
+    var isLocalServer = (window.location && (window.location.port === '3000' || window.location.port === '8090'));
     var primaryUrl = isLocalServer ? localUrl : cloudUrl;
 
     audio.src = primaryUrl;
     var playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(function(errPlay) {
-        console.warn('[Elsa Neural] Primo play fallito, passo a Cloud Elsa:', errPlay);
+        console.warn('[Elsa Neural] Play intercettato:', errPlay);
         if (audio.src !== cloudUrl) {
           audio.src = cloudUrl;
           audio.play().catch(function() {
@@ -481,7 +488,7 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
       });
     }
   } catch(e) {
-    console.error('[Elsa Neural] Errore avvio:', e);
+    console.error('[Elsa Neural] Errore:', e);
     handleEnd();
   }
 }
