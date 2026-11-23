@@ -7848,18 +7848,19 @@
 
       <!-- HEADER MODALE -->
       <div class="modal-header"
-        style="background:linear-gradient(135deg, #059669 0%, #047857 100%); color:white; padding:14px 20px; display:flex; justify-content:space-between; align-items:center;">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:26px;">🖨️</span>
-          <div>
-            <h3 style="margin:0; font-size:16.5px; font-weight:900;">Promemoria Richiesta Impegnative per il Medico di
-              Famiglia (MMG)</h3>
-            <p style="margin:2px 0 0; font-size:11.5px; color:#d1fae5;">Riepilogo esatto delle sole prestazioni a carico
-              del MMG &bull; Formato A4 Stampa & Condivisione</p>
+        style="background:linear-gradient(135deg, #059669 0%, #047857 100%); color:white; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-shrink:0;">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+          <span style="font-size:24px; line-height:1; flex-shrink:0;">🖨️</span>
+          <div style="min-width:0;">
+            <h3 style="margin:0; font-size:15.5px; font-weight:900; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Promemoria Impegnative MMG</h3>
+            <p style="margin:2px 0 0; font-size:11px; color:#d1fae5; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Prestazioni a carico del Medico di Famiglia &bull; A4 & WhatsApp</p>
           </div>
         </div>
-        <button class="modal-close" style="color:white; font-size:24px; cursor:pointer; background:none; border:none;"
-          onclick="closeModal('modal-promemoria-mmg')">&times;</button>
+        <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+          <button type="button" class="btn btn-outline btn-guida-contestuale" onclick="mostraGuidaContestuale('promemoria-mmg')" style="background:rgba(255,255,255,0.2) !important; color:#ffffff !important; border:1px solid rgba(255,255,255,0.45) !important; padding:4px 8px !important; border-radius:8px !important; font-weight:800 !important; font-size:11px !important; cursor:pointer !important; white-space:nowrap !important; flex-shrink:0 !important; width:auto !important; height:auto !important;" title="Guida vocale e spiegazione">💡 A cosa serve</button>
+          <button class="modal-close" style="color:white; font-size:22px; cursor:pointer; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; padding:0; flex-shrink:0;"
+            onclick="closeModal('modal-promemoria-mmg')">&times;</button>
+        </div>
       </div>
 
       <!-- CORPO MODALE CON ANTEPRIMA DEL FOGLIO A4 -->

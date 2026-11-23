@@ -10494,7 +10494,7 @@ function openModal(id) {
 
     // Inietta o aggiorna in automatico l'indicazione chiara del paziente attivo
     const p = getActivePaziente();
-    if (p && id !== 'modal-nuovo-paziente' && id !== 'modal-cestino' && id !== 'modal-report-whatsapp' && id !== 'modal-scheda-118' && id !== 'modal-modifica-farmaco' && id !== 'modal-laboratorio-scotti' && id !== 'modal-archivio-storico-controlli' && id !== 'modal-diario-mobile' && id !== 'modal-modifica-diario-item' && id !== 'modal-guida-contestuale' && id !== 'modal-briefing-vocale') {
+    if (p && id !== 'modal-nuovo-paziente' && id !== 'modal-cestino' && id !== 'modal-report-whatsapp' && id !== 'modal-scheda-118' && id !== 'modal-modifica-farmaco' && id !== 'modal-laboratorio-scotti' && id !== 'modal-archivio-storico-controlli' && id !== 'modal-diario-mobile' && id !== 'modal-modifica-diario-item' && id !== 'modal-guida-contestuale' && id !== 'modal-briefing-vocale' && id !== 'modal-promemoria-mmg') {
       const header = el.querySelector('.modal-header');
       if (header) {
         // Cerca o crea il badge del paziente all'interno di .modal-title (layout a 2 righe pulito, zero sovrapposizioni)
@@ -28341,6 +28341,19 @@ var GUIDE_CONTESTUALI = {
     ]
     ,
     utilita: '<b>Igiene totale bedside e rapidità operativa</b>: permette di registrare i parametri anche quando si indossano i guanti sanitari o le mani sono impegnate nella cura dell\'assistito.'
+  },
+  'promemoria-mmg': {
+    icona: '🖨️',
+    titolo: 'Promemoria Impegnative SSN per il Medico di Famiglia (MMG)',
+    sottotitolo: 'Riepilogo analitico delle prestazioni specialistiche prescrivibili con esenzione',
+    scopo: 'Questa schermata genera il prospetto ufficiale delle sole impegnative ed esami specialistici che devono essere prescritti dal Medico di Medicina Generale (MMG), come esami del sangue ed ecografie di monitoraggio. Distingue in automatico le prestazioni a carico del curante da quelle già emesse direttamente dai reparti ospedalieri o universitari (es. Policlinico), evitando doppie prescrizioni ed errori nei codici di esenzione.',
+    comeSiUsa: [
+      '<b>Verifica Prescrizioni Necessarie</b>: controlla l\'elenco ordinato degli esami ematochimici e strumentali con il relativo quesito diagnostico e codice di esenzione.',
+      '<b>Stampa Foglio A4</b>: genera una stampa pulita e formale da consegnare a mano allo studio medico o alla segreteria del curante.',
+      '<b>Copia per WhatsApp</b>: genera un messaggio precompilato completo ed esaustivo pronto da incollare e inviare su WhatsApp alla segreteria dello studio medico.',
+      '<b>Invia Email al Medico</b>: predispone l\'email con l\'elenco esami e i dati completi dell\'assistito per la richiesta a distanza delle ricette elettroniche dematerializzate (NRE).'
+    ],
+    utilita: '<b>Zero prescrizioni duplicate o mancanti</b>: permette al medico di famiglia di emettere le ricette corrette in pochi istanti senza dimenticanze e nel pieno rispetto delle esenzioni per patologia.'
   },
   'ambulatorio-epatologia': {
     icona: '🔬',
