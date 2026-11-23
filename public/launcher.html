@@ -5776,7 +5776,7 @@
     // ==============================================================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js?v=1795429414539').then(reg => {
+            navigator.serviceWorker.register('/sw.js?v=1795430227286').then(reg => {
                 if (reg) reg.update();
                 console.log('[PWA] Service Worker attivo:', reg.scope);
             }).catch(err => console.warn('[PWA] SW register notice:', err));
@@ -6423,6 +6423,14 @@
             La postazione è ora in sicurezza.
         </p>
 
+        
+        <!-- GUIDA VOCALE ELSA NEURAL PER CHIUSURA SESSIONE & RIENTRO -->
+        <div style="margin: -0.6rem auto 1.3rem auto; display:flex; justify-content:center;">
+            <button type="button" id="btnVoceArrivederciElsa" onclick="toggleVoceArrivederciElsa()" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; font-weight:800; font-size:12px; padding:7px 16px; border-radius:14px; border:1px solid #34d399; cursor:pointer; display:inline-flex; align-items:center; gap:7px; box-shadow:0 3px 12px rgba(16,185,129,0.35); transition:all 0.2s;" title="Ascolta con Elsa Neural a cosa serve questa maschera e come rientrare">
+                <span id="icoVoceArrivederciElsa" style="font-size:14px;">🔊</span> <span id="txtVoceArrivederciElsa">💡 A cosa serve (Elsa Neural)</span>
+            </button>
+        </div>
+
         <!-- Pulsante Principale di Rientro Elegante -->
         <button type="button" onclick="riapriAccessoSuite()" style="width:100%; background:linear-gradient(135deg, #d4af37 0%, #b45309 100%); color:#090d16; font-weight:900; font-size:15px; padding:15px 20px; border:none; border-radius:16px; cursor:pointer; letter-spacing:0.5px; box-shadow:0 8px 25px rgba(212,175,55,0.4); display:flex; align-items:center; justify-content:center; gap:10px; transition:transform 0.15s, box-shadow 0.15s; margin-bottom:12px;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
             <span style="font-size:20px;">🔑</span> <span>SE VUOI RIENTRARE CLICCA QUI</span> ➔
@@ -6440,6 +6448,140 @@
 </div>
 
 <script>
+
+    
+    // ==============================================================================
+    // GUIDA VOCALE ELSA NEURAL PER MASCHERA ARRIVEDERCI / CHIUSURA SESSIONE
+    // ==============================================================================
+    let _audioArrivederciElsa = null;
+    let _isVoceArrivederciInCorso = false;
+    let _preloadedAudioArrivederci = null;
+
+    const testoGuidaArrivederci = "A cosa serve questa schermata di protezione sessione. " +
+        "La tua sessione di lavoro è stata chiusa e protetta con successo. " +
+        "Tutti i dati registrati su terapie, turni, parametri clinici o inventario sono stati memorizzati in sicurezza e sincronizzati con il Cloud e con la chiavetta. " +
+        "La postazione è ora bloccata per impedire accessi non autorizzati da parte di estranei. " +
+        "Se desideri rientrare subito e riprendere a lavorare, tocca il pulsante dorato Se Vuoi Rientrare Clicca Qui e digita il tuo PIN personale. " +
+        "Se invece hai terminato il turno, puoi cliccare il pulsante rosso Spegni Postazione per arrestare i servizi in background in totale sicurezza.";
+
+    function precaricaAudioArrivederci() {
+        if (_preloadedAudioArrivederci) return;
+        try {
+            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+            const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci);
+            _preloadedAudioArrivederci = new Audio();
+            _preloadedAudioArrivederci.preload = 'auto';
+            _preloadedAudioArrivederci.src = url;
+            _preloadedAudioArrivederci.load();
+        } catch(e) {}
+    }
+
+    function fermaVoceArrivederciElsa() {
+        if (_audioArrivederciElsa) {
+            try {
+                _audioArrivederciElsa.pause();
+                _audioArrivederciElsa.currentTime = 0;
+            } catch(e){}
+            _audioArrivederciElsa = null;
+        }
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+        _isVoceArrivederciInCorso = false;
+        aggiornaBtnVoceArrivederci(false);
+    }
+
+    function aggiornaBtnVoceArrivederci(inCorso) {
+        const btn = document.getElementById('btnVoceArrivederciElsa');
+        const ico = document.getElementById('icoVoceArrivederciElsa');
+        const txt = document.getElementById('txtVoceArrivederciElsa');
+        if (!btn) return;
+        if (inCorso) {
+            if (ico) ico.textContent = '⏹️';
+            if (txt) txt.textContent = 'Interrompi Voce';
+            btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+            btn.style.borderColor = '#f87171';
+        } else {
+            if (ico) ico.textContent = '🔊';
+            if (txt) txt.textContent = '💡 A cosa serve (Elsa Neural)';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            btn.style.borderColor = '#34d399';
+        }
+    }
+
+    function toggleVoceArrivederciElsa() {
+        if (_isVoceArrivederciInCorso) {
+            fermaVoceArrivederciElsa();
+            return;
+        }
+
+        fermaVoceArrivederciElsa();
+        _isVoceArrivederciInCorso = true;
+        aggiornaBtnVoceArrivederci(true);
+
+        let isPlaying = false;
+        let safetyTimer = null;
+
+        function fallbackArrivederciSubito() {
+            if (isPlaying) return;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if (_audioArrivederciElsa) {
+                try { _audioArrivederciElsa.pause(); } catch(e){}
+                _audioArrivederciElsa = null;
+            }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+                const utter = new SpeechSynthesisUtterance(testoGuidaArrivederci);
+                utter.lang = 'it-IT';
+                utter.rate = 1.0;
+                const voices = window.speechSynthesis.getVoices();
+                const vElsa = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('ElsaNeural') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+                if (vElsa) utter.voice = vElsa;
+                utter.onend = function() { fermaVoceArrivederciElsa(); };
+                utter.onerror = function() { fermaVoceArrivederciElsa(); };
+                window.speechSynthesis.speak(utter);
+            } else {
+                fermaVoceArrivederciElsa();
+            }
+        }
+
+        // Safety timer calibrato a 4000ms per non interrompere Elsa Neural
+        safetyTimer = setTimeout(function() {
+            if (!isPlaying) {
+                console.warn('Timeout Elsa arrivederci: avvio fallback');
+                fallbackArrivederciSubito();
+            }
+        }, 4000);
+
+        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+        const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci);
+
+        const audio = _preloadedAudioArrivederci || new Audio(apiUrl);
+        _audioArrivederciElsa = audio;
+
+        audio.onplaying = function() {
+            isPlaying = true;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+            }
+        };
+
+        audio.onended = function() {
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            fermaVoceArrivederciElsa();
+        };
+
+        audio.onerror = function() {
+            fallbackArrivederciSubito();
+        };
+
+        audio.play().catch(function() {
+            fallbackArrivederciSubito();
+        });
+    }
 
     function mostraMascheraArrivederci() {
         // Pulisci le sessioni per sicurezza
@@ -6467,6 +6609,7 @@
         const arrivederci = document.getElementById('modalArrivederciSuite');
         if (arrivederci) {
             arrivederci.style.display = 'flex';
+            precaricaAudioArrivederci();
         }
     }
 
