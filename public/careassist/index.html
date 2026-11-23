@@ -11934,10 +11934,10 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
       <!-- CONTROLLO VOCALE GUIDA ELSA NEURAL -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:#f0f9ff; border:1.5px solid #bae6fd; border-radius:14px; padding:8px 12px; box-shadow:0 2px 6px rgba(2,132,199,0.06); flex-shrink:0;">
         <div style="font-size:11.5px; font-weight:800; color:#0369a1; display:flex; align-items:center; gap:6px;">
-          <span>🤖</span> <span>Assistente Elsa Neural</span>
+          <span>🤖</span> <span>Assistente Elisa Neural</span>
         </div>
-        <button type="button" id="btnVoceStrumentiElsa" onclick="toggleVoceStrumentiElsa(event)" ontouchstart="toggleVoceStrumentiElsa(event)" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:1px solid #34d399; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(16,185,129,0.25); transition:all 0.2s;">
-          <span id="icoVoceStrumentiElsa">🔊</span> <span id="txtVoceStrumentiElsa">A cosa serve (Ascolta)</span>
+        <button type="button" id="btnVoceStrumentiElisa" onclick="toggleVoceStrumentiElisa(event)" ontouchstart="toggleVoceStrumentiElisa(event)" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:1px solid #34d399; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(16,185,129,0.25); transition:all 0.2s;">
+          <span id="icoVoceStrumentiElisa">🔊</span> <span id="txtVoceStrumentiElisa">A cosa serve (Ascolta)</span>
         </button>
       </div>
 
@@ -12213,16 +12213,16 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
 // ==============================================================================
 // GUIDA VOCALE ELSA NEURAL PER IL PANNELLO "TUTTI GLI STRUMENTI PC"
 // ==============================================================================
-let _audioStrumentiElsa = null;
+let _audioStrumentiElisa = null;
 let _isVoceStrumentiInCorso = false;
 
-function fermaVoceStrumentiElsa() {
-  if (_audioStrumentiElsa) {
+function fermaVoceStrumentiElisa() {
+  if (_audioStrumentiElisa) {
     try {
-      _audioStrumentiElsa.pause();
-      _audioStrumentiElsa.currentTime = 0;
+      _audioStrumentiElisa.pause();
+      _audioStrumentiElisa.currentTime = 0;
     } catch(e){}
-    _audioStrumentiElsa = null;
+    _audioStrumentiElisa = null;
   }
   if ('speechSynthesis' in window) {
     try { window.speechSynthesis.cancel(); } catch(e){}
@@ -12232,9 +12232,9 @@ function fermaVoceStrumentiElsa() {
 }
 
 function aggiornaBtnVoceStrumenti(inCorso) {
-  const btn = document.getElementById('btnVoceStrumentiElsa');
-  const ico = document.getElementById('icoVoceStrumentiElsa');
-  const txt = document.getElementById('txtVoceStrumentiElsa');
+  const btn = document.getElementById('btnVoceStrumentiElisa');
+  const ico = document.getElementById('icoVoceStrumentiElisa');
+  const txt = document.getElementById('txtVoceStrumentiElisa');
   if (!btn) return;
   if (inCorso) {
     if (ico) ico.textContent = '⏹️';
@@ -12249,10 +12249,10 @@ function aggiornaBtnVoceStrumenti(inCorso) {
   }
 }
 
-function toggleVoceStrumentiElsa(e) {
+function toggleVoceStrumentiElisa(e) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
   if (_isVoceStrumentiInCorso) {
-    fermaVoceStrumentiElsa();
+    fermaVoceStrumentiElisa();
     return;
   }
 
@@ -12265,16 +12265,16 @@ function toggleVoceStrumentiElsa(e) {
     "dettare a voce le note cliniche OSS e azionare i comandi a mani libere con intelligenza artificiale, " +
     "consultare le scale cliniche Braden e Barthel, visualizzare il Turnario Operatori H24 e accedere a Progetto Salute e Ambulatorio Medico.";
 
-  fermaVoceStrumentiElsa();
+  fermaVoceStrumentiElisa();
   _isVoceStrumentiInCorso = true;
   aggiornaBtnVoceStrumenti(true);
 
-  const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+  const apiUrl = '/api/tts-umano?voice=isabella&text=' + encodeURIComponent(testo);
   const audio = new Audio(apiUrl);
-  _audioStrumentiElsa = audio;
+  _audioStrumentiElisa = audio;
 
   audio.onended = function() {
-    fermaVoceStrumentiElsa();
+    fermaVoceStrumentiElisa();
   };
 
   audio.onerror = function() {
@@ -12282,11 +12282,11 @@ function toggleVoceStrumentiElsa(e) {
       const utter = new SpeechSynthesisUtterance(testo);
       utter.lang = 'it-IT';
       utter.rate = 1.0;
-      utter.onend = function() { fermaVoceStrumentiElsa(); };
-      utter.onerror = function() { fermaVoceStrumentiElsa(); };
+      utter.onend = function() { fermaVoceStrumentiElisa(); };
+      utter.onerror = function() { fermaVoceStrumentiElisa(); };
       window.speechSynthesis.speak(utter);
     } else {
-      fermaVoceStrumentiElsa();
+      fermaVoceStrumentiElisa();
     }
   };
 
@@ -12295,11 +12295,11 @@ function toggleVoceStrumentiElsa(e) {
       const utter = new SpeechSynthesisUtterance(testo);
       utter.lang = 'it-IT';
       utter.rate = 1.0;
-      utter.onend = function() { fermaVoceStrumentiElsa(); };
-      utter.onerror = function() { fermaVoceStrumentiElsa(); };
+      utter.onend = function() { fermaVoceStrumentiElisa(); };
+      utter.onerror = function() { fermaVoceStrumentiElisa(); };
       window.speechSynthesis.speak(utter);
     } else {
-      fermaVoceStrumentiElsa();
+      fermaVoceStrumentiElisa();
     }
   });
 }
@@ -12310,13 +12310,13 @@ function toggleVoceStrumentiElsa(e) {
   if (bs) {
     const origClose = window.chiudiMenuOSSTop;
     window.chiudiMenuOSSTop = function(e) {
-      fermaVoceStrumentiElsa();
+      fermaVoceStrumentiElisa();
       if (typeof origClose === 'function') origClose(e);
     };
   }
 })();
-window.toggleVoceStrumentiElsa = toggleVoceStrumentiElsa;
-window.fermaVoceStrumentiElsa = fermaVoceStrumentiElsa;
+window.toggleVoceStrumentiElisa = toggleVoceStrumentiElisa;
+window.fermaVoceStrumentiElisa = fermaVoceStrumentiElisa;
 </script>
 
 </body>
