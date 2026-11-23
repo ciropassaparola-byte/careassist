@@ -11930,6 +11930,17 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
           style="background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:16px; font-weight:900; color:#475569; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
       </div>
 
+      
+      <!-- CONTROLLO VOCALE GUIDA ELSA NEURAL -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:#f0f9ff; border:1.5px solid #bae6fd; border-radius:14px; padding:8px 12px; box-shadow:0 2px 6px rgba(2,132,199,0.06); flex-shrink:0;">
+        <div style="font-size:11.5px; font-weight:800; color:#0369a1; display:flex; align-items:center; gap:6px;">
+          <span>🤖</span> <span>Assistente Elsa Neural</span>
+        </div>
+        <button type="button" id="btnVoceStrumentiElsa" onclick="toggleVoceStrumentiElsa(event)" ontouchstart="toggleVoceStrumentiElsa(event)" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:1px solid #34d399; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(16,185,129,0.25); transition:all 0.2s;">
+          <span id="icoVoceStrumentiElsa">🔊</span> <span id="txtVoceStrumentiElsa">A cosa serve (Ascolta)</span>
+        </button>
+      </div>
+
       <!-- CORPO STRUMENTI CON SCROLL FLUIDO -->
       <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:4px 2px 14px 2px;">
         
@@ -12196,6 +12207,117 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
       window.addEventListener('keydown', autoTriggerFs, { once: true });
     })();
   </script>
+
+
+<script>
+// ==============================================================================
+// GUIDA VOCALE ELSA NEURAL PER IL PANNELLO "TUTTI GLI STRUMENTI PC"
+// ==============================================================================
+let _audioStrumentiElsa = null;
+let _isVoceStrumentiInCorso = false;
+
+function fermaVoceStrumentiElsa() {
+  if (_audioStrumentiElsa) {
+    try {
+      _audioStrumentiElsa.pause();
+      _audioStrumentiElsa.currentTime = 0;
+    } catch(e){}
+    _audioStrumentiElsa = null;
+  }
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.cancel(); } catch(e){}
+  }
+  _isVoceStrumentiInCorso = false;
+  aggiornaBtnVoceStrumenti(false);
+}
+
+function aggiornaBtnVoceStrumenti(inCorso) {
+  const btn = document.getElementById('btnVoceStrumentiElsa');
+  const ico = document.getElementById('icoVoceStrumentiElsa');
+  const txt = document.getElementById('txtVoceStrumentiElsa');
+  if (!btn) return;
+  if (inCorso) {
+    if (ico) ico.textContent = '⏹️';
+    if (txt) txt.textContent = 'Interrompi Voce';
+    btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+    btn.style.borderColor = '#f87171';
+  } else {
+    if (ico) ico.textContent = '🔊';
+    if (txt) txt.textContent = 'A cosa serve (Ascolta)';
+    btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    btn.style.borderColor = '#34d399';
+  }
+}
+
+function toggleVoceStrumentiElsa(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  if (_isVoceStrumentiInCorso) {
+    fermaVoceStrumentiElsa();
+    return;
+  }
+
+  const testo = "A cosa serve il pannello Tutti gli Strumenti PC. " +
+    "Questo pannello rende disponibili sul tuo smartphone tutte le funzioni operative avanzate della postazione fissa del computer. " +
+    "Da qui puoi compilare il prestampato infettivi del Policlinico di Bari, " +
+    "accedere al registro di ritiro farmaci ASL, " +
+    "stampare il Dossier Clinico A4 completo per il medico, " +
+    "firmare digitalmente con posizione GPS la consegna del turno, " +
+    "dettare a voce le note cliniche OSS e azionare i comandi a mani libere con intelligenza artificiale, " +
+    "consultare le scale cliniche Braden e Barthel, visualizzare il Turnario Operatori H24 e accedere a Progetto Salute e Ambulatorio Medico.";
+
+  fermaVoceStrumentiElsa();
+  _isVoceStrumentiInCorso = true;
+  aggiornaBtnVoceStrumenti(true);
+
+  const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+  const audio = new Audio(apiUrl);
+  _audioStrumentiElsa = audio;
+
+  audio.onended = function() {
+    fermaVoceStrumentiElsa();
+  };
+
+  audio.onerror = function() {
+    if ('speechSynthesis' in window) {
+      const utter = new SpeechSynthesisUtterance(testo);
+      utter.lang = 'it-IT';
+      utter.rate = 1.0;
+      utter.onend = function() { fermaVoceStrumentiElsa(); };
+      utter.onerror = function() { fermaVoceStrumentiElsa(); };
+      window.speechSynthesis.speak(utter);
+    } else {
+      fermaVoceStrumentiElsa();
+    }
+  };
+
+  audio.play().catch(function() {
+    if ('speechSynthesis' in window) {
+      const utter = new SpeechSynthesisUtterance(testo);
+      utter.lang = 'it-IT';
+      utter.rate = 1.0;
+      utter.onend = function() { fermaVoceStrumentiElsa(); };
+      utter.onerror = function() { fermaVoceStrumentiElsa(); };
+      window.speechSynthesis.speak(utter);
+    } else {
+      fermaVoceStrumentiElsa();
+    }
+  });
+}
+
+// Ferma la voce quando il pannello viene chiuso
+(function() {
+  const bs = document.getElementById('modal-menu-oss-bottomsheet');
+  if (bs) {
+    const origClose = window.chiudiMenuOSSTop;
+    window.chiudiMenuOSSTop = function(e) {
+      fermaVoceStrumentiElsa();
+      if (typeof origClose === 'function') origClose(e);
+    };
+  }
+})();
+window.toggleVoceStrumentiElsa = toggleVoceStrumentiElsa;
+window.fermaVoceStrumentiElsa = fermaVoceStrumentiElsa;
+</script>
 
 </body>
 
