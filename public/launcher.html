@@ -1723,9 +1723,9 @@
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
-                            careassist-r6lq.onrender.com
+                            careassist-r61q.onrender.com
                         </div>
-                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r6lq.onrender.com', 'Profilo 1 (Master)')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r61q.onrender.com', 'Profilo 1 (Master)')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -1749,7 +1749,7 @@
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
                             milella-suite-iv93.onrender.com
                         </div>
-                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r6lq.onrender.com', 'Profilo 2 (Riserva A)')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r61q.onrender.com', 'Profilo 2 (Riserva A)')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -2587,7 +2587,7 @@
         // Se siamo su Render o online, usa l'URL pubblico esatto, altrimenti la rete locale
         var targetUrl = window.location.origin + '/launcher.html';
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} targetUrl = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-r6lq.onrender.com/launcher.html';
+            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} targetUrl = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-r61q.onrender.com/launcher.html';
         }
         
         var urlElem = document.getElementById('qrTargetUrlText');
@@ -2649,7 +2649,7 @@
     function condividiWhatsApp() {
         var url = window.location.origin + '/launcher.html';
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} url = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-r6lq.onrender.com/launcher.html';
+            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} url = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-r61q.onrender.com/launcher.html';
         }
         var msg = encodeURIComponent("📱 Accedi alla Suite Gestionale C. Milella:\n" + url);
         window.open("https://api.whatsapp.com/send?text=" + msg, "_blank");
@@ -2672,8 +2672,8 @@
     // ==============================================================================
     // CABINA DI REGIA CLOUD (SELETTORE PROFILI RENDER & LOCALE)
     // ==============================================================================
-    const CLOUD_PROFILO_1 = 'https://careassist-r6lq.onrender.com';
-    const CLOUD_PROFILO_2 = 'https://careassist-r6lq.onrender.com';
+    const CLOUD_PROFILO_1 = 'https://careassist-r61q.onrender.com';
+    const CLOUD_PROFILO_2 = 'https://careassist-r61q.onrender.com';
     const CLOUD_PROFILO_3 = 'https://milella-suite.onrender.com';
     const CLOUD_PROFILO_4 = 'https://milella-suite-p4.onrender.com';
     const CLOUD_LOCALE    = 'http://localhost:3000';
@@ -2890,7 +2890,7 @@
 
         [b1, b2, b3, b4, bL].forEach(b => { if (b) b.style.display = 'none'; });
 
-        if (cur.indexOf('careassist-r6lq.onrender.com') !== -1) {
+        if (cur.indexOf('careassist-r61q.onrender.com') !== -1) {
             if (b1) b1.style.display = 'inline-block';
             if (cardP1) cardP1.style.borderColor = '#22c55e';
             if (lbl) lbl.textContent = 'Cloud: Profilo 1 (Master)';
@@ -5649,7 +5649,7 @@
             msg += '• 🚗 Flotta: Revisioni e tagliandi monitorati\n• 🛠️ Attrezzi: Inventario verificato e sincronizzato\n• 📦 Logistica: Consegne e ritiri operativi\n\n';
         }
 
-        msg += '🔗 *Accedi al portale:* https://careassist-r6lq.onrender.com/launcher.html';
+        msg += '🔗 *Accedi al portale:* https://careassist-r61q.onrender.com/launcher.html';
         const waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg);
         window.open(waUrl, '_blank');
     }

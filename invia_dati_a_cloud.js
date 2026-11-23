@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetUrl = 'https://careassist-r6lq.onrender.com/api/suite/ripristina-backup';
+const targetUrl = 'https://careassist-r61q.onrender.com/api/suite/ripristina-backup';
 const suiteDir = path.resolve(__dirname);
 
 console.log('[*] Raccolta dati da Chiavetta USB in corso...');

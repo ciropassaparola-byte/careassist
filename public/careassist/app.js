@@ -2568,7 +2568,7 @@ function saveDb(forceBeforeInitialSync, isBackgroundAutoLog) {
   inviaModificheAlServer();
 }
 
-const CAREASSIST_CLOUD_MASTER_URL = 'https://careassist-r6lq.onrender.com';
+const CAREASSIST_CLOUD_MASTER_URL = 'https://careassist-r61q.onrender.com';
 
 function isLocalOrFileOrigin() {
   try {
@@ -17347,7 +17347,7 @@ function apriModalSmartphone() {
   // Determina l'URL corretto: se online o su Render usa HTTPS Cloud, altrimenti usa l'origine corrente
   var targetUrl = window.location.origin + '/careassist/';
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    targetUrl = 'https://careassist-r6lq.onrender.com/careassist/';
+    targetUrl = 'https://careassist-r61q.onrender.com/careassist/';
   }
 
   // Genera dinamicamente il QR Code con l'indirizzo esatto
