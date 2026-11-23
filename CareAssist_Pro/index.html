@@ -3764,8 +3764,8 @@
             <div id="cambia-orario-farm-nome" style="font-size:12px; color:#e0f2fe; font-weight:700;">Farmaco</div>
           </div>
         </div>
-        <button type="button" class="btn btn-outline" onclick="chiudiCambiaOrarioRapido()"
-          style="color:#ffffff; border-color:rgba(255,255,255,0.4); padding:4px 8px; border-radius:8px;">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('cambia-orario-rapido')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button type="button" class="btn btn-outline" onclick="chiudiCambiaOrarioRapido()"
+          style="color:#ffffff; border-color:rgba(255,255,255,0.4); padding:4px 8px; border-radius:8px;">✕</button></div>
       </div>
       <div class="modal-body" style="padding:16px;">
         <div
@@ -3827,8 +3827,8 @@
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-outline" onclick="chiudiModificaScortaRapida()"
-          style="color:#ffffff !important; border-color:rgba(255,255,255,0.5) !important; padding:4px 9px !important; border-radius:8px !important; font-weight:900 !important; font-size:14px !important; background:rgba(255,255,255,0.2) !important; cursor:pointer;">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('modifica-scorta-rapida')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button type="button" class="btn btn-outline" onclick="chiudiModificaScortaRapida()"
+          style="color:#ffffff !important; border-color:rgba(255,255,255,0.5) !important; padding:4px 9px !important; border-radius:8px !important; font-weight:900 !important; font-size:14px !important; background:rgba(255,255,255,0.2) !important; cursor:pointer;">✕</button></div>
       </div>
 
       <div class="modal-body" style="padding:18px;">
@@ -5497,7 +5497,7 @@
     <div class="modal-card" style="max-width: 520px;">
       <div class="modal-header">
         <div class="modal-title">📦 Carico Farmaci (Scatole Nuove o Capsule Sfuse a Casa)</div>
-        <button class="btn btn-outline" onclick="closeModal('modal-ricarica-scorta')">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('ricarica-scorta')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button class="btn btn-outline" onclick="closeModal('modal-ricarica-scorta')">✕</button></div>
       </div>
       <form onsubmit="salvaRicaricaScorta(event)">
         <div class="modal-body">
@@ -6286,8 +6286,8 @@
               consegnare allo specialista</p>
           </div>
         </div>
-        <button class="modal-close" style="color:#fff;"
-          onclick="closeModal('modal-lettera-specialistica')">&times;</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('lettera-specialistica')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button class="modal-close" style="color:#fff;"
+          onclick="closeModal('modal-lettera-specialistica')">&times;</button></div>
       </div>
       <div class="modal-body" style="padding: 18px 20px; overflow-y: auto; flex: 1; background: #f8fafc;">
         <div
@@ -6645,11 +6645,14 @@
   <!-- MODAL 6: REGISTRA CADUTA / INCIDENT REPORT (RSA SAFETY) -->
   <div class="modal-overlay" id="modal-caduta" style="z-index: 10003;">
     <div class="modal-card" style="max-width: 580px;">
-      <div class="modal-header" style="background:#fff1f2; border-bottom:1px solid #fecdd3;">
+      <div class="modal-header" style="background:#fff1f2; border-bottom:1px solid #fecdd3; display:flex; justify-content:space-between; align-items:center;">
         <div class="modal-title" style="color:#9f1239; display:flex; align-items:center; gap:8px;">
           <span>⚠️</span> <span>Registra Evento Caduta / Inciampo (Incident Report)</span>
         </div>
-        <button class="btn btn-outline" onclick="closeModal('modal-caduta')">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('caduta')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-caduta')">✕</button>
+        </div>
       </div>
       <form onsubmit="salvaEventoCaduta(event)">
         <div class="modal-body">
@@ -6723,11 +6726,14 @@
   <!-- MODAL 7: CONSEGNA DI TURNO CONDIVISA (SHIFT HANDOVER RSA) -->
   <div class="modal-overlay" id="modal-consegna-turno" style="z-index: 10003;">
     <div class="modal-card" style="max-width: 620px;">
-      <div class="modal-header" style="background:#f0fdf4; border-bottom:1px solid #bbf7d0;">
+      <div class="modal-header" style="background:#f0fdf4; border-bottom:1px solid #bbf7d0; display:flex; justify-content:space-between; align-items:center;">
         <div class="modal-title" style="color:#166534; display:flex; align-items:center; gap:8px;">
           <span>📋</span> <span>Passaggio Consegne di Turno (RSA & Domicilio)</span>
         </div>
-        <button class="btn btn-outline" onclick="closeModal('modal-consegna-turno')">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('consegna-turno')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-consegna-turno')">✕</button>
+        </div>
       </div>
       <div class="modal-body">
         <div style="font-size:13px; color:#475569; margin-bottom:12px;">
@@ -6765,11 +6771,14 @@
   <!-- MODAL 8: REGISTRA DIURESI & CATETERE / SILODYX -->
   <div class="modal-overlay" id="modal-diuresi" style="z-index: 10004;">
     <div class="modal-card" style="max-width: 540px;">
-      <div class="modal-header" style="background:#fff7ed; border-bottom:1px solid #fed7aa;">
+      <div class="modal-header" style="background:#fff7ed; border-bottom:1px solid #fed7aa; display:flex; justify-content:space-between; align-items:center;">
         <div class="modal-title" style="color:#9a3412; display:flex; align-items:center; gap:8px;">
           <span>🧪</span> <span>Registra Diuresi & Controllo Catetere / Silodyx</span>
         </div>
-        <button class="btn btn-outline" onclick="closeModal('modal-diuresi')">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('diuresi')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-diuresi')">✕</button>
+        </div>
       </div>
       <form onsubmit="salvaDiuresi(event)">
         <div class="modal-body">
@@ -6835,11 +6844,14 @@
   <!-- MODAL 9: DIARIO NUTRIZIONALE PASTI (RSA NUTRITION) -->
   <div class="modal-overlay" id="modal-pasti" style="z-index: 10004;">
     <div class="modal-card" style="max-width: 520px;">
-      <div class="modal-header" style="background:#f0fdf4; border-bottom:1px solid #bbf7d0;">
+      <div class="modal-header" style="background:#f0fdf4; border-bottom:1px solid #bbf7d0; display:flex; justify-content:space-between; align-items:center;">
         <div class="modal-title" style="color:#166534; display:flex; align-items:center; gap:8px;">
           <span>🍲</span> <span>Diario Nutrizionale & Pasti di Aldo</span>
         </div>
-        <button class="btn btn-outline" onclick="closeModal('modal-pasti')">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('pasti')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-pasti')">✕</button>
+        </div>
       </div>
       <form onsubmit="salvaPasto(event)">
         <div class="modal-body">
@@ -6887,11 +6899,14 @@
   <!-- MODAL 10: SCALA DI BRADEN (VALUTAZIONE RISCHIO PIAGHE DA DECUBITO) -->
   <div class="modal-overlay" id="modal-braden" style="z-index: 10004;">
     <div class="modal-card" style="max-width: 600px;">
-      <div class="modal-header" style="background:#faf5ff; border-bottom:1px solid #e9d5ff;">
+      <div class="modal-header" style="background:#faf5ff; border-bottom:1px solid #e9d5ff; display:flex; justify-content:space-between; align-items:center;">
         <div class="modal-title" style="color:#6b21a8; display:flex; align-items:center; gap:8px;">
           <span>🎯</span> <span>Calcolatore Ufficiale Scala di Braden (Rischio LdP)</span>
         </div>
-        <button class="btn btn-outline" onclick="closeModal('modal-braden')">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('braden')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button>
+          <button class="btn btn-outline" onclick="closeModal('modal-braden')">✕</button>
+        </div>
       </div>
       <div class="modal-body">
         <div
@@ -8058,8 +8073,8 @@
               Modulo Area Farmaceutica Territoriale</p>
           </div>
         </div>
-        <button class="modal-close" style="color:white; font-size:24px; cursor:pointer;"
-          onclick="chiudiModalPrenotazioneCto()">&times;</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('prenotazione-cto')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button class="modal-close" style="color:white; font-size:24px; cursor:pointer;"
+          onclick="chiudiModalPrenotazioneCto()">&times;</button></div>
       </div>
 
       <!-- CORPO DEL MODULO COMPILATO -->
@@ -8200,8 +8215,8 @@
               clinica dose saltata</p>
           </div>
         </div>
-        <button class="modal-close" style="color:white; font-size:24px;"
-          onclick="closeModal('modal-salta-farmaco')">&times;</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('salta-farmaco')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button class="modal-close" style="color:white; font-size:24px;"
+          onclick="closeModal('modal-salta-farmaco')">&times;</button></div>
       </div>
       <form onsubmit="confermaRegistrazioneFarmacoSaltato(event)">
         <input type="hidden" id="salta-farmaco-id">
@@ -8719,8 +8734,8 @@
           style="margin:0; font-size:16px; font-weight:800; color:#0f2744; display:flex; align-items:center; gap:8px;">
           <span>📝</span> Registra Nota di Turno / Consegna
         </h3>
-        <button type="button" class="btn-close-modal btn-close-dark" onclick="closeModal('modal-nota-turno')"
-          title="Chiudi Finestra" aria-label="Chiudi">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('nota-turno')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button type="button" class="btn-close-modal btn-close-dark" onclick="closeModal('modal-nota-turno')"
+          title="Chiudi Finestra" aria-label="Chiudi">✕</button></div>
       </div>
       <div class="modal-body" style="padding:16px 20px;">
         <div class="form-group" style="margin-bottom:12px;">
@@ -9284,8 +9299,8 @@
             </div>
           </div>
         </div>
-        <button type="button" class="btn-close-modal" onclick="closeModal('modal-ordine-ausili-whatsapp')"
-          style="background:rgba(255,255,255,0.2); border:none; color:#fff; border-radius:50%; width:32px; height:32px; font-size:16px; font-weight:800; cursor:pointer;">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('ordine-ausili-whatsapp')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button type="button" class="btn-close-modal" onclick="closeModal('modal-ordine-ausili-whatsapp')"
+          style="background:rgba(255,255,255,0.2); border:none; color:#fff; border-radius:50%; width:32px; height:32px; font-size:16px; font-weight:800; cursor:pointer;">✕</button></div>
       </div>
 
       <div class="modal-body" style="padding:16px; background:#f8fafc; max-height:calc(85vh - 130px); overflow-y:auto;">
@@ -9334,8 +9349,8 @@
             <div style="font-size: 12px; color: #ccfbf1;" id="turnario-settimana-label">Settimana in corso</div>
           </div>
         </div>
-        <button type="button" onclick="chiudiModalTurnarioAdmin()"
-          style="background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.7); color: #fff; font-size: 16px; font-weight: 900; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('turnario-admin')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button type="button" onclick="chiudiModalTurnarioAdmin()"
+          style="background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.7); color: #fff; font-size: 16px; font-weight: 900; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">✕</button></div>
       </div>
 
       <!-- BODY MODALE -->
@@ -9523,6 +9538,7 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+          <button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('roadmap-scadenze')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button>
           <button type="button" class="btn btn-roadmap-export" onclick="sincronizzaCalendarioTuttiPazienti()"
             style="background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; color: #ffffff !important; border: 1px solid #6ee7b7 !important; padding: 7px 14px !important; border-radius: 9px !important; font-weight: 800 !important; font-size: 12px !important; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(16,185,129,0.35); transition: all 0.2s;"
             title="Scarica il file .ics per integrare tutte le date nel calendario del tuo smartphone">
@@ -9805,9 +9821,9 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-outline modal-close" onclick="closeModal('modal-laboratorio-scotti')"
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('laboratorio-scotti')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button class="btn btn-outline modal-close" onclick="closeModal('modal-laboratorio-scotti')"
           aria-label="Chiudi finestra"
-          style="color: #ffffff !important; background: rgba(255,255,255,0.22) !important; border: 1.5px solid rgba(255,255,255,0.7) !important; border-radius: 50% !important; width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 18px !important; flex-shrink: 0 !important; cursor: pointer !important; padding: 0 !important;">✕</button>
+          style="color: #ffffff !important; background: rgba(255,255,255,0.22) !important; border: 1.5px solid rgba(255,255,255,0.7) !important; border-radius: 50% !important; width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 18px !important; flex-shrink: 0 !important; cursor: pointer !important; padding: 0 !important;">✕</button></div>
       </div>
 
       <!-- BODY MODALE -->

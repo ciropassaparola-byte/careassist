@@ -28214,6 +28214,246 @@ window.fermaVoceBriefing = fermaVoceBriefing;
 // 💡 SISTEMA DI GUIDA CONTESTUALE DINAMICA & UTILITÀ CLINICO-GESTIONALE
 // ==========================================================================
 var GUIDE_CONTESTUALI = {
+  'modifica-scorta-rapida': {
+    "icona": "📦",
+    "titolo": "Aggiornamento Rapido Scorta Farmaco",
+    "sottotitolo": "Rettifica immediata compresse, fiale o bustine disponibili",
+    "scopo": "Permette di correggere al volo il conteggio delle unità residue di un farmaco a casa dell'assistito quando viene aperta una nuova confezione o dopo una verifica fisica nell'armadietto farmaci.",
+    "comeSiUsa": [
+        "<b>Conteggio Attuale</b>: visualizza le compresse/unità stimate dal sistema.",
+        "<b>Nuovo Valore</b>: inserisci la quantità effettiva verificata nell'armadietto.",
+        "<b>Salva Scorta</b>: aggiorna il semaforo scorte e ricalcola i giorni di autonomia residua."
+    ],
+    "percheDifferenza": "Elimina le discrepanze tra registro digitale e scatole reali, evitando di rimanere sprovvisti di farmaci salvavita."
+},
+
+  'registra-ritiro-asl': {
+    "icona": "🏛️",
+    "titolo": "Registrazione Ritiro Farmaci ASL / PHT",
+    "sottotitolo": "Tracciabilità farmacia territoriale ed esenzione",
+    "scopo": "Registra il ritiro effettivo dei farmaci ad erogazione diretta (PHT/Distribuzione Diretta) presso la farmacia territoriale ASL o presidio ospedaliero, aggiornando le scorte e memorizzando la ricevuta o il promemoria di ritiro.",
+    "comeSiUsa": [
+        "<b>Farmaco Ritirato</b>: seleziona il farmaco di piano terapeutico.",
+        "<b>Quantità Scatole</b>: indica il numero di confezioni consegnate dalla farmacia ASL.",
+        "<b>Foto / Ricevuta</b>: allega se necessario la foto del bollettino di consegna.",
+        "<b>Conferma Ritiro</b>: accredita le unità nella scorta dell'assistito."
+    ],
+    "percheDifferenza": "Garantisce la continuità terapeutica per i farmaci specialistici ospedalieri e documenta con precisione ogni passaggio amministrativo."
+},
+
+  'ricarica-scorta': {
+    "icona": "📦",
+    "titolo": "Carico Farmaci & Nuove Confezioni",
+    "sottotitolo": "Ingresso scatole, capsule sfuse e scanner codice a barre",
+    "scopo": "Questa schermata serve per registrare l'arrivo a domicilio di nuovi lotti di medicinali acquistati o ritirati, anche con l'ausilio della fotocamera dello smartphone per scansionare il codice a barre della scatola.",
+    "comeSiUsa": [
+        "<b>Scansione o Ricerca</b>: inquadra la scatola con la fotocamera o cerca il farmaco per nome.",
+        "<b>Numero Confezioni</b>: inserisci quante scatole o capsule sono state caricate.",
+        "<b>Scadenza Lotto</b>: annota la data di scadenza della confezione.",
+        "<b>Registra Carico</b>: tocca Salva per aggiornare l'inventario dell'assistito."
+    ],
+    "percheDifferenza": "Evita doppi ordini in farmacia e impedisce la somministrazione accidentale di farmaci scaduti."
+},
+
+  'riconciliazione': {
+    "icona": "🔄",
+    "titolo": "Riconciliazione Terapeutica Ospedale - Territorio",
+    "sottotitolo": "Verifica congruenza tra lettere di dimissione e piano attivo",
+    "scopo": "Strumento clinico avanzato per confrontare la terapia domiciliare in corso con nuove prescrizioni ospedaliere o lettere di dimissione, individuando duplicazioni terapeutiche, dosaggi variati o farmaci sospesi dallo specialista.",
+    "comeSiUsa": [
+        "<b>Confronta Elenchi</b>: visualizza la terapia domiciliare affiancata alle nuove indicazioni.",
+        "<b>Segnala Discrepanze</b>: evidenzia variazioni di dosaggio, cambi di molecola o sospensioni.",
+        "<b>Convalida Clinica</b>: approva il nuovo assetto terapeutico concordato con il medico curante."
+    ],
+    "percheDifferenza": "Costituisce il principale presidio contro gli errori di riconciliazione farmacologica nei passaggi di cura."
+},
+
+  'lettera-specialistica': {
+    "icona": "🩺",
+    "titolo": "Lettera Accompagnamento per Visita Specialistica",
+    "sottotitolo": "Prospetto clinico completo da consegnare al medico specialista",
+    "scopo": "Genera un documento clinico strutturato in formato A4 pronto per la stampa o la condivisione PDF, contenente l'anamnesi completa, le patologie attive, la terapia farmacologica in corso con orari esatti e gli ultimi parametri vitali dell'assistito.",
+    "comeSiUsa": [
+        "<b>Verifica Dati</b>: controlla che patologie, allergie e terapie siano aggiornate.",
+        "<b>Aggiungi Quesito Clinico</b>: inserisci il motivo della consulenza o i dubbi da sottoporre.",
+        "<b>Stampa o Condividi</b>: tocca Stampa per il foglio cartaceo o invialo via WhatsApp/Email."
+    ],
+    "percheDifferenza": "Fornisce allo specialista un quadro clinico impeccabile e immediato in meno di un minuto, evitando dimenticanze o omissioni anamnestiche."
+},
+
+  'richiesta-medico': {
+    "icona": "🩺",
+    "titolo": "Invia Richiesta Ricette al Medico Curante",
+    "sottotitolo": "Messaggio formale rapido per WhatsApp ed Email MMG",
+    "scopo": "Genera automaticamente un messaggio formale e chiaro per la segreteria o il Medico di Medicina Generale con l'elenco dei farmaci da prescrivere, l'esenzione e i dati anagrafici del paziente.",
+    "comeSiUsa": [
+        "<b>Seleziona Farmaci</b>: spunta i medicinali in esaurimento.",
+        "<b>Scegli Canale</b>: premi Invia WhatsApp oppure Invia Email per aprire l'app con il testo già formattato.",
+        "<b>Invia Richiesta</b>: invia il messaggio con un solo tocco."
+    ],
+    "percheDifferenza": "Zero errori di digitazione, zero equivoci sui dosaggi e tempi di risposta più rapidi da parte dello studio medico."
+},
+
+  'caduta': {
+    "icona": "⚠️",
+    "titolo": "Incident Report: Evento Caduta o Inciampo",
+    "sottotitolo": "Tracciabilità medico-legale e prevenzione del rischio clinico",
+    "scopo": "Scheda di segnalazione immediata per documentare circostanze, dinamica, conseguenze fisiche, parametri vitali e interventi attuati a seguito di una caduta dell'assistito a letto o durante la deambulazione.",
+    "comeSiUsa": [
+        "<b>Dinamica & Luogo</b>: specifica dove e come è avvenuta la caduta (letto, bagno, corridoio).",
+        "<b>Stato di Coscienza & Lesioni</b>: descrivi traumi visibili, dolore o variazioni di mobilità.",
+        "<b>Azioni Intraprese</b>: annota se è stato avvisato il 112, la guardia medica o il familiare.",
+        "<b>Salva Report</b>: archivia l'evento con timestamp indelebile."
+    ],
+    "percheDifferenza": "Tutela la sicurezza dell'assistito e la responsabilità legale della struttura e dei caregiver."
+},
+
+  'consegna-turno': {
+    "icona": "📋",
+    "titolo": "Passaggio Consegne di Turno (RSA & Domicilio)",
+    "sottotitolo": "Continuità assistenziale tra operatori e diario di servizio",
+    "scopo": "Raccoglie in modo chiaro e sintetico le novità del turno appena concluso (terapie somministrate, evacuazione, stato d'animo, eventi particolari) per l'operatore del turno successivo o per la famiglia.",
+    "comeSiUsa": [
+        "<b>Sintesi del Turno</b>: scrivi o detta con la voce gli eventi salienti.",
+        "<b>Parametri & Attenzioni</b>: segnala eventuali criticità da monitorare (es. febbre o sonnolenza).",
+        "<b>Invia / Archivia</b>: salva nel diario e condividi nel gruppo di assistenza."
+    ],
+    "percheDifferenza": "Evita perdite di informazioni vitali tra cambi turno e azzera il rischio di doppie somministrazioni."
+},
+
+  'diuresi': {
+    "icona": "🧪",
+    "titolo": "Monitoraggio Diuresi & Controllo Catetere",
+    "sottotitolo": "Bilancio idrico e tracciabilità presidi urologici",
+    "scopo": "Consente di registrare il volume e le caratteristiche dell'urina (colore, limpidezza, sedimenti), lo svuotamento o cambio della sacca catetere e la corretta assunzione di farmaci urologici come il Silodyx.",
+    "comeSiUsa": [
+        "<b>Volume Urina</b>: inserisci la quantità in millilitri rilevata.",
+        "<b>Aspetto Urine</b>: seleziona colore (chiara, scura, ematica) ed eventuali anomalie.",
+        "<b>Controllo Sacca/Catetere</b>: indica se è stata effettuata la sostituzione del presidio.",
+        "<b>Salva Dati</b>: memorizza il rilievo per il calcolo del bilancio idrico giornaliero."
+    ],
+    "percheDifferenza": "Permette di intercettare tempestivamente infezioni delle vie urinarie, disidratazione o blocchi del catetere."
+},
+
+  'pasti': {
+    "icona": "🍲",
+    "titolo": "Diario Nutrizionale & Pasti Assistito",
+    "sottotitolo": "Monitoraggio appetito, consistenza e disfagia",
+    "scopo": "Registra l'assunzione calorica e nutritiva nei pasti principali (colazione, pranzo, merenda, cena), monitorando l'appetito, la deglutizione e l'eventuale necessità di addensanti per prevenire ab ingestis.",
+    "comeSiUsa": [
+        "<b>Tipo di Pasto</b>: seleziona il pasto consumato.",
+        "<b>Porzione Consumata</b>: indica la quantità assunta (tutto, metà, poco, rifiutato).",
+        "<b>Difficoltà di Deglutizione</b>: segnala eventuali colpi di tosse o disfagia ai liquidi.",
+        "<b>Registra Pasto</b>: salva la scheda per il bilancio nutrizionale settimanale."
+    ],
+    "percheDifferenza": "Previene malnutrizione e disidratazione nell'anziano fragile e allerta precocemente su problemi di deglutizione."
+},
+
+  'braden': {
+    "icona": "🎯",
+    "titolo": "Calcolatore Ufficiale Scala di Braden",
+    "sottotitolo": "Valutazione clinica del rischio di lesioni da pressione (LdP)",
+    "scopo": "Calcola automaticamente il punteggio della scala validata di Braden (percezione sensoriale, umidità, attività, mobilità, nutrizione, frizione e scivolamento) per classificare il livello di rischio di piaghe da decubito dell'assistito.",
+    "comeSiUsa": [
+        "<b>Assegna i Punteggi</b>: seleziona l'opzione corrispondente per ciascuno dei 6 parametri.",
+        "<b>Punteggio Totale</b>: il sistema calcola la somma (minore è il punteggio, maggiore è il rischio).",
+        "<b>Protocollo Consigliato</b>: applica le misure di prevenzione suggerite (materasso ad aria, rotazioni orarie, creme barriera).",
+        "<b>Salva Valutazione</b>: archivia il test nel fascicolo clinico per rivalutazioni periodiche."
+    ],
+    "percheDifferenza": "Fornisce evidenza medico-legale e attiva i corretti protocolli posturali prima che compaiano arrossamenti o ulcere."
+},
+
+  'prenotazione-cto': {
+    "icona": "📑",
+    "titolo": "Prenotazione Ufficiale Farmaci Ex-CTO ASL Bari",
+    "sottotitolo": "Compilazione modulo area farmaceutica territoriale",
+    "scopo": "Genera il modulo prestampato ufficiale per la richiesta e prenotazione dei farmaci di fascia H e PHT da ritirare presso l'ex presidio CTO di Bari, con tutti i dati anagrafici, codice fiscale, patologia ed esenzione già inseriti.",
+    "comeSiUsa": [
+        "<b>Seleziona Farmaco</b>: spunta il farmaco da richiedere in erogazione.",
+        "<b>Verifica Prescrizione</b>: controlla le date del piano terapeutico specialistico.",
+        "<b>Genera & Stampa</b>: stampa il documento da consegnare allo sportello o invialo via email ASL."
+    ],
+    "percheDifferenza": "Azzera le code e i respingimenti per moduli incompleti o dati mancanti presso l'ufficio farmaceutico ASL."
+},
+
+  'salta-farmaco': {
+    "icona": "❌",
+    "titolo": "Registrazione Mancata Somministrazione / Dose Saltata",
+    "sottotitolo": "Tracciabilità clinica per rifiuto, sonno o digiuno",
+    "scopo": "Permette di annotare con precisione la causa per cui una determinata terapia non è stata assunta all'orario stabilito (es. rifiuto del paziente, sonno profondo, vomito o esami diagnostici in corso), evitando che la dose risulti erroneamente assunta.",
+    "comeSiUsa": [
+        "<b>Seleziona Motivo</b>: scegli la motivazione della mancata somministrazione.",
+        "<b>Note Cliniche</b>: aggiungi dettagli o istruzioni ricevute dal medico/caregiver.",
+        "<b>Conferma Mancata Assunzione</b>: aggiorna la cartella e non scala le unità dalla scorta."
+    ],
+    "percheDifferenza": "Garantisce la trasparenza clinica totale e impedisce discrepanze pericolose tra terapia assunta e terapia registrata."
+},
+
+  'ordine-ausili-whatsapp': {
+    "icona": "📦",
+    "titolo": "Riordino Ausili & Sanitaria via WhatsApp",
+    "sottotitolo": "Invio immediato fabbisogno presidi igienici e sanitari",
+    "scopo": "Compone un messaggio WhatsApp istantaneo per la farmacia o sanitaria convenzionata con l'elenco preciso dei presidi necessari (pannoloni, traverse, guanti, cateteri, garze, siringhe, disinfettanti) e l'indirizzo di consegna.",
+    "comeSiUsa": [
+        "<b>Seleziona i Presidi</b>: spunta gli articoli in esaurimento.",
+        "<b>Indica Quantità</b>: specifica il numero di pacchi o confezioni necessarie.",
+        "<b>Invia a Sanitaria</b>: apre direttamente WhatsApp con il messaggio pronto per la spedizione."
+    ],
+    "percheDifferenza": "Elimina telefonate e dimenticanze, garantendo la fornitura puntuale dei presidi igienici a domicilio."
+},
+
+  'turnario-admin': {
+    "icona": "🗓️",
+    "titolo": "Turnario & Combinatore Turni Intelligente",
+    "sottotitolo": "Pianificazione orari operatori, OSS, infermieri e badanti",
+    "scopo": "Pannello di regia gestionale per organizzare i turni diurni, notturni e le presenze del personale di assistenza, verificando la copertura continua delle 24 ore e prevenendo sovrapposizioni o scoperte assistenziali.",
+    "comeSiUsa": [
+        "<b>Seleziona Settimana</b>: visualizza la griglia oraria dal lunedì alla domenica.",
+        "<b>Assegna Operatore</b>: associa ciascuna fascia oraria all'operatore in turno.",
+        "<b>Esporta & Stampa</b>: genera la tabella A4 da appendere in struttura o invia il turnario su WhatsApp."
+    ],
+    "percheDifferenza": "Assicura una gestione del personale impeccabile, chiara e priva di incomprensioni sui riposi e le sostituzioni."
+},
+
+  'laboratorio-scotti': {
+    "icona": "🔬",
+    "titolo": "Laboratorio Scotti • Gestione & Prenotazione Analisi",
+    "sottotitolo": "Prelievi ematici a domicilio e convenzione ASL",
+    "scopo": "Modulo dedicato per pianificare i prelievi domiciliari con il Laboratorio di Analisi Cliniche Scotti, verificare i codici di esenzione, inviare le impegnative e visualizzare i referti ematochimici.",
+    "comeSiUsa": [
+        "<b>Verifica Prescrizioni</b>: controlla che gli esami del sangue prescritti siano corretti.",
+        "<b>Prenota Prelievo Domiciliare</b>: contatta la segreteria del laboratorio tramite i canali rapidi.",
+        "<b>Archiviazione Referti</b>: inserisci o consulta i referti storici non appena disponibili."
+    ],
+    "percheDifferenza": "Centralizza tutti i contatti e i protocolli del laboratorio di riferimento, facilitando prelievi domiciliari puntuali per i pazienti non deambulanti."
+},
+
+  'nota-turno': {
+    "icona": "📝",
+    "titolo": "Registrazione Nota di Turno e Diario",
+    "sottotitolo": "Appunti rapidi per l'equipe assistenziale",
+    "scopo": "Consente a qualsiasi operatore o familiare di inserire una breve nota di servizio, un promemoria o un'osservazione comportamentale nel diario clinico per renderla visibile a tutta la rete di cura.",
+    "comeSiUsa": [
+        "<b>Testo Nota</b>: scrivi l'osservazione o usa la dettatura vocale.",
+        "<b>Categoria</b>: specifica se si tratta di comportamento, cura, igiene o comunicazione medica.",
+        "<b>Salva nel Diario</b>: pubblica la nota nella cronologia della giornata."
+    ],
+    "percheDifferenza": "Mantiene informati tutti i componenti dell'equipe in tempo reale evitando dimenticanze."
+},
+
+  'audit-farmaco': {
+    "icona": "💊",
+    "titolo": "Dettaglio & Tracciabilità Somministrazioni Farmaco",
+    "sottotitolo": "Audit trail, cronologia oraria e note cliniche del singolo medicinale",
+    "scopo": "Fornisce lo storico completo di tutte le somministrazioni registrate per uno specifico farmaco (data, ora esatta, operatore che ha convalidato, dosaggio e stato assunto o saltato).",
+    "comeSiUsa": [
+        "<b>Consulta lo Storico</b>: verifica giorno per giorno quando il farmaco è stato assunto.",
+        "<b>Note Cliniche</b>: leggi eventuali anomalie o effetti riferiti dall'assistito.",
+        "<b>Chiudi Scheda</b>: torna alla visualizzazione generale della terapia."
+    ],
+    "percheDifferenza": "Fornisce una prova documentale inconfutabile della corretta aderenza terapeutica per medici e familiari."
+},
+
   'bollario-scorte-semaforo': {
     icona: '📦',
     titolo: 'Bollario Farmaci & Semaforo Scorte Intelligente',

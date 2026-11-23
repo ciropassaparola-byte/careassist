@@ -5838,7 +5838,7 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
     <div class="modal-card" style="max-width: 520px;">
       <div class="modal-header">
         <div class="modal-title">📦 Carico Farmaci (Scatole Nuove o Capsule Sfuse a Casa)</div>
-        <button class="btn btn-outline" onclick="closeModal('modal-ricarica-scorta')">✕</button>
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('ricarica-scorta')" style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button class="btn btn-outline" onclick="closeModal('modal-ricarica-scorta')">✕</button></div>
       </div>
       <form onsubmit="salvaRicaricaScorta(event)">
         <div class="modal-body">
@@ -10286,9 +10286,9 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
             </div>
           </div>
         </div>
-        <button class="btn btn-outline modal-close" onclick="closeModal('modal-laboratorio-scotti')"
+        <div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn btn-sm btn-guida-contestuale" onclick="mostraGuidaContestuale('laboratorio-scotti')" style="background:rgba(254,240,138,0.25); color:#fef08a; border:1px solid rgba(254,240,138,0.6); font-weight:800; font-size:11px; padding:4px 9px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.15); flex-shrink:0;" title="Guida vocale e spiegazione della schermata">💡 A cosa serve</button><button class="btn btn-outline modal-close" onclick="closeModal('modal-laboratorio-scotti')"
           aria-label="Chiudi finestra"
-          style="color: #ffffff !important; background: rgba(255,255,255,0.22) !important; border: 1.5px solid rgba(255,255,255,0.7) !important; border-radius: 50% !important; width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 18px !important; flex-shrink: 0 !important; cursor: pointer !important; padding: 0 !important;">✕</button>
+          style="color: #ffffff !important; background: rgba(255,255,255,0.22) !important; border: 1.5px solid rgba(255,255,255,0.7) !important; border-radius: 50% !important; width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 18px !important; flex-shrink: 0 !important; cursor: pointer !important; padding: 0 !important;">✕</button></div>
       </div>
 
       <!-- BODY MODALE -->

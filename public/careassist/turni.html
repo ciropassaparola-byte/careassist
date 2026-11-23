@@ -3789,5 +3789,118 @@ window.chiudiModalGuidaTurnario = chiudiModalGuidaTurnario;
 window.toggleVoceGuidaTurnario = toggleVoceGuidaTurnario;
 </script>
 
+
+  <!-- MODAL GUIDA CONTESTUALE TURNI -->
+  <div id="modal-guida-turni" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(8,13,26,0.85); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:16px;">
+    <div style="max-width:620px; width:100%; max-height:90vh; background:#0e1726; border:2px solid #38bdf8; border-radius:20px; box-shadow:0 25px 60px rgba(0,0,0,0.7); overflow:hidden; display:flex; flex-direction:column; color:#ffffff;">
+      <div style="background:linear-gradient(135deg, #091e3a 0%, #0c4a6e 50%, #0284c7 100%); padding:18px 22px; display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #38bdf8;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-size:32px;">🗓️</div>
+          <div>
+            <div style="font-size:11px; font-weight:900; color:#7dd3fc; text-transform:uppercase; letter-spacing:0.8px;">GUIDA RAPIDA & UTILITÀ CLINICO-GESTIONALE</div>
+            <div style="font-size:18px; font-weight:900; color:#ffffff; margin-top:2px;">Gestione Roster Sanitario & Turni H24</div>
+          </div>
+        </div>
+        <button type="button" onclick="chiudiGuidaTurni()" style="background:rgba(255,255,255,0.2); border:none; color:#ffffff; width:34px; height:34px; border-radius:50%; font-size:18px; font-weight:900; cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:20px; overflow-y:auto; line-height:1.5; font-size:13.5px; color:#e2e8f0; flex:1;">
+        <div style="background:#152238; border:1.5px solid #38bdf8; border-left:5px solid #0284c7; border-radius:12px; padding:14px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <div style="font-size:11px; text-transform:uppercase; font-weight:900; color:#38bdf8;">🎯 A cosa serve (Scopo Gestionale & Normativo)</div>
+            <button type="button" id="btn-ascolta-guida-turni" onclick="toggleAscoltoGuidaTurni()" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#fff; border:none; border-radius:20px; padding:4px 12px; font-size:11.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+              <span>🔊</span> <span>Ascolta (Elsa Neural)</span>
+            </button>
+          </div>
+          <div>Questa schermata coordina la turnazione H24 di tutti gli operatori sanitari (OSS, badanti, infermieri e familiari). Verifica in automatico la conformità al Decreto Legislativo 66 del 2003 garantendo le 11 ore di riposo consecutivo e il tetto orario settimanale, prevenendo sovrapposizioni e scoperte assistenziali.</div>
+        </div>
+
+        <div style="background:#152238; border:1px solid #334155; border-radius:12px; padding:14px; margin-bottom:16px;">
+          <div style="font-size:11px; text-transform:uppercase; font-weight:900; color:#fde047; margin-bottom:10px;">🛠️ Come si usa (Passi Operativi)</div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div style="background:#0284c7; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0;">1</div>
+            <div><b>Seleziona la Settimana</b>: naviga tra le settimane con i pulsanti orari o scegli un intervallo specifico.</div>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div style="background:#0284c7; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0;">2</div>
+            <div><b>Assegna i Turni</b>: tocca ogni casella per assegnare turno Mattina, Pomeriggio, Notte o Riposo all'operatore.</div>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div style="background:#0284c7; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0;">3</div>
+            <div><b>Condividi Roster</b>: tocca "Condividi WhatsApp" per inviare il prospetto completo alla squadra di lavoro.</div>
+          </div>
+        </div>
+
+        <div style="background:#052e16; border:1px solid #16a34a; border-radius:12px; padding:12px 14px;">
+          <div style="font-size:11px; text-transform:uppercase; font-weight:900; color:#4ade80; margin-bottom:4px;">💡 Perché fa la differenza</div>
+          <div style="color:#dcfce7;">Azzera i conflitti di orario, tutela i lavoratori con il riposo obbligatorio e garantisce all'assistito una presenza continuativa e documentata ogni singolo giorno.</div>
+        </div>
+      </div>
+      <div style="padding:14px 20px; background:#0b1320; border-top:1px solid #1e293b; display:flex; justify-content:flex-end;">
+        <button type="button" onclick="chiudiGuidaTurni()" style="background:#0284c7; color:#fff; border:none; padding:8px 22px; border-radius:10px; font-weight:800; cursor:pointer;">Ho Capito, Torna ai Turni</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var _audioGuidaTurni = null;
+    function apriGuidaTurni() {
+      var m = document.getElementById('modal-guida-turni');
+      if (m) m.style.display = 'flex';
+    }
+    function chiudiGuidaTurni() {
+      var m = document.getElementById('modal-guida-turni');
+      if (m) m.style.display = 'none';
+      if (_audioGuidaTurni) { _audioGuidaTurni.pause(); _audioGuidaTurni = null; }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      var btn = document.getElementById('btn-ascolta-guida-turni');
+      if (btn) btn.innerHTML = '<span>🔊</span> <span>Ascolta (Elsa Neural)</span>';
+    }
+    function toggleAscoltoGuidaTurni() {
+      var btn = document.getElementById('btn-ascolta-guida-turni');
+      if (_audioGuidaTurni || (window.speechSynthesis && window.speechSynthesis.speaking)) {
+        if (_audioGuidaTurni) { _audioGuidaTurni.pause(); _audioGuidaTurni = null; }
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (btn) btn.innerHTML = '<span>🔊</span> <span>Ascolta (Elsa Neural)</span>';
+        return;
+      }
+
+      var testo = "A cosa serve il Roster Sanitario e Turni Personale. " +
+        "Questa schermata coordina la turnazione H 24 di tutti gli operatori sanitari: o s s, badanti, infermieri e familiari. " +
+        "Verifica in automatico la conformità al Decreto Legislativo 66 del 2003 garantendo le 11 ore di riposo consecutivo e il tetto orario settimanale, prevenendo sovrapposizioni e scoperte assistenziali. " +
+        "Come si usa. Punto 1: Seleziona la Settimana con i pulsanti orari. Punto 2: Assegna i Turni toccando ogni casella per mattina, pomeriggio, notte o riposo. Punto 3: Condividi il Roster su WhatsApp per inviare il prospetto completo alla squadra di lavoro. " +
+        "Perché fa la differenza. Azzera i conflitti di orario, tutela i lavoratori e garantisce all'assistito una presenza continuativa e documentata.";
+
+      if (btn) btn.innerHTML = '<span>⏹️</span> <span>Interrompi</span>';
+
+      // Use TTS Edge Elsa Neural if available via endpoint, else Web Speech API
+      var url = 'https://careassist-r61q.onrender.com/api/tts?text=' + encodeURIComponent(testo) + '&voice=it-IT-ElsaNeural';
+      var a = new Audio(url);
+      _audioGuidaTurni = a;
+      a.onended = function() {
+        _audioGuidaTurni = null;
+        if (btn) btn.innerHTML = '<span>🔊</span> <span>Ascolta (Elsa Neural)</span>';
+      };
+      a.onerror = function() {
+        _audioGuidaTurni = null;
+        if ('speechSynthesis' in window) {
+          var u = new SpeechSynthesisUtterance(testo);
+          u.lang = 'it-IT';
+          u.onend = function() { if (btn) btn.innerHTML = '<span>🔊</span> <span>Ascolta (Elsa Neural)</span>'; };
+          window.speechSynthesis.speak(u);
+        } else {
+          if (btn) btn.innerHTML = '<span>🔊</span> <span>Ascolta (Elsa Neural)</span>';
+        }
+      };
+      a.play().catch(function() {
+        if ('speechSynthesis' in window) {
+          var u = new SpeechSynthesisUtterance(testo);
+          u.lang = 'it-IT';
+          u.onend = function() { if (btn) btn.innerHTML = '<span>🔊</span> <span>Ascolta (Elsa Neural)</span>'; };
+          window.speechSynthesis.speak(u);
+        }
+      });
+    }
+  </script>
+  
 </body>
 </html>
