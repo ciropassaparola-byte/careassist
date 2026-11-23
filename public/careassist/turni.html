@@ -3621,6 +3621,22 @@
 // ==========================================================================
 let _audioTurnarioElsa = null;
 let _isVoceTurnarioInCorso = false;
+let _preloadedAudioTurnario = null;
+
+const testoGuidaTurnarioCompleto = "A cosa serve il Roster Sanitario e Turnario Operatori H24. Questa schermata gestisce la pianificazione continua e in tempo reale dell'assistenza domiciliare 24 ore su 24, suddivisa tra turni di mattina, pomeriggio e notte. Garantisce la copertura completa e senza scoperture per ciascun assistito, vigilando sul rispetto delle 11 ore di riposo obbligatorio previste dalla legge e sui massimali orari del CCNL socio-sanitario. Funzioni principali: Primo: Griglia turni e copertura in tempo reale, per sapere sempre chi è in servizio. Secondo: Condividi Turni WhatsApp, per inviare l'orario a tutto il personale con un solo tocco. Terzo: Registro consegne cliniche tra turnisti montanti e uscenti, con bilancio ore e straordinari. Quarto: Stampa del foglio turni in formato A4 ed esportazione automatica sul calendario di smartphone Google e Apple.";
+
+function precaricaAudioTurnario() {
+  if (_preloadedAudioTurnario) return;
+  try {
+    const cloudBase = 'https://careassist-r61q.onrender.com';
+    const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+    const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaTurnarioCompleto);
+    _preloadedAudioTurnario = new Audio();
+    _preloadedAudioTurnario.preload = 'auto';
+    _preloadedAudioTurnario.src = url;
+    _preloadedAudioTurnario.load();
+  } catch(e) {}
+}
 
 function apriModalGuidaTurnario() {
   const m = document.getElementById('modal-guida-turnario');
@@ -3667,37 +3683,13 @@ function aggiornaStatoBtnVoceTurnario(inCorso) {
   }
 }
 
-let _preloadedAudioTurnario = null;
-function precaricaAudioTurnario() {
-  if (_preloadedAudioTurnario) return;
-  try {
-    const testo = "A cosa serve il Roster Sanitario e Turnario Operatori H24. Questa schermata gestisce la pianificazione continua e in tempo reale dell'assistenza domiciliare 24 ore su 24.";
-    const cloudBase = 'https://careassist-r61q.onrender.com';
-    const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
-    const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
-    _preloadedAudioTurnario = new Audio();
-    _preloadedAudioTurnario.preload = 'auto';
-    _preloadedAudioTurnario.src = url;
-    _preloadedAudioTurnario.load();
-  } catch(e) {}
-}
-
 function toggleVoceGuidaTurnario() {
   if (_isVoceTurnarioInCorso) {
     fermaVoceTurnarioElsa();
     return;
   }
 
-  const testo = "A cosa serve il Roster Sanitario e Turnario Operatori H24. " +
-    "Questa schermata gestisce la pianificazione continua e in tempo reale dell'assistenza domiciliare 24 ore su 24, " +
-    "suddivisa tra turni di mattina, pomeriggio e notte. " +
-    "Garantisce la copertura completa e senza scoperture per ciascun assistito, " +
-    "vigilando sul rispetto delle 11 ore di riposo obbligatorio previste dalla legge e sui massimali orari del CCNL socio-sanitario. " +
-    "Funzioni principali: " +
-    "Primo: Griglia turni e copertura in tempo reale, per sapere sempre chi è in servizio. " +
-    "Secondo: Condividi Turni WhatsApp, per inviare l'orario a tutto il personale con un solo tocco. " +
-    "Terzo: Registro consegne cliniche tra turnisti montanti e uscenti, con bilancio ore e straordinari. " +
-    "Quarto: Stampa del foglio turni in formato A4 ed esportazione automatica sul calendario di smartphone Google e Apple.";
+  const testo = testoGuidaTurnarioCompleto;
 
   fermaVoceTurnarioElsa();
   _isVoceTurnarioInCorso = true;
@@ -3729,13 +3721,13 @@ function toggleVoceGuidaTurnario() {
     }
   }
 
-  // Safety timer 1000ms: mai più attese lunghe se la rete ha lag
+  // Safety timer aumentato a 4000ms per dare tempo a Elsa Neural di generare l'audio e NON ricadere nella voce sintetica del computer
   safetyTimer = setTimeout(function() {
     if (!isPlaying) {
-      console.warn('Timeout audio turnario: fallback istantaneo');
+      console.warn('Timeout audio turnario: fallback di riserva');
       avviaFallbackSubito();
     }
-  }, 1000);
+  }, 4000);
 
   const cloudBase = 'https://careassist-r61q.onrender.com';
   const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
