@@ -376,26 +376,34 @@ window.applicaFiltriWhatsAppDOM = applicaFiltriWhatsAppDOM;
 let _audioElementCareAssistAttivo = null;
 
 function fermaVoceHDGlobale() {
+  if (window._audioSafetyTimerCareAssist) {
+    clearTimeout(window._audioSafetyTimerCareAssist);
+    window._audioSafetyTimerCareAssist = null;
+  }
   if (_audioElementCareAssistAttivo) {
     try {
       _audioElementCareAssistAttivo.pause();
       _audioElementCareAssistAttivo.currentTime = 0;
+      _audioElementCareAssistAttivo.src = '';
     } catch (e) { }
     _audioElementCareAssistAttivo = null;
   }
   if ('speechSynthesis' in window) {
-    try { window.speechSynthesis.cancel(); } catch (e) { }
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) { }
   }
 }
 window.fermaVoceHDGlobale = fermaVoceHDGlobale;
 window.fermaVoceSintesiInApp = fermaVoceHDGlobale;
 
 function riproduciVoceNaturaleHD(testo, onEndCallback) {
+  // 1. Arresta tassativamente qualsiasi audio o sintesi precedente
   fermaVoceHDGlobale();
   if (!testo || typeof testo !== 'string') return;
 
-  // Sanificazione accurata del testo: espansioni fonetiche e pause naturali
-  let t = (testo || '')
+  // Sanificazione del testo: espansioni fonetiche e pause naturali
+  var t = (testo || '')
     .replace(/<[^>]*>/g, ' ')
     .replace(/&amp;/g, ' e ')
     .replace(/&/g, ' e ')
@@ -413,121 +421,113 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     .replace(/\s*\/\s*/g, ' oppure ')
     .replace(/\s*-\s*/g, ' - ')
     .replace(/\.{2,}/g, '. ')
-    .replace(/:\s*/g, ': ')
+    .replace(/:s*/g, ': ')
     .replace(/\s+/g, ' ')
     .trim();
 
-  // Testo per audio sintetizzato Neurale
   var ttsTesto = t.length > 800 ? t.substring(0, 800) : t;
 
-  if ('speechSynthesis' in window) {
-    try { window.speechSynthesis.cancel(); } catch(e){}
-  }
-
-  // Costruisci URL Cloud prioritario e locale
   var cloudBase = 'https://careassist-r61q.onrender.com';
   var isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
-  
-  // Su smartphone e cloud siamo su onrender.com o simili.
-  // Su smartphone l'URL locale relativo è '/api/tts-umano?voice=elsa...'
-  // In ogni caso garantiamo che punti a Elsa Neural HD!
-  var primaryUrl = isLocal ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(ttsTesto)) : ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(ttsTesto));
+  var primaryUrl = isLocal 
+    ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(ttsTesto))
+    : ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(ttsTesto));
   var cloudUrl = cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(ttsTesto);
 
   var isAudioStarted = false;
-  var fallbackAttivato = false;
-  var safetyTimer = null;
 
-  function attivaFallback() {
-    if (fallbackAttivato || isAudioStarted) return;
-    fallbackAttivato = true;
-    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-    if (_audioElementCareAssistAttivo) {
-      try { _audioElementCareAssistAttivo.pause(); } catch(e){}
-      _audioElementCareAssistAttivo = null;
+  // Cleanup helper
+  function pulisciAudio() {
+    if (window._audioSafetyTimerCareAssist) {
+      clearTimeout(window._audioSafetyTimerCareAssist);
+      window._audioSafetyTimerCareAssist = null;
     }
-    console.warn('[CareAssist] Fallback voce sistema disabilitato per garantire solo Elsa Neural.');
-    if (typeof onEndCallback === 'function') onEndCallback();
+    _audioElementCareAssistAttivo = null;
+    if (typeof onEndCallback === 'function') {
+      try { onEndCallback(); } catch(e){}
+    }
   }
-
-  // Timer di tolleranza a 4000ms: non interrompe precocemente il flusso MP3 Elsa Neural
-  safetyTimer = setTimeout(function() {
-    if (!isAudioStarted) {
-      console.warn('[CareAssist] Timeout audio Elsa Neural, passaggio a fallback');
-      attivaFallback();
-    }
-  }, 4000);
 
   try {
     var audio = new Audio(primaryUrl);
     _audioElementCareAssistAttivo = audio;
 
-    audio.onplaying = function () {
+    audio.onplay = function() {
       isAudioStarted = true;
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
       if ('speechSynthesis' in window) {
         try { window.speechSynthesis.cancel(); } catch(e){}
       }
     };
 
+    audio.onplaying = function () {
+      isAudioStarted = true;
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) { }
+      }
+    };
+
     audio.onended = function () {
-      _audioElementCareAssistAttivo = null;
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-      if (typeof onEndCallback === 'function') onEndCallback();
+      pulisciAudio();
     };
 
     audio.onerror = function () {
-      // Se fallisce l'URL relativo (ad esempio in locale), prova direttamente il Cloud Render con Elsa Neural!
       if (!isAudioStarted && primaryUrl !== cloudUrl) {
-        console.warn('[CareAssist] Tentativo con Cloud Elsa Neural...');
-        var audioCloud = new Audio(cloudUrl);
-        _audioElementCareAssistAttivo = audioCloud;
-        audioCloud.onplaying = function() {
-          isAudioStarted = true;
-          if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-          if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
-        };
-        audioCloud.onended = function() {
-          _audioElementCareAssistAttivo = null;
-          if (typeof onEndCallback === 'function') onEndCallback();
-        };
-        audioCloud.onerror = function() { attivaFallback(); };
-        audioCloud.play().catch(function() { attivaFallback(); });
-        return;
+        console.warn('[CareAssist] Failover su Cloud Render Elsa Neural...');
+        try {
+          var audioCloud = new Audio(cloudUrl);
+          _audioElementCareAssistAttivo = audioCloud;
+          audioCloud.onplay = function() {
+            isAudioStarted = true;
+            if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+          };
+          audioCloud.onplaying = function () {
+            isAudioStarted = true;
+            if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch (e) { } }
+          };
+          audioCloud.onended = function () {
+            pulisciAudio();
+          };
+          audioCloud.onerror = function () {
+            console.warn('[CareAssist] Cloud Elsa non disponibile.');
+            pulisciAudio();
+          };
+          audioCloud.play().catch(function (eCloud) {
+            console.warn('[CareAssist] Errore play Cloud Elsa:', eCloud);
+            pulisciAudio();
+          });
+          return;
+        } catch(errCloud) {
+          console.warn('[CareAssist] Fallito avvio audio cloud:', errCloud);
+        }
       }
-      attivaFallback();
+      pulisciAudio();
     };
 
-    audio.play().then(function() {
-      // Audio avviato con successo
-    }).catch(function (err) {
-      console.warn('[Audio Elsa] play() intercettato:', err);
-      // Se l'errore è dovuto a blocchi di autoplay o policy mobile, non ripiegare su SpeechSynthesis
-      if (err && err.name === 'NotAllowedError') {
-        if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-        if (typeof onEndCallback === 'function') onEndCallback();
-        return;
-      }
+    audio.play().catch(function (err) {
+      console.warn('[Audio Elsa] play() fallito o bloccato:', err);
+      // Se fallisce l'audio relativo (es. in locale 404 o rifiutato), prova subito Cloud
       if (!isAudioStarted && primaryUrl !== cloudUrl) {
-        var audioCloud = new Audio(cloudUrl);
-        _audioElementCareAssistAttivo = audioCloud;
-        audioCloud.onplaying = function() {
-          isAudioStarted = true;
-          if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
-          if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
-        };
-        audioCloud.onended = function() {
-          _audioElementCareAssistAttivo = null;
-          if (typeof onEndCallback === 'function') onEndCallback();
-        };
-        audioCloud.onerror = function() { attivaFallback(); };
-        audioCloud.play().catch(function() { attivaFallback(); });
-        return;
+        try {
+          var audioCloud2 = new Audio(cloudUrl);
+          _audioElementCareAssistAttivo = audioCloud2;
+          audioCloud2.onplaying = function () {
+            isAudioStarted = true;
+            if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch (e) { } }
+          };
+          audioCloud2.onended = function () {
+            pulisciAudio();
+          };
+          audioCloud2.onerror = function () { pulisciAudio(); };
+          audioCloud2.play().catch(function () { pulisciAudio(); });
+          return;
+        } catch(e2){}
       }
-      attivaFallback();
+      pulisciAudio();
     });
-  } catch(e) {
-    attivaFallback();
+
+  } catch (errInit) {
+    console.error('[CareAssist] Errore creazione Audio Elsa:', errInit);
+    pulisciAudio();
   }
 }
 window.riproduciVoceNaturaleHD = riproduciVoceNaturaleHD;
