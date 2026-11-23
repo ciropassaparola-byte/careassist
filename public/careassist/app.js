@@ -28118,6 +28118,19 @@ window.fermaVoceBriefing = fermaVoceBriefing;
 // 💡 SISTEMA DI GUIDA CONTESTUALE DINAMICA & UTILITÀ CLINICO-GESTIONALE
 // ==========================================================================
 var GUIDE_CONTESTUALI = {
+    'bollario-scorte-semaforo': {
+      icona: '📦',
+      titolo: 'Bollario Farmaci & Semaforo Scorte Intelligente',
+      sottotitolo: 'Monitoraggio autonomia, previsione esaurimento e riordino ricette',
+      scopo: 'Questa schermata calcola automaticamente il fabbisogno giornaliero e l\'autonomia residua di ciascun farmaco dell\'assistito. Grazie al semaforo a tre colori evidenzia subito i farmaci critici in esaurimento (entro 48 ore) e consente di aggiornare le compresse o inviare l\'ordine ricetta su WhatsApp al medico curante con un solo clic.',
+      comeSiUsa: [
+        '<b>Semaforo Autonomia</b>: verde indica oltre 7 giorni di scorta, giallo tra 3 e 7 giorni, rosso esaurimento critico entro 48 ore.',
+        '<b>Tasto Aggiorna</b>: tocca per rettificare rapidamente le unità o compresse presenti fisicamente a domicilio.',
+        '<b>Ordina Ricetta</b>: inoltra istantaneamente al medico curante (MMG) il messaggio precompilato con nome farmaco e dosaggio per la prescrizione.',
+        '<b>Stampa Prospetto A4</b>: genera un foglio chiaro e ordinato per il raccoglitore domiciliare o i familiari.'
+      ],
+      utilita: '<b>Zero interruzioni terapeutiche</b>: garantisce che i farmaci salvavita non rimangano mai sprovvisti, pianificando le ricette mediche con largo anticipo.'
+    },
   'piano-terapeutico-orari': {
     icona: '✏️',
     titolo: 'Modifica Piano Terapeutico, Orari e Scorte',
