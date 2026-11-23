@@ -12391,48 +12391,19 @@ function toggleVoceBollarioElsa(e) {
   _isVoceBollarioInCorso = true;
   aggiornaBtnVoceBollario(true);
 
-  const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
-  const audio = new Audio(apiUrl);
-  _audioBollarioElsa = audio;
-
-  audio.onended = function() {
-    fermaVoceBollarioElsa();
-  };
-
-  audio.onerror = function() {
-    if ('speechSynthesis' in window) {
-      const utter = new SpeechSynthesisUtterance(testo);
-      utter.lang = 'it-IT';
-      utter.rate = 1.0;
-      utter.onend = function() { fermaVoceBollarioElsa(); };
-      utter.onerror = function() { fermaVoceBollarioElsa(); };
-      window.speechSynthesis.speak(utter);
-    } else {
+  if (typeof riproduciVoceNaturaleHD === 'function') {
+    riproduciVoceNaturaleHD(testo, function() {
       fermaVoceBollarioElsa();
-    }
-  };
-
-  audio.play().catch(function() {
-    if ('speechSynthesis' in window) {
-      const utter = new SpeechSynthesisUtterance(testo);
-      utter.lang = 'it-IT';
-      utter.rate = 1.0;
-      utter.onend = function() { fermaVoceBollarioElsa(); };
-      utter.onerror = function() { fermaVoceBollarioElsa(); };
-      window.speechSynthesis.speak(utter);
-    } else {
-      fermaVoceBollarioElsa();
-    }
-  });
-}
-
-// Interrompi audio se si chiude il modal
-if (typeof chiudiModalBollarioScorte === 'function') {
-  const _origChiudiBollario = chiudiModalBollarioScorte;
-  chiudiModalBollarioScorte = function() {
-    fermaVoceBollarioElsa();
-    _origChiudiBollario();
-  };
+    });
+  } else {
+    const ttsBase = (typeof getCareAssistSyncBase === 'function') ? getCareAssistSyncBase() : 'https://careassist-r61q.onrender.com';
+    const apiUrl = (ttsBase ? ttsBase : '') + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+    const audio = new Audio(apiUrl);
+    _audioBollarioElsa = audio;
+    audio.onended = function() { fermaVoceBollarioElsa(); };
+    audio.onerror = function() { fermaVoceBollarioElsa(); };
+    audio.play().catch(function() { fermaVoceBollarioElsa(); });
+  }
 }
 window.toggleVoceBollarioElsa = toggleVoceBollarioElsa;
 window.fermaVoceBollarioElsa = fermaVoceBollarioElsa;
