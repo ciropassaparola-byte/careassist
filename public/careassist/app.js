@@ -520,20 +520,6 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
   } catch(e) {
     attivaFallback();
   }
-};
-      audio.play().catch(function () {
-        parlaFallbackBrowserCareAssist(t, onEndCallback);
-      });
-      return;
-    } catch(e) {
-      parlaFallbackBrowserCareAssist(t, onEndCallback);
-      return;
-    }
-  }
-
-  // Su PC Windows locale: parliamo istantaneamente con la voce di sistema nativa chiara (Elsa/Isabella)
-  // senza dover attendere socket o rischiare che l'audio resti in attesa!
-  parlaFallbackBrowserCareAssist(t, onEndCallback);
 }
 window.riproduciVoceNaturaleHD = riproduciVoceNaturaleHD;
 
