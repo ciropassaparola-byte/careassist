@@ -498,7 +498,16 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
       attivaFallback();
     };
 
-    audio.play().catch(function () {
+    audio.play().then(function() {
+      // Audio avviato con successo
+    }).catch(function (err) {
+      console.warn('[Audio Elsa] play() intercettato:', err);
+      // Se l'errore è dovuto a blocchi di autoplay o policy mobile, non ripiegare su SpeechSynthesis
+      if (err && err.name === 'NotAllowedError') {
+        if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+        if (typeof onEndCallback === 'function') onEndCallback();
+        return;
+      }
       if (!isAudioStarted && primaryUrl !== cloudUrl) {
         var audioCloud = new Audio(cloudUrl);
         _audioElementCareAssistAttivo = audioCloud;
@@ -21630,7 +21639,7 @@ function leggiIstruzioniSOSVocale() {
     if (typeof fermaVoceHDGlobale === 'function') fermaVoceHDGlobale();
     _isSOSVoicePlaying = false;
     if (btn) {
-      btn.innerHTML = '🔊 Ascolta Guida Vocale';
+      btn.innerHTML = '🔊 Ascolta Elsa Neural Vocale';
       btn.style.background = 'transparent';
       btn.style.color = '#b91c1c';
     }
@@ -21690,7 +21699,7 @@ function leggiIstruzioniSOSVocale() {
   const resetBtn = function() {
     _isSOSVoicePlaying = false;
     if (btn) {
-      btn.innerHTML = '🔊 Ascolta Guida Vocale';
+      btn.innerHTML = '🔊 Ascolta Elsa Neural Vocale';
       btn.style.background = 'transparent';
       btn.style.color = '#b91c1c';
     }
@@ -29006,7 +29015,7 @@ function mostraGuidaContestuale(chiave) {
     '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">' +
     '  <div style="font-size:11px; text-transform:uppercase; font-weight:900; color:#0369a1; letter-spacing:0.5px;">🎯 A cosa serve (Scopo Clinico &amp; Gestionale)</div>' +
     '  <button type="button" id="btn-ascolta-guida-contestuale" onclick="ascoltaGuidaContestualeVocale()" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#ffffff; border:none; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(2,132,199,0.3);">' +
-    '    <span id="ico-audio-guida-contestuale">🔊</span> <span id="txt-audio-guida-contestuale">Ascolta con Voce Naturale</span>' +
+    '    <span id="ico-audio-guida-contestuale">🔊</span> <span id="txt-audio-guida-contestuale">Ascolta con Elsa Neural</span>' +
     '  </button>' +
     '</div>' +
     '<div style="font-size:13.5px; color:#1e293b; line-height:1.5;">' +
@@ -29040,12 +29049,6 @@ function mostraGuidaContestuale(chiave) {
   // Make sure modal-guida-contestuale is visible above other modals!
   modal.style.setProperty('z-index', '2147483647', 'important');
   openModal('modal-guida-contestuale');
-  // AVVIO IMMEDIATO CON VOCE NATURALE ELSA NEURAL
-  try {
-    ascoltaGuidaContestualeVocale();
-  } catch (eAudio) {
-    console.warn('Avvio automatico audio guida contestuale:', eAudio);
-  }
 }
 window.mostraGuidaContestuale = mostraGuidaContestuale;
 
@@ -29080,15 +29083,15 @@ function ascoltaGuidaContestualeVocale() {
       if (btnF) btnF.style.background = 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)';
     } else {
       if (ico) ico.textContent = '🔊';
-      if (txt) txt.textContent = 'Ascolta con Voce Naturale';
+      if (txt) txt.textContent = 'Ascolta con Elsa Neural';
       if (btn) btn.style.background = 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)';
 
       if (icoH) icoH.textContent = '🔊';
-      if (txtH) txtH.textContent = 'Ascolta Guida';
+      if (txtH) txtH.textContent = 'Ascolta Elsa Neural';
       if (btnH) btnH.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
 
       if (icoF) icoF.textContent = '🔊';
-      if (txtF) txtF.textContent = 'Ascolta con Voce Naturale';
+      if (txtF) txtF.textContent = 'Ascolta con Elsa Neural';
       if (btnF) btnF.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
     }
   }
@@ -33253,7 +33256,7 @@ function renderPatologieTab(p) {
     '</div>' +
     '</div>' +
     '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' +
-    '<button type="button" id="btn-voce-patologie-tab" class="btn" onclick="leggiSintesiVocalePatologie()" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; font-weight:800; font-size:13px; padding:9px 15px; border-radius:10px; border:1px solid #34d399; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(16,185,129,0.35);" title="Ascolta con Voce Naturale Umana il quadro clinico, le patologie e i farmaci associati"><span id="ico-voce-patologie-tab">🔊</span> <span id="txt-voce-patologie-tab">Ascolta Quadro Clinico</span></button>' +
+    '<button type="button" id="btn-voce-patologie-tab" class="btn" onclick="leggiSintesiVocalePatologie()" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; font-weight:800; font-size:13px; padding:9px 15px; border-radius:10px; border:1px solid #34d399; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(16,185,129,0.35);" title="Ascolta con Elsa Neural Umana il quadro clinico, le patologie e i farmaci associati"><span id="ico-voce-patologie-tab">🔊</span> <span id="txt-voce-patologie-tab">Ascolta Quadro Clinico</span></button>' +
     '<button type="button" class="btn" onclick="mostraGuidaContestuale(\'patologie\')" style="background:rgba(255,255,255,0.22); color:#ffffff; font-weight:800; font-size:13px; padding:9px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.45); cursor:pointer; display:inline-flex; align-items:center; gap:6px;" title="Guida all\'uso e utilità clinica">' +
     '<span>💡</span> <span>A cosa serve</span>' +
     '</button>' +
@@ -35094,7 +35097,7 @@ window.leggiAutorizzazioneAdminVoceElsa = function(motivo) {
       if (btn) { btn.style.background = '#ffffff'; btn.style.color = '#dc2626'; }
     } else {
       if (ico) ico.textContent = '🗣️';
-      if (txt) txt.textContent = 'Ascolta Guida Elsa';
+      if (txt) txt.textContent = 'Ascolta Elsa Neural Elsa';
       if (btn) { btn.style.background = '#fef08a'; btn.style.color = '#854d0e'; }
     }
   }
@@ -35537,7 +35540,7 @@ window.renderFamilyPortal = function () {
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <button type="button" id="btn-voce-portale-famiglia" onclick="leggiSintesiVocalePortaleFamiglia()"
             style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; font-weight:900; font-size:13px; padding:10px 16px; border-radius:12px; border:1px solid #34d399; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(16,185,129,0.35);"
-            title="Ascolta con Voce Naturale Elsa Neural">
+            title="Ascolta con Elsa Neural Elsa Neural">
             <span id="ico-voce-portale-famiglia">🔊</span> <span id="txt-voce-portale-famiglia">Ascolta con Elsa Neural</span>
           </button>
           <button type="button" class="btn" onclick="mostraGuidaContestuale('portale-famiglia')"
@@ -36998,7 +37001,7 @@ function ascoltaGuidaCestinoVocale() {
     if (typeof fermaVoceHDGlobale === 'function') fermaVoceHDGlobale();
     _isGuidaCestinoInRiproduzione = false;
     if (ico) ico.textContent = '🔊';
-    if (txt) txt.textContent = 'Ascolta Guida';
+    if (txt) txt.textContent = 'Ascolta Elsa Neural';
     if (btn) btn.style.background = 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)';
     return;
   }
@@ -37022,7 +37025,7 @@ function ascoltaGuidaCestinoVocale() {
   const resetStato = function() {
     _isGuidaCestinoInRiproduzione = false;
     if (ico) ico.textContent = '🔊';
-    if (txt) txt.textContent = 'Ascolta Guida';
+    if (txt) txt.textContent = 'Ascolta Elsa Neural';
     if (btn) btn.style.background = 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)';
   };
 
