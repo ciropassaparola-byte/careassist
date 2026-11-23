@@ -3474,12 +3474,110 @@
     if (typeof window !== 'undefined') {
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(precaricaAudioGate, 600);
+            setTimeout(precaricaAudioGlobaleSuite, 1200);
         });
     }
 
     
+        
+    function riproduciAudioElsaNeuralUniversale(testo, onStart, onEnd, onError) {
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+
+        const cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+        const localUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+        const isLocalHost = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+
+        // Se siamo su localhost ma il server locale /api/tts-umano potrebbe non rispondere,
+        // usiamo DIRECTLY il Cloud Render di Elsa Neural oppure prima local poi cloud istantaneo
+        let audio = new Audio(isLocalHost ? localUrl : cloudUrl);
+        let riproduzioneIniziata = false;
+
+        audio.onplaying = function() {
+            riproduzioneIniziata = true;
+            if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+            if (typeof onStart === 'function') onStart(audio);
+        };
+
+        audio.onended = function() {
+            if (typeof onEnd === 'function') onEnd();
+        };
+
+        audio.onerror = function() {
+            if (!riproduzioneIniziata && isLocalHost) {
+                console.warn('[TTS] Locale non risponde, passaggio automatico al Cloud Elsa Neural...');
+                const audioCloud = new Audio(cloudUrl);
+                audioCloud.onplaying = function() {
+                    riproduzioneIniziata = true;
+                    if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+                    if (typeof onStart === 'function') onStart(audioCloud);
+                };
+                audioCloud.onended = function() {
+                    if (typeof onEnd === 'function') onEnd();
+                };
+                audioCloud.onerror = function() {
+                    console.warn('[TTS] Anche Cloud non raggiungibile, fallback locale');
+                    if (typeof onError === 'function') onError();
+                };
+                audioCloud.play().catch(function() {
+                    if (typeof onError === 'function') onError();
+                });
+                return;
+            }
+            if (typeof onError === 'function') onError();
+        };
+
+        audio.play().catch(function(err) {
+            if (!riproduzioneIniziata && isLocalHost) {
+                console.warn('[TTS] Play locale bloccato, tentativo con Cloud Elsa Neural:', err);
+                const audioCloud = new Audio(cloudUrl);
+                audioCloud.onplaying = function() {
+                    riproduzioneIniziata = true;
+                    if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+                    if (typeof onStart === 'function') onStart(audioCloud);
+                };
+                audioCloud.onended = function() {
+                    if (typeof onEnd === 'function') onEnd();
+                };
+                audioCloud.onerror = function() {
+                    if (typeof onError === 'function') onError();
+                };
+                audioCloud.play().catch(function() {
+                    if (typeof onError === 'function') onError();
+                });
+                return;
+            }
+            if (typeof onError === 'function') onError();
+        });
+
+        return audio;
+    }
+
     let _audioElsaGlobaleAttivo = null;
     let _isVoceGlobaleInCorso = false;
+    let _preloadedAudioGlobale = null;
+
+    const testoPresentazioneSuite = "Benvenuto nella Suite Gestionale Aziendale Ciro Milella. " +
+        "A cosa serve questa piattaforma: è un centro operativo unificato che racchiude in un unico ambiente " +
+        "tutte le attività quotidiane: la gestione clinica e farmacologica di CareAssist Pro con orari, dosaggi e scorte, " +
+        "il monitoraggio dei parametri vitali e del benessere con Progetto Salute, " +
+        "il controllo scadenze e costi della Flotta Veicoli, il ricettario nutrizionale e l'inventario degli attrezzi. " +
+        "Grazie alla sincronizzazione intelligente tra computer, chiavetta USB e Cloud, " +
+        "tutti i dati registrati dagli operatori o dal personale sono sempre allineati in tempo reale su qualsiasi dispositivo.";
+
+    function precaricaAudioGlobaleSuite() {
+        if (_preloadedAudioGlobale) return;
+        try {
+            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+            const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazioneSuite);
+            _preloadedAudioGlobale = new Audio();
+            _preloadedAudioGlobale.preload = 'auto';
+            _preloadedAudioGlobale.src = url;
+            _preloadedAudioGlobale.load();
+        } catch(e) {}
+    }
 
     function fermaVoceGlobaleSuite() {
         if (_audioElsaGlobaleAttivo) {
@@ -3514,19 +3612,12 @@
         }
     }
 
-    function toggleVoceGuidaGlobaleSuite() {
+    function toggleVoceGuidaGlobaleSuite(e) {
+        if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
         if (_isVoceGlobaleInCorso) {
             fermaVoceGlobaleSuite();
             return;
         }
-
-        const testoPresentazione = "Benvenuto nella Suite Gestionale Aziendale Ciro Milella. " +
-            "A cosa serve questa piattaforma: è un centro operativo unificato che racchiude in un unico ambiente " +
-            "tutte le attività quotidiane: la gestione clinica e farmacologica di CareAssist Pro con orari, dosaggi e scorte, " +
-            "il monitoraggio dei parametri vitali e del benessere con Progetto Salute, " +
-            "il controllo scadenze e costi della Flotta Veicoli, il ricettario nutrizionale e l'inventario degli attrezzi. " +
-            "Grazie alla sincronizzazione intelligente tra computer, chiavetta USB e Cloud, " +
-            "tutti i dati registrati dagli operatori o dal personale sono sempre allineati in tempo reale su qualsiasi dispositivo.";
 
         fermaVoceGlobaleSuite();
         _isVoceGlobaleInCorso = true;
@@ -3534,14 +3625,15 @@
 
         const cloudBase = 'https://careassist-r61q.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
-        const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazione);
+        const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazioneSuite);
 
         let isPlaying = false;
         let safetyTimer = setTimeout(function() {
             if (!isPlaying) {
+                console.warn('Timeout audio Elsa Globale: avvio fallback');
                 fallbackGlobaleSubito();
             }
-        }, 1000);
+        }, 4000);
 
         function fallbackGlobaleSubito() {
             if (isPlaying) return;
@@ -3552,11 +3644,11 @@
             }
             if ('speechSynthesis' in window) {
                 try { window.speechSynthesis.cancel(); } catch(e){}
-                const utter = new SpeechSynthesisUtterance(testoPresentazione);
+                const utter = new SpeechSynthesisUtterance(testoPresentazioneSuite);
                 utter.lang = 'it-IT';
-                utter.rate = 1.05;
+                utter.rate = 1.0;
                 const voices = window.speechSynthesis.getVoices();
-                const vIt = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+                const vIt = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('ElsaNeural') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
                 if (vIt) utter.voice = vIt;
                 utter.onend = function() { fermaVoceGlobaleSuite(); };
                 utter.onerror = function() { fermaVoceGlobaleSuite(); };
@@ -3566,7 +3658,7 @@
             }
         }
 
-        const audio = new Audio(apiUrl);
+        const audio = _preloadedAudioGlobale || new Audio(apiUrl);
         _audioElsaGlobaleAttivo = audio;
 
         audio.onplaying = function() {
@@ -3583,13 +3675,42 @@
         };
 
         audio.onerror = function() {
+            if (isLocal && !isPlaying) {
+                console.warn('[Elsa Globale] Server locale non pronto, carico Cloud Elsa Neural...');
+                const cloudAudio = new Audio(cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazione));
+                _audioElsaGlobaleAttivo = cloudAudio;
+                cloudAudio.onplaying = function() {
+                    isPlaying = true;
+                    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+                    if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+                };
+                cloudAudio.onended = function() { fermaVoceGlobaleSuite(); };
+                cloudAudio.onerror = function() { fallbackGlobaleSubito(); };
+                cloudAudio.play().catch(function() { fallbackGlobaleSubito(); });
+                return;
+            }
             fallbackGlobaleSubito();
         };
 
         audio.play().catch(function() {
+            if (isLocal && !isPlaying) {
+                const cloudAudio = new Audio(cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazione));
+                _audioElsaGlobaleAttivo = cloudAudio;
+                cloudAudio.onplaying = function() {
+                    isPlaying = true;
+                    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+                    if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+                };
+                cloudAudio.onended = function() { fermaVoceGlobaleSuite(); };
+                cloudAudio.onerror = function() { fallbackGlobaleSubito(); };
+                cloudAudio.play().catch(function() { fallbackGlobaleSubito(); });
+                return;
+            }
             fallbackGlobaleSubito();
         });
     }
+    window.toggleVoceGuidaGlobaleSuite = toggleVoceGuidaGlobaleSuite;
+    window.fermaVoceGlobaleSuite = fermaVoceGlobaleSuite;
 
     function toggleMostraPasswordGate() {
         const input = document.getElementById('inputPinGate');
@@ -6652,10 +6773,37 @@
         };
 
         audio.onerror = function() {
+            if (isLocal && !isPlaying) {
+                console.warn('[Elsa] Server locale non pronto, carico Cloud Elsa Neural...');
+                const cloudAudio = new Audio(cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci));
+                _audioArrivederciElsa = cloudAudio;
+                cloudAudio.onplaying = function() {
+                    isPlaying = true;
+                    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+                    if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+                };
+                cloudAudio.onended = function() { fermaVoceArrivederciElsa(); };
+                cloudAudio.onerror = function() { fallbackArrivederciSubito(); };
+                cloudAudio.play().catch(function() { fallbackArrivederciSubito(); });
+                return;
+            }
             fallbackArrivederciSubito();
         };
 
         audio.play().catch(function() {
+            if (isLocal && !isPlaying) {
+                const cloudAudio = new Audio(cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci));
+                _audioArrivederciElsa = cloudAudio;
+                cloudAudio.onplaying = function() {
+                    isPlaying = true;
+                    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+                    if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch(e){} }
+                };
+                cloudAudio.onended = function() { fermaVoceArrivederciElsa(); };
+                cloudAudio.onerror = function() { fallbackArrivederciSubito(); };
+                cloudAudio.play().catch(function() { fallbackArrivederciSubito(); });
+                return;
+            }
             fallbackArrivederciSubito();
         });
     }
