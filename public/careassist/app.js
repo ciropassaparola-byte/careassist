@@ -29009,46 +29009,31 @@ var _chiaveGuidaContestualeAttiva = '';
 var _isGuidaContestualeInRiproduzione = false;
 
 function ascoltaGuidaContestualeVocale() {
-  const btn = document.getElementById('btn-ascolta-guida-contestuale');
-  const ico = document.getElementById('ico-audio-guida-contestuale');
-  const txt = document.getElementById('txt-audio-guida-contestuale');
-
   const btnH = document.getElementById('btn-ascolta-guida-header');
   const icoH = document.getElementById('ico-audio-guida-header');
   const txtH = document.getElementById('txt-audio-guida-header');
 
-  const btnF = document.getElementById('btn-ascolta-guida-footer');
-  const icoF = document.getElementById('ico-audio-guida-footer');
-  const txtF = document.getElementById('txt-audio-guida-footer');
-
   function impostaStatoPulsanti(inRiproduzione) {
     if (inRiproduzione) {
-      if (ico) ico.textContent = '⏹️';
-      if (txt) txt.textContent = 'Interrompi Voce';
-      if (btn) btn.style.background = 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)';
-
       if (icoH) icoH.textContent = '⏹️';
       if (txtH) txtH.textContent = 'Interrompi';
-      if (btnH) btnH.style.background = 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)';
-
-      if (icoF) icoF.textContent = '⏹️';
-      if (txtF) txtF.textContent = 'Interrompi Voce';
-      if (btnF) btnF.style.background = 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)';
+      if (btnH) {
+        btnH.style.setProperty('background', 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)', 'important');
+        btnH.style.setProperty('border-color', '#fda4af', 'important');
+        btnH.style.setProperty('box-shadow', '0 3px 8px rgba(225,29,72,0.4)', 'important');
+      }
     } else {
-      if (ico) ico.textContent = '🔊';
-      if (txt) txt.textContent = 'Ascolta con Elsa Neural';
-      if (btn) btn.style.background = 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)';
-
       if (icoH) icoH.textContent = '🔊';
       if (txtH) txtH.textContent = 'Ascolta Elsa Neural';
-      if (btnH) btnH.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-
-      if (icoF) icoF.textContent = '🔊';
-      if (txtF) txtF.textContent = 'Ascolta con Elsa Neural';
-      if (btnF) btnF.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+      if (btnH) {
+        btnH.style.setProperty('background', 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 'important');
+        btnH.style.setProperty('border-color', '#34d399', 'important');
+        btnH.style.setProperty('box-shadow', '0 3px 8px rgba(16,185,129,0.35)', 'important');
+      }
     }
   }
 
+  // TOGGLE: Se è già in riproduzione, FERMA TUTTO E NON RIAVVIARE!
   if (_isGuidaContestualeInRiproduzione) {
     if (typeof fermaVoceHDGlobale === 'function') fermaVoceHDGlobale();
     _isGuidaContestualeInRiproduzione = false;
@@ -29057,7 +29042,7 @@ function ascoltaGuidaContestualeVocale() {
     return;
   }
 
-  const g = GUIDE_CONTESTUALI[_chiaveGuidaContestualeAttiva];
+  const g = (typeof GUIDE_CONTESTUALI !== 'undefined' && GUIDE_CONTESTUALI[_chiaveGuidaContestualeAttiva]) ? GUIDE_CONTESTUALI[_chiaveGuidaContestualeAttiva] : null;
   if (!g) return;
 
   // Componi un testo discorsivo naturale per l'audio, sanificando simboli grafici (&, •, /, ecc.)
@@ -29086,29 +29071,26 @@ function ascoltaGuidaContestualeVocale() {
     .replace(/[•▪▸►✓✔✕✖★☆✦]/g, ', ')
     .replace(/\s*\/\s*/g, ' oppure ')
     .replace(/\.{2,}/g, '. ')
-    .replace(/:\s*/g, ': ')
+    .replace(/:s*/g, ': ')
     .replace(/\s+/g, ' ')
     .trim();
 
+  // IMPOSTA IMMEDIATAMENTE LO STATO ATTIVO: Diventa Rosso Interrompi
   _isGuidaContestualeInRiproduzione = true;
   impostaStatoPulsanti(true);
-  if (typeof showToast === 'function') showToast('🗣️ Riproduzione vocale in corso...');
+  if (typeof showToast === 'function') showToast('🗣️ Elsa Neural in ascolto...');
 
-  const resetStato = function() {
+  const resetStato = function () {
     _isGuidaContestualeInRiproduzione = false;
     impostaStatoPulsanti(false);
   };
 
   if (typeof riproduciVoceNaturaleHD === 'function') {
     riproduciVoceNaturaleHD(testoVoce, resetStato);
-  } else if (typeof parlaFallbackBrowserCareAssist === 'function') {
-    parlaFallbackBrowserCareAssist(testoVoce);
-    setTimeout(resetStato, 30000);
   } else {
     resetStato();
   }
 }
-window.ascoltaGuidaContestualeVocale = ascoltaGuidaContestualeVocale;
 
 
 // ==========================================================================
