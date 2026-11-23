@@ -4760,6 +4760,7 @@ function chiediPukSicurezza() {
 
 // Notifica Toast Elegante al posto dei popup brutti del browser
 function showToast(messaggio, tipo = 'success') {
+  if (typeof triggerHapticFeedback === 'function') triggerHapticFeedback(40);
   const existing = document.querySelector('.toast-notification');
   if (existing) existing.remove();
 
@@ -29347,6 +29348,9 @@ function mostraGuidaContestuale(chiave) {
 
   modal.style.setProperty('z-index', '2147483647', 'important');
   openModal('modal-guida-contestuale');
+  if (window._isGuidaAutoPlayEnabled && typeof ascoltaGuidaContestualeVocale === 'function') {
+    setTimeout(function() { ascoltaGuidaContestualeVocale(); }, 350);
+  }
 
   // Precarica IMMEDIATAMENTE l'audio in background: non appena l'utente apre la guida!
   setTimeout(function() {
