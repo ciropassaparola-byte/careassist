@@ -417,59 +417,35 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     .replace(/\s+/g, ' ')
     .trim();
 
-  // Endpoint TTS Neurale Elsa: locale relativo se su localhost o cloud origin, altrimenti CAREASSIST_CLOUD_MASTER_URL
-  var ttsBase = '';
-  try {
-    if (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-      ttsBase = ''; // usa direttamente il server locale su porta 3000
-    } else if (typeof getCareAssistSyncBase === 'function') {
-      ttsBase = getCareAssistSyncBase();
-    }
-  } catch(e) {}
-  const apiUrl = (ttsBase ? ttsBase : '') + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(t);
+  // Verifica se siamo su Cloud Render attivo o su PC locale
+  var isCloudRender = (window.location && window.location.hostname && window.location.hostname.includes('onrender.com'));
 
-  // Stop rigido a qualsiasi sintesi vocale prima di iniziare
-  if ('speechSynthesis' in window) {
-    try { window.speechSynthesis.cancel(); } catch(e) {}
+  // Se siamo su Cloud Render (es. da cellulare), usiamo il motore Neurale Elsa MP3
+  if (isCloudRender) {
+    try {
+      var ttsTesto = t.length > 800 ? t.substring(0, 800) : t;
+      var audio = new Audio('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(ttsTesto));
+      _audioElementCareAssistAttivo = audio;
+      audio.onended = function () {
+        _audioElementCareAssistAttivo = null;
+        if (typeof onEndCallback === 'function') onEndCallback();
+      };
+      audio.onerror = function () {
+        parlaFallbackBrowserCareAssist(t, onEndCallback);
+      };
+      audio.play().catch(function () {
+        parlaFallbackBrowserCareAssist(t, onEndCallback);
+      });
+      return;
+    } catch(e) {
+      parlaFallbackBrowserCareAssist(t, onEndCallback);
+      return;
+    }
   }
 
-  const audio = new Audio(apiUrl);
-  _audioElementCareAssistAttivo = audio;
-
-  let isAudioStarted = false;
-
-  audio.onplay = function () {
-    isAudioStarted = true;
-    // Assicurati che WebSpeech sia spento
-    if ('speechSynthesis' in window) {
-      try { window.speechSynthesis.cancel(); } catch(e) {}
-    }
-  };
-
-  audio.onended = function () {
-    _audioElementCareAssistAttivo = null;
-    if (typeof onEndCallback === 'function') onEndCallback();
-  };
-
-  audio.onerror = function (e) {
-    console.warn('Errore caricamento audio MP3 Elsa:', e);
-    _audioElementCareAssistAttivo = null;
-    // Attiva il fallback locale SOLO ED ESCLUSIVAMENTE se l\'audio naturale non è partito
-    if (!isAudioStarted && typeof parlaFallbackBrowserCareAssist === 'function') {
-      parlaFallbackBrowserCareAssist(t);
-    }
-    if (typeof onEndCallback === 'function') onEndCallback();
-  };
-
-  audio.play().then(function() {
-    isAudioStarted = true;
-  }).catch(function (err) {
-    console.warn('Riproduzione audio MP3 bloccata da browser o fallita:', err);
-    // SOLO se non è partito l\'audio naturale e c\'è stato un blocco effettivo
-    if (!isAudioStarted && typeof parlaFallbackBrowserCareAssist === 'function') {
-      parlaFallbackBrowserCareAssist(t);
-    }
-  });
+  // Su PC Windows locale: parliamo istantaneamente con la voce di sistema nativa chiara (Elsa/Isabella)
+  // senza dover attendere socket o rischiare che l'audio resti in attesa!
+  parlaFallbackBrowserCareAssist(t, onEndCallback);
 }
 window.riproduciVoceNaturaleHD = riproduciVoceNaturaleHD;
 
@@ -27994,26 +27970,83 @@ function parlaConVoceUmanaCareAssist(testo) {
   }
 }
 
-function parlaFallbackBrowserCareAssist(testo) {
-  if (!('speechSynthesis' in window)) return;
+function parlaFallbackBrowserCareAssist(testo, onEndCallback) {
+  if (!('speechSynthesis' in window)) {
+    if (typeof onEndCallback === 'function') onEndCallback();
+    return;
+  }
   try {
     window.speechSynthesis.cancel();
-    var cleanText = String(testo || '').replace(/\b112\b/g, 'uno uno due').replace(/\bNUE\b/gi, 'Numero Unico Europeo').replace(/\.{2,}/g, '. ').replace(/[:•-]/g, ', ').replace(/\s+/g, ' ').trim();
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+
+    var cleanText = String(testo || '')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&amp;/g, ' e ')
+      .replace(/&/g, ' e ')
+      .replace(/[•▪▸►✓✔✕✖★☆✦]/g, ', ')
+      .replace(/\b112\b/g, 'uno uno due')
+      .replace(/\bNUE\b/gi, 'Numero Unico Europeo')
+      .replace(/\.{2,}/g, '. ')
+      .replace(/[:•-]/g, ', ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!cleanText) {
+      if (typeof onEndCallback === 'function') onEndCallback();
+      return;
+    }
+
     var utter = new SpeechSynthesisUtterance(cleanText);
     utter.lang = 'it-IT';
-    var voices = window.speechSynthesis.getVoices() || [];
-    var itV = voices.filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf('it') === 0; });
-    // Priorita assoluta e vincolante a voci femminili calde e precise (Isabella, Elsa, Alice, Google Italiano)
-    var best = itV.find(function (v) { return /isabella|elsa|alice|chiara|federica|elena|natural.*female|google.*italiano/i.test(v.name); })
-      || itV.find(function (v) { return !/diego|giuseppe|cosimo|male|uomo/i.test(v.name); })
-      || itV[0];
-    if (best) utter.voice = best;
-    utter.rate = 0.96;
-    utter.pitch = 1.02;
-    window.speechSynthesis.speak(utter);
-  } catch (e) { }
-}
+    utter.volume = 1.0;
+    utter.rate = 1.0;
+    utter.pitch = 1.0;
 
+    var assegnaVoce = function() {
+      var voices = window.speechSynthesis.getVoices() || [];
+      var itV = voices.filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf('it') === 0; });
+      var best = itV.find(function (v) { return /elsa|isabella|alice|chiara|federica|elena|natural.*female|google.*italiano/i.test(v.name); })
+        || itV.find(function (v) { return !/diego|giuseppe|cosimo|male|uomo/i.test(v.name); })
+        || itV[0];
+      if (best) utter.voice = best;
+    };
+
+    assegnaVoce();
+
+    var fineChiamata = false;
+    var safeEnd = function() {
+      if (fineChiamata) return;
+      fineChiamata = true;
+      if (typeof onEndCallback === 'function') onEndCallback();
+    };
+
+    utter.onend = safeEnd;
+    utter.onerror = safeEnd;
+
+    // Se le voci non erano ancora caricate dal browser (asincrone)
+    if (!utter.voice && window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = function() {
+        assegnaVoce();
+      };
+    }
+
+    window.speechSynthesis.speak(utter);
+
+    // Watchdog per Chrome/Edge: se l'utterance è lunga, il browser la sospende dopo 14s se non c'è resume()
+    var resumeTimer = setInterval(function() {
+      if (!window.speechSynthesis.speaking) {
+        clearInterval(resumeTimer);
+      } else {
+        window.speechSynthesis.resume();
+      }
+    }, 10000);
+  } catch (e) {
+    console.warn('Errore SpeechSynthesis:', e);
+    if (typeof onEndCallback === 'function') onEndCallback();
+  }
+}
 function fermaVoceBriefing() {
   try {
     if (_careHumanAudio) {

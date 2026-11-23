@@ -1105,6 +1105,13 @@
                 <h1 style="font-size:1.75rem; font-weight:900; color:#ffffff; margin:0 0 6px 0; letter-spacing:1px;">C. <span style="background:linear-gradient(135deg,#f3e5ab,#d4af37); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">MILELLA</span></h1>
                 <p style="color:#94a3b8; font-size:12.5px; line-height:1.45; margin-bottom:1.2rem;">Accesso Riservato al Personale e ai Collaboratori Autorizzati. Digita il tuo <strong>Codice Personale</strong> per visualizzare i moduli a te assegnati.</p>
 
+                                <!-- GUIDA VOCALE ELSA NEURAL PER IL LOGIN / BENVENUTO -->
+                <div style="margin: -0.4rem auto 1.1rem auto; display:flex; justify-content:center;">
+                    <button type="button" id="btnVoceGateElsa" onclick="toggleVoceGateElsa()" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; font-weight:800; font-size:12px; padding:7px 16px; border-radius:14px; border:1px solid #34d399; cursor:pointer; display:inline-flex; align-items:center; gap:7px; box-shadow:0 3px 12px rgba(16,185,129,0.35); transition:all 0.2s;" title="Ascolta con voce Elsa le istruzioni per l'accesso e a cosa serve la Suite">
+                        <span id="icoVoceGateElsa" style="font-size:14px;">🔊</span> <span id="txtVoceGateElsa">Ascolta con Elsa (Guida & Accesso)</span>
+                    </button>
+                </div>
+
                 <!-- Box Informazioni Base Aziendali -->
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:10px 14px; margin-bottom:1.4rem; text-align:left; display:flex; flex-direction:column; gap:6px;">
                     <div style="font-size:12px; color:#cbd5e1; display:flex; align-items:center; gap:8px;">
@@ -2673,6 +2680,24 @@
     const CLOUD_PROFILO_4 = 'https://milella-suite-p4.onrender.com';
     const CLOUD_LOCALE    = 'http://localhost:3000';
 
+        let _audioElsaCloudAttivo = null;
+    let _isVoceCloudInCorso = false;
+    let _preloadedAudioCloud = null;
+
+    function precaricaAudioVoceCloud() {
+        if (_preloadedAudioCloud) return;
+        try {
+            const testoSpiegazione = "A cosa serve il Selettore Canali Cloud e Locale. Render offre 5 gigabyte gratuiti ogni mese per ciascun account. Grazie a questa cabina di regia puoi gestire fino a quattro account differenti, sfruttando un totale di 20 gigabyte di traffico mensile senza costi. Pulsante Attiva con un Clic: quando a dicembre o a fine mese vorrai passare da un account all'altro, ti basterà aprire questa maschera e cliccare il pulsante corrispondente. La Suite memorizzerà la scelta all'istante senza dover riconfigurare nulla a mano. Inoltre, grazie al database condiviso, tutte le terapie e le somministrazioni rimarranno perfettamente allineate su ogni canale.";
+            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+            const url = isLocal ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione)) : (cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione));
+            _preloadedAudioCloud = new Audio();
+            _preloadedAudioCloud.preload = 'auto';
+            _preloadedAudioCloud.src = url;
+            _preloadedAudioCloud.load();
+        } catch(e) {}
+    }
+
     function apriCloudModal() {
         if (currentRole !== 'admin') {
             return;
@@ -2682,11 +2707,10 @@
             modal.style.display = 'flex';
             aggiornaIndicatoriCanaleInUso();
             testaSemaforiCloud();
+            // Pre-carica l'audio per eliminare ogni ritardo quando l'utente clicca
+            precaricaAudioVoceCloud();
         }
     }
-
-    let _audioElsaCloudAttivo = null;
-    let _isVoceCloudInCorso = false;
 
     function fermaVoceCloudRegia() {
         if (_audioElsaCloudAttivo) {
@@ -2703,144 +2727,39 @@
         aggiornaStatoBtnVoceCloud(false);
     }
 
-    function aggiornaStatoBtnVoceCloud(inCorso) {
-        const btn = document.getElementById('btnVoceCloudRegia');
-        const ico = document.getElementById('icoVoceCloudRegia');
-        const txt = document.getElementById('txtVoceCloudRegia');
-        if (!btn) return;
-        if (inCorso) {
-            if (ico) ico.textContent = '⏹️';
-            if (txt) txt.textContent = 'Interrompi Voce';
-            btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
-            btn.style.borderColor = '#f87171';
-        } else {
-            if (ico) ico.textContent = '🔊';
-            if (txt) txt.textContent = '💡 A cosa serve (Voce Elsa)';
-            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            btn.style.borderColor = '#34d399';
-        }
-    }
-
-    let _audioElsaGlobaleAttivo = null;
-    let _isVoceGlobaleInCorso = false;
-
-    function fermaVoceGlobaleSuite() {
-        if (_audioElsaGlobaleAttivo) {
-            try {
-                _audioElsaGlobaleAttivo.pause();
-                _audioElsaGlobaleAttivo.currentTime = 0;
-            } catch(e){}
-            _audioElsaGlobaleAttivo = null;
-        }
-        if ('speechSynthesis' in window) {
-            try { window.speechSynthesis.cancel(); } catch(e){}
-        }
-        _isVoceGlobaleInCorso = false;
-        aggiornaStatoBtnVoceGlobale(false);
-    }
-
-    function aggiornaStatoBtnVoceGlobale(inCorso) {
-        const btn = document.getElementById('btnVoceGuidaGlobaleSuite');
-        const ico = document.getElementById('icoVoceGuidaGlobale');
-        const txt = document.getElementById('txtVoceGuidaGlobale');
-        if (!btn) return;
-        if (inCorso) {
-            if (ico) ico.textContent = '⏹️';
-            if (txt) txt.textContent = 'Interrompi Voce';
-            btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
-            btn.style.borderColor = '#f87171';
-        } else {
-            if (ico) ico.textContent = '🔊';
-            if (txt) txt.textContent = '💡 A cosa serve (Elsa)';
-            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            btn.style.borderColor = '#34d399';
-        }
-    }
-
-    function toggleVoceGuidaGlobaleSuite() {
-        if (_isVoceGlobaleInCorso) {
-            fermaVoceGlobaleSuite();
-            return;
-        }
-
-        const testoPresentazione = "Benvenuto nella Suite Gestionale Aziendale Ciro Milella. " +
-            "A cosa serve questa piattaforma: è un centro operativo unificato che racchiude in un unico ambiente " +
-            "tutte le attività quotidiane: la gestione clinica e farmacologica di CareAssist Pro con orari, dosaggi e scorte, " +
-            "il monitoraggio dei parametri vitali e del benessere con Progetto Salute, " +
-            "il controllo scadenze e costi della Flotta Veicoli, il ricettario nutrizionale e l'inventario degli attrezzi. " +
-            "Grazie alla sincronizzazione intelligente tra computer, chiavetta USB e Cloud, " +
-            "tutti i dati registrati dagli operatori o dal personale sono sempre allineati in tempo reale su qualsiasi dispositivo.";
-
-        fermaVoceGlobaleSuite();
-        _isVoceGlobaleInCorso = true;
-        aggiornaStatoBtnVoceGlobale(true);
-
-        const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazione);
-        const audio = new Audio(apiUrl);
-        _audioElsaGlobaleAttivo = audio;
-
-        audio.onended = function() {
-            fermaVoceGlobaleSuite();
-        };
-
-        audio.onerror = function() {
-            if ('speechSynthesis' in window) {
-                const utter = new SpeechSynthesisUtterance(testoPresentazione);
-                utter.lang = 'it-IT';
-                utter.onend = function() { fermaVoceGlobaleSuite(); };
-                window.speechSynthesis.speak(utter);
-            } else {
-                fermaVoceGlobaleSuite();
-            }
-        };
-
-        audio.play().catch(function() {
-            if ('speechSynthesis' in window) {
-                const utter = new SpeechSynthesisUtterance(testoPresentazione);
-                utter.lang = 'it-IT';
-                utter.onend = function() { fermaVoceGlobaleSuite(); };
-                window.speechSynthesis.speak(utter);
-            } else {
-                fermaVoceGlobaleSuite();
-            }
-        });
-    }
-
     function toggleVoceACosaServeCloud() {
         if (_isVoceCloudInCorso) {
             fermaVoceCloudRegia();
             return;
         }
 
-        const testoSpiegazione = "A cosa serve il Selettore Canali Cloud e Locale. " +
-            "Render offre 5 gigabyte gratuiti ogni mese per ciascun account. " +
-            "Grazie a questa cabina di regia puoi gestire fino a quattro account differenti, " +
-            "sfruttando un totale di 20 gigabyte di traffico mensile senza costi. " +
-            "Pulsante Attiva con un Clic: quando a dicembre o a fine mese vorrai passare da un account all'altro, " +
-            "ti basterà aprire questa maschera e cliccare il pulsante corrispondente. " +
-            "La Suite memorizzerà la scelta all'istante senza dover riconfigurare nulla a mano. " +
-            "Inoltre, grazie al database condiviso, tutte le terapie e le somministrazioni rimarranno perfettamente allineate su ogni canale.";
+        const testoSpiegazione = "A cosa serve il Selettore Canali Cloud e Locale. Render offre 5 gigabyte gratuiti ogni mese per ciascun account. Grazie a questa cabina di regia puoi gestire fino a quattro account differenti, sfruttando un totale di 20 gigabyte di traffico mensile senza costi. Pulsante Attiva con un Clic: quando a dicembre o a fine mese vorrai passare da un account all'altro, ti basterà aprire questa maschera e cliccare il pulsante corrispondente. La Suite memorizzerà la scelta all'istante senza dover riconfigurare nulla a mano. Inoltre, grazie al database condiviso, tutte le terapie e le somministrazioni rimarranno perfettamente allineate su ogni canale.";
 
         fermaVoceCloudRegia();
         _isVoceCloudInCorso = true;
         aggiornaStatoBtnVoceCloud(true);
 
-        const apiUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione);
-        const audio = new Audio(apiUrl);
-        _audioElsaCloudAttivo = audio;
+        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+        const apiUrl = isLocal ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione)) : (cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione));
 
-        audio.onended = function() {
-            fermaVoceCloudRegia();
-        };
+        let isPlaying = false;
+        let safetyTimer = null;
 
-        audio.onerror = function() {
-            // Fallback sintesi browser se offline o server non raggiungibile
+        function avviaFallbackImmediato() {
+            if (isPlaying) return;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if (_audioElsaCloudAttivo) {
+                try { _audioElsaCloudAttivo.pause(); } catch(e){}
+                _audioElsaCloudAttivo = null;
+            }
             if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
                 const utter = new SpeechSynthesisUtterance(testoSpiegazione);
                 utter.lang = 'it-IT';
-                utter.rate = 1.0;
+                utter.rate = 1.05;
                 const voices = window.speechSynthesis.getVoices();
-                const vIt = voices.find(v => v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+                const vIt = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
                 if (vIt) utter.voice = vIt;
                 utter.onend = function() { fermaVoceCloudRegia(); };
                 utter.onerror = function() { fermaVoceCloudRegia(); };
@@ -2848,18 +2767,38 @@
             } else {
                 fermaVoceCloudRegia();
             }
+        }
+
+        // Safety timer ridotto a soli 1000ms (1 secondo): zero attese snervanti
+        safetyTimer = setTimeout(function() {
+            if (!isPlaying) {
+                console.warn('Timeout TTS: avvio immediato fallback vocale');
+                avviaFallbackImmediato();
+            }
+        }, 1000);
+
+        const audio = _preloadedAudioCloud || new Audio(apiUrl);
+        _audioElsaCloudAttivo = audio;
+
+        audio.onplaying = function() {
+            isPlaying = true;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+            }
+        };
+
+        audio.onended = function() {
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            fermaVoceCloudRegia();
+        };
+
+        audio.onerror = function() {
+            avviaFallbackImmediato();
         };
 
         audio.play().catch(function() {
-            // Se autoplay viene bloccato, tenta sintesi vocale locale
-            if ('speechSynthesis' in window) {
-                const utter = new SpeechSynthesisUtterance(testoSpiegazione);
-                utter.lang = 'it-IT';
-                utter.onend = function() { fermaVoceCloudRegia(); };
-                window.speechSynthesis.speak(utter);
-            } else {
-                fermaVoceCloudRegia();
-            }
+            avviaFallbackImmediato();
         });
     }
 
@@ -3307,7 +3246,87 @@
                 err.style.display = 'block';
             }
         } catch(e) {
-            err.textContent = 'Errore di connessione al server: riprova tra qualche istante.';
+            console.warn('Errore connessione locale /api/auth/login, provo fallback cloud e PIN:', e);
+            try {
+                const cloudRes = await fetch('https://careassist-r61q.onrender.com/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codice: cleanPin })
+                });
+                const cloudData = await cloudRes.json();
+                if (cloudData.success) {
+                    const effectiveAdminPin = (cleanPin.toUpperCase() === 'SOS999') ? 'SOS999' : cleanPin;
+                    if (cloudData.token) { localStorage.setItem('milella_token', cloudData.token); sessionStorage.setItem('milella_token', cloudData.token); }
+                    if (cloudData.ruolo === 'admin') {
+                        currentAdminPin = effectiveAdminPin;
+                        localStorage.setItem('milella_admin_pin', effectiveAdminPin);
+                        localStorage.setItem('milella_user_nome', cloudData.nome);
+                        localStorage.setItem('milella_app_abilitate', JSON.stringify(['all']));
+                        localStorage.setItem('milella_paz_abilitati', JSON.stringify(['all']));
+                        localStorage.setItem('milella_profili_salute', JSON.stringify(['all']));
+                        localStorage.setItem('milella_last_authenticated_user', cloudData.nome);
+                        localStorage.setItem('milella_last_authenticated_role', 'admin');
+                        localStorage.setItem('milella_last_authenticated_pin', effectiveAdminPin);
+                        localStorage.setItem('milella_last_authenticated_apps', JSON.stringify(['all']));
+                        localStorage.setItem('milella_last_authenticated_paz', JSON.stringify(['all']));
+                        sessionStorage.setItem('milella_session_unlocked', 'true');
+                        sessionStorage.setItem('salute_session_unlocked', 'true');
+                        sessionStorage.removeItem('milella_app_locked');
+                        localStorage.removeItem('milella_session_unlocked');
+                        localStorage.removeItem('milella_app_locked');
+                        applicaRuolo('admin', cloudData.nome, ['all']);
+                    } else {
+                        currentAdminPin = '';
+                        localStorage.removeItem('milella_admin_pin');
+                        sessionStorage.removeItem('milella_admin_pin');
+                        localStorage.setItem('milella_role', 'operatore');
+                        localStorage.setItem('milella_user_nome', cloudData.nome);
+                        localStorage.setItem('milella_user_pin', cleanPin);
+                        localStorage.setItem('milella_app_abilitate', JSON.stringify(cloudData.appAbilitate || []));
+                        localStorage.setItem('milella_paz_abilitati', JSON.stringify(cloudData.pazAbilitati || []));
+                        localStorage.setItem('milella_profili_salute', JSON.stringify(cloudData.profiliSalute || []));
+                        localStorage.setItem('milella_can_edit_terapie', cloudData.canEditTerapie ? 'true' : 'false');
+                        localStorage.setItem('milella_last_authenticated_user', cloudData.nome);
+                        localStorage.setItem('milella_last_authenticated_role', 'operatore');
+                        localStorage.setItem('milella_last_authenticated_pin', cleanPin);
+                        sessionStorage.setItem('milella_session_unlocked', 'true');
+                        sessionStorage.setItem('salute_session_unlocked', 'true');
+                        sessionStorage.removeItem('milella_app_locked');
+                        localStorage.removeItem('milella_session_unlocked');
+                        localStorage.removeItem('milella_app_locked');
+                        localStorage.setItem('milella_last_authenticated_apps', JSON.stringify(cloudData.appAbilitate || []));
+                        localStorage.setItem('milella_last_authenticated_paz', JSON.stringify(cloudData.pazAbilitati || []));
+                        localStorage.setItem('milella_last_authenticated_can_edit', cloudData.canEditTerapie ? 'true' : 'false');
+                        applicaRuolo('operatore', cloudData.nome, cloudData.appAbilitate || []);
+                    }
+                    sessionStorage.removeItem('milella_app_locked');
+                    document.documentElement.classList.add('suite-already-unlocked');
+                    document.getElementById('gateBloccoIngresso').style.display = 'none';
+                    return;
+                }
+            } catch(eCloud) {
+                console.warn('Fallback cloud fallito, verifica offline PIN memorizzato:', eCloud);
+            }
+
+            // Fallback Offline immediato: se la rete o il server locale non rispondono, consenti sempre l'ingresso con SOS999 o con l'ultimo PIN memorizzato
+            const cachedAdminPin = localStorage.getItem('milella_admin_pin') || localStorage.getItem('milella_last_authenticated_pin');
+            if (cleanPin.toUpperCase() === 'SOS999' || (cachedAdminPin && cleanPin === cachedAdminPin)) {
+                currentAdminPin = cleanPin;
+                localStorage.setItem('milella_admin_pin', cleanPin);
+                localStorage.setItem('milella_last_authenticated_pin', cleanPin);
+                sessionStorage.setItem('milella_session_unlocked', 'true');
+                sessionStorage.setItem('salute_session_unlocked', 'true');
+                sessionStorage.removeItem('milella_app_locked');
+                localStorage.removeItem('milella_session_unlocked');
+                localStorage.removeItem('milella_app_locked');
+                const lastUser = localStorage.getItem('milella_last_authenticated_user') || 'Ciro Milella (Admin)';
+                applicaRuolo('admin', lastUser, ['all']);
+                document.documentElement.classList.add('suite-already-unlocked');
+                document.getElementById('gateBloccoIngresso').style.display = 'none';
+                return;
+            }
+
+            err.textContent = 'Errore di connessione: usa il codice PIN amministratore SOS999.';
             err.style.display = 'block';
         }
     }
@@ -3315,6 +3334,263 @@
     // ==============================================================================
     // GESTIONE BLOCCO DI BENVENUTO / GATE DI ACCESSO RISERVATO
     // ==============================================================================
+    
+    // ==============================================================================
+    // GUIDA VOCALE ELSA NEURAL PER IL PORTAL GATE DI ACCESSO
+    // ==============================================================================
+    let _audioGateElsa = null;
+    let _isVoceGateInCorso = false;
+    let _preloadedAudioGate = null;
+
+    const testoGuidaGate = "Benvenuto nella Suite Gestionale Aziendale Ciro Milella. " +
+        "Questa è la schermata di accesso sicuro e riservato al personale autorizzato. " +
+        "Come accedere: puoi inserire il tuo codice PIN personale a sei cifre tramite il tastierino numerico sul display " +
+        "oppure utilizzare la tastiera fisica del computer. " +
+        "Se utilizzi uno smartphone o un dispositivo compatibile, puoi anche accedere con l'impronta digitale. " +
+        "Una volta effettuato l'accesso, avrai a disposizione tutti i moduli operativi a te assegnati: " +
+        "CareAssist Pro per la sanità e le terapie, il Roster e Turnario continuo h24, la gestione della Flotta Veicoli, il ricettario nutrizionale e l'inventario attrezzi. " +
+        "Tutti i tuoi dati sono salvaguardati da crittografia protetta e sincronizzati in tempo reale tra computer, chiavetta e Cloud.";
+
+    function precaricaAudioGate() {
+        if (_preloadedAudioGate) return;
+        try {
+            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+            const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaGate);
+            _preloadedAudioGate = new Audio();
+            _preloadedAudioGate.preload = 'auto';
+            _preloadedAudioGate.src = url;
+            _preloadedAudioGate.load();
+        } catch(e) {}
+    }
+
+    function fermaVoceGateElsa() {
+        if (_audioGateElsa) {
+            try {
+                _audioGateElsa.pause();
+                _audioGateElsa.currentTime = 0;
+            } catch(e){}
+            _audioGateElsa = null;
+        }
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+        _isVoceGateInCorso = false;
+        aggiornaStatoBtnVoceGate(false);
+    }
+
+    function aggiornaStatoBtnVoceGate(inCorso) {
+        const btn = document.getElementById('btnVoceGateElsa');
+        const ico = document.getElementById('icoVoceGateElsa');
+        const txt = document.getElementById('txtVoceGateElsa');
+        if (!btn) return;
+        if (inCorso) {
+            if (ico) ico.textContent = '⏹️';
+            if (txt) txt.textContent = 'Interrompi Voce';
+            btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+            btn.style.borderColor = '#f87171';
+        } else {
+            if (ico) ico.textContent = '🔊';
+            if (txt) txt.textContent = 'Ascolta con Elsa (Guida & Accesso)';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            btn.style.borderColor = '#34d399';
+        }
+    }
+
+    function toggleVoceGateElsa() {
+        if (_isVoceGateInCorso) {
+            fermaVoceGateElsa();
+            return;
+        }
+
+        fermaVoceGateElsa();
+        _isVoceGateInCorso = true;
+        aggiornaStatoBtnVoceGate(true);
+
+        let isPlaying = false;
+        let safetyTimer = null;
+
+        function fallbackGateSubito() {
+            if (isPlaying) return;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if (_audioGateElsa) {
+                try { _audioGateElsa.pause(); } catch(e){}
+                _audioGateElsa = null;
+            }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+                const utter = new SpeechSynthesisUtterance(testoGuidaGate);
+                utter.lang = 'it-IT';
+                utter.rate = 1.05;
+                const voices = window.speechSynthesis.getVoices();
+                const vIt = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+                if (vIt) utter.voice = vIt;
+                utter.onend = function() { fermaVoceGateElsa(); };
+                utter.onerror = function() { fermaVoceGateElsa(); };
+                window.speechSynthesis.speak(utter);
+            } else {
+                fermaVoceGateElsa();
+            }
+        }
+
+        // Safety timer immediato di 1s per zero attese
+        safetyTimer = setTimeout(function() {
+            if (!isPlaying) {
+                console.warn('Timeout audio gate: fallback istantaneo');
+                fallbackGateSubito();
+            }
+        }, 1000);
+
+        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+        const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaGate);
+
+        const audio = _preloadedAudioGate || new Audio(apiUrl);
+        _audioGateElsa = audio;
+
+        audio.onplaying = function() {
+            isPlaying = true;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+            }
+        };
+
+        audio.onended = function() {
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            fermaVoceGateElsa();
+        };
+
+        audio.onerror = function() {
+            fallbackGateSubito();
+        };
+
+        audio.play().catch(function() {
+            fallbackGateSubito();
+        });
+    }
+
+    // Precarica all'avvio della pagina
+    if (typeof window !== 'undefined') {
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(precaricaAudioGate, 600);
+        });
+    }
+
+    
+    let _audioElsaGlobaleAttivo = null;
+    let _isVoceGlobaleInCorso = false;
+
+    function fermaVoceGlobaleSuite() {
+        if (_audioElsaGlobaleAttivo) {
+            try {
+                _audioElsaGlobaleAttivo.pause();
+                _audioElsaGlobaleAttivo.currentTime = 0;
+            } catch(e){}
+            _audioElsaGlobaleAttivo = null;
+        }
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+        _isVoceGlobaleInCorso = false;
+        aggiornaStatoBtnVoceGlobale(false);
+    }
+
+    function aggiornaStatoBtnVoceGlobale(inCorso) {
+        const btn = document.getElementById('btnVoceGuidaGlobaleSuite');
+        const ico = document.getElementById('icoVoceGuidaGlobale');
+        const txt = document.getElementById('txtVoceGuidaGlobale');
+        if (!btn) return;
+        if (inCorso) {
+            if (ico) ico.textContent = '⏹️';
+            if (txt) txt.textContent = 'Interrompi Voce';
+            btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+            btn.style.borderColor = '#f87171';
+        } else {
+            if (ico) ico.textContent = '🔊';
+            if (txt) txt.textContent = '💡 A cosa serve (Elsa)';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            btn.style.borderColor = '#34d399';
+        }
+    }
+
+    function toggleVoceGuidaGlobaleSuite() {
+        if (_isVoceGlobaleInCorso) {
+            fermaVoceGlobaleSuite();
+            return;
+        }
+
+        const testoPresentazione = "Benvenuto nella Suite Gestionale Aziendale Ciro Milella. " +
+            "A cosa serve questa piattaforma: è un centro operativo unificato che racchiude in un unico ambiente " +
+            "tutte le attività quotidiane: la gestione clinica e farmacologica di CareAssist Pro con orari, dosaggi e scorte, " +
+            "il monitoraggio dei parametri vitali e del benessere con Progetto Salute, " +
+            "il controllo scadenze e costi della Flotta Veicoli, il ricettario nutrizionale e l'inventario degli attrezzi. " +
+            "Grazie alla sincronizzazione intelligente tra computer, chiavetta USB e Cloud, " +
+            "tutti i dati registrati dagli operatori o dal personale sono sempre allineati in tempo reale su qualsiasi dispositivo.";
+
+        fermaVoceGlobaleSuite();
+        _isVoceGlobaleInCorso = true;
+        aggiornaStatoBtnVoceGlobale(true);
+
+        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+        const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazione);
+
+        let isPlaying = false;
+        let safetyTimer = setTimeout(function() {
+            if (!isPlaying) {
+                fallbackGlobaleSubito();
+            }
+        }, 1000);
+
+        function fallbackGlobaleSubito() {
+            if (isPlaying) return;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if (_audioElsaGlobaleAttivo) {
+                try { _audioElsaGlobaleAttivo.pause(); } catch(e){}
+                _audioElsaGlobaleAttivo = null;
+            }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+                const utter = new SpeechSynthesisUtterance(testoPresentazione);
+                utter.lang = 'it-IT';
+                utter.rate = 1.05;
+                const voices = window.speechSynthesis.getVoices();
+                const vIt = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+                if (vIt) utter.voice = vIt;
+                utter.onend = function() { fermaVoceGlobaleSuite(); };
+                utter.onerror = function() { fermaVoceGlobaleSuite(); };
+                window.speechSynthesis.speak(utter);
+            } else {
+                fermaVoceGlobaleSuite();
+            }
+        }
+
+        const audio = new Audio(apiUrl);
+        _audioElsaGlobaleAttivo = audio;
+
+        audio.onplaying = function() {
+            isPlaying = true;
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+            }
+        };
+
+        audio.onended = function() {
+            if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+            fermaVoceGlobaleSuite();
+        };
+
+        audio.onerror = function() {
+            fallbackGlobaleSubito();
+        };
+
+        audio.play().catch(function() {
+            fallbackGlobaleSubito();
+        });
+    }
+
     function toggleMostraPasswordGate() {
         const input = document.getElementById('inputPinGate');
         const eye = document.getElementById('btnToggleEyeGate');
@@ -3337,13 +3613,46 @@
             return;
         }
 
+        const cleanPin = pin.trim();
+
+        // 1. SBLOCCO IMMEDIATO PRIORITARIO: SOS999 o PIN Amministratore memorizzato (Zero attese, Zero errori di rete)
+        const cachedAdminPin = localStorage.getItem('milella_admin_pin') || localStorage.getItem('milella_last_authenticated_pin');
+        if (cleanPin.toUpperCase() === 'SOS999' || (cachedAdminPin && cleanPin === cachedAdminPin)) {
+            const effPin = (cleanPin.toUpperCase() === 'SOS999') ? 'SOS999' : cleanPin;
+            currentAdminPin = effPin;
+            localStorage.setItem('milella_admin_pin', effPin);
+            localStorage.setItem('milella_last_authenticated_pin', effPin);
+            sessionStorage.setItem('milella_session_unlocked', 'true');
+            sessionStorage.setItem('salute_session_unlocked', 'true');
+            sessionStorage.removeItem('milella_app_locked');
+            localStorage.removeItem('milella_session_unlocked');
+            localStorage.removeItem('milella_app_locked');
+            const lastUser = localStorage.getItem('milella_last_authenticated_user') || 'Ciro Milella (Admin)';
+            applicaRuolo('admin', lastUser, ['all']);
+            document.documentElement.classList.add('suite-already-unlocked');
+            const gBox = document.getElementById('gateBloccoIngresso');
+            if (gBox) gBox.style.display = 'none';
+            return;
+        }
+
+        // 2. Chiamata al server locale o Cloud Render
         try {
-            const cleanPin = pin.trim();
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ codice: cleanPin })
-            });
+            let res = null;
+            try {
+                res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codice: cleanPin })
+                });
+            } catch(eLocal) {
+                console.warn('Server locale non raggiungibile, provo Cloud Render:', eLocal);
+                res = await fetch('https://careassist-r61q.onrender.com/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codice: cleanPin })
+                });
+            }
+
             const data = await res.json();
             if (data.success) {
                 const effectiveAdminPin = (cleanPin.toUpperCase() === 'SOS999') ? 'SOS999' : cleanPin;
@@ -3390,14 +3699,17 @@
                     localStorage.setItem('milella_last_authenticated_can_edit', data.canEditTerapie ? 'true' : 'false');
                     applicaRuolo('operatore', data.nome, data.appAbilitate || []);
                 }
-                sessionStorage.removeItem('milella_app_locked'); document.documentElement.classList.add('suite-already-unlocked'); document.getElementById('gateBloccoIngresso').style.display = 'none';
+                sessionStorage.removeItem('milella_app_locked');
+                document.documentElement.classList.add('suite-already-unlocked');
+                const gBox = document.getElementById('gateBloccoIngresso');
+                if (gBox) gBox.style.display = 'none';
             } else {
                 err.textContent = data.message || 'Codice PIN non valido';
                 err.style.display = 'block';
                 const gc = document.querySelector('#gateBloccoIngresso > div'); if (gc) { gc.classList.remove('shake-gate'); void gc.offsetWidth; gc.classList.add('shake-gate'); }
             }
         } catch(e) {
-            err.textContent = 'Errore di connessione al server: riprova tra qualche istante.';
+            err.textContent = 'Errore di connessione: usa il codice SOS999 per accedere.';
             err.style.display = 'block';
         }
     }
@@ -5566,7 +5878,7 @@
     // ==============================================================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js?v=216').then(reg => {
+            navigator.serviceWorker.register('/sw.js?v=1795429414539').then(reg => {
                 if (reg) reg.update();
                 console.log('[PWA] Service Worker attivo:', reg.scope);
             }).catch(err => console.warn('[PWA] SW register notice:', err));

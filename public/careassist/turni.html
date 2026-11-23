@@ -3570,7 +3570,7 @@
       <!-- CONTROLLO VOCALE ELSA NEURAL -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:#f0f9ff; border:1.5px solid #bae6fd; border-radius:12px; padding:10px 14px; box-shadow:0 2px 6px rgba(2,132,199,0.06);">
         <div style="font-size:12px; font-weight:800; color:#0369a1; display:flex; align-items:center; gap:6px;">
-          <span>🤖</span> <span>Assistente Elsa/Elisa Neural</span>
+          <span>🤖</span> <span>Assistente Elsa Neural</span>
         </div>
         <button type="button" id="btnVoceTurnarioElsa" onclick="toggleVoceGuidaTurnario()" ontouchstart="toggleVoceGuidaTurnario()" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:1px solid #34d399; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(16,185,129,0.3); transition:all 0.2s;">
           <span id="icoVoceTurnarioElsa">🔊</span> <span id="txtVoceTurnarioElsa">Ascolta con Elsa Neural</span>
@@ -3625,6 +3625,7 @@ let _isVoceTurnarioInCorso = false;
 function apriModalGuidaTurnario() {
   const m = document.getElementById('modal-guida-turnario');
   if (m) m.style.display = 'flex';
+  precaricaAudioTurnario();
 }
 
 function chiudiModalGuidaTurnario() {
@@ -3666,6 +3667,21 @@ function aggiornaStatoBtnVoceTurnario(inCorso) {
   }
 }
 
+let _preloadedAudioTurnario = null;
+function precaricaAudioTurnario() {
+  if (_preloadedAudioTurnario) return;
+  try {
+    const testo = "A cosa serve il Roster Sanitario e Turnario Operatori H24. Questa schermata gestisce la pianificazione continua e in tempo reale dell'assistenza domiciliare 24 ore su 24.";
+    const cloudBase = 'https://careassist-r61q.onrender.com';
+    const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+    const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+    _preloadedAudioTurnario = new Audio();
+    _preloadedAudioTurnario.preload = 'auto';
+    _preloadedAudioTurnario.src = url;
+    _preloadedAudioTurnario.load();
+  } catch(e) {}
+}
+
 function toggleVoceGuidaTurnario() {
   if (_isVoceTurnarioInCorso) {
     fermaVoceTurnarioElsa();
@@ -3687,38 +3703,66 @@ function toggleVoceGuidaTurnario() {
   _isVoceTurnarioInCorso = true;
   aggiornaStatoBtnVoceTurnario(true);
 
-  const apiUrl = '/api/tts-umano?voice=isabella&text=' + encodeURIComponent(testo);
-  const audio = new Audio(apiUrl);
+  let isPlaying = false;
+  let safetyTimer = null;
+
+  function avviaFallbackSubito() {
+    if (isPlaying) return;
+    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+    if (_audioTurnarioElsa) {
+      try { _audioTurnarioElsa.pause(); } catch(e){}
+      _audioTurnarioElsa = null;
+    }
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch(e){}
+      const utter = new SpeechSynthesisUtterance(testo);
+      utter.lang = 'it-IT';
+      utter.rate = 1.0;
+      const voices = window.speechSynthesis.getVoices();
+      const vElsa = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('ElsaNeural') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+      if (vElsa) utter.voice = vElsa;
+      utter.onend = function() { fermaVoceTurnarioElsa(); };
+      utter.onerror = function() { fermaVoceTurnarioElsa(); };
+      window.speechSynthesis.speak(utter);
+    } else {
+      fermaVoceTurnarioElsa();
+    }
+  }
+
+  // Safety timer 1000ms: mai più attese lunghe se la rete ha lag
+  safetyTimer = setTimeout(function() {
+    if (!isPlaying) {
+      console.warn('Timeout audio turnario: fallback istantaneo');
+      avviaFallbackSubito();
+    }
+  }, 1000);
+
+  const cloudBase = 'https://careassist-r61q.onrender.com';
+  const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+  const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+
+  const audio = _preloadedAudioTurnario || new Audio(apiUrl);
   _audioTurnarioElsa = audio;
 
+  audio.onplaying = function() {
+    isPlaying = true;
+    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch(e){}
+    }
+  };
+
   audio.onended = function() {
+    if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
     fermaVoceTurnarioElsa();
   };
 
   audio.onerror = function() {
-    if ('speechSynthesis' in window) {
-      const utter = new SpeechSynthesisUtterance(testo);
-      utter.lang = 'it-IT';
-      utter.rate = 1.0;
-      utter.onend = function() { fermaVoceTurnarioElsa(); };
-      utter.onerror = function() { fermaVoceTurnarioElsa(); };
-      window.speechSynthesis.speak(utter);
-    } else {
-      fermaVoceTurnarioElsa();
-    }
+    avviaFallbackSubito();
   };
 
   audio.play().catch(function() {
-    if ('speechSynthesis' in window) {
-      const utter = new SpeechSynthesisUtterance(testo);
-      utter.lang = 'it-IT';
-      utter.rate = 1.0;
-      utter.onend = function() { fermaVoceTurnarioElsa(); };
-      utter.onerror = function() { fermaVoceTurnarioElsa(); };
-      window.speechSynthesis.speak(utter);
-    } else {
-      fermaVoceTurnarioElsa();
-    }
+    avviaFallbackSubito();
   });
 }
 window.apriModalGuidaTurnario = apriModalGuidaTurnario;
