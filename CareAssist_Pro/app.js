@@ -28215,6 +28215,19 @@ window.fermaVoceBriefing = fermaVoceBriefing;
 // 💡 SISTEMA DI GUIDA CONTESTUALE DINAMICA & UTILITÀ CLINICO-GESTIONALE
 // ==========================================================================
 var GUIDE_CONTESTUALI = {
+  'allineamento-terapie': {
+    "icona": "🔄",
+    "titolo": "Allineamento Terapie & Controllo Scorte Farmacia",
+    "sottotitolo": "Recupero Intelligente Dosi Non Registrate • Controllo Scorte",
+    "scopo": "Questa maschera rileva automaticamente se nei giorni precedenti ci sono state somministrazioni programmate che non sono state registrate nel sistema (ad esempio se il computer era spento o se l'operatore era impossibilitato ad inserire i dati sul momento).",
+    "comeSiUsa": [
+      "<b>🟢 Conferma Assunte (Scala Scorte e Registra):</b> Usalo se il paziente ha effettivamente assunto i farmaci. Il sistema scalerà automaticamente le compresse dai blister virtuali e certificherà la terapia nello storico clinico.",
+      "<b>🔴 Segna Come Saltate (Scorte Intatte):</b> Usalo se le dosi non sono state somministrate o il paziente le ha rifiutate. Le scorte rimarranno invariate e l'omissione sarà annotata nel diario clinico.",
+      "<b>Deseleziona / Seleziona Singoli Farmaci:</b> Puoi selezionare o deselezionare le singole somministrazioni per applicare scelte mirate a ciascun medicinale."
+    ],
+    "percheDifferenza": "Mantiene il perfetto allineamento tra le scorte reali a domicilio e il diario clinico digitale, garantendo la continuità terapeutica senza errori di calcolo."
+  },
+
   'modifica-scorta-rapida': {
     "icona": "📦",
     "titolo": "Aggiornamento Rapido Scorta Farmaco",
