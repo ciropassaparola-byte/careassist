@@ -1,5 +1,5 @@
 {
-  "activePazienteId": "paz_aldo",
+  "activePazienteId": "paz_1793216119572",
   "pazienti": [
     {
       "id": "paz_aldo",
@@ -471,6 +471,13 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 34 minuti! Orario previsto: 20:00 - Orario effettivo assunzione: 20:34. Rimanenza scorta: 19 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "esc_1795289646296",
+          "timestamp": "2026-11-21T19:34:06.295Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 20:34 il farmaco \"SILODYX 8 mg (Silodosina)\" delle ore 20:00 risulta non ancora spuntato (+34 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
         },
         {
           "id": "log_1795289645275",
@@ -2043,7 +2050,7 @@
           ]
         }
       },
-      "lastModified": 1795447789641
+      "lastModified": 1795350608745
     },
     {
       "id": "paz_angela",
@@ -2204,7 +2211,7 @@
           "cprPerScatola": 28,
           "scorta": 17,
           "farmacia": "Farmacia MACARIO",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "ultimaDoseSomministrata": 1,
           "fattoOggiGiorno": "2026-11-23",
           "annullatoOggiTimestamp": 1795414254202
@@ -2511,6 +2518,13 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 58 minuti! Orario previsto: 09:00 - Orario effettivo assunzione: 09:58. Rimanenza scorta: 15 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "esc_1795337873035",
+          "timestamp": "2026-11-22T08:57:53.033Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 09:57 il farmaco \"Lasix 25 mg (Furosemide)\" delle ore 09:00 risulta non ancora spuntato (+57 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
         },
         {
           "id": "log_1795332724612",
@@ -4432,7 +4446,7 @@
           "scorta": 42,
           "giorniAlert": 7,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 70,
           "unitaDoseDie": 1,
@@ -4462,7 +4476,7 @@
           "scorta": 28,
           "giorniAlert": 7,
           "cadenzaTipo": "",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "compressa",
           "penneScorta": 28,
           "unitaDoseDie": 1,
@@ -4492,7 +4506,7 @@
           "scorta": 3.52,
           "giorniAlert": 15,
           "cadenzaTipo": "giornaliera",
-          "fattoOggi": true,
+          "fattoOggi": false,
           "tipoFormulazione": "penna",
           "penneScorta": 3.52,
           "unitaDoseDie": 36,
@@ -4588,6 +4602,20 @@
           "tipo": "nota_turno",
           "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
           "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 11:04 il farmaco \"ARCOXIA 90 mg\" delle ore 10:30 risulta non ancora spuntato (+34 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
+          "id": "esc_1795428258296",
+          "timestamp": "2026-11-23T10:04:18.248Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 11:04 il farmaco \"SINEMET 100+25 mg (1ª dose: 2 cpr - ore 10:00)\" delle ore 10:00 risulta non ancora spuntato (+64 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
+          "id": "esc_1795428258250",
+          "timestamp": "2026-11-23T10:04:18.248Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 11:04 il farmaco \"CONGESCOR 2,5 mg\" delle ore 10:00 risulta non ancora spuntato (+64 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
         },
         {
           "id": "log_1795424483826",
@@ -4828,6 +4856,13 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 31 minuti! Orario previsto: 17:30 - Orario effettivo assunzione: 18:01. Rimanenza scorta: 3.53 cpr.",
           "operatore": "Ciro Milella (Admin)"
+        },
+        {
+          "id": "esc_1795366879286",
+          "timestamp": "2026-11-22T17:01:19.276Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 18:01 il farmaco \"XULTOPHY penna\" delle ore 17:30 risulta non ancora spuntato (+31 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
         },
         {
           "id": "log_1795360947266",
@@ -5123,6 +5158,27 @@
         {
           "id": "esc_1795332000950",
           "timestamp": "2026-11-22T07:20:00.859Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 08:20 il farmaco \"DIAMICRON 60 mg RM\" delle ore 08:00 risulta non ancora spuntato (+20 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
+          "id": "esc_1795332000608",
+          "timestamp": "2026-11-22T07:20:00.486Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 08:20 il farmaco \"TRIATEC 5 mg\" delle ore 08:00 risulta non ancora spuntato (+20 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
+          "id": "esc_1795332000544",
+          "timestamp": "2026-11-22T07:20:00.486Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 08:20 il farmaco \"FEDIVELLE 20.000 U.I.\" delle ore 08:00 risulta non ancora spuntato (+20 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
+          "id": "esc_1795332000487",
+          "timestamp": "2026-11-22T07:20:00.486Z",
           "tipo": "nota_turno",
           "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
           "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 08:20 il farmaco \"DIAMICRON 60 mg RM\" delle ore 08:00 risulta non ancora spuntato (+20 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
@@ -8907,6 +8963,13 @@
           "operatore": "Ciro Milella (Admin)"
         },
         {
+          "id": "esc_1795328979754",
+          "timestamp": "2026-11-22T06:29:39.750Z",
+          "tipo": "nota_turno",
+          "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
+          "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 07:29 il farmaco \"Entecavir Sandoz 0,5 mg\" delle ore 07:00 risulta non ancora spuntato (+29 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
+        },
+        {
           "id": "log_1795284265993",
           "tipo": "farmaco_ritardo",
           "timestamp": "2026-11-21T18:04:25.992Z",
@@ -10972,16 +11035,10 @@
       "lastModified": 1795332864124
     }
   ],
-  "lastModified": 1795447789641,
+  "lastModified": "2026-11-24T07:03:59.706Z",
   "lastModifiedDevice": "pc",
-  "lastModifiedBy": {
-    "nome": "Admin",
-    "ruolo": "admin",
-    "paziente": "Aldo Zamparino",
-    "ora": "16:29",
-    "timestamp": 1795447789641
-  },
-  "ultimoGiornoOperativo": "2026-11-23",
+  "lastModifiedBy": "Merge Intelligente USB <-> Web",
+  "ultimoGiornoOperativo": "2026-11-22",
   "aldoVimpatInizializzato2026": true,
   "rosaInitializedOnce": true,
   "rosaTerapiaFoto20261017": true,

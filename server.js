@@ -2324,6 +2324,10 @@ app.get('/api/my-ip', (req, res) => {
 
 // Chiusura aggraziata del server se richiesta
 app.post('/api/shutdown', (req, res) => {
+    // PROTEZIONE CLOUD: Se il server gira su Render Cloud (process.env.RENDER) non deve terminare il processo!
+    if (process.env.RENDER || process.env.RENDER_SERVICE_ID) {
+        return res.json({ success: true, message: 'Cloud attivo: simulata chiusura sessione' });
+    }
     const isLocalReq = req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1';
     if (!isLocalReq && (!req.user || !req.user.admin)) {
         return res.status(403).json({ error: 'Accesso negato: solo admin o locale' });

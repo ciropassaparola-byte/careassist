@@ -2444,7 +2444,7 @@
         <div class="sd-card" role="dialog" aria-labelledby="sdTitle">
             <div class="sd-bar">
                 <span class="sd-badge">C. Milella &bull; Sistema</span>
-                <button class="sd-x" id="sdCloseX" title="Chiudi" aria-label="Chiudi">&#10005;</button>
+                <!-- X rimossa per evitare interruzioni accidentali -->
             </div>
             <div class="sd-body">
                 <div class="sd-icon">
@@ -2464,8 +2464,19 @@
         (function () {
             var m = document.getElementById('shutdownModal');
             function hide() { m.style.display = 'none'; }
-            function closeWin() { window.close(); setTimeout(hide, 300); }
-            document.getElementById('sdCloseX').addEventListener('click', closeWin);
+            function closeWin() {
+                try { window.close(); } catch(e){}
+                setTimeout(function() {
+                    hide();
+                    if (typeof esciConArrivederci === "function") {
+                        esciConArrivederci();
+                    } else {
+                        var arrivederci = document.getElementById("modalArrivederciSuite");
+                        if (arrivederci) arrivederci.style.display = "flex";
+                    }
+                }, 300);
+            }
+            var _x = document.getElementById('sdCloseX'); if (_x) _x.addEventListener('click', closeWin);
             document.getElementById('sdCloseBtn').addEventListener('click', closeWin);
             document.getElementById('sdBack').addEventListener('click', hide);
             document.addEventListener('keydown', function (e) { 
@@ -2545,6 +2556,7 @@
         });
 
         const _bCf = document.getElementById('btnConfirmShutdown'); if (_bCf) _bCf.addEventListener('click', async () => {
+            const isCloudRender = window.location.hostname.includes('onrender.com');
             confirmModal.style.display = 'none';
             shutdownModal.classList.remove('done');
             shutdownModal.style.display = 'flex';
@@ -2563,7 +2575,7 @@
             shutdownText.innerHTML = 'Il sistema e il server locale si stanno spegnendo.<br>Attendere prego.';
 
             try {
-                await fetch('/api/shutdown', { method: 'POST' });
+                if (!isCloudRender) { await fetch('/api/shutdown', { method: 'POST' }); }
             } catch(e) {}
             
             setTimeout(() => {
