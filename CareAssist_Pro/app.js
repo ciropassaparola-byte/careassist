@@ -12046,58 +12046,7 @@ function mostraCardRiconoscimentoScanner(farmacoRiconosciuto, targetModal, previ
 }
 window.mostraCardRiconoscimentoScanner = mostraCardRiconoscimentoScanner;
 
-// ==========================================================================
-// 🎙️ BRIEFING VOCALE AI ASSISTITO (MODALITÀ REGIA DEMO LIVE)
-// ==========================================================================
-function avviaBriefingVocaleAssistitoDemo() {
-  const p = (typeof getActivePaziente === 'function') ? getActivePaziente() : null;
-  if (!p) {
-    if (typeof showToast === 'function') showToast('Seleziona un assistito per avviare il Briefing AI.');
-    return;
-  }
-
-  const nomePulito = (p.nome || 'Assistito').replace(/\s*\(\d+\s*anni\)/gi, '').trim();
-  const eta = (typeof calcolaAnniDaData === 'function' && p.dataNascita) ? calcolaAnniDaData(p.dataNascita) : (p.eta || '');
-  const terapie = Array.isArray(p.terapie) ? p.terapie : [];
-  const terapieOggi = terapie.filter(t => (typeof isTerapiaPrevistaOggi === 'function') ? isTerapiaPrevistaOggi(t) : true);
-  const completate = terapieOggi.filter(t => t.fattoOggi).length;
-  const daFare = terapieOggi.filter(t => !t.fattoOggi && !t.saltatoOggi);
-  const prossima = daFare.length > 0 ? daFare[0] : null;
-  const inScadenza = terapie.filter(t => (parseInt(t.scorta) || 0) <= (parseInt(t.giorniAlert) || 7));
-
-  let testoVoce = `Briefing Clinico Intelligente CareAssist Pro per l'assistito ${nomePulito}` + (eta ? `, di ${eta} anni. ` : '. ');
-  testoVoce += `Il piano terapeutico attivo comprende ${terapieOggi.length} somministrazioni giornaliere, di cui ${completate} già eseguite e tracciate oggi. `;
-  if (prossima) {
-    testoVoce += `Prossima somministrazione programmata: ${(prossima.farmaco || '').split('(')[0].trim()} alle ore ${prossima.ora || '08:00'}. `;
-  } else if (terapieOggi.length > 0) {
-    testoVoce += `Tutte le somministrazioni previste per la giornata odierna risultano regolarmente completate. `;
-  }
-  if (inScadenza.length > 0) {
-    testoVoce += `Attenzione magazzino: ${inScadenza.length} farmaco richiede il rinnovo della ricetta medica. `;
-  } else {
-    testoVoce += `Le scorte domiciliari risultano regolari e coperte. `;
-  }
-  testoVoce += `Scudo Clinico AI e tracciabilità multi-operatore attivi.`;
-
-  if (typeof showToast === 'function') {
-    showToast(`🎙️ Briefing AI attivo per ${nomePulito}: ${completate}/${terapieOggi.length} terapie eseguite oggi.`);
-  }
-
-  if ('speechSynthesis' in window) {
-    try {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        return;
-      }
-      const utter = new SpeechSynthesisUtterance(testoVoce);
-      utter.lang = 'it-IT';
-      utter.rate = 0.98;
-      utter.pitch = 1.05;
-      window.speechSynthesis.speak(utter);
-    } catch (e) { }
-  }
-}
-window.avviaBriefingVocaleAssistitoDemo = avviaBriefingVocaleAssistitoDemo;
+// [Briefing duplicato rimosso]
 
 // ==========================================================================
 // 🎤 VOCE AI & CONSOLE ASSISTENZA FAMILIARI (FARMACI, AUSILI & RICERCA WEB IN-APP)
@@ -28147,6 +28096,8 @@ function fermaVoceBriefing() {
 }
 
 function avviaBriefingVocaleAssistitoDemo(modalita) {
+  if (typeof fermaVoceHDGlobale === 'function') fermaVoceHDGlobale();
+  fermaVoceBriefing();
   var p = (typeof getActivePaziente === 'function') ? getActivePaziente() : null;
   if (!p) return;
 
