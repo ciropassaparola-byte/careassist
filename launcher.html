@@ -1114,6 +1114,7 @@ body::-webkit-scrollbar,
             <div style="background:rgba(15,23,42,0.92); border:1.5px solid rgba(212,175,55,0.4); border-radius:28px; max-width:480px; width:100%; max-height:calc(100vh - 2.4rem); overflow-y:auto; margin:auto; padding:1.6rem 1.8rem; text-align:center; box-shadow:0 25px 70px rgba(0,0,0,0.8), 0 0 40px rgba(212,175,55,0.15); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); animation:fadeInGate 0.4s ease-out; position:relative;">
                 <!-- Dettaglio Luce Oro Superiore -->
                 <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, transparent, #d4af37, #f3e5ab, #d4af37, transparent);"></div>
+                  <button type="button" onclick="mostraMascheraArrivederci()" title="Chiudi / Esci dalla sessione" style="position:absolute; top:12px; right:14px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:#fca5a5; width:34px; height:34px; border-radius:50%; font-size:16px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.35)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(239,68,68,0.15)'; this.style.color='#fca5a5';">✕</button>
 
                 <!-- Marchio Ufficiale C. Milella -->
                 <div style="width:78px; height:78px; margin:0.3rem auto 1rem auto; border-radius:22px; background:linear-gradient(145deg, #0f172a 0%, #030712 100%); border:1.5px solid rgba(212,175,55,0.65); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.8), 0 0 35px rgba(212,175,55,0.35); overflow:hidden; position:relative; cursor:pointer; transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);" onmouseover="this.style.transform='scale(1.06)'; this.style.borderColor='#fde047';" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(212,175,55,0.65)';">
@@ -1241,7 +1242,12 @@ body::-webkit-scrollbar,
                 </div>
 
                 <!-- Footer Assistenza -->
-                <div style="font-size:11.5px; color:#f3e5ab; margin-top:1.4rem; opacity:0.85;">
+                <div style="margin-top:1.2rem; display:flex; justify-content:center; gap:8px;">
+                      <button type="button" onclick="mostraMascheraArrivederci()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); color:#cbd5e1; font-size:12px; font-weight:700; padding:8px 16px; border-radius:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#fca5a5'; this.style.borderColor='rgba(239,68,68,0.4)';" onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.color='#cbd5e1'; this.style.borderColor='rgba(255,255,255,0.18)';">
+                          <span>🚪</span> <span>Esci / Chiudi Schermata</span>
+                      </button>
+                  </div>
+                  <div style="font-size:11.5px; color:#f3e5ab; margin-top:1.2rem; opacity:0.85;">
                     📞 Non hai il PIN o serve assistenza?<br>
                     <strong>Contattare Amministratore Ciro Milella</strong>
                 </div>
@@ -1738,7 +1744,7 @@ body::-webkit-scrollbar,
             <!-- SEZIONE PROFILI -->
             <div style="display:flex; flex-direction:column; gap:10px; text-align:left;">
                 
-                <!-- SCHEDA PROFILO 1 (suitecorleto@gmail.com - CAREASSIST ATTIVO) -->
+                <!-- SCHEDA PROFILO 1 (milellaciro800@gmail.com - CAREASSIST ATTIVO) -->
                 <div id="cardCloudP1" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(34,197,94,0.4); border-radius:18px; padding:12px 16px; transition:all 0.2s;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
                         <div>
@@ -1746,7 +1752,7 @@ body::-webkit-scrollbar,
                                 <span>🟢</span> <span>Profilo 1 - Attivo (Master)</span>
                                 <span id="badgeActiveP1" style="display:none; background:#22c55e; color:#052e16; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px;">IN USO ORA</span>
                             </div>
-                            <div style="font-size:11.5px; color:#94a3b8; margin-top:2px;">Account: <strong>suitecorleto@gmail.com</strong> (5 GB)</div>
+                            <div style="font-size:11.5px; color:#94a3b8; margin-top:2px;">Account: <strong>milellaciro800@gmail.com</strong> (5 GB)</div>
                         </div>
                         <span id="liveStatusP1" style="font-size:11px; font-weight:800; color:#22c55e; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); padding:3px 8px; border-radius:10px;">
                             🟢 ONLINE
@@ -1754,9 +1760,9 @@ body::-webkit-scrollbar,
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
-                            careassist-r61q.onrender.com
+                            careassist-suite-pmze.onrender.com
                         </div>
-                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r61q.onrender.com', 'Profilo 1 (Master)')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://careassist-suite-pmze.onrender.com', 'Profilo 1 (Master)')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -1780,7 +1786,7 @@ body::-webkit-scrollbar,
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
                             milella-suite-iv93.onrender.com
                         </div>
-                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r61q.onrender.com', 'Profilo 2 (Riserva A)')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://careassist-suite-pmze.onrender.com', 'Profilo 2 (Riserva A)')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -2061,15 +2067,15 @@ body::-webkit-scrollbar,
                         <div id="listPazientiNewOp" style="display:flex; flex-direction:column; gap:5px;">
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-new-paz" value="paz_aldo" style="width:16px; height:16px; accent-color:#38bdf8;">
-                                <span>👴 Aldo Zamparino (91 anni)</span>
+                                <span>👴 Aldo Z. (91 anni)</span>
                             </label>
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-new-paz" value="paz_angela" style="width:16px; height:16px; accent-color:#38bdf8;">
-                                <span>👵 Angela Mazzicone</span>
+                                <span>👵 Angela M.</span>
                             </label>
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-new-paz" value="paz_rosa" style="width:16px; height:16px; accent-color:#38bdf8;">
-                                <span>👵 Rosa Annunziata Cavalcante</span>
+                                <span>👵 Rosa C.</span>
                             </label>
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-new-paz" value="paz_1793216119572" style="width:16px; height:16px; accent-color:#38bdf8;">
@@ -2180,15 +2186,15 @@ body::-webkit-scrollbar,
                         <div id="listPazientiEditOp" style="display:flex; flex-direction:column; gap:5px;">
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-edit-paz" value="paz_aldo" style="width:16px; height:16px; accent-color:#38bdf8;">
-                                <span>👴 Aldo Zamparino (91 anni)</span>
+                                <span>👴 Aldo Z. (91 anni)</span>
                             </label>
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-edit-paz" value="paz_angela" style="width:16px; height:16px; accent-color:#38bdf8;">
-                                <span>👵 Angela Mazzicone</span>
+                                <span>👵 Angela M.</span>
                             </label>
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-edit-paz" value="paz_rosa" style="width:16px; height:16px; accent-color:#38bdf8;">
-                                <span>👵 Rosa Annunziata Cavalcante</span>
+                                <span>👵 Rosa C.</span>
                             </label>
                             <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#fff; cursor:pointer;">
                                 <input type="checkbox" class="chk-edit-paz" value="paz_1793216119572" style="width:16px; height:16px; accent-color:#38bdf8;">
@@ -2481,7 +2487,7 @@ body::-webkit-scrollbar,
         <div class="sd-card" role="dialog" aria-labelledby="sdTitle">
             <div class="sd-bar">
                 <span class="sd-badge">C. Milella &bull; Sistema</span>
-                <!-- Tasto X rimosso definitivamente -->
+                <!-- X rimossa per evitare interruzioni accidentali -->
             </div>
             <div class="sd-body">
                 <div class="sd-icon">
@@ -2501,19 +2507,19 @@ body::-webkit-scrollbar,
         (function () {
             var m = document.getElementById('shutdownModal');
             function hide() { m.style.display = 'none'; }
-            function closeWin() { 
-        try { window.close(); } catch(e){}
-        setTimeout(function() {
-            hide();
-            if (typeof esciConArrivederci === "function") {
-                esciConArrivederci();
-            } else {
-                var arr = document.getElementById("modalArrivederciSuite");
-                if (arr) arr.style.display = "flex";
+            function closeWin() {
+                try { window.close(); } catch(e){}
+                setTimeout(function() {
+                    hide();
+                    if (typeof esciConArrivederci === "function") {
+                        esciConArrivederci();
+                    } else {
+                        var arrivederci = document.getElementById("modalArrivederciSuite");
+                        if (arrivederci) arrivederci.style.display = "flex";
+                    }
+                }, 300);
             }
-        }, 200);
-    }
-            document.getElementById('sdCloseX').addEventListener('click', closeWin);
+            var _x = document.getElementById('sdCloseX'); if (_x) _x.addEventListener('click', closeWin);
             document.getElementById('sdCloseBtn').addEventListener('click', closeWin);
             document.getElementById('sdBack').addEventListener('click', hide);
             document.addEventListener('keydown', function (e) { 
@@ -2593,6 +2599,7 @@ body::-webkit-scrollbar,
         });
 
         const _bCf = document.getElementById('btnConfirmShutdown'); if (_bCf) _bCf.addEventListener('click', async () => {
+            const isCloudRender = window.location.hostname.includes('onrender.com');
             window.__suiteShuttingDown = true;
             confirmModal.style.display = 'none';
             shutdownModal.classList.remove('done');
@@ -2612,7 +2619,7 @@ body::-webkit-scrollbar,
             shutdownText.innerHTML = 'Il sistema e il server locale si stanno spegnendo.<br>Attendere prego.';
 
             try {
-                if (!window.location.hostname.includes('onrender.com')) { await fetch('/api/shutdown', { method: 'POST' }); }
+                if (!isCloudRender) { await fetch('/api/shutdown', { method: 'POST' }); }
             } catch(e) {}
             
             setTimeout(() => {
@@ -2642,7 +2649,7 @@ body::-webkit-scrollbar,
         // Se siamo su Render o online, usa l'URL pubblico esatto, altrimenti la rete locale
         var targetUrl = window.location.origin + '/launcher.html';
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            targetUrl = 'https://careassist-r61q.onrender.com/launcher.html';
+            targetUrl = 'https://careassist-suite-pmze.onrender.com/launcher.html';
         }
         
         var urlElem = document.getElementById('qrTargetUrlText');
@@ -2704,7 +2711,7 @@ body::-webkit-scrollbar,
     function condividiWhatsApp() {
         var url = window.location.origin + '/launcher.html';
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            url = 'https://careassist-r61q.onrender.com/launcher.html';
+            url = 'https://careassist-suite-pmze.onrender.com/launcher.html';
         }
         var msg = encodeURIComponent("📱 Accedi alla Suite Gestionale C. Milella:\n" + url);
         window.open("https://api.whatsapp.com/send?text=" + msg, "_blank");
@@ -2727,8 +2734,8 @@ body::-webkit-scrollbar,
     // ==============================================================================
     // CABINA DI REGIA CLOUD (SELETTORE PROFILI RENDER & LOCALE)
     // ==============================================================================
-    const CLOUD_PROFILO_1 = 'https://careassist-r61q.onrender.com';
-    const CLOUD_PROFILO_2 = 'https://careassist-r61q.onrender.com';
+    const CLOUD_PROFILO_1 = 'https://careassist-suite-pmze.onrender.com';
+    const CLOUD_PROFILO_2 = 'https://careassist-suite-pmze.onrender.com';
     const CLOUD_PROFILO_3 = 'https://milella-suite.onrender.com';
     const CLOUD_PROFILO_4 = 'https://milella-suite-p4.onrender.com';
     const CLOUD_LOCALE    = 'http://localhost:3000';
@@ -2741,7 +2748,7 @@ body::-webkit-scrollbar,
         if (_preloadedAudioCloud) return;
         try {
             const testoSpiegazione = "A cosa serve il Selettore Canali Cloud e Locale. Render offre 5 gigabyte gratuiti ogni mese per ciascun account. Grazie a questa cabina di regia puoi gestire fino a quattro account differenti, sfruttando un totale di 20 gigabyte di traffico mensile senza costi. Pulsante Attiva con un Clic: quando a dicembre o a fine mese vorrai passare da un account all'altro, ti basterà aprire questa maschera e cliccare il pulsante corrispondente. La Suite memorizzerà la scelta all'istante senza dover riconfigurare nulla a mano. Inoltre, grazie al database condiviso, tutte le terapie e le somministrazioni rimarranno perfettamente allineate su ogni canale.";
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = isLocal ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione)) : (cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione));
             _preloadedAudioCloud = new Audio();
@@ -2792,7 +2799,7 @@ body::-webkit-scrollbar,
         _isVoceCloudInCorso = true;
         aggiornaStatoBtnVoceCloud(true);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = isLocal ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione)) : (cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione));
 
@@ -2877,7 +2884,7 @@ body::-webkit-scrollbar,
 
         [b1, b2, b3, b4, bL].forEach(b => { if (b) b.style.display = 'none'; });
 
-        if (cur.indexOf('careassist-r61q.onrender.com') !== -1) {
+        if (cur.indexOf('careassist-suite-pmze.onrender.com') !== -1) {
             if (b1) b1.style.display = 'inline-block';
             if (cardP1) cardP1.style.borderColor = '#22c55e';
             if (lbl) lbl.textContent = 'Cloud: Profilo 1 (Master)';
@@ -3301,7 +3308,7 @@ body::-webkit-scrollbar,
         } catch(e) {
             console.warn('Errore connessione locale /api/auth/login, provo fallback cloud e PIN:', e);
             try {
-                const cloudRes = await fetch('https://careassist-r61q.onrender.com/api/auth/login', {
+                const cloudRes = await fetch('https://careassist-suite-pmze.onrender.com/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ codice: cleanPin })
@@ -3407,7 +3414,7 @@ body::-webkit-scrollbar,
     function precaricaAudioGate() {
         if (_preloadedAudioGate) return;
         try {
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaGate);
             _preloadedAudioGate = new Audio();
@@ -3494,7 +3501,7 @@ body::-webkit-scrollbar,
             }
         }, 1000);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaGate);
 
@@ -3538,7 +3545,7 @@ body::-webkit-scrollbar,
             try { window.speechSynthesis.cancel(); } catch(e){}
         }
 
-        const cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+        const cloudUrl = 'https://careassist-suite-pmze.onrender.com/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
         const localUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
         const isLocalHost = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
 
@@ -3622,7 +3629,7 @@ body::-webkit-scrollbar,
     function precaricaAudioGlobaleSuite() {
         if (_preloadedAudioGlobale) return;
         try {
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazioneSuite);
             _preloadedAudioGlobale = new Audio();
@@ -3676,7 +3683,7 @@ body::-webkit-scrollbar,
         _isVoceGlobaleInCorso = true;
         aggiornaStatoBtnVoceGlobale(true);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazioneSuite);
 
@@ -3820,7 +3827,7 @@ body::-webkit-scrollbar,
                 });
             } catch(eLocal) {
                 console.warn('Server locale non raggiungibile, provo Cloud Render:', eLocal);
-                res = await fetch('https://careassist-r61q.onrender.com/api/auth/login', {
+                res = await fetch('https://careassist-suite-pmze.onrender.com/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ codice: cleanPin })
@@ -4386,9 +4393,9 @@ body::-webkit-scrollbar,
     }
 
     const NOMI_PAZIENTI_MAP = {
-        'paz_aldo': 'Aldo Zamparino',
-        'paz_angela': 'Angela Mazzicone',
-        'paz_rosa': 'Rosa Annunziata Cavalcante',
+        'paz_aldo': 'Aldo Z.',
+        'paz_angela': 'Angela M.',
+        'paz_rosa': 'Rosa C.',
         'paz_1793216119572': 'Ciro Milella'
     };
 
@@ -5419,9 +5426,7 @@ body::-webkit-scrollbar,
                     const salRes = await fetch('/api/salute/data');
                     const salData = await salRes.json();
                     if (salData) {
-                        const todayIso = new Date().toISOString().split('T')[0];
-                        const dateWater = salData.water_date_marito;
-                        const waterMarito = (dateWater === todayIso) ? (parseInt(salData.waterCount_marito, 10) || 0) : 0;
+                        const waterMarito = salData.waterCount_marito || 0;
                         const fastMarito = salData.fast_end_marito || '19:30';
                         if (waterMarito < 8) {
                             window.__smartSaluteAlert = 'Idratazione: ' + waterMarito + '/8 bicchieri';
@@ -6052,7 +6057,7 @@ body::-webkit-scrollbar,
     // ==============================================================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js?v=1795506271646').then(reg => {
+            navigator.serviceWorker.register('/sw.js?v=1795506271697').then(reg => {
                 if (reg) reg.update();
                 console.log('[PWA] Service Worker attivo:', reg.scope);
             }).catch(err => console.warn('[PWA] SW register notice:', err));
@@ -6130,7 +6135,7 @@ body::-webkit-scrollbar,
             msg += '• 🚗 Flotta: Revisioni e tagliandi monitorati\n• 🛠️ Attrezzi: Inventario verificato e sincronizzato\n• 📦 Logistica: Consegne e ritiri operativi\n\n';
         }
 
-        msg += '🔗 *Accedi al portale:* https://careassist-r61q.onrender.com/launcher.html';
+        msg += '🔗 *Accedi al portale:* https://careassist-suite-pmze.onrender.com/launcher.html';
         const waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg);
         window.open(waUrl, '_blank');
     }
@@ -6718,7 +6723,7 @@ body::-webkit-scrollbar,
     function precaricaAudioArrivederci() {
         if (_preloadedAudioArrivederci) return;
         try {
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci);
             _preloadedAudioArrivederci = new Audio();
@@ -6805,7 +6810,7 @@ body::-webkit-scrollbar,
             }
         }, 4000);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci);
 

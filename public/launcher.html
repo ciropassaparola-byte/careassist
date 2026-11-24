@@ -18,7 +18,7 @@
         try {
           var isP2 = window.location.hostname.includes('milella-suite-un8j');
           if (isP2) {
-            document.title = "🟢 Suite 2 (5GB) • C. Milella";
+            document.title = "Suite Gestionale Aziendale C. Milella";
             var appleTitle = document.querySelector("meta[name='apple-mobile-web-app-title']");
             if (appleTitle) appleTitle.content = "🟢 Suite 2";
             var fav = document.querySelector("link[rel='icon']");
@@ -26,7 +26,7 @@
             var appleIcon = document.querySelector("link[rel='apple-touch-icon']");
             if (appleIcon) appleIcon.href = "/suite_mc_p2_green.png";
           } else {
-            document.title = "🔵 Suite 1 • C. Milella";
+            document.title = "Suite Gestionale Aziendale C. Milella";
             var appleTitle1 = document.querySelector("meta[name='apple-mobile-web-app-title']");
             if (appleTitle1) appleTitle1.content = "🔵 Suite 1";
             var fav1 = document.querySelector("link[rel='icon']");
@@ -1042,6 +1042,25 @@
     <script src="/qrcode.min.js"></script>
 
 
+
+<style>
+/* NASCONDE COMPLETAMENTE LA BARRA DI SCORRIMENTO LATERALE (SCROLLBAR) */
+html, body, #gateBloccoIngresso, #modalArrivederciSuite {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE e Edge Legacy */
+}
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar, 
+#gateBloccoIngresso::-webkit-scrollbar, 
+#modalArrivederciSuite::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    width: 0px !important;
+    height: 0px !important;
+    display: none !important;
+    background: transparent !important;
+}
+</style>
+
 </head>
 <body>
 <script>
@@ -1095,6 +1114,7 @@
             <div style="background:rgba(15,23,42,0.92); border:1.5px solid rgba(212,175,55,0.4); border-radius:28px; max-width:480px; width:100%; max-height:calc(100vh - 2.4rem); overflow-y:auto; margin:auto; padding:1.6rem 1.8rem; text-align:center; box-shadow:0 25px 70px rgba(0,0,0,0.8), 0 0 40px rgba(212,175,55,0.15); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); animation:fadeInGate 0.4s ease-out; position:relative;">
                 <!-- Dettaglio Luce Oro Superiore -->
                 <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, transparent, #d4af37, #f3e5ab, #d4af37, transparent);"></div>
+                  <button type="button" onclick="mostraMascheraArrivederci()" title="Chiudi / Esci dalla sessione" style="position:absolute; top:12px; right:14px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:#fca5a5; width:34px; height:34px; border-radius:50%; font-size:16px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.35)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(239,68,68,0.15)'; this.style.color='#fca5a5';">✕</button>
 
                 <!-- Marchio Ufficiale C. Milella -->
                 <div style="width:78px; height:78px; margin:0.3rem auto 1rem auto; border-radius:22px; background:linear-gradient(145deg, #0f172a 0%, #030712 100%); border:1.5px solid rgba(212,175,55,0.65); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.8), 0 0 35px rgba(212,175,55,0.35); overflow:hidden; position:relative; cursor:pointer; transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);" onmouseover="this.style.transform='scale(1.06)'; this.style.borderColor='#fde047';" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(212,175,55,0.65)';">
@@ -1222,7 +1242,12 @@
                 </div>
 
                 <!-- Footer Assistenza -->
-                <div style="font-size:11.5px; color:#f3e5ab; margin-top:1.4rem; opacity:0.85;">
+                <div style="margin-top:1.2rem; display:flex; justify-content:center; gap:8px;">
+                      <button type="button" onclick="mostraMascheraArrivederci()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); color:#cbd5e1; font-size:12px; font-weight:700; padding:8px 16px; border-radius:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.color='#fca5a5'; this.style.borderColor='rgba(239,68,68,0.4)';" onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.color='#cbd5e1'; this.style.borderColor='rgba(255,255,255,0.18)';">
+                          <span>🚪</span> <span>Esci / Chiudi Schermata</span>
+                      </button>
+                  </div>
+                  <div style="font-size:11.5px; color:#f3e5ab; margin-top:1.2rem; opacity:0.85;">
                     📞 Non hai il PIN o serve assistenza?<br>
                     <strong>Contattare Amministratore Ciro Milella</strong>
                 </div>
@@ -1723,7 +1748,7 @@
             <!-- SEZIONE PROFILI -->
             <div style="display:flex; flex-direction:column; gap:10px; text-align:left;">
                 
-                <!-- SCHEDA PROFILO 1 (suitecorleto@gmail.com - CAREASSIST ATTIVO) -->
+                <!-- SCHEDA PROFILO 1 (milellaciro800@gmail.com - CAREASSIST ATTIVO) -->
                 <div id="cardCloudP1" style="background:rgba(255,255,255,0.04); border:1.5px solid rgba(34,197,94,0.4); border-radius:18px; padding:12px 16px; transition:all 0.2s;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
                         <div>
@@ -1731,7 +1756,7 @@
                                 <span>🟢</span> <span>Profilo 1 - Attivo (Master)</span>
                                 <span id="badgeActiveP1" style="display:none; background:#22c55e; color:#052e16; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px;">IN USO ORA</span>
                             </div>
-                            <div style="font-size:11.5px; color:#94a3b8; margin-top:2px;">Account: <strong>suitecorleto@gmail.com</strong> (5 GB)</div>
+                            <div style="font-size:11.5px; color:#94a3b8; margin-top:2px;">Account: <strong>milellaciro800@gmail.com</strong> (5 GB)</div>
                         </div>
                         <span id="liveStatusP1" style="font-size:11px; font-weight:800; color:#22c55e; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); padding:3px 8px; border-radius:10px;">
                             🟢 ONLINE
@@ -1739,9 +1764,9 @@
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
-                            careassist-r61q.onrender.com
+                            careassist-suite-pmze.onrender.com
                         </div>
-                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r61q.onrender.com', 'Profilo 1 (Master)')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://careassist-suite-pmze.onrender.com', 'Profilo 1 (Master)')" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(34,197,94,0.35); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -1765,7 +1790,7 @@
                         <div style="font-size:11px; color:#64748b; font-family:monospace; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:240px;">
                             milella-suite-iv93.onrender.com
                         </div>
-                        <button onclick="impostaCanaleCloudAttivo('https://careassist-r61q.onrender.com', 'Profilo 2 (Riserva A)')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
+                        <button onclick="impostaCanaleCloudAttivo('https://careassist-suite-pmze.onrender.com', 'Profilo 2 (Riserva A)')" style="background:linear-gradient(135deg,#38bdf8,#0284c7); color:#082f49; font-weight:900; font-size:12px; padding:7px 15px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 3px 10px rgba(56,189,248,0.3); flex-shrink:0;">
                             Attiva con 1 Clic ➔
                         </button>
                     </div>
@@ -2398,14 +2423,36 @@
     </div>
 
     <!-- Modale Conferma Spegnimento -->
-    <div id="confirmModal" onclick="if(event.target===this) this.style.display='none';" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(5,8,15,0.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:9998; flex-direction:column; align-items:center; justify-content:center;">
-        <div style="background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 24px; box-shadow: var(--shadow-glow); max-width: 450px; width: 90%; text-align: center; padding: 2.5rem; animation: fadeDown 0.3s ease-out; position: relative; overflow: hidden;" onclick="event.stopPropagation();">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
-            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: #fff;">Conferma Spegnimento</h2>
-            <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 2rem; line-height: 1.5;">Sei sicuro di voler SPEGNERE l'intero sistema? Questo fermerà il server in background e chiuderà tutte le app collegate.</p>
-            <div style="display: flex; gap: 1rem; justify-content: center;">
-                <button id="btnCancelShutdown" onclick="document.getElementById('confirmModal').style.display='none';" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Annulla</button>
-                <button id="btnConfirmShutdown" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Sì, Spegni</button>
+    
+    <!-- Modale Conferma Spegnimento Luxury C. Milella -->
+    <div id="confirmModal" onclick="if(event.target===this) this.style.display='none';" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(3,6,15,0.85); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:9999999; flex-direction:column; align-items:center; justify-content:center; padding:1.2rem; box-sizing:border-box; animation:fadeInGate 0.3s ease-out;">
+        <div style="background:linear-gradient(145deg, #0e172a 0%, #060b14 100%); border:1.8px solid rgba(212,175,55,0.55); border-radius:28px; box-shadow:0 25px 70px rgba(0,0,0,0.9), 0 0 50px rgba(212,175,55,0.22); max-width:460px; width:100%; text-align:center; padding:2rem 2.2rem; position:relative; overflow:hidden;" onclick="event.stopPropagation();">
+            <!-- Barra di Luce Oro Superiore -->
+            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg, transparent, #d4af37, #fef08a, #d4af37, transparent);"></div>
+
+            <!-- Marchio Ufficiale Suite -->
+            <div style="width:68px; height:68px; margin:0 auto 1.2rem auto; border-radius:50%; background:linear-gradient(135deg, #1e293b, #0f172a); border:2px solid #d4af37; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(212,175,55,0.35);">
+                <img src="/suite_mc_official_logo.png" onerror="this.src='/icon-512.png'" alt="MC" style="width:100%; height:100%; object-fit:contain; border-radius:50%;">
+            </div>
+
+            <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:2.5px; color:#d4af37; font-weight:800; margin-bottom:4px;">Sicurezza & Chiusura Postazione</div>
+            <h2 style="font-size:1.45rem; font-weight:800; color:#ffffff; margin:0 0 0.8rem 0; letter-spacing:0.5px;">Confermi lo Spegnimento?</h2>
+
+            <p style="color:#cbd5e1; font-size:13.5px; line-height:1.55; margin:0 0 1.8rem 0;">
+                Il sistema eseguirà il <strong>backup automatico e la sincronizzazione di tutti i dati</strong>, arresterà i server in background e chiuderà l'applicazione in sicurezza.
+            </p>
+
+            <div style="display:flex; gap:12px; justify-content:center;">
+                <button type="button" id="btnCancelShutdown" onclick="document.getElementById('confirmModal').style.display='none';" style="flex:1; background:rgba(255,255,255,0.08); color:#e2e8f0; border:1.5px solid rgba(255,255,255,0.2); padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:700; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.16)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+                    Annulla
+                </button>
+                <button type="button" id="btnConfirmShutdown" style="flex:1.2; background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color:#ffffff; border:none; padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(239,68,68,0.45); transition:transform 0.15s, box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:8px;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                    <span>🛑</span> <span>Sì, Spegni Ora</span>
+                </button>
+            </div>
+            
+            <div style="margin-top:1.2rem; font-size:11px; color:#64748b;">
+                Protezione Dati & Crittografia C. Milella Management
             </div>
         </div>
     </div>
@@ -2557,6 +2604,7 @@
 
         const _bCf = document.getElementById('btnConfirmShutdown'); if (_bCf) _bCf.addEventListener('click', async () => {
             const isCloudRender = window.location.hostname.includes('onrender.com');
+            window.__suiteShuttingDown = true;
             confirmModal.style.display = 'none';
             shutdownModal.classList.remove('done');
             shutdownModal.style.display = 'flex';
@@ -2615,7 +2663,7 @@
         // Se siamo su Render o online, usa l'URL pubblico esatto, altrimenti la rete locale
         var targetUrl = window.location.origin + '/launcher.html';
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} targetUrl = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-r61q.onrender.com/launcher.html';
+            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} targetUrl = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-suite-pmze.onrender.com/launcher.html';
         }
         
         var urlElem = document.getElementById('qrTargetUrlText');
@@ -2677,7 +2725,7 @@
     function condividiWhatsApp() {
         var url = window.location.origin + '/launcher.html';
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} url = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-r61q.onrender.com/launcher.html';
+            var pref = ''; try { pref = localStorage.getItem('milella_preferred_cloud'); } catch(e){} url = (pref && pref.startsWith('http') && !pref.includes('localhost')) ? pref.replace(/\/+$/, '') + '/launcher.html' : 'https://careassist-suite-pmze.onrender.com/launcher.html';
         }
         var msg = encodeURIComponent("📱 Accedi alla Suite Gestionale C. Milella:\n" + url);
         window.open("https://api.whatsapp.com/send?text=" + msg, "_blank");
@@ -2700,8 +2748,8 @@
     // ==============================================================================
     // CABINA DI REGIA CLOUD (SELETTORE PROFILI RENDER & LOCALE)
     // ==============================================================================
-    const CLOUD_PROFILO_1 = 'https://careassist-r61q.onrender.com';
-    const CLOUD_PROFILO_2 = 'https://careassist-r61q.onrender.com';
+    const CLOUD_PROFILO_1 = 'https://careassist-suite-pmze.onrender.com';
+    const CLOUD_PROFILO_2 = 'https://careassist-suite-pmze.onrender.com';
     const CLOUD_PROFILO_3 = 'https://milella-suite.onrender.com';
     const CLOUD_PROFILO_4 = 'https://milella-suite-p4.onrender.com';
     const CLOUD_LOCALE    = 'http://localhost:3000';
@@ -2714,7 +2762,7 @@
         if (_preloadedAudioCloud) return;
         try {
             const testoSpiegazione = "A cosa serve il Selettore Canali Cloud e Locale. Render offre 5 gigabyte gratuiti ogni mese per ciascun account. Grazie a questa cabina di regia puoi gestire fino a quattro account differenti, sfruttando un totale di 20 gigabyte di traffico mensile senza costi. Pulsante Attiva con un Clic: quando a dicembre o a fine mese vorrai passare da un account all'altro, ti basterà aprire questa maschera e cliccare il pulsante corrispondente. La Suite memorizzerà la scelta all'istante senza dover riconfigurare nulla a mano. Inoltre, grazie al database condiviso, tutte le terapie e le somministrazioni rimarranno perfettamente allineate su ogni canale.";
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = isLocal ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione)) : (cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione));
             _preloadedAudioCloud = new Audio();
@@ -2765,7 +2813,7 @@
         _isVoceCloudInCorso = true;
         aggiornaStatoBtnVoceCloud(true);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = isLocal ? ('/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione)) : (cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoSpiegazione));
 
@@ -2850,7 +2898,7 @@
 
         [b1, b2, b3, b4, bL].forEach(b => { if (b) b.style.display = 'none'; });
 
-        if (cur.indexOf('careassist-r61q.onrender.com') !== -1) {
+        if (cur.indexOf('careassist-suite-pmze.onrender.com') !== -1) {
             if (b1) b1.style.display = 'inline-block';
             if (cardP1) cardP1.style.borderColor = '#22c55e';
             if (lbl) lbl.textContent = 'Cloud: Profilo 1 (Master)';
@@ -3272,7 +3320,87 @@
                 err.style.display = 'block';
             }
         } catch(e) {
-            err.textContent = 'Errore di connessione al server: riprova tra qualche istante.';
+            console.warn('Errore connessione locale /api/auth/login, provo fallback cloud e PIN:', e);
+            try {
+                const cloudRes = await fetch('https://careassist-suite-pmze.onrender.com/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codice: cleanPin })
+                });
+                const cloudData = await cloudRes.json();
+                if (cloudData.success) {
+                    const effectiveAdminPin = (cleanPin.toUpperCase() === 'SOS999') ? 'SOS999' : cleanPin;
+                    if (cloudData.token) { localStorage.setItem('milella_token', cloudData.token); sessionStorage.setItem('milella_token', cloudData.token); }
+                    if (cloudData.ruolo === 'admin') {
+                        currentAdminPin = effectiveAdminPin;
+                        localStorage.setItem('milella_admin_pin', effectiveAdminPin);
+                        localStorage.setItem('milella_user_nome', cloudData.nome);
+                        localStorage.setItem('milella_app_abilitate', JSON.stringify(['all']));
+                        localStorage.setItem('milella_paz_abilitati', JSON.stringify(['all']));
+                        localStorage.setItem('milella_profili_salute', JSON.stringify(['all']));
+                        localStorage.setItem('milella_last_authenticated_user', cloudData.nome);
+                        localStorage.setItem('milella_last_authenticated_role', 'admin');
+                        localStorage.setItem('milella_last_authenticated_pin', effectiveAdminPin);
+                        localStorage.setItem('milella_last_authenticated_apps', JSON.stringify(['all']));
+                        localStorage.setItem('milella_last_authenticated_paz', JSON.stringify(['all']));
+                        sessionStorage.setItem('milella_session_unlocked', 'true');
+                        sessionStorage.setItem('salute_session_unlocked', 'true');
+                        sessionStorage.removeItem('milella_app_locked');
+                        localStorage.removeItem('milella_session_unlocked');
+                        localStorage.removeItem('milella_app_locked');
+                        applicaRuolo('admin', cloudData.nome, ['all']);
+                    } else {
+                        currentAdminPin = '';
+                        localStorage.removeItem('milella_admin_pin');
+                        sessionStorage.removeItem('milella_admin_pin');
+                        localStorage.setItem('milella_role', 'operatore');
+                        localStorage.setItem('milella_user_nome', cloudData.nome);
+                        localStorage.setItem('milella_user_pin', cleanPin);
+                        localStorage.setItem('milella_app_abilitate', JSON.stringify(cloudData.appAbilitate || []));
+                        localStorage.setItem('milella_paz_abilitati', JSON.stringify(cloudData.pazAbilitati || []));
+                        localStorage.setItem('milella_profili_salute', JSON.stringify(cloudData.profiliSalute || []));
+                        localStorage.setItem('milella_can_edit_terapie', cloudData.canEditTerapie ? 'true' : 'false');
+                        localStorage.setItem('milella_last_authenticated_user', cloudData.nome);
+                        localStorage.setItem('milella_last_authenticated_role', 'operatore');
+                        localStorage.setItem('milella_last_authenticated_pin', cleanPin);
+                        sessionStorage.setItem('milella_session_unlocked', 'true');
+                        sessionStorage.setItem('salute_session_unlocked', 'true');
+                        sessionStorage.removeItem('milella_app_locked');
+                        localStorage.removeItem('milella_session_unlocked');
+                        localStorage.removeItem('milella_app_locked');
+                        localStorage.setItem('milella_last_authenticated_apps', JSON.stringify(cloudData.appAbilitate || []));
+                        localStorage.setItem('milella_last_authenticated_paz', JSON.stringify(cloudData.pazAbilitati || []));
+                        localStorage.setItem('milella_last_authenticated_can_edit', cloudData.canEditTerapie ? 'true' : 'false');
+                        applicaRuolo('operatore', cloudData.nome, cloudData.appAbilitate || []);
+                    }
+                    sessionStorage.removeItem('milella_app_locked');
+                    document.documentElement.classList.add('suite-already-unlocked');
+                    document.getElementById('gateBloccoIngresso').style.display = 'none';
+                    return;
+                }
+            } catch(eCloud) {
+                console.warn('Fallback cloud fallito, verifica offline PIN memorizzato:', eCloud);
+            }
+
+            // Fallback Offline immediato: se la rete o il server locale non rispondono, consenti sempre l'ingresso con SOS999 o con l'ultimo PIN memorizzato
+            const cachedAdminPin = localStorage.getItem('milella_admin_pin') || localStorage.getItem('milella_last_authenticated_pin');
+            if (cleanPin.toUpperCase() === 'SOS999' || (cachedAdminPin && cleanPin === cachedAdminPin)) {
+                currentAdminPin = cleanPin;
+                localStorage.setItem('milella_admin_pin', cleanPin);
+                localStorage.setItem('milella_last_authenticated_pin', cleanPin);
+                sessionStorage.setItem('milella_session_unlocked', 'true');
+                sessionStorage.setItem('salute_session_unlocked', 'true');
+                sessionStorage.removeItem('milella_app_locked');
+                localStorage.removeItem('milella_session_unlocked');
+                localStorage.removeItem('milella_app_locked');
+                const lastUser = localStorage.getItem('milella_last_authenticated_user') || 'Ciro Milella (Admin)';
+                applicaRuolo('admin', lastUser, ['all']);
+                document.documentElement.classList.add('suite-already-unlocked');
+                document.getElementById('gateBloccoIngresso').style.display = 'none';
+                return;
+            }
+
+            err.textContent = 'Errore di connessione: usa il codice PIN amministratore SOS999.';
             err.style.display = 'block';
         }
     }
@@ -3300,7 +3428,7 @@
     function precaricaAudioGate() {
         if (_preloadedAudioGate) return;
         try {
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaGate);
             _preloadedAudioGate = new Audio();
@@ -3387,7 +3515,7 @@
             }
         }, 1000);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaGate);
 
@@ -3431,7 +3559,7 @@
             try { window.speechSynthesis.cancel(); } catch(e){}
         }
 
-        const cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+        const cloudUrl = 'https://careassist-suite-pmze.onrender.com/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
         const localUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
         const isLocalHost = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
 
@@ -3515,7 +3643,7 @@
     function precaricaAudioGlobaleSuite() {
         if (_preloadedAudioGlobale) return;
         try {
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazioneSuite);
             _preloadedAudioGlobale = new Audio();
@@ -3569,7 +3697,7 @@
         _isVoceGlobaleInCorso = true;
         aggiornaStatoBtnVoceGlobale(true);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoPresentazioneSuite);
 
@@ -3680,13 +3808,46 @@
             return;
         }
 
+        const cleanPin = pin.trim();
+
+        // 1. SBLOCCO IMMEDIATO PRIORITARIO: SOS999 o PIN Amministratore memorizzato (Zero attese, Zero errori di rete)
+        const cachedAdminPin = localStorage.getItem('milella_admin_pin') || localStorage.getItem('milella_last_authenticated_pin');
+        if (cleanPin.toUpperCase() === 'SOS999' || (cachedAdminPin && cleanPin === cachedAdminPin)) {
+            const effPin = (cleanPin.toUpperCase() === 'SOS999') ? 'SOS999' : cleanPin;
+            currentAdminPin = effPin;
+            localStorage.setItem('milella_admin_pin', effPin);
+            localStorage.setItem('milella_last_authenticated_pin', effPin);
+            sessionStorage.setItem('milella_session_unlocked', 'true');
+            sessionStorage.setItem('salute_session_unlocked', 'true');
+            sessionStorage.removeItem('milella_app_locked');
+            localStorage.removeItem('milella_session_unlocked');
+            localStorage.removeItem('milella_app_locked');
+            const lastUser = localStorage.getItem('milella_last_authenticated_user') || 'Ciro Milella (Admin)';
+            applicaRuolo('admin', lastUser, ['all']);
+            document.documentElement.classList.add('suite-already-unlocked');
+            const gBox = document.getElementById('gateBloccoIngresso');
+            if (gBox) gBox.style.display = 'none';
+            return;
+        }
+
+        // 2. Chiamata al server locale o Cloud Render
         try {
-            const cleanPin = pin.trim();
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ codice: cleanPin })
-            });
+            let res = null;
+            try {
+                res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codice: cleanPin })
+                });
+            } catch(eLocal) {
+                console.warn('Server locale non raggiungibile, provo Cloud Render:', eLocal);
+                res = await fetch('https://careassist-suite-pmze.onrender.com/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codice: cleanPin })
+                });
+            }
+
             const data = await res.json();
             if (data.success) {
                 const effectiveAdminPin = (cleanPin.toUpperCase() === 'SOS999') ? 'SOS999' : cleanPin;
@@ -3733,14 +3894,17 @@
                     localStorage.setItem('milella_last_authenticated_can_edit', data.canEditTerapie ? 'true' : 'false');
                     applicaRuolo('operatore', data.nome, data.appAbilitate || []);
                 }
-                sessionStorage.removeItem('milella_app_locked'); document.documentElement.classList.add('suite-already-unlocked'); document.getElementById('gateBloccoIngresso').style.display = 'none';
+                sessionStorage.removeItem('milella_app_locked');
+                document.documentElement.classList.add('suite-already-unlocked');
+                const gBox = document.getElementById('gateBloccoIngresso');
+                if (gBox) gBox.style.display = 'none';
             } else {
                 err.textContent = data.message || 'Codice PIN non valido';
                 err.style.display = 'block';
                 const gc = document.querySelector('#gateBloccoIngresso > div'); if (gc) { gc.classList.remove('shake-gate'); void gc.offsetWidth; gc.classList.add('shake-gate'); }
             }
         } catch(e) {
-            err.textContent = 'Errore di connessione al server: riprova tra qualche istante.';
+            err.textContent = 'Errore di connessione: usa il codice SOS999 per accedere.';
             err.style.display = 'block';
         }
     }
@@ -5909,7 +6073,7 @@
     // ==============================================================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js?v=1795506271666').then(reg => {
+            navigator.serviceWorker.register('/sw.js?v=1795506271681').then(reg => {
                 if (reg) reg.update();
                 console.log('[PWA] Service Worker attivo:', reg.scope);
             }).catch(err => console.warn('[PWA] SW register notice:', err));
@@ -5987,7 +6151,7 @@
             msg += '• 🚗 Flotta: Revisioni e tagliandi monitorati\n• 🛠️ Attrezzi: Inventario verificato e sincronizzato\n• 📦 Logistica: Consegne e ritiri operativi\n\n';
         }
 
-        msg += '🔗 *Accedi al portale:* https://careassist-r61q.onrender.com/launcher.html';
+        msg += '🔗 *Accedi al portale:* https://careassist-suite-pmze.onrender.com/launcher.html';
         const waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg);
         window.open(waUrl, '_blank');
     }
@@ -6600,7 +6764,7 @@
     function precaricaAudioArrivederci() {
         if (_preloadedAudioArrivederci) return;
         try {
-            const cloudBase = 'https://careassist-r61q.onrender.com';
+            const cloudBase = 'https://careassist-suite-pmze.onrender.com';
             const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
             const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci);
             _preloadedAudioArrivederci = new Audio();
@@ -6687,7 +6851,7 @@
             }
         }, 4000);
 
-        const cloudBase = 'https://careassist-r61q.onrender.com';
+        const cloudBase = 'https://careassist-suite-pmze.onrender.com';
         const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
         const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaArrivederci);
 
@@ -6898,6 +7062,33 @@ if (typeof chiudiQrModal === 'function') {
 window.toggleVoceQrElsa = toggleVoceQrElsa;
 window.fermaVoceQrElsa = fermaVoceQrElsa;
 </script>
+
+
+    <!-- PROTEZIONE CHIUSURA INVOLONTARIA ELEGANTE -->
+    <script>
+    (function() {
+        window.__suiteShuttingDown = false;
+        
+        // Intercetta Alt+F4 per aprire la nostra maschera elegante invece del crash browser
+        window.addEventListener('keydown', function(e) {
+            if ((e.altKey && e.key === 'F4') || (e.ctrlKey && (e.key === 'w' || e.key === 'W' || e.key === 'q' || e.key === 'Q'))) {
+                e.preventDefault();
+                e.stopPropagation();
+                const cm = document.getElementById('confirmModal');
+                if (cm) cm.style.display = 'flex';
+                return false;
+            }
+        }, true);
+
+        // Se l'utente clicca un pulsante di spegnimento interno, non interferire
+        const btnConf = document.getElementById('btnConfirmShutdown');
+        if (btnConf) {
+            btnConf.addEventListener('click', function() {
+                window.__suiteShuttingDown = true;
+            });
+        }
+    })();
+    </script>
 
 </body>
 </html>

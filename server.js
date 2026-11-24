@@ -2324,10 +2324,6 @@ app.get('/api/my-ip', (req, res) => {
 
 // Chiusura aggraziata del server se richiesta
 app.post('/api/shutdown', (req, res) => {
-    // PROTEZIONE CLOUD: Se il server gira su Render Cloud (process.env.RENDER) non deve terminare il processo!
-    if (process.env.RENDER || process.env.RENDER_SERVICE_ID) {
-        return res.json({ success: true, message: 'Cloud attivo: simulata chiusura sessione' });
-    }
     const isLocalReq = req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1';
     if (!isLocalReq && (!req.user || !req.user.admin)) {
         return res.status(403).json({ error: 'Accesso negato: solo admin o locale' });
@@ -2925,7 +2921,7 @@ app.post('/api/sync/execute', async (req, res) => {
         const deskQuestaDir = (desktopFolder && desktopFolder.trim()) ? desktopFolder.trim() : path.join(process.env.USERPROFILE || 'C:\\Users\\Utente', 'Desktop', 'questa');
 
         // URL del Cloud Master
-        const CLOUD_MASTER_URL = process.env.RENDER_EXTERNAL_URL || 'https://careassist-r61q.onrender.com';
+        const CLOUD_MASTER_URL = process.env.RENDER_EXTERNAL_URL || 'https://careassist-suite-pmze.onrender.com';
 
         // ----------------------------------------------------
         // CASO 1: USB <-> DESKTOP (Robocopy Reale Bidirezionale/Incrementale)
@@ -3282,7 +3278,7 @@ function generaPausaNaturaleAudio() {
 
 app.get(['/api/tts-umano', '/careassist/api/tts-umano'], async (req, res) => {
     try {
-        const rawText = String(req.query.text || '').slice(0, 3000);
+        const rawText = String(req.query.text || '').slice(0, 1800);
         const voiceParam = String(req.query.voice || 'elsa').toLowerCase();
         const voiceName = voiceParam === 'diego' ? 'it-IT-DiegoNeural'
             : (voiceParam === 'giuseppe' ? 'it-IT-GiuseppeNeural' : (voiceParam === 'isabella' ? 'it-IT-IsabellaNeural' : 'it-IT-ElsaNeural'));
@@ -3683,7 +3679,7 @@ async function inviaPushMobileEmergenza(titolo, messaggio, priorita = 5, tag = '
                         'Title': titolo,
                         'Priority': String(priorita), // 5 = Urgent/Max, suona anche in non disturbare
                         'Tags': tag,
-                        'Click': 'https://careassist-r61q.onrender.com/careassist/',
+                        'Click': 'https://careassist-suite-pmze.onrender.com/careassist/',
                         'Content-Type': 'text/plain; charset=utf-8',
                         'Content-Length': Buffer.byteLength(postData)
                     }
@@ -3704,7 +3700,7 @@ async function inviaPushMobileEmergenza(titolo, messaggio, priorita = 5, tag = '
     if (cfg.telegramToken && cfg.telegramChatId) {
         try {
             const https = require('https');
-            const tgMsg = `🚨 *${titolo}*\n\n${messaggio}\n\n👉 [Apri CareAssist](https://careassist-r61q.onrender.com/careassist/)`;
+            const tgMsg = `🚨 *${titolo}*\n\n${messaggio}\n\n👉 [Apri CareAssist](https://careassist-suite-pmze.onrender.com/careassist/)`;
             const tgUrl = `https://api.telegram.org/bot${cfg.telegramToken}/sendMessage`;
             const payload = JSON.stringify({
                 chat_id: cfg.telegramChatId,
@@ -3906,7 +3902,7 @@ app.listen(PORT, '0.0.0.0', () => {
 
     // Sistema Anti-Sospensione H24 (Keep-Alive per Render Cloud)
     // Invia un auto-ping leggero ogni 10 minuti per evitare che il server vada in standby
-    const KEEP_ALIVE_URL = process.env.RENDER_EXTERNAL_URL || 'https://careassist-r61q.onrender.com';
+    const KEEP_ALIVE_URL = process.env.RENDER_EXTERNAL_URL || 'https://careassist-suite-pmze.onrender.com';
     function keepAlivePing() {
         try {
             const https = require('https');
