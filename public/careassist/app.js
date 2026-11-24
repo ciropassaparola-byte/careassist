@@ -434,6 +434,9 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     .replace(/\bUI\b/gi, 'unità internazionali')
     .replace(/\b112\b/g, 'uno uno due')
     .replace(/\bNUE\b/gi, 'Numero Unico Europeo')
+    .replace(/\bASL\/CUP\b/gi, 'A S L oppure C U P')
+    .replace(/\bCUP\b/gi, 'C U P, Centro Unico Prenotazioni')
+    .replace(/\bASL\b/gi, 'A S L')
     .replace(/\s*\/\s*/g, ' oppure ')
     .replace(/\s*-\s*/g, ' - ')
     .replace(/\.{2,}/g, '. ')
@@ -28024,6 +28027,9 @@ function parlaFallbackBrowserCareAssist(testo, onEndCallback) {
       .replace(/[•▪▸►✓✔✕✖★☆✦]/g, ', ')
       .replace(/\b112\b/g, 'uno uno due')
       .replace(/\bNUE\b/gi, 'Numero Unico Europeo')
+    .replace(/\bASL\/CUP\b/gi, 'A S L oppure C U P')
+    .replace(/\bCUP\b/gi, 'C U P, Centro Unico Prenotazioni')
+    .replace(/\bASL\b/gi, 'A S L')
       .replace(/\.{2,}/g, '. ')
       .replace(/[:•-]/g, ', ')
       .replace(/\s+/g, ' ')
@@ -28763,7 +28769,7 @@ var GUIDE_CONTESTUALI = {
     scopo: 'Pianifica in modo completo e dettagliato visite specialistiche territoriali, accessi ospedalieri, visite private o prestazioni infermieristiche domiciliari (ADI), tracciando ogni condizione preparatoria e logistica.',
     comeSiUsa: [
       '<b>Programmazione & Rinvii</b>: imposta data, ora e stato. Se la visita viene spostata, attiva lo stato "Posticipata / Spostata" per memorizzare data iniziale e motivo.',
-      '<b>Struttura & Recapito Telefonico</b>: specifica se la visita avviene presso ASL/CUP, Ospedale pubblico, Studio privato o a Domicilio, con numero telefonico per contatti rapidi a 1 tap.',
+      '<b>Struttura & Recapito Telefonico</b>: specifica se la visita avviene presso il Centro Unico Prenotazioni CUP della ASL, Ospedale pubblico, Studio privato o a Domicilio, con numero telefonico per contatti rapidi a 1 tap.',
       '<b>Condizioni & Impegnativa</b>: traccia codice NRE ricetta elettronica, priorità nazionale (U-72h, B-10gg, D-30/60gg, P-180gg) e modalità trasporto (ambulanza o lettoambulanza per pazienti allettati).',
       '<b>Preparazione & Documenti</b>: aggiungi al volo digiuno (8-12h), vescica piena, sospensione farmaci concordata, esenzione ticket e documenti da portare.'
     ],
@@ -29241,6 +29247,9 @@ function compilaTestoVocaleGuida(g) {
     .replace(/\bUI\b/gi, 'unità internazionali')
     .replace(/\b112\b/g, 'uno uno due')
     .replace(/\bNUE\b/gi, 'Numero Unico Europeo')
+    .replace(/\bASL\/CUP\b/gi, 'A S L oppure C U P')
+    .replace(/\bCUP\b/gi, 'C U P, Centro Unico Prenotazioni')
+    .replace(/\bASL\b/gi, 'A S L')
     .replace(/\s*\/\s*/g, ' oppure ')
     .replace(/\s*-\s*/g, ' - ')
     .replace(/\.{2,}/g, '. ')
