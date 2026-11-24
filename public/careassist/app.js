@@ -444,7 +444,7 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
     .replace(/\s+/g, ' ')
     .trim();
 
-  var ttsTesto = t.length > 700 ? t.substring(0, 700) : t;
+  var ttsTesto = t.length > 2500 ? t.substring(0, 2500) : t;
   var encoded = encodeURIComponent(ttsTesto);
 
   var cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encoded;
@@ -29267,7 +29267,7 @@ function precaricaAudioGuidaContestuale(chiave) {
   var testo = compilaTestoVocaleGuida(g);
   if (!testo || testo === _testoAudioPrecaricato) return;
 
-  var ttsTesto = testo.length > 700 ? testo.substring(0, 700) : testo;
+  var ttsTesto = testo.length > 2500 ? testo.substring(0, 2500) : testo;
   var encoded = encodeURIComponent(ttsTesto);
   var isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
   var url = (isLocal ? '/api/tts-umano' : 'https://careassist-r61q.onrender.com/api/tts-umano') + '?voice=elsa&text=' + encoded;

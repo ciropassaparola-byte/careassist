@@ -3282,7 +3282,7 @@ function generaPausaNaturaleAudio() {
 
 app.get(['/api/tts-umano', '/careassist/api/tts-umano'], async (req, res) => {
     try {
-        const rawText = String(req.query.text || '').slice(0, 1800);
+        const rawText = String(req.query.text || '').slice(0, 3000);
         const voiceParam = String(req.query.voice || 'elsa').toLowerCase();
         const voiceName = voiceParam === 'diego' ? 'it-IT-DiegoNeural'
             : (voiceParam === 'giuseppe' ? 'it-IT-GiuseppeNeural' : (voiceParam === 'isabella' ? 'it-IT-IsabellaNeural' : 'it-IT-ElsaNeural'));
