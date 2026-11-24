@@ -2988,8 +2988,16 @@ body::-webkit-scrollbar,
             localStorage.setItem('milella_preferred_cloud', url);
         } catch(e){}
         chiudiCloudModal();
-        mostraNotificaEleganteSuite('CANALE AGGIORNATO CON SUCCESSO', nomeCanale + ' attivato e pronto all\'uso!', '✨');
-        try { aggiornaIndicatoriCanaleInUso(); } catch(e){}
+        if (typeof mostraNotificaEleganteSuite === 'function') {
+            mostraNotificaEleganteSuite('CANALE ATTIVATO', nomeCanale + ' in apertura...', '✨');
+        }
+        setTimeout(function() {
+            if (url && url.startsWith('http')) {
+                var clean = url.replace(/\/+$/, '');
+                var target = clean + '/launcher.html';
+                window.location.href = target;
+            }
+        }, 300);
     }
 
     function selezionaProfiloCloud(url) {
