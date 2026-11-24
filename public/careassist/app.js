@@ -17738,7 +17738,15 @@ function leggiSpiegazioneAllineamentoVocale() {
   var parti = [];
   parti.push('Allineamento terapie e controllo scorte farmacia per ' + nomePaz + '.');
   if (numDosi > 0) {
-    parti.push('Sono state rilevate ' + numDosi + ' somministrazioni passate non ancora registrate, ad esempio durante il periodo a computer spento.');
+    // Estrai le date uniche coinvolte
+    var dateCoinvolte = [];
+    dosi.forEach(function(ds) {
+      if (ds.dataVisuale && dateCoinvolte.indexOf(ds.dataVisuale) === -1) {
+        dateCoinvolte.push(ds.dataVisuale);
+      }
+    });
+    var dateTesto = dateCoinvolte.join(', ');
+    parti.push('Sono state rilevate ' + numDosi + ' somministrazioni passate non ancora registrate per la data del: ' + dateTesto + ', periodo in cui il computer era spento.');
   } else {
     parti.push('Tutte le terapie risultano attualmente allineate e sincronizzate.');
   }
@@ -17860,7 +17868,7 @@ function apriModalRiconciliazione(giorni, ultimaData) {
           html += '      </div>';
           html += '      <div style="text-align:right;">';
           html += '        <span style="font-size:11px; color:#0369a1; font-weight:700; background:#f0f9ff; padding:2px 6px; border-radius:4px; border:1px solid #bae6fd;">' + deltaTxt + '</span>';
-          html += '        <div style="font-size:10px; color:#94a3b8; margin-top:2px;">' + d.dataVisuale + '</div>';
+          html += '        <div style="font-size:11px; font-weight:800; color:#0284c7; background:#e0f2fe; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; margin-top:3px; display:inline-block;">📅 ' + d.dataVisuale + '</div>';
           html += '      </div>';
           html += '    </label>';
         });
@@ -18419,6 +18427,21 @@ function renderAll() {
 
 window._initialSyncDone = false;
 window.addEventListener('DOMContentLoaded', () => {
+  // SSO INTEGRATION: allinea utente e ruolo passati dal Launcher della Suite
+  try {
+    const _p = new URLSearchParams(window.location.search);
+    const uUser = _p.get('auth_user') || _p.get('user');
+    const uRole = _p.get('auth_role') || _p.get('role');
+    if (uUser) {
+      localStorage.setItem('milella_user_nome', uUser);
+      localStorage.setItem('milella_last_authenticated_user', uUser);
+    }
+    if (uRole) {
+      localStorage.setItem('milella_role', uRole);
+      localStorage.setItem('milella_last_authenticated_role', uRole);
+    }
+  } catch(eAuth) {}
+
   // Deep-link integration from Suite Launcher
   try {
     const urlParams = new URLSearchParams(window.location.search);
