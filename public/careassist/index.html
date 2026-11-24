@@ -1807,7 +1807,13 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
             </button>
           </div>
           <div class="diario-bulk-toolbar" id="diario-bulk-toolbar">
-            <button type="button" class="btn btn-sm" id="btn-diario-svuota-ritardi" onclick="svuotaRitardiFarmaci()"
+            <button type="button" class="btn btn-sm" id="btn-diario-svuota-tutto" onclick="svuotaInteroStoricoDiario()"
+                style="font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px; border-radius:8px; cursor:pointer; background:#fff1f2; color:#be123c; border:1.5px solid #fecdd3; font-weight:800;"
+                title="Cancella l'intero storico annotazioni (protetto da Password Admin)">
+                <span>🗑️</span>
+                <span>Svuota Storico</span>
+              </button>
+              <button type="button" class="btn btn-sm" id="btn-diario-svuota-ritardi" onclick="svuotaRitardiFarmaci()"
               style="font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px; border-radius:8px; cursor:pointer; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; font-weight:700;"
               title="Rimuovi tutti gli avvisi storici di ritardo somministrazione">
               <span>🧹</span>
@@ -2220,6 +2226,12 @@ window.apriMenuOSSTuttiStrumenti = function(e) {
               <span>💡</span> <span>A cosa serve</span>
             </button>
             <div class="diario-bulk-toolbar" id="diario-full-bulk-toolbar">
+                <button type="button" class="btn btn-sm" id="btn-full-svuota-tutto" onclick="svuotaInteroStoricoDiario()"
+                  style="font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px; border-radius:8px; cursor:pointer; background:#fff1f2; color:#be123c; border:1.5px solid #fecdd3; font-weight:800;"
+                  title="Cancella l'intero storico annotazioni (protetto da Password Admin)">
+                  <span>🗑️</span>
+                  <span>Svuota Storico</span>
+                </button>
               <button type="button" class="btn btn-sm btn-outline" id="btn-full-select-all"
                 onclick="toggleSelectAllDiarioBtn('full')"
                 style="font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px; border-radius:8px; cursor:pointer;"
@@ -12418,7 +12430,7 @@ function toggleVoceBollarioElsa(e) {
       fermaVoceBollarioElsa();
     });
   } else {
-    const ttsBase = (typeof getCareAssistSyncBase === 'function') ? getCareAssistSyncBase() : 'https://careassist-r61q.onrender.com';
+    const ttsBase = (typeof getCareAssistSyncBase === 'function') ? getCareAssistSyncBase() : 'https://careassist-suite-pmze.onrender.com';
     const apiUrl = (ttsBase ? ttsBase : '') + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
     const audio = new Audio(apiUrl);
     _audioBollarioElsa = audio;

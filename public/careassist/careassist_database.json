@@ -1,5 +1,5 @@
 {
-  "activePazienteId": "paz_aldo",
+  "activePazienteId": "paz_1793216119572",
   "pazienti": [
     {
       "id": "paz_aldo",
@@ -145,6 +145,14 @@
           "tipo": "nota_turno",
           "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
           "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 14:04 il farmaco \"VIMPAT 100 mg (2ª dose)\" delle ore 13:30 risulta non ancora spuntato (+34 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Operatore in turno)."
+        },
+        {
+          "id": "log_1795525463801",
+          "tipo": "postura",
+          "timestamp": "2026-11-24T13:04:23.801Z",
+          "posizione": "Supino (Schiena a letto)",
+          "cute": "Integra e rosea (Iniziale)",
+          "operatore": "Sistema Automatico CareAssist"
         },
         {
           "id": "log_salto_1795508068868_mioeu",
@@ -1886,14 +1894,6 @@
           "tipo": "nota_turno",
           "operatore": "🛡️ Sistema Anti-Sabotaggio (Audit Automatico)",
           "testo": "[ESCALATION STADIO 3 - OLTRE 20 MIN] Alle 10:22 il farmaco \"Bisoprololo Teva/Sandoz 1,25 mg\" delle ore 08:30 risulta non ancora spuntato (+112 min). Allarme emesso con Volume Hardware Forzato ≥ 90% (Ciro Milella (Admin))."
-        },
-        {
-          "id": "log_1795525463801",
-          "tipo": "postura",
-          "timestamp": "2026-11-24T13:04:23.801Z",
-          "posizione": "Supino (Schiena a letto)",
-          "cute": "Integra e rosea (Iniziale)",
-          "operatore": "Sistema Automatico CareAssist"
         }
       ],
       "visite": [
@@ -7123,6 +7123,16 @@
           "operatore": "CareAssist Pro"
         },
         {
+          "id": "reg_pants_1795525463772",
+          "tipo": "ausilio_consegna",
+          "categoria": "Ausili",
+          "data": "2026-11-17",
+          "ora": "11:00",
+          "timestamp": "2026-11-17T10:00:00.000Z",
+          "testo": "📦 Ricevuto carico domiciliare mutandine assorbenti PANTS Serenity (Fornitura trimestrale ASP). Registrato nello storico consegne.",
+          "operatore": "CareAssist Pro"
+        },
+        {
           "id": "log_allin_2026-11-17_1794119271026",
           "tipo": "farmaco",
           "timestamp": "2026-11-17T08:30:00.000Z",
@@ -8663,16 +8673,6 @@
           "azione": "somministrazione",
           "dettaglio": "⚠️ SOMMINISTRATO CON RITARDO DI 11 ore e 38 min! Orario previsto: 08:00 - Orario effettivo assunzione: 19:38. Rimanenza scorta: 2 cpr.",
           "operatore": "Ciro Milella (Admin)"
-        },
-        {
-          "id": "reg_pants_1795525463772",
-          "tipo": "ausilio_consegna",
-          "categoria": "Ausili",
-          "data": "2026-11-17",
-          "ora": "11:00",
-          "timestamp": "2026-11-17T10:00:00.000Z",
-          "testo": "📦 Ricevuto carico domiciliare mutandine assorbenti PANTS Serenity (Fornitura trimestrale ASP). Registrato nello storico consegne.",
-          "operatore": "CareAssist Pro"
         }
       ],
       "visite": [
@@ -11278,7 +11278,7 @@
       "lastModified": 1795522397661
     }
   ],
-  "lastModified": "2026-11-24T12:20:42.866Z",
+  "lastModified": "2026-11-24T13:33:01.107Z",
   "lastModifiedDevice": "pc",
   "lastModifiedBy": "Merge Intelligente USB <-> Web",
   "ultimoGiornoOperativo": "2026-11-24",

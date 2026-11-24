@@ -1,74 +1,74 @@
-[
-    {
-        "id": "app_centro_operativo",
-        "titolo": "Centro Operativo & Fatturazione",
-        "icona": "🏛️",
-        "url": "/centro_operativo.html",
-        "descrizione": "Notifiche familiari WhatsApp, Ricevute Sanitarie 730, Agenda visite e Cartella referti.",
-        "visibilita": "tutti",
-        "attivo": true
-    },
-    {
-        "id": "app_careassist",
-        "titolo": "CareAssist Pro",
-        "icona": "🩺",
-        "url": "/careassist/",
-        "descrizione": "Diario socio-sanitario, terapie farmacologiche e gestione assistenza domiciliare.",
-        "visibilita": "admin",
-        "attivo": true
-    },
-    {
-        "id": "app_salute",
-        "titolo": "Progetto Salute",
-        "icona": "❤️",
-        "url": "/salute/",
-        "descrizione": "Monitoraggio parametri vitali, fitness e benessere personale quotidiano.",
-        "visibilita": "admin",
-        "attivo": true
-    },
-    {
-        "id": "app_veicoli",
-        "titolo": "Flotta Veicoli & Spese",
-        "icona": "🚗",
-        "url": "/veicoli_mobile/",
-        "descrizione": "Controllo scadenze revisioni, bolli, manutenzioni e rimborsi chilometrici aziendali.",
-        "visibilita": "tutti",
-        "attivo": true
-    },
-    {
-        "id": "app_ricettario",
-        "titolo": "Il Ricettario",
-        "icona": "👨‍🍳",
-        "url": "/ricettario/",
-        "descrizione": "L'archivio prezioso delle tue ricette personali con lista della spesa automatica.",
-        "visibilita": "tutti",
-        "attivo": true
-    },
-    {
-        "id": "app_mednutri",
-        "titolo": "MedNutri Pro",
-        "icona": "🥗",
-        "url": "/mednutri/",
-        "descrizione": "Software avanzato per piani nutrizionali personalizzati e gestione clinica.",
-        "visibilita": "admin",
-        "attivo": true
-    },
-    {
-        "id": "app_gioco",
-        "titolo": "Progetto Gioco",
-        "icona": "🎰",
-        "url": "/progetto_gioco/",
-        "descrizione": "Monitoraggio statistico SuperEnalotto e Gratta & Vinci con bilancio netto.",
-        "visibilita": "admin",
-        "attivo": true
-    },
-    {
-        "id": "app_inventario",
-        "titolo": "Inventario Attrezzi",
-        "icona": "🛠️",
-        "url": "/inventario.html",
-        "descrizione": "Catalogo fotografico intelligente e ricerca rapida degli attrezzi tra garage, casa e furgone.",
-        "visibilita": "tutti",
-        "attivo": true
-    }
-]
+{
+  "0": {
+    "id": "app_centro_operativo",
+    "titolo": "Centro Operativo & Fatturazione",
+    "icona": "🏛️",
+    "url": "/centro_operativo.html",
+    "descrizione": "Notifiche familiari WhatsApp, Ricevute Sanitarie 730, Agenda visite e Cartella referti.",
+    "visibilita": "tutti",
+    "attivo": true
+  },
+  "1": {
+    "id": "app_careassist",
+    "titolo": "CareAssist Pro",
+    "icona": "🩺",
+    "url": "/careassist/",
+    "descrizione": "Diario socio-sanitario, terapie farmacologiche e gestione assistenza domiciliare.",
+    "visibilita": "admin",
+    "attivo": true
+  },
+  "2": {
+    "id": "app_salute",
+    "titolo": "Progetto Salute",
+    "icona": "❤️",
+    "url": "/salute/",
+    "descrizione": "Monitoraggio parametri vitali, fitness e benessere personale quotidiano.",
+    "visibilita": "admin",
+    "attivo": true
+  },
+  "3": {
+    "id": "app_veicoli",
+    "titolo": "Flotta Veicoli & Spese",
+    "icona": "🚗",
+    "url": "/veicoli_mobile/",
+    "descrizione": "Controllo scadenze revisioni, bolli, manutenzioni e rimborsi chilometrici aziendali.",
+    "visibilita": "tutti",
+    "attivo": true
+  },
+  "4": {
+    "id": "app_ricettario",
+    "titolo": "Il Ricettario",
+    "icona": "👨‍🍳",
+    "url": "/ricettario/",
+    "descrizione": "L'archivio prezioso delle tue ricette personali con lista della spesa automatica.",
+    "visibilita": "tutti",
+    "attivo": true
+  },
+  "5": {
+    "id": "app_mednutri",
+    "titolo": "MedNutri Pro",
+    "icona": "🥗",
+    "url": "/mednutri/",
+    "descrizione": "Software avanzato per piani nutrizionali personalizzati e gestione clinica.",
+    "visibilita": "admin",
+    "attivo": true
+  },
+  "6": {
+    "id": "app_gioco",
+    "titolo": "Progetto Gioco",
+    "icona": "🎰",
+    "url": "/progetto_gioco/",
+    "descrizione": "Monitoraggio statistico SuperEnalotto e Gratta & Vinci con bilancio netto.",
+    "visibilita": "admin",
+    "attivo": true
+  },
+  "7": {
+    "id": "app_inventario",
+    "titolo": "Inventario Attrezzi",
+    "icona": "🛠️",
+    "url": "/inventario.html",
+    "descrizione": "Catalogo fotografico intelligente e ricerca rapida degli attrezzi tra garage, casa e furgone.",
+    "visibilita": "tutti",
+    "attivo": true
+  }
+}

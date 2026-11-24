@@ -38,7 +38,7 @@ window.selezionaTipoSpecialitaModal = selezionaTipoSpecialitaModal;
 function deduciTipoSpecialitaDaNome(nome) {
   if (!nome) return 'originale';
   var upper = nome.toUpperCase();
-  var matchGenerico = ['SANDOZ', 'TEVA', 'DOC', 'EG', 'EUROGENERICI', 'ZENTIVA', 'MYLAN', 'ACCORD', 'AUROBINDO', 'KRKA', 'PENSA', 'RATIOPHARM', 'ARISTO', 'SUN', 'ALMUS', 'GERMED'].some(function(brand) {
+  var matchGenerico = ['SANDOZ', 'TEVA', 'DOC', 'EG', 'EUROGENERICI', 'ZENTIVA', 'MYLAN', 'ACCORD', 'AUROBINDO', 'KRKA', 'PENSA', 'RATIOPHARM', 'ARISTO', 'SUN', 'ALMUS', 'GERMED'].some(function (brand) {
     return upper.indexOf(brand) >= 0;
   });
   return matchGenerico ? 'generico' : 'originale';
@@ -49,10 +49,10 @@ function gestisciCaricaFotoScatolo(event, target) {
   var file = event && event.target && event.target.files && event.target.files[0];
   if (!file) return;
   var reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function (e) {
     var rawUrl = e.target.result;
     var img = new Image();
-    img.onload = function() {
+    img.onload = function () {
       var maxDim = 1100;
       var w = img.width;
       var h = img.height;
@@ -66,7 +66,7 @@ function gestisciCaricaFotoScatolo(event, target) {
       var ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, w, h);
       var compressed = canvas.toDataURL('image/jpeg', 0.82);
-      
+
       if (target === 'pillola') {
         window._tempFotoPillolaData = compressed;
         aggiornaUIFotoPillolaModal(compressed);
@@ -161,7 +161,7 @@ function apriFotoScatoloModal(scatolaSrc, titolo, dettaglio, pillolaSrc) {
   if (!scatolaSrc && !pillolaSrc) return;
   window._viewerCurrentScatolaSrc = scatolaSrc || '';
   window._viewerCurrentPillolaSrc = pillolaSrc || '';
-  
+
   var vModal = document.getElementById('modal-foto-scatolo-viewer');
   var vImg = document.getElementById('scatolo-foto-viewer-img');
   var vTit = document.getElementById('scatolo-foto-viewer-titolo');
@@ -246,7 +246,7 @@ function inizializzaTouchPanZoom() {
 
   // Doppio tocco per zoom rapido
   var lastTap = 0;
-  container.addEventListener('touchend', function(e) {
+  container.addEventListener('touchend', function (e) {
     var currentTime = new Date().getTime();
     var tapLength = currentTime - lastTap;
     if (tapLength < 300 && tapLength > 0) {
@@ -262,7 +262,7 @@ function inizializzaTouchPanZoom() {
   });
 
   // Gestione Touch (Pinch & Pan)
-  container.addEventListener('touchstart', function(e) {
+  container.addEventListener('touchstart', function (e) {
     if (e.touches.length === 2) {
       _touchStartDist = Math.hypot(
         e.touches[0].pageX - e.touches[1].pageX,
@@ -276,7 +276,7 @@ function inizializzaTouchPanZoom() {
     }
   }, { passive: true });
 
-  container.addEventListener('touchmove', function(e) {
+  container.addEventListener('touchmove', function (e) {
     if (e.touches.length === 2 && _touchStartDist > 0) {
       var dist = Math.hypot(
         e.touches[0].pageX - e.touches[1].pageX,
@@ -292,7 +292,7 @@ function inizializzaTouchPanZoom() {
     }
   }, { passive: true });
 
-  container.addEventListener('touchend', function(e) {
+  container.addEventListener('touchend', function (e) {
     _touchStartDist = 0;
     _isDraggingImg = false;
   }, { passive: true });
@@ -447,7 +447,7 @@ function riproduciVoceNaturaleHD(testo, onEndCallback) {
   var ttsTesto = t.length > 2500 ? t.substring(0, 2500) : t;
   var encoded = encodeURIComponent(ttsTesto);
 
-  var cloudUrl = 'https://careassist-r61q.onrender.com/api/tts-umano?voice=elsa&text=' + encoded;
+  var cloudUrl = 'https://careassist-suite-pmze.onrender.com/api/tts-umano?voice=elsa&text=' + encoded;
   var isLocalServer = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
   var primaryUrl = isLocalServer ? ('/api/tts-umano?voice=elsa&text=' + encoded) : cloudUrl;
 
@@ -2607,7 +2607,7 @@ function saveDb(forceBeforeInitialSync, isBackgroundAutoLog) {
   inviaModificheAlServer();
 }
 
-const CAREASSIST_CLOUD_MASTER_URL = 'https://careassist-r61q.onrender.com';
+const CAREASSIST_CLOUD_MASTER_URL = 'https://careassist-suite-pmze.onrender.com';
 
 function isLocalOrFileOrigin() {
   try {
@@ -2957,18 +2957,18 @@ function sincronizzaDbDalServer(callback) {
 }
 
 function aggiornaBadgeStatoSync(isOnline) {
-    var mobTxt = document.getElementById('mobile-sync-text');
-    var mobDot = document.getElementById('mobile-sync-dot');
-    var oraMobStr = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-    if (mobTxt && mobDot) {
-      if (isOnline) {
-        mobDot.className = 'mobile-sync-dot online';
-        mobTxt.innerHTML = '🟢 Cloud Sincronizzato <span style="font-weight: normal; opacity: 0.8; font-size: 11px;">(' + oraMobStr + ')</span>';
-      } else {
-        mobDot.className = 'mobile-sync-dot offline';
-        mobTxt.innerHTML = '⚠️ Offline / Tocca per Ricaricare';
-      }
+  var mobTxt = document.getElementById('mobile-sync-text');
+  var mobDot = document.getElementById('mobile-sync-dot');
+  var oraMobStr = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+  if (mobTxt && mobDot) {
+    if (isOnline) {
+      mobDot.className = 'mobile-sync-dot online';
+      mobTxt.innerHTML = '🟢 Cloud Sincronizzato <span style="font-weight: normal; opacity: 0.8; font-size: 11px;">(' + oraMobStr + ')</span>';
+    } else {
+      mobDot.className = 'mobile-sync-dot offline';
+      mobTxt.innerHTML = '⚠️ Offline / Tocca per Ricaricare';
     }
+  }
 
   var badge = document.getElementById('header-cloud-sync-badge');
   var dot = document.getElementById('sync-dot');
@@ -3210,7 +3210,7 @@ function getPazientiAccessibili() {
     if (raw) {
       pazAbilitati = JSON.parse(raw);
     }
-  } catch(e) {
+  } catch (e) {
     pazAbilitati = [];
   }
 
@@ -4541,7 +4541,7 @@ async function cestinoEliminaSelezionati() {
     if (!ok) return;
 
     const lista = (AppData && Array.isArray(AppData._cestino)) ? AppData._cestino : [];
-    AppData._cestino = lista.filter(function(x) { return !_cestinoSelezionati.has(x.id); });
+    AppData._cestino = lista.filter(function (x) { return !_cestinoSelezionati.has(x.id); });
     _cestinoSelezionati.clear();
     saveDb();
     renderCestino();
@@ -5788,14 +5788,14 @@ function renderCatalogoAusiliForm(containerId, ausiliEsistenti = []) {
             </div>
             <div id="${prefix}-storico-consegne-${index}" style="font-size:11px; color:#475569; display:flex; flex-direction:column; gap:4px;">
               ${Array.isArray(esistente && esistente.storicoConsegne) && esistente.storicoConsegne.length > 0 ?
-                esistente.storicoConsegne.slice().reverse().map(c => `
+        esistente.storicoConsegne.slice().reverse().map(c => `
                   <div style="display:flex; align-items:center; justify-content:space-between; background:#f8fafc; border-left:3px solid #0284c7; padding:4px 8px; border-radius:4px;">
                     <span>📅 <b>${new Date(c.data).toLocaleDateString('it-IT')}</b> — ${c.note || 'Carico fornitura ricevuto'}</span>
                     <span style="color:#059669; font-weight:800;">Ricevuto</span>
                   </div>
                 `).join('')
-                : '<div style="color:#94a3b8; font-style:italic;">Nessun carico registrato in precedenza nello storico.</div>'
-              }
+        : '<div style="color:#94a3b8; font-style:italic;">Nessun carico registrato in precedenza nello storico.</div>'
+      }
             </div>
           </div>
         </div>
@@ -5900,7 +5900,7 @@ function registraConsegnaRapidaAusilio(prefix, index) {
   }
   const chk = document.getElementById(`${prefix}-chk-${index}`);
   const tipo = chk ? (chk.getAttribute('data-tipo') || 'Ausilio') : 'Ausilio';
-  
+
   const ieriStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
   const dataScelta = prompt(`📦 Registra Carico Consegna per "${tipo}"\nInserisci la data della consegna (formato AAAA-MM-GG):`, ieriStr);
   if (!dataScelta) return;
@@ -6152,7 +6152,7 @@ function initTabs() {
 
       // Se seleziona un tab operativo (visite, terapie, patologie, ecc.), scrolla per renderlo subito visibile
       if (target && target !== 'tab-dashboard' && targetEl) {
-        setTimeout(function() {
+        setTimeout(function () {
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 50);
       }
@@ -6565,11 +6565,11 @@ function renderTerapie() {
             <b style="color:var(--primary); font-size:14.5px; text-decoration: underline; text-decoration-color: rgba(37,99,235,0.4);">${t.farmaco}</b>
             <span style="font-size:11px; margin-left:4px;" title="Storico">🔍</span>
             ${(() => {
-              const isGen = (t.tipoSpecialita === 'generico') || (typeof deduciTipoSpecialitaDaNome === 'function' && deduciTipoSpecialitaDaNome(t.farmaco) === 'generico');
-              return isGen
-                ? '<span class="badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px; margin-left:4px;" title="Farmaco Equivalente / Generico">🧬 Generico</span>'
-                : '<span class="badge" style="background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px; margin-left:4px;" title="Specialità Medicinale Originale di Marca">⭐ Originale</span>';
-            })()}
+          const isGen = (t.tipoSpecialita === 'generico') || (typeof deduciTipoSpecialitaDaNome === 'function' && deduciTipoSpecialitaDaNome(t.farmaco) === 'generico');
+          return isGen
+            ? '<span class="badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px; margin-left:4px;" title="Farmaco Equivalente / Generico">🧬 Generico</span>'
+            : '<span class="badge" style="background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px; margin-left:4px;" title="Specialità Medicinale Originale di Marca">⭐ Originale</span>';
+        })()}
             ${t.fotoScatola ? `
               <span class="badge" onclick="event.stopPropagation(); apriFotoScatoloModal('${t.fotoScatola}', '${(t.farmaco || '').replace(/'/g, "\\'")}', 'Principio: ${t.principio || '--'} &bull; Confezione Scatolo Ufficiale')" style="background:#f8fafc; color:#0284c7; border:1px solid #0284c7; font-weight:800; font-size:10px; padding:1px 6px; border-radius:6px; margin-left:4px; cursor:pointer;" title="Clicca per visualizzare la foto dello scatolo">
                 📷 Scatolo
@@ -6968,15 +6968,15 @@ function renderTerapie() {
             <small style="color:#64748b;">${t.modo}</small>
           </div>
           ${(() => {
-            const isASL = (t.canaleDistribuzione === 'territoriale_asl') ||
-              (t.pianoTerapeutico && t.pianoTerapeutico.attivo) ||
-              ((t.farmaco || '').toUpperCase().indexOf('ENTECAVIR') >= 0 && (p.nome || '').toLowerCase().indexOf('ciro') >= 0);
-            if (isASL) {
-              const ptObj = t.pianoTerapeutico || (typeof getPianoTerapeuticoAttivo === 'function' ? getPianoTerapeuticoAttivo(p) : null);
-              const totScat = ptObj ? (parseInt(ptObj.scatoleTotali || ptObj.scatoleSpettantiAnno, 10) || 12) : 12;
-              const ritScat = ptObj ? (parseInt(ptObj.scatoleRitirate || ptObj.scatoleRitirateTotali, 10) || 0) : 0;
-              const resScat = Math.max(0, totScat - ritScat);
-              return `
+          const isASL = (t.canaleDistribuzione === 'territoriale_asl') ||
+            (t.pianoTerapeutico && t.pianoTerapeutico.attivo) ||
+            ((t.farmaco || '').toUpperCase().indexOf('ENTECAVIR') >= 0 && (p.nome || '').toLowerCase().indexOf('ciro') >= 0);
+          if (isASL) {
+            const ptObj = t.pianoTerapeutico || (typeof getPianoTerapeuticoAttivo === 'function' ? getPianoTerapeuticoAttivo(p) : null);
+            const totScat = ptObj ? (parseInt(ptObj.scatoleTotali || ptObj.scatoleSpettantiAnno, 10) || 12) : 12;
+            const ritScat = ptObj ? (parseInt(ptObj.scatoleRitirate || ptObj.scatoleRitirateTotali, 10) || 0) : 0;
+            const resScat = Math.max(0, totScat - ritScat);
+            return `
                 <div style="margin-top:5px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                   <button type="button" onclick="event.stopPropagation(); apriModalRegistraRitiroASL(${t.id})" class="btn" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#ffffff; font-weight:800; font-size:10.5px; padding:3px 9px; border-radius:6px; border:none; box-shadow:0 1px 4px rgba(2,132,199,0.3); cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="Registra ritiro di 1, 2 o 3 scatole presso la Farmacia Territoriale ASL">
                     <span>🏛️</span> <span>Ritiro ASL (${resScat} rimaste)</span>
@@ -6986,9 +6986,9 @@ function renderTerapie() {
                   </button>
                 </div>
               `;
-            }
-            return '';
-          })()}
+          }
+          return '';
+        })()}
         </td>
         <td>
           <span class="badge ${t.scorta <= 5 ? 'badge-danger' : 'badge-primary'}">${t.scorta} cpr</span>
@@ -7797,7 +7797,7 @@ function mostraAuditFarmaco(farmacoId) {
     ? new Date(t.ultimoRitiro).toLocaleDateString('it-IT') + ' ore ' + new Date(t.ultimoRitiro).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
     : 'Iniziale (Prescrizione)';
 
-    const isASL = t.canaleDistribuzione === 'territoriale_asl' || (t.pianoTerapeutico && t.pianoTerapeutico.attivo) || (t.nomeCommerciale || t.farmaco || '').toUpperCase().includes('ENTECAVIR');
+  const isASL = t.canaleDistribuzione === 'territoriale_asl' || (t.pianoTerapeutico && t.pianoTerapeutico.attivo) || (t.nomeCommerciale || t.farmaco || '').toUpperCase().includes('ENTECAVIR');
 
   infoBox.innerHTML = `
     <div style="width:100%; display:flex; flex-direction:column; gap:10px;">
@@ -7835,11 +7835,11 @@ function mostraAuditFarmaco(farmacoId) {
         <div style="text-align:right;">
           <div style="font-size:11px; color:#b45309; font-weight:800;">
             ⏳ Fine Scorta: <b>${(() => {
-              if (!t.scorta || t.scorta <= 0) return 'Esaurito';
-              const dt = new Date();
-              dt.setDate(dt.getDate() + t.scorta);
-              return dt.toLocaleDateString('it-IT');
-            })()}</b>
+      if (!t.scorta || t.scorta <= 0) return 'Esaurito';
+      const dt = new Date();
+      dt.setDate(dt.getDate() + t.scorta);
+      return dt.toLocaleDateString('it-IT');
+    })()}</b>
           </div>
         </div>
       </div>
@@ -7967,7 +7967,7 @@ function apriModalCaricoElegante(farmacoId) {
 
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-  } catch(e) {
+  } catch (e) {
     console.error('Errore apriModalCaricoElegante:', e);
   }
 }
@@ -8087,7 +8087,7 @@ async function confermaCaricoElegante() {
 
     showToast('✅ Rifornimento del ' + new Date(dataScelta).toLocaleDateString('it-IT') + ' registrato con successo!', 'success');
     mostraAuditFarmaco(t.id);
-  } catch(err) {
+  } catch (err) {
     console.error('Errore confermaCaricoElegante:', err);
   }
 }
@@ -8275,8 +8275,8 @@ function toggleSezioneCanaleTerritoriale(val) {
     if (boxPT) boxPT.style.display = 'none';
     var topAslBox = document.getElementById('box-hero-ritiro-asl-top');
     if (topAslBox) topAslBox.style.display = 'none';
-      var topAslBox = document.getElementById('box-hero-ritiro-asl-top');
-      if (topAslBox) topAslBox.style.display = 'none';
+    var topAslBox = document.getElementById('box-hero-ritiro-asl-top');
+    if (topAslBox) topAslBox.style.display = 'none';
     if (badge) {
       badge.textContent = 'Convenzionata';
       badge.style.background = '#e2e8f0';
@@ -8680,11 +8680,11 @@ function apriModalRegistraRitiroASL(terapiaId) {
           var dFmt = r.data ? new Date(r.data).toLocaleDateString('it-IT') : '--/--/----';
           return '<div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border-left:3px solid #0284c7; padding:5px 8px; border-radius:6px;">' +
             '<div>' +
-              '<b>📅 ' + dFmt + '</b>: ' + (r.scatole || 1) + ' scatole (+' + (r.cprAggiunte || ((r.scatole || 1) * 30)) + ' cpr)' +
-              (r.note ? '<div style="color:#64748b; font-size:10px;">' + r.note + '</div>' : '') +
+            '<b>📅 ' + dFmt + '</b>: ' + (r.scatole || 1) + ' scatole (+' + (r.cprAggiunte || ((r.scatole || 1) * 30)) + ' cpr)' +
+            (r.note ? '<div style="color:#64748b; font-size:10px;">' + r.note + '</div>' : '') +
             '</div>' +
             '<span style="font-weight:800; color:#0369a1; font-size:10px;">' + (r.sedeRitiro ? r.sedeRitiro.replace('Farmacia Territoriale ASL ', '') : 'ASL') + '</span>' +
-          '</div>';
+            '</div>';
         }).join('');
       } else {
         elStoricoElenco.innerHTML = '<div style="color:#94a3b8; font-style:italic; padding:4px;">Nessun ritiro ASL precedente registrato.</div>';
@@ -8775,7 +8775,7 @@ function aggiornaDataUltimoRitiroModale(val) {
     if (elUlt) {
       elUlt.textContent = new Date(val).toLocaleDateString('it-IT');
     }
-  } catch(e) {
+  } catch (e) {
     console.error(e);
   }
 }
@@ -9376,31 +9376,31 @@ async function caricaScatolaRapida(farmacoId) {
       t.ultimoRitiro = now.toISOString();
     }
 
-      t.storicoCarichi = Array.isArray(t.storicoCarichi) ? t.storicoCarichi : [];
-      t.storicoCarichi.push({
-        data: now.toISOString().split('T')[0],
-        timestamp: now.toISOString(),
-        tipo: 'compresse',
-        quantita: cprDaAggiungere,
-        scatole: 1,
-        scortaRisultante: t.scorta,
-        operatore: localStorage.getItem('milella_user') || 'Caregiver',
-        farmacia: t.farmacia || p.farmaciaDiRiferimento || 'Farmacia'
-      });
+    t.storicoCarichi = Array.isArray(t.storicoCarichi) ? t.storicoCarichi : [];
+    t.storicoCarichi.push({
+      data: now.toISOString().split('T')[0],
+      timestamp: now.toISOString(),
+      tipo: 'compresse',
+      quantita: cprDaAggiungere,
+      scatole: 1,
+      scortaRisultante: t.scorta,
+      operatore: localStorage.getItem('milella_user') || 'Caregiver',
+      farmacia: t.farmacia || p.farmaciaDiRiferimento || 'Farmacia'
+    });
 
-      p.registrazioni = p.registrazioni || [];
-      p.registrazioni.push({
-        id: 'log_' + Date.now(),
-        tipo: 'scorta',
-        farmacoId: t.id,
-        farmaco: t.farmaco,
-        azione: 'carico_farmacia',
-        numScatole: 1,
-        cprAggiunte: cprDaAggiungere,
-        timestamp: now.toISOString(),
-        desc: `Carico Farmacia: Ritiro di 1 scatola di ${t.farmaco} (+${cprDaAggiungere} cpr). Nuova scorta: ${t.scorta} cpr.`,
-        operatore: localStorage.getItem('milella_user') || 'Operatore OSS / Famiglia'
-      });
+    p.registrazioni = p.registrazioni || [];
+    p.registrazioni.push({
+      id: 'log_' + Date.now(),
+      tipo: 'scorta',
+      farmacoId: t.id,
+      farmaco: t.farmaco,
+      azione: 'carico_farmacia',
+      numScatole: 1,
+      cprAggiunte: cprDaAggiungere,
+      timestamp: now.toISOString(),
+      desc: `Carico Farmacia: Ritiro di 1 scatola di ${t.farmaco} (+${cprDaAggiungere} cpr). Nuova scorta: ${t.scorta} cpr.`,
+      operatore: localStorage.getItem('milella_user') || 'Operatore OSS / Famiglia'
+    });
 
     if (typeof saveDb === 'function') saveDb();
     if (typeof renderMobileNativeView === 'function') renderMobileNativeView(p.terapie, p);
@@ -10226,6 +10226,51 @@ async function svuotaRitardiFarmaci() {
   }
 }
 window.svuotaRitardiFarmaci = svuotaRitardiFarmaci;
+
+async function svuotaInteroStoricoDiario() {
+  const p = getActivePaziente();
+  if (!p) return;
+  const totale = (p.registrazioni || []).length;
+  if (totale === 0) {
+    showToast('Nessuna annotazione o evento presente nello storico di ' + p.nome, 'info');
+    return;
+  }
+
+  const authAdmin = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore per cancellare l\'intero storico annotazioni (' + totale + ' eventi) di ' + p.nome + ':');
+  if (!authAdmin) {
+    showToast('Operazione annullata: autorizzazione Admin non fornita.', 'warning');
+    return;
+  }
+
+  let ok = false;
+  try {
+    if (typeof customConfirm === 'function') {
+      ok = await customConfirm(
+        'Svuota Storico Annotazioni',
+        'Verranno archiviati tutti i ' + totale + ' eventi dello storico di ' + p.nome + ' nel Cestino. Vuoi procedere?',
+        '🗑️',
+        'Svuota Storico'
+      );
+    } else {
+      ok = confirm('Vuoi cancellare tutte le ' + totale + ' registrazioni di ' + p.nome + '?');
+    }
+  } catch(e) {
+    ok = confirm('Vuoi cancellare tutte le ' + totale + ' registrazioni di ' + p.nome + '?');
+  }
+
+  if (ok) {
+    if (typeof cestinoAggiungi === 'function') {
+      cestinoAggiungi('annotazione', totale + ' eventi dello storico di ' + p.nome, 'Storico completo annotazioni e diario clinico', [...p.registrazioni], p);
+    }
+    p.registrazioni = [];
+    saveDb();
+    renderDiario();
+    if (typeof renderDiarioMobile === 'function') renderDiarioMobile();
+    showToast('✅ Storico di ' + p.nome + ' cancellato e archiviato nel Cestino!', 'success');
+  }
+}
+window.svuotaInteroStoricoDiario = svuotaInteroStoricoDiario;
+
 
 // Rendering Visite Mediche
 function renderVisite() {
@@ -14042,7 +14087,7 @@ function apriModificaFarmaco(farmacoId) {
     if (document.getElementById('edit-farm-id')) document.getElementById('edit-farm-id').value = t.id;
     if (document.getElementById('edit-farm-nome')) document.getElementById('edit-farm-nome').value = cleanNome;
     if (document.getElementById('edit-farm-principio')) document.getElementById('edit-farm-principio').value = t.principio || '';
-    
+
     // Inizializza Tipo Specialità (Originale vs Generico)
     var tipoSpec = t.tipoSpecialita || (typeof deduciTipoSpecialitaDaNome === 'function' ? deduciTipoSpecialitaDaNome(cleanNome) : 'originale');
     if (typeof selezionaTipoSpecialitaModal === 'function') selezionaTipoSpecialitaModal(tipoSpec);
@@ -14203,7 +14248,7 @@ function apriModificaFarmaco(farmacoId) {
       if (document.getElementById('edit-pt-note')) document.getElementById('edit-pt-note').value = notePT;
 
       if (typeof aggiornaCalcoloPianoTerapeuticoModale === 'function') aggiornaCalcoloPianoTerapeuticoModale();
-      
+
       var topAslBox = document.getElementById('box-hero-ritiro-asl-top');
       if (topAslBox) {
         topAslBox.style.display = 'block';
@@ -14527,9 +14572,9 @@ function apriSchedaFarmacoFullscreen(farmacoId) {
         var ritScat = ptObj ? (parseInt(ptObj.scatoleRitirate || ptObj.scatoleRitirateTotali, 10) || 0) : 0;
         var resScat = Math.max(0, totScat - ritScat);
         var dtScadRaw = ptObj ? (ptObj.dataScadenza || ptObj.dataScadenzaAnno || '2027-02-22') : '2027-02-22';
-              var dtScad = dtScadRaw && dtScadRaw.includes('-')
-                ? dtScadRaw.split('T')[0].split('-').reverse().join('-')
-                : dtScadRaw;
+        var dtScad = dtScadRaw && dtScadRaw.includes('-')
+          ? dtScadRaw.split('T')[0].split('-').reverse().join('-')
+          : dtScadRaw;
         var proto = ptObj ? (ptObj.protocollo || ptObj.numeroRegistro || '011BQ1X145RHL') : '011BQ1X145RHL';
         var badgeRimaste = document.getElementById('sff-asl-rimaste-badge');
         var protEl = document.getElementById('sff-asl-protocollo');
@@ -14695,231 +14740,231 @@ function salvaModificaFarmaco(e) {
     }
     if (!p.terapie) p.terapie = [];
 
-  var rawNome = document.getElementById('edit-farm-nome').value.trim();
-  var cleanNome = rawNome.replace(/\s*\(\d+ª?\s*dose[^)]*\)/gi, '').trim();
-  if (!cleanNome) {
-    showToast('Inserisci il nome del farmaco.');
-    return;
-  }
+    var rawNome = document.getElementById('edit-farm-nome').value.trim();
+    var cleanNome = rawNome.replace(/\s*\(\d+ª?\s*dose[^)]*\)/gi, '').trim();
+    if (!cleanNome) {
+      showToast('Inserisci il nome del farmaco.');
+      return;
+    }
 
-  var principio = document.getElementById('edit-farm-principio').value.trim();
-  var dosaggioBase = document.getElementById('edit-farm-dosaggio').value.trim() || '1 cpr';
-  var cprPerScatola = parseInt(document.getElementById('edit-farm-cpr-scatola').value) || 28;
-  var scorta = parseInt(document.getElementById('edit-farm-scorta').value) || 0;
-  var giorniAlert = parseInt(document.getElementById('edit-farm-giorni-alert').value) || 7;
-  var modoBase = document.getElementById('edit-farm-modo').value.trim();
-  var cadenza = document.getElementById('edit-farm-cadenza') ? document.getElementById('edit-farm-cadenza').value : 'giornaliera';
-  var cadGiornoSettimana = (cadenza === 'settimanale') ? (parseInt(document.getElementById('edit-farm-giorno-settimana')?.value) || 1) : null;
-  var cadGiornoMese = (['mensile', 'bimestrale', 'trimestrale', 'semestrale'].indexOf(cadenza) >= 0) ? (document.getElementById('edit-farm-giorno-mese')?.value || '1') : null;
-  var cadDataInizio = (['bimestrale', 'trimestrale', 'semestrale', 'alterni'].indexOf(cadenza) >= 0) ? (document.getElementById('edit-farm-data-inizio')?.value || new Date().toISOString().slice(0, 10)) : null;
-  var cadMeseAnnuale = (cadenza === 'annuale') ? (parseInt(document.getElementById('edit-farm-mese-annuale')?.value) || (new Date().getMonth() + 1)) : null;
-  var cadGiornoAnnuale = (cadenza === 'annuale') ? (parseInt(document.getElementById('edit-farm-giorno-annuale')?.value) || new Date().getDate()) : null;
-var cadGiorniSpecifici = (cadenza === 'giorni_specifici')
-    ? ((Array.isArray(window._capsulaGiorniSpecifici) && window._capsulaGiorniSpecifici.length > 0) ? window._capsulaGiorniSpecifici.slice() : [1, 2, 3, 4, 5, 6, 7])
-    : null;
+    var principio = document.getElementById('edit-farm-principio').value.trim();
+    var dosaggioBase = document.getElementById('edit-farm-dosaggio').value.trim() || '1 cpr';
+    var cprPerScatola = parseInt(document.getElementById('edit-farm-cpr-scatola').value) || 28;
+    var scorta = parseInt(document.getElementById('edit-farm-scorta').value) || 0;
+    var giorniAlert = parseInt(document.getElementById('edit-farm-giorni-alert').value) || 7;
+    var modoBase = document.getElementById('edit-farm-modo').value.trim();
+    var cadenza = document.getElementById('edit-farm-cadenza') ? document.getElementById('edit-farm-cadenza').value : 'giornaliera';
+    var cadGiornoSettimana = (cadenza === 'settimanale') ? (parseInt(document.getElementById('edit-farm-giorno-settimana')?.value) || 1) : null;
+    var cadGiornoMese = (['mensile', 'bimestrale', 'trimestrale', 'semestrale'].indexOf(cadenza) >= 0) ? (document.getElementById('edit-farm-giorno-mese')?.value || '1') : null;
+    var cadDataInizio = (['bimestrale', 'trimestrale', 'semestrale', 'alterni'].indexOf(cadenza) >= 0) ? (document.getElementById('edit-farm-data-inizio')?.value || new Date().toISOString().slice(0, 10)) : null;
+    var cadMeseAnnuale = (cadenza === 'annuale') ? (parseInt(document.getElementById('edit-farm-mese-annuale')?.value) || (new Date().getMonth() + 1)) : null;
+    var cadGiornoAnnuale = (cadenza === 'annuale') ? (parseInt(document.getElementById('edit-farm-giorno-annuale')?.value) || new Date().getDate()) : null;
+    var cadGiorniSpecifici = (cadenza === 'giorni_specifici')
+      ? ((Array.isArray(window._capsulaGiorniSpecifici) && window._capsulaGiorniSpecifici.length > 0) ? window._capsulaGiorniSpecifici.slice() : [1, 2, 3, 4, 5, 6, 7])
+      : null;
 
-  var fonteTipoEl = document.getElementById('edit-farm-fonte-tipo');
-  var medNomeEl = document.getElementById('edit-farm-medico-nome');
-  var motivoModEl = document.getElementById('edit-farm-motivo-modifica');
+    var fonteTipoEl = document.getElementById('edit-farm-fonte-tipo');
+    var medNomeEl = document.getElementById('edit-farm-medico-nome');
+    var motivoModEl = document.getElementById('edit-farm-motivo-modifica');
 
-  var fonteNome = (fonteTipoEl && fonteTipoEl.value === 'visita_specialistica') ? 'Visita Specialistica' : 'Medico di Base (MMG)';
-  var nomeDoc = medNomeEl ? medNomeEl.value.trim() : '';
-  var motivoMod = motivoModEl ? motivoModEl.value.trim() : 'Aggiornamento schema posologico capsula';
-  var oggiStr = new Date().toLocaleDateString('it-IT');
+    var fonteNome = (fonteTipoEl && fonteTipoEl.value === 'visita_specialistica') ? 'Visita Specialistica' : 'Medico di Base (MMG)';
+    var nomeDoc = medNomeEl ? medNomeEl.value.trim() : '';
+    var motivoMod = motivoModEl ? motivoModEl.value.trim() : 'Aggiornamento schema posologico capsula';
+    var oggiStr = new Date().toLocaleDateString('it-IT');
 
-  var ultimaMod = {
-    data: oggiStr,
-    fonte: fonteNome,
-    medico: nomeDoc,
-    motivo: motivoMod
-  };
-
-  // 1. Salva lo stato delle dosi preesistenti prima di rimuoverle
-  var nomeBase = cleanNome.toLowerCase();
-  var vecchieDosiFarmaco = (p.terapie || []).filter(function (item) {
-    var n = (item.farmaco || '').replace(/\s*\(\d+ª?\s*dose[^)]*\)/gi, '').trim().toLowerCase();
-    return n.length > 2 && (n === nomeBase || nomeBase.indexOf(n) >= 0 || n.indexOf(nomeBase) >= 0);
-  });
-
-  var tipoSpecialita = (document.getElementById('edit-farm-tipo-specialita') ? document.getElementById('edit-farm-tipo-specialita').value : '') || (typeof deduciTipoSpecialitaDaNome === 'function' ? deduciTipoSpecialitaDaNome(cleanNome) : 'originale');
-  var fotoScatolaSalvataggio = (typeof window._tempFotoScatoloData !== 'undefined' && window._tempFotoScatoloData !== null) ? window._tempFotoScatoloData : ((Array.isArray(vecchieDosiFarmaco) && vecchieDosiFarmaco[0]) ? (vecchieDosiFarmaco[0].fotoScatola || null) : null);
-  var fotoPillolaSalvataggio = (typeof window._tempFotoPillolaData !== 'undefined' && window._tempFotoPillolaData !== null) ? window._tempFotoPillolaData : ((Array.isArray(vecchieDosiFarmaco) && vecchieDosiFarmaco[0]) ? (vecchieDosiFarmaco[0].fotoPillola || null) : null);
-
-  // Rimuovi le vecchie dosi per rigenerarle con la nuova scorta
-  p.terapie = p.terapie.filter(function (item) {
-    var n = (item.farmaco || '').replace(/\s*\(\d+ª?\s*dose[^)]*\)/gi, '').trim().toLowerCase();
-    var isColl = n.length > 2 && (n === nomeBase || nomeBase.indexOf(n) >= 0 || n.indexOf(nomeBase) >= 0);
-    return !isColl;
-  });
-
-  // 2. Leggi le impostazioni del canale di erogazione e piano terapeutico ASL
-  var canaleDist = (document.getElementById('radio-canale-territoriale') && document.getElementById('radio-canale-territoriale').checked) ? 'territoriale_asl' : 'convenzionata';
-  var ptData = null;
-  if (canaleDist === 'territoriale_asl') {
-    var totScat = parseInt(document.getElementById('edit-pt-scatole-totali')?.value, 10) || 12;
-    var ritScat = parseInt(document.getElementById('edit-pt-scatole-ritirate')?.value, 10) || 0;
-    var resScat = Math.max(0, totScat - ritScat);
-    ptData = {
-      attivo: true,
-      dataScadenza: document.getElementById('edit-pt-data-scadenza')?.value || '',
-      protocollo: document.getElementById('edit-pt-protocollo')?.value.trim() || '',
-      scatoleTotali: totScat,
-      scatoleRitirate: ritScat,
-      scatoleResidue: resScat,
-      centroPrescrittore: document.getElementById('edit-pt-centro-prescrittore')?.value.trim() || '',
-      sedeRitiro: document.getElementById('edit-pt-sede-ritiro')?.value.trim() || '',
-      note: document.getElementById('edit-pt-note')?.value.trim() || '',
-      ultimoRitiro: (document.getElementById('edit-pt-ultimo-ritiro') && document.getElementById('edit-pt-ultimo-ritiro').value) ? document.getElementById('edit-pt-ultimo-ritiro').value : '2026-11-16'
+    var ultimaMod = {
+      data: oggiStr,
+      fonte: fonteNome,
+      medico: nomeDoc,
+      motivo: motivoMod
     };
 
-    if (p.pianoTerapeuticoDpc) {
-      p.pianoTerapeuticoDpc.scatoleSpettantiAnno = totScat;
-      p.pianoTerapeuticoDpc.scatoleRitirateTotali = ritScat;
-      p.pianoTerapeuticoDpc.scatoleResidueDaRitirare = resScat;
-      if (ptData.dataScadenza) p.pianoTerapeuticoDpc.dataScadenzaAnno = ptData.dataScadenza;
-      if (ptData.sedeRitiro) p.pianoTerapeuticoDpc.puntoRitiro = ptData.sedeRitiro;
+    // 1. Salva lo stato delle dosi preesistenti prima di rimuoverle
+    var nomeBase = cleanNome.toLowerCase();
+    var vecchieDosiFarmaco = (p.terapie || []).filter(function (item) {
+      var n = (item.farmaco || '').replace(/\s*\(\d+ª?\s*dose[^)]*\)/gi, '').trim().toLowerCase();
+      return n.length > 2 && (n === nomeBase || nomeBase.indexOf(n) >= 0 || n.indexOf(nomeBase) >= 0);
+    });
+
+    var tipoSpecialita = (document.getElementById('edit-farm-tipo-specialita') ? document.getElementById('edit-farm-tipo-specialita').value : '') || (typeof deduciTipoSpecialitaDaNome === 'function' ? deduciTipoSpecialitaDaNome(cleanNome) : 'originale');
+    var fotoScatolaSalvataggio = (typeof window._tempFotoScatoloData !== 'undefined' && window._tempFotoScatoloData !== null) ? window._tempFotoScatoloData : ((Array.isArray(vecchieDosiFarmaco) && vecchieDosiFarmaco[0]) ? (vecchieDosiFarmaco[0].fotoScatola || null) : null);
+    var fotoPillolaSalvataggio = (typeof window._tempFotoPillolaData !== 'undefined' && window._tempFotoPillolaData !== null) ? window._tempFotoPillolaData : ((Array.isArray(vecchieDosiFarmaco) && vecchieDosiFarmaco[0]) ? (vecchieDosiFarmaco[0].fotoPillola || null) : null);
+
+    // Rimuovi le vecchie dosi per rigenerarle con la nuova scorta
+    p.terapie = p.terapie.filter(function (item) {
+      var n = (item.farmaco || '').replace(/\s*\(\d+ª?\s*dose[^)]*\)/gi, '').trim().toLowerCase();
+      var isColl = n.length > 2 && (n === nomeBase || nomeBase.indexOf(n) >= 0 || n.indexOf(nomeBase) >= 0);
+      return !isColl;
+    });
+
+    // 2. Leggi le impostazioni del canale di erogazione e piano terapeutico ASL
+    var canaleDist = (document.getElementById('radio-canale-territoriale') && document.getElementById('radio-canale-territoriale').checked) ? 'territoriale_asl' : 'convenzionata';
+    var ptData = null;
+    if (canaleDist === 'territoriale_asl') {
+      var totScat = parseInt(document.getElementById('edit-pt-scatole-totali')?.value, 10) || 12;
+      var ritScat = parseInt(document.getElementById('edit-pt-scatole-ritirate')?.value, 10) || 0;
+      var resScat = Math.max(0, totScat - ritScat);
+      ptData = {
+        attivo: true,
+        dataScadenza: document.getElementById('edit-pt-data-scadenza')?.value || '',
+        protocollo: document.getElementById('edit-pt-protocollo')?.value.trim() || '',
+        scatoleTotali: totScat,
+        scatoleRitirate: ritScat,
+        scatoleResidue: resScat,
+        centroPrescrittore: document.getElementById('edit-pt-centro-prescrittore')?.value.trim() || '',
+        sedeRitiro: document.getElementById('edit-pt-sede-ritiro')?.value.trim() || '',
+        note: document.getElementById('edit-pt-note')?.value.trim() || '',
+        ultimoRitiro: (document.getElementById('edit-pt-ultimo-ritiro') && document.getElementById('edit-pt-ultimo-ritiro').value) ? document.getElementById('edit-pt-ultimo-ritiro').value : '2026-11-16'
+      };
+
+      if (p.pianoTerapeuticoDpc) {
+        p.pianoTerapeuticoDpc.scatoleSpettantiAnno = totScat;
+        p.pianoTerapeuticoDpc.scatoleRitirateTotali = ritScat;
+        p.pianoTerapeuticoDpc.scatoleResidueDaRitirare = resScat;
+        if (ptData.dataScadenza) p.pianoTerapeuticoDpc.dataScadenzaAnno = ptData.dataScadenza;
+        if (ptData.sedeRitiro) p.pianoTerapeuticoDpc.puntoRitiro = ptData.sedeRitiro;
+      }
     }
-  }
 
-  // 2b. Leggi le card dal form (con fallback sicuro su _capsulaCurrentDosi)
-  var cardElements = document.querySelectorAll('#box-dosi-cards-container .dose-card-item');
-  var totalDosi = cardElements.length;
+    // 2b. Leggi le card dal form (con fallback sicuro su _capsulaCurrentDosi)
+    var cardElements = document.querySelectorAll('#box-dosi-cards-container .dose-card-item');
+    var totalDosi = cardElements.length;
 
-  // Se per qualsiasi motivo i cardElements nel DOM non avessero la classe, usa _capsulaCurrentDosi
-  if (totalDosi === 0 && Array.isArray(_capsulaCurrentDosi) && _capsulaCurrentDosi.length > 0) {
-    totalDosi = _capsulaCurrentDosi.length;
-    _capsulaCurrentDosi.forEach(function (d, idx) {
-      var oraVal = d.ora || '08:00';
-      var fasciaVal = d.fascia || deduciFasciaDaOrario(oraVal);
-      var quotaVal = parseFloat(d.quota) || 1.0;
-      var quotaLabel = (quotaVal === 0.5) ? '½ cpr' : (quotaVal === 1 ? '1 cpr' : (quotaVal === 1.5 ? '1½ cpr' : quotaVal + ' cpr'));
-      var farmacoNomeFinal = (totalDosi > 1) ? (cleanNome + ' (' + (idx + 1) + 'ª dose: ' + quotaLabel + ' - ore ' + oraVal + ')') : cleanNome;
+    // Se per qualsiasi motivo i cardElements nel DOM non avessero la classe, usa _capsulaCurrentDosi
+    if (totalDosi === 0 && Array.isArray(_capsulaCurrentDosi) && _capsulaCurrentDosi.length > 0) {
+      totalDosi = _capsulaCurrentDosi.length;
+      _capsulaCurrentDosi.forEach(function (d, idx) {
+        var oraVal = d.ora || '08:00';
+        var fasciaVal = d.fascia || deduciFasciaDaOrario(oraVal);
+        var quotaVal = parseFloat(d.quota) || 1.0;
+        var quotaLabel = (quotaVal === 0.5) ? '½ cpr' : (quotaVal === 1 ? '1 cpr' : (quotaVal === 1.5 ? '1½ cpr' : quotaVal + ' cpr'));
+        var farmacoNomeFinal = (totalDosi > 1) ? (cleanNome + ' (' + (idx + 1) + 'ª dose: ' + quotaLabel + ' - ore ' + oraVal + ')') : cleanNome;
 
-      var vecchiaDose = vecchieDosiFarmaco[idx] || vecchieDosiFarmaco.find(function (vd) { return vd.ora === oraVal; }) || null;
-      var fallbackFattoOggi = !!(vecchiaDose && vecchiaDose.fattoOggi === true);
-      if (vecchiaDose && vecchiaDose.ora !== oraVal && typeof verificaStatoOrarioFarmaco === 'function' && verificaStatoOrarioFarmaco(oraVal).futuro) {
-        fallbackFattoOggi = false;
-      }
+        var vecchiaDose = vecchieDosiFarmaco[idx] || vecchieDosiFarmaco.find(function (vd) { return vd.ora === oraVal; }) || null;
+        var fallbackFattoOggi = !!(vecchiaDose && vecchiaDose.fattoOggi === true);
+        if (vecchiaDose && vecchiaDose.ora !== oraVal && typeof verificaStatoOrarioFarmaco === 'function' && verificaStatoOrarioFarmaco(oraVal).futuro) {
+          fallbackFattoOggi = false;
+        }
 
-      p.terapie.push({
-        id: (vecchiaDose && vecchiaDose.id) ? vecchiaDose.id : (Date.now() + idx * 311),
-        ora: oraVal,
-        fascia: fasciaVal,
-        farmaco: farmacoNomeFinal,
-        principio: principio,
-        dosaggio: (window._currentFormatoModal === 'penna') ? ((parseFloat(document.getElementById('edit-penna-dose-die')?.value) || 16) + ' Unità (sottocute)') : (dosaggioBase + ' (' + quotaLabel + ')'),
-        quantitaQuota: quotaVal,
-        modo: modoBase,
-        cprPerScatola: cprPerScatola,
-        scorta: scorta,
-        giorniAlert: giorniAlert,
-        cadenzaTipo: cadenza,
-        cadenzaGiorniSpecifici: cadGiorniSpecifici,
-        cadenzaGiornoSettimana: cadGiornoSettimana,
-        cadenzaGiornoMese: cadGiornoMese,
-        cadenzaDataInizio: cadDataInizio,
-        cadenzaMeseAnnuale: cadMeseAnnuale,
-        cadenzaGiornoAnnuale: cadGiornoAnnuale,
-        fattoOggi: fallbackFattoOggi,
-        saltatoOggi: false,
-        ultimaModificaTimestamp: Date.now(),
-        tipoFormulazione: (window._currentFormatoModal === 'penna') ? 'penna' : 'compressa',
-        canaleDistribuzione: canaleDist,
-        pianoTerapeutico: ptData,
-        ultimaModificaClinica: ultimaMod,
-        tipoSpecialita: tipoSpecialita,
-        fotoScatola: fotoScatolaSalvataggio,
-        fotoPillola: fotoPillolaSalvataggio
+        p.terapie.push({
+          id: (vecchiaDose && vecchiaDose.id) ? vecchiaDose.id : (Date.now() + idx * 311),
+          ora: oraVal,
+          fascia: fasciaVal,
+          farmaco: farmacoNomeFinal,
+          principio: principio,
+          dosaggio: (window._currentFormatoModal === 'penna') ? ((parseFloat(document.getElementById('edit-penna-dose-die')?.value) || 16) + ' Unità (sottocute)') : (dosaggioBase + ' (' + quotaLabel + ')'),
+          quantitaQuota: quotaVal,
+          modo: modoBase,
+          cprPerScatola: cprPerScatola,
+          scorta: scorta,
+          giorniAlert: giorniAlert,
+          cadenzaTipo: cadenza,
+          cadenzaGiorniSpecifici: cadGiorniSpecifici,
+          cadenzaGiornoSettimana: cadGiornoSettimana,
+          cadenzaGiornoMese: cadGiornoMese,
+          cadenzaDataInizio: cadDataInizio,
+          cadenzaMeseAnnuale: cadMeseAnnuale,
+          cadenzaGiornoAnnuale: cadGiornoAnnuale,
+          fattoOggi: fallbackFattoOggi,
+          saltatoOggi: false,
+          ultimaModificaTimestamp: Date.now(),
+          tipoFormulazione: (window._currentFormatoModal === 'penna') ? 'penna' : 'compressa',
+          canaleDistribuzione: canaleDist,
+          pianoTerapeutico: ptData,
+          ultimaModificaClinica: ultimaMod,
+          tipoSpecialita: tipoSpecialita,
+          fotoScatola: fotoScatolaSalvataggio,
+          fotoPillola: fotoPillolaSalvataggio
+        });
       });
-    });
-  } else {
-    cardElements.forEach(function (card, idx) {
-      var oraVal = card.querySelector('.dose-card-ora').value || '08:00';
-      var fasciaVal = card.querySelector('.dose-card-fascia').value || deduciFasciaDaOrario(oraVal);
-      var quotaVal = parseFloat(card.querySelector('.dose-card-quota-val').value) || 1.0;
+    } else {
+      cardElements.forEach(function (card, idx) {
+        var oraVal = card.querySelector('.dose-card-ora').value || '08:00';
+        var fasciaVal = card.querySelector('.dose-card-fascia').value || deduciFasciaDaOrario(oraVal);
+        var quotaVal = parseFloat(card.querySelector('.dose-card-quota-val').value) || 1.0;
 
-      var quotaLabel = (quotaVal === 0.5) ? '½ cpr' : (quotaVal === 1 ? '1 cpr' : (quotaVal === 1.5 ? '1½ cpr' : quotaVal + ' cpr'));
+        var quotaLabel = (quotaVal === 0.5) ? '½ cpr' : (quotaVal === 1 ? '1 cpr' : (quotaVal === 1.5 ? '1½ cpr' : quotaVal + ' cpr'));
 
-      var farmacoNomeFinal = cleanNome;
-      if (totalDosi > 1) {
-        farmacoNomeFinal = cleanNome + ' (' + (idx + 1) + 'ª dose: ' + quotaLabel + ' - ore ' + oraVal + ')';
-      }
+        var farmacoNomeFinal = cleanNome;
+        if (totalDosi > 1) {
+          farmacoNomeFinal = cleanNome + ' (' + (idx + 1) + 'ª dose: ' + quotaLabel + ' - ore ' + oraVal + ')';
+        }
 
-      var isFormatoPenna = (window._currentFormatoModal === 'penna');
-      var pScorta = isFormatoPenna ? (parseFloat(document.getElementById('edit-penna-scorta') ? document.getElementById('edit-penna-scorta').value : 2) || 2) : scorta;
-      var pDoseDie = isFormatoPenna ? (parseFloat(document.getElementById('edit-penna-dose-die') ? document.getElementById('edit-penna-dose-die').value : 16) || 16) : 1;
-      var pUnitaTot = isFormatoPenna ? (parseInt(document.getElementById('edit-penna-unita-totali') ? document.getElementById('edit-penna-unita-totali').value : 300) || 300) : 300;
-      var pScatola = isFormatoPenna ? (parseInt(document.getElementById('edit-penna-per-scatola') ? document.getElementById('edit-penna-per-scatola').value : 3) || 3) : cprPerScatola;
+        var isFormatoPenna = (window._currentFormatoModal === 'penna');
+        var pScorta = isFormatoPenna ? (parseFloat(document.getElementById('edit-penna-scorta') ? document.getElementById('edit-penna-scorta').value : 2) || 2) : scorta;
+        var pDoseDie = isFormatoPenna ? (parseFloat(document.getElementById('edit-penna-dose-die') ? document.getElementById('edit-penna-dose-die').value : 16) || 16) : 1;
+        var pUnitaTot = isFormatoPenna ? (parseInt(document.getElementById('edit-penna-unita-totali') ? document.getElementById('edit-penna-unita-totali').value : 300) || 300) : 300;
+        var pScatola = isFormatoPenna ? (parseInt(document.getElementById('edit-penna-per-scatola') ? document.getElementById('edit-penna-per-scatola').value : 3) || 3) : cprPerScatola;
 
-      // PRESERVAZIONE FEDELE STATO ASSUNZIONE OGGI PER SINGOLA DOSE:
-      var vecchiaDose = vecchieDosiFarmaco[idx] || vecchieDosiFarmaco.find(function (vd) { return vd.ora === oraVal; }) || null;
-      var eraGiaFattoOggi = !!(vecchiaDose && vecchiaDose.fattoOggi === true);
-      if (vecchiaDose && vecchiaDose.ora !== oraVal && typeof verificaStatoOrarioFarmaco === 'function' && verificaStatoOrarioFarmaco(oraVal).futuro) {
-        eraGiaFattoOggi = false;
-      }
+        // PRESERVAZIONE FEDELE STATO ASSUNZIONE OGGI PER SINGOLA DOSE:
+        var vecchiaDose = vecchieDosiFarmaco[idx] || vecchieDosiFarmaco.find(function (vd) { return vd.ora === oraVal; }) || null;
+        var eraGiaFattoOggi = !!(vecchiaDose && vecchiaDose.fattoOggi === true);
+        if (vecchiaDose && vecchiaDose.ora !== oraVal && typeof verificaStatoOrarioFarmaco === 'function' && verificaStatoOrarioFarmaco(oraVal).futuro) {
+          eraGiaFattoOggi = false;
+        }
 
-      p.terapie.push({
-        id: (vecchiaDose && vecchiaDose.id) ? vecchiaDose.id : (Date.now() + idx * 311),
-        ora: oraVal,
-        fascia: fasciaVal,
-        farmaco: farmacoNomeFinal,
-        principio: principio,
-        dosaggio: isFormatoPenna ? (pDoseDie + ' Unità (sottocute)') : (dosaggioBase + ' (' + quotaLabel + ')'),
-        quantitaQuota: quotaVal,
-        modo: modoBase,
-        cprPerScatola: pScatola,
-        scorta: pScorta,
-        giorniAlert: giorniAlert,
-        cadenzaTipo: cadenza,
-        cadenzaGiorniSpecifici: cadGiorniSpecifici,
-        cadenzaGiornoSettimana: cadGiornoSettimana,
-        cadenzaGiornoMese: cadGiornoMese,
-        cadenzaDataInizio: cadDataInizio,
-        cadenzaMeseAnnuale: cadMeseAnnuale,
-        cadenzaGiornoAnnuale: cadGiornoAnnuale,
-        fattoOggi: eraGiaFattoOggi,
-        saltatoOggi: false,
-        ultimaModificaTimestamp: Date.now(),
-        tipoFormulazione: isFormatoPenna ? 'penna' : 'compressa',
-        canaleDistribuzione: canaleDist,
-        pianoTerapeutico: ptData,
-        penneScorta: pScorta,
-        unitaDoseDie: pDoseDie,
-        unitaPerPenna: pUnitaTot,
-        pennePerScatola: pScatola,
-        kitGlicemiaAssociato: isFormatoPenna ? {
-          attivo: document.getElementById('edit-penna-kit-attivo') ? document.getElementById('edit-penna-kit-attivo').checked : true,
-          sensoriNome: document.getElementById('edit-penna-sensori-nome') ? document.getElementById('edit-penna-sensori-nome').value.trim() : 'GlucoMen areo Sensor (25 sensori)',
-          sensoriScorta: parseInt(document.getElementById('edit-penna-sensori-scorta') ? document.getElementById('edit-penna-sensori-scorta').value : 25) || 25,
-          lancetteNome: document.getElementById('edit-penna-lancette-nome') ? document.getElementById('edit-penna-lancette-nome').value.trim() : 'Glucoject Lancets Extra 33G (25 lancette)',
-          lancetteScorta: parseInt(document.getElementById('edit-penna-lancette-scorta') ? document.getElementById('edit-penna-lancette-scorta').value : 25) || 25
-        } : null,
-        ultimaModificaClinica: ultimaMod,
-        tipoSpecialita: tipoSpecialita,
-        fotoScatola: fotoScatolaSalvataggio,
-        fotoPillola: fotoPillolaSalvataggio
+        p.terapie.push({
+          id: (vecchiaDose && vecchiaDose.id) ? vecchiaDose.id : (Date.now() + idx * 311),
+          ora: oraVal,
+          fascia: fasciaVal,
+          farmaco: farmacoNomeFinal,
+          principio: principio,
+          dosaggio: isFormatoPenna ? (pDoseDie + ' Unità (sottocute)') : (dosaggioBase + ' (' + quotaLabel + ')'),
+          quantitaQuota: quotaVal,
+          modo: modoBase,
+          cprPerScatola: pScatola,
+          scorta: pScorta,
+          giorniAlert: giorniAlert,
+          cadenzaTipo: cadenza,
+          cadenzaGiorniSpecifici: cadGiorniSpecifici,
+          cadenzaGiornoSettimana: cadGiornoSettimana,
+          cadenzaGiornoMese: cadGiornoMese,
+          cadenzaDataInizio: cadDataInizio,
+          cadenzaMeseAnnuale: cadMeseAnnuale,
+          cadenzaGiornoAnnuale: cadGiornoAnnuale,
+          fattoOggi: eraGiaFattoOggi,
+          saltatoOggi: false,
+          ultimaModificaTimestamp: Date.now(),
+          tipoFormulazione: isFormatoPenna ? 'penna' : 'compressa',
+          canaleDistribuzione: canaleDist,
+          pianoTerapeutico: ptData,
+          penneScorta: pScorta,
+          unitaDoseDie: pDoseDie,
+          unitaPerPenna: pUnitaTot,
+          pennePerScatola: pScatola,
+          kitGlicemiaAssociato: isFormatoPenna ? {
+            attivo: document.getElementById('edit-penna-kit-attivo') ? document.getElementById('edit-penna-kit-attivo').checked : true,
+            sensoriNome: document.getElementById('edit-penna-sensori-nome') ? document.getElementById('edit-penna-sensori-nome').value.trim() : 'GlucoMen areo Sensor (25 sensori)',
+            sensoriScorta: parseInt(document.getElementById('edit-penna-sensori-scorta') ? document.getElementById('edit-penna-sensori-scorta').value : 25) || 25,
+            lancetteNome: document.getElementById('edit-penna-lancette-nome') ? document.getElementById('edit-penna-lancette-nome').value.trim() : 'Glucoject Lancets Extra 33G (25 lancette)',
+            lancetteScorta: parseInt(document.getElementById('edit-penna-lancette-scorta') ? document.getElementById('edit-penna-lancette-scorta').value : 25) || 25
+          } : null,
+          ultimaModificaClinica: ultimaMod,
+          tipoSpecialita: tipoSpecialita,
+          fotoScatola: fotoScatolaSalvataggio,
+          fotoPillola: fotoPillolaSalvataggio
+        });
       });
-    });
 
-  }
+    }
 
-  // 3. Ordina cronologicamente le terapie secondo il ciclo clinico
-  p.terapie.sort(comparaOrariTerapie);
-  p.lastModified = Date.now();
+    // 3. Ordina cronologicamente le terapie secondo il ciclo clinico
+    p.terapie.sort(comparaOrariTerapie);
+    p.lastModified = Date.now();
 
-  closeModal('modal-modifica-farmaco');
-  allarmeTerapieSnoozeFinoA = 0; // Azzera qualsiasi pausa snooze appena cambi l'orario di un farmaco!
-  ultimoSuonoFarmacoRitardo = 0;
-  _ultimoMinutoNotificatoTerapia = '';
-  saveDb(true);
-  if (typeof renderMobileNativeView === 'function') {
-    try { renderMobileNativeView(p.terapie, p); } catch (e) { }
-  }
-  if (typeof salvaStatoCareAssistStorage === 'function') salvaStatoCareAssistStorage();
-  setTimeout(function () {
-    try { controllaTerapieGlobaliTuttiPazienti(); } catch (e) { }
-  }, 300);
-  showToast('Terapia per "' + cleanNome + '" salvata con successo con ' + totalDosi + ' somministrazioni! 💊', "success");
+    closeModal('modal-modifica-farmaco');
+    allarmeTerapieSnoozeFinoA = 0; // Azzera qualsiasi pausa snooze appena cambi l'orario di un farmaco!
+    ultimoSuonoFarmacoRitardo = 0;
+    _ultimoMinutoNotificatoTerapia = '';
+    saveDb(true);
+    if (typeof renderMobileNativeView === 'function') {
+      try { renderMobileNativeView(p.terapie, p); } catch (e) { }
+    }
+    if (typeof salvaStatoCareAssistStorage === 'function') salvaStatoCareAssistStorage();
+    setTimeout(function () {
+      try { controllaTerapieGlobaliTuttiPazienti(); } catch (e) { }
+    }, 300);
+    showToast('Terapia per "' + cleanNome + '" salvata con successo con ' + totalDosi + ' somministrazioni! 💊', "success");
   } catch (err) {
     console.error("ERRORE salvaModificaFarmaco:", err);
     alert("Avviso salvataggio terapia: " + (err.message || err));
@@ -15228,23 +15273,23 @@ function analizzaRicettaOCR(event) {
     file,
     'ita',
     {
-      logger: function(m) {
+      logger: function (m) {
         if (statusEl && m.status === 'recognizing text') {
           var pct = Math.round((m.progress || 0) * 100);
           statusEl.innerHTML = '<span style="display:inline-block; animation:spin 1s linear infinite;">🔍</span> Lettura ricetta medica AI in corso: <b>' + pct + '%</b>';
         }
       }
     }
-  ).then(function(result) {
+  ).then(function (result) {
     var text = (result && result.data && result.data.text) ? result.data.text : '';
     if (statusEl) {
       statusEl.innerHTML = '✅ Ricetta letta con successo! Estrazione dati clinici in corso...';
-      setTimeout(function() {
+      setTimeout(function () {
         statusEl.style.display = 'none';
       }, 3500);
     }
     interpretaTestoRicettaECompila(text);
-  }).catch(function(err) {
+  }).catch(function (err) {
     console.error('Errore OCR Ricetta:', err);
     if (statusEl) {
       statusEl.innerHTML = '⚠️ Impossibile decifrare l\'immagine: ' + (err.message || 'Errore di lettura');
@@ -15366,8 +15411,8 @@ function suggerisciVisiteDaQuadroClinico() {
   var box = document.getElementById('vis-box-suggerimenti-ai');
   if (!container || !box) return;
 
-  var patologieStr = (p.patologie || []).map(function(x) { return (x.nome || x.patologia || x || '').toString().toLowerCase(); }).join(' ');
-  var farmaciStr = (p.terapie || []).map(function(x) { return (x.farmaco || x.nome || x || '').toString().toLowerCase(); }).join(' ');
+  var patologieStr = (p.patologie || []).map(function (x) { return (x.nome || x.patologia || x || '').toString().toLowerCase(); }).join(' ');
+  var farmaciStr = (p.terapie || []).map(function (x) { return (x.farmaco || x.nome || x || '').toString().toLowerCase(); }).join(' ');
   var quadroCompleto = patologieStr + ' ' + farmaciStr;
 
   var suggerimenti = [];
@@ -15480,19 +15525,19 @@ function suggerisciVisiteDaQuadroClinico() {
   });
 
   var html = '';
-  suggerimenti.forEach(function(s, idx) {
+  suggerimenti.forEach(function (s, idx) {
     html += '<div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:9px 12px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">' +
       '<div style="flex:1; min-width:200px;">' +
-        '<div style="display:flex; align-items:center; gap:6px; margin-bottom:3px;">' +
-          '<span style="font-size:10px; background:' + s.badgeColor + '; color:#ffffff; padding:1px 6px; border-radius:4px; font-weight:800;">' + s.badge + '</span>' +
-          '<b style="font-size:12px; color:#0f172a;">' + s.titolo + '</b>' +
-        '</div>' +
-        '<div style="font-size:11px; color:#475569; line-height:1.3;">' + s.motivoClinico + '</div>' +
+      '<div style="display:flex; align-items:center; gap:6px; margin-bottom:3px;">' +
+      '<span style="font-size:10px; background:' + s.badgeColor + '; color:#ffffff; padding:1px 6px; border-radius:4px; font-weight:800;">' + s.badge + '</span>' +
+      '<b style="font-size:12px; color:#0f172a;">' + s.titolo + '</b>' +
+      '</div>' +
+      '<div style="font-size:11px; color:#475569; line-height:1.3;">' + s.motivoClinico + '</div>' +
       '</div>' +
       '<button type="button" onclick="applicaControlloSuggeritoAI(' + idx + ')" style="background:#15803d; color:#ffffff; border:none; border-radius:8px; padding:6px 12px; font-size:11px; font-weight:800; cursor:pointer; box-shadow:0 1px 3px rgba(21,128,61,0.2); white-space:nowrap;">' +
-        '⚡ Applica (1-Tap)' +
+      '⚡ Applica (1-Tap)' +
       '</button>' +
-    '</div>';
+      '</div>';
   });
 
   window._cacheSuggerimentiAI = suggerimenti;
@@ -15571,7 +15616,7 @@ function controllaConflittiVisita() {
 
   // 1. Controllo sovrapposizione data/orario con altre visite
   if (dataVal && Array.isArray(p.visite)) {
-    var visiteStessoGiorno = p.visite.filter(function(v) {
+    var visiteStessoGiorno = p.visite.filter(function (v) {
       if (String(v.id) === String(editId)) return false;
       var vStato = v.statoVisita || (v.fatto ? 'Eseguita' : 'In programma');
       if (vStato === 'Eseguita' || vStato === 'Disdetta') return false;
@@ -15580,7 +15625,7 @@ function controllaConflittiVisita() {
 
     if (visiteStessoGiorno.length > 0) {
       var dFmt = dataVal.split('-').reverse().join('/');
-      var medStr = visiteStessoGiorno.map(function(v) { return (v.medico || 'Visita') + ' (ore ' + (v.ora || '--:--') + ')'; }).join(', ');
+      var medStr = visiteStessoGiorno.map(function (v) { return (v.medico || 'Visita') + ' (ore ' + (v.ora || '--:--') + ')'; }).join(', ');
       warnings.push('⚠️ <b>Conflitto Appuntamenti:</b> Il paziente ha già ' + (visiteStessoGiorno.length === 1 ? 'un\'altra visita' : 'altre visite') + ' lo stesso giorno (<b>' + dFmt + '</b>): ' + medStr + '. Verificare che gli orari e i tragitti non si accavallino.');
     }
   }
@@ -15599,7 +15644,7 @@ function controllaConflittiVisita() {
   if (warnings.length > 0) {
     alertBox.style.display = 'block';
     alertBox.innerHTML = '<div style="font-weight:800; font-size:11.5px; margin-bottom:4px; display:flex; align-items:center; gap:5px;"><span>🛡️</span> <span>Controlli di Sicurezza Clinica Attivi:</span></div>' +
-      warnings.map(function(w) { return '<div style="margin-top:4px;">' + w + '</div>'; }).join('');
+      warnings.map(function (w) { return '<div style="margin-top:4px;">' + w + '</div>'; }).join('');
   } else {
     alertBox.style.display = 'none';
     alertBox.innerHTML = '';
@@ -15621,10 +15666,10 @@ function popolaSelettoreVisiteEsistenti(selectedId) {
   if (countEl) countEl.textContent = vList.length;
   if (!selectEl) return;
 
-  var vSorted = [...vList].sort(function(a, b) { return new Date(a.data) - new Date(b.data); });
+  var vSorted = [...vList].sort(function (a, b) { return new Date(a.data) - new Date(b.data); });
 
   var optionsHtml = '<option value="">➕ Nuova Visita (Modulo Vuoto per nuova prenotazione)</option>';
-  vSorted.forEach(function(v) {
+  vSorted.forEach(function (v) {
     var dFmt = (v.data && v.data.length >= 10) ? (v.data.slice(8, 10) + '/' + v.data.slice(5, 7) + '/' + v.data.slice(0, 4)) : (v.data || '--');
     var oraFmt = v.ora ? (' ore ' + v.ora) : '';
     var med = v.medico || 'Visita Specialistica';
@@ -15785,7 +15830,7 @@ function leggiPromemoriaVocaleVisita() {
 
   if (typeof showToast === 'function') showToast('🗣️ Riproduzione vocale in corso...');
 
-  riproduciVoceNaturaleHD(testoCompleto, function() {
+  riproduciVoceNaturaleHD(testoCompleto, function () {
     if (btnHeader) {
       btnHeader.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
       btnHeader.innerHTML = '<span id="icona-voce-modal-visita">🔊</span> <span>Ascolta</span>';
@@ -17336,7 +17381,7 @@ function apriModalSmartphone() {
   // Determina l'URL corretto: se online o su Render usa HTTPS Cloud, altrimenti usa l'origine corrente
   var targetUrl = window.location.origin + '/careassist/';
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    targetUrl = 'https://careassist-r61q.onrender.com/careassist/';
+    targetUrl = 'https://careassist-suite-pmze.onrender.com/careassist/';
   }
 
   // Genera dinamicamente il QR Code con l'indirizzo esatto
@@ -17721,7 +17766,7 @@ function leggiSpiegazioneAllineamentoVocale() {
   impostaStato(true);
   if (typeof showToast === 'function') showToast('🗣️ Riproduzione vocale Elsa Neural in corso...');
 
-  var resetFn = function() {
+  var resetFn = function () {
     _isAllineamentoVoceInCorso = false;
     impostaStato(false);
   };
@@ -18458,7 +18503,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // Sincronizza all'istante non appena l'utente tocca lo schermo o torna sulla scheda del browser
   // AUTO-SINCRONIZZAZIONE ISTANTANEA ALL'APERTURA, SBLOCCO O RITORNO SULL'APP
   window.addEventListener('focus', () => {
-    sincronizzaDbDalServer(function(success) {
+    sincronizzaDbDalServer(function (success) {
       if (success && typeof showSyncToast === 'function') {
         showSyncToast('Allineamento Cloud completato ✓', true);
       }
@@ -18466,7 +18511,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
-      sincronizzaDbDalServer(function(success) {
+      sincronizzaDbDalServer(function (success) {
         if (success && typeof showSyncToast === 'function') {
           showSyncToast('Allineamento Cloud completato ✓', true);
         }
@@ -21193,7 +21238,7 @@ function fermaRegistrazioneConsegna() {
   if (micBtn) micBtn.classList.remove('recording');
   if (wave) wave.classList.remove('active');
 
-  setTimeout(function() {
+  setTimeout(function () {
     if (txtArea && !txtArea.value.trim() && (_consegnaAudioBlobUrl || (_consegnaAudioChunks && _consegnaAudioChunks.length > 0) || _consegnaAudioBase64)) {
       const nowTime = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
       txtArea.value = '🎙️ Nota Vocale registrata alle ' + nowTime + ' (Audio allegato)';
@@ -21649,7 +21694,7 @@ function leggiIstruzioniSOSVocale() {
     btnCard.style.background = '#b91c1c';
   }
 
-  const resetBtn = function() {
+  const resetBtn = function () {
     _isSOSVoicePlaying = false;
     if (btn) {
       btn.innerHTML = '🔊 Ascolta Elsa Neural Vocale';
@@ -28046,7 +28091,7 @@ function parlaFallbackBrowserCareAssist(testo, onEndCallback) {
     utter.rate = 1.0;
     utter.pitch = 1.0;
 
-    var assegnaVoce = function() {
+    var assegnaVoce = function () {
       var voices = window.speechSynthesis.getVoices() || [];
       var itV = voices.filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf('it') === 0; });
       var best = itV.find(function (v) { return /elsa|isabella|alice|chiara|federica|elena|natural.*female|google.*italiano/i.test(v.name); })
@@ -28058,7 +28103,7 @@ function parlaFallbackBrowserCareAssist(testo, onEndCallback) {
     assegnaVoce();
 
     var fineChiamata = false;
-    var safeEnd = function() {
+    var safeEnd = function () {
       if (fineChiamata) return;
       fineChiamata = true;
       if (typeof onEndCallback === 'function') onEndCallback();
@@ -28069,7 +28114,7 @@ function parlaFallbackBrowserCareAssist(testo, onEndCallback) {
 
     // Se le voci non erano ancora caricate dal browser (asincrone)
     if (!utter.voice && window.speechSynthesis.onvoiceschanged !== undefined) {
-      window.speechSynthesis.onvoiceschanged = function() {
+      window.speechSynthesis.onvoiceschanged = function () {
         assegnaVoce();
       };
     }
@@ -28077,7 +28122,7 @@ function parlaFallbackBrowserCareAssist(testo, onEndCallback) {
     window.speechSynthesis.speak(utter);
 
     // Watchdog per Chrome/Edge: se l'utterance è lunga, il browser la sospende dopo 14s se non c'è resume()
-    var resumeTimer = setInterval(function() {
+    var resumeTimer = setInterval(function () {
       if (!window.speechSynthesis.speaking) {
         clearInterval(resumeTimer);
       } else {
@@ -28448,19 +28493,19 @@ var GUIDE_CONTESTUALI = {
     "percheDifferenza": "Fornisce una prova documentale inconfutabile della corretta aderenza terapeutica per medici e familiari."
 },
 
-    'bollario-scorte-semaforo': {
-      icona: '📦',
-      titolo: 'Bollario Farmaci & Semaforo Scorte Intelligente',
-      sottotitolo: 'Monitoraggio autonomia, previsione esaurimento e riordino ricette',
-      scopo: 'Questa schermata calcola automaticamente il fabbisogno giornaliero e l\'autonomia residua di ciascun farmaco dell\'assistito. Grazie al semaforo a tre colori evidenzia subito i farmaci critici in esaurimento (entro 48 ore) e consente di aggiornare le compresse o inviare l\'ordine ricetta su WhatsApp al medico curante con un solo clic.',
-      comeSiUsa: [
-        '<b>Semaforo Autonomia</b>: verde indica oltre 7 giorni di scorta, giallo tra 3 e 7 giorni, rosso esaurimento critico entro 48 ore.',
-        '<b>Tasto Aggiorna</b>: tocca per rettificare rapidamente le unità o compresse presenti fisicamente a domicilio.',
-        '<b>Ordina Ricetta</b>: inoltra istantaneamente al medico curante (MMG) il messaggio precompilato con nome farmaco e dosaggio per la prescrizione.',
-        '<b>Stampa Prospetto A4</b>: genera un foglio chiaro e ordinato per il raccoglitore domiciliare o i familiari.'
-      ],
-      utilita: '<b>Zero interruzioni terapeutiche</b>: garantisce che i farmaci salvavita non rimangano mai sprovvisti, pianificando le ricette mediche con largo anticipo.'
-    },
+  'bollario-scorte-semaforo': {
+    icona: '📦',
+    titolo: 'Bollario Farmaci & Semaforo Scorte Intelligente',
+    sottotitolo: 'Monitoraggio autonomia, previsione esaurimento e riordino ricette',
+    scopo: 'Questa schermata calcola automaticamente il fabbisogno giornaliero e l\'autonomia residua di ciascun farmaco dell\'assistito. Grazie al semaforo a tre colori evidenzia subito i farmaci critici in esaurimento (entro 48 ore) e consente di aggiornare le compresse o inviare l\'ordine ricetta su WhatsApp al medico curante con un solo clic.',
+    comeSiUsa: [
+      '<b>Semaforo Autonomia</b>: verde indica oltre 7 giorni di scorta, giallo tra 3 e 7 giorni, rosso esaurimento critico entro 48 ore.',
+      '<b>Tasto Aggiorna</b>: tocca per rettificare rapidamente le unità o compresse presenti fisicamente a domicilio.',
+      '<b>Ordina Ricetta</b>: inoltra istantaneamente al medico curante (MMG) il messaggio precompilato con nome farmaco e dosaggio per la prescrizione.',
+      '<b>Stampa Prospetto A4</b>: genera un foglio chiaro e ordinato per il raccoglitore domiciliare o i familiari.'
+    ],
+    utilita: '<b>Zero interruzioni terapeutiche</b>: garantisce che i farmaci salvavita non rimangano mai sprovvisti, pianificando le ricette mediche con largo anticipo.'
+  },
   'piano-terapeutico-orari': {
     icona: '✏️',
     titolo: 'Modifica Piano Terapeutico, Orari e Scorte',
@@ -28546,7 +28591,7 @@ var GUIDE_CONTESTUALI = {
       '<b>Note di Consegna</b>: scrivi eventuali annotazioni urgenti o riepiloghi per il collega del turno montante.',
       '<b>Convalida e Firma Turno</b>: tocca il tasto verde per generare l\'impronta digitale di sicurezza (hash) e salvare il check-in nel turnario certificato.'
     ]
-  ,
+    ,
     utilita: '<b>Valore legale e tutela per la struttura e la famiglia</b>: certifica con data, ora certa e coordinate geografiche la presenza al domicilio, azzerando contestazioni sulle fasce orarie di assistenza.'
   },
   'roadmap-scadenze': {
@@ -28559,7 +28604,7 @@ var GUIDE_CONTESTUALI = {
       '<b>Filtro per Categoria</b>: filtra rapidamente per Visite Specialistiche, Esami del Sangue, Diagnostica o Rinnovo Piani/Forniture.',
       '<b>Salva nel Telefono</b>: tocca il calendario su qualsiasi singolo evento o premi "Scarica Calendario Completo (.ics)" per salvare tutti i promemoria su Google Calendar, iPhone o Android.'
     ]
-  ,
+    ,
     utilita: '<b>Sincronizzazione familiare e zero visite saltate</b>: evita che esami del sangue, ecografie o rinnovi di piani terapeutici vitali vengano dimenticati, coordinando la famiglia su un unico scadenzario condiviso.'
   },
   'handsfree-ai': {
@@ -28573,7 +28618,7 @@ var GUIDE_CONTESTUALI = {
       '<b>Verifica la Trascrizione</b>: le parole compariranno in tempo reale nel riquadro sottostante.',
       '<b>Conferma e Salva</b>: premi il pulsante di conferma per archiviare automaticamente la nota nel diario clinico dell\'assistito selezionato.'
     ]
-  ,
+    ,
     utilita: '<b>Igiene totale bedside e rapidità operativa</b>: permette di registrare i parametri anche quando si indossano i guanti sanitari o le mani sono impegnate nella cura dell\'assistito.'
   },
   'promemoria-mmg': {
@@ -28600,7 +28645,7 @@ var GUIDE_CONTESTUALI = {
       '<b>Nuovo Controllo da Foto / Archivia Referto</b>: permette di fotografare o caricare direttamente l\'esito dell\'esame eseguito per aggiornare lo storico clinico.',
       '<b>Stampa e Moduli A4</b>: genera istantaneamente il prestampato ufficiale per il reparto di Malattie Infettive del Policlinico.'
     ]
-  ,
+    ,
     utilita: '<b>Compliance clinica impeccabile per esenzioni e controlli epatologici</b>: mantiene aggiornato il timing perfetto tra esami preparatori (Scotti), ecografia addome e visita specialistica del Policlinico.'
   },
 
@@ -29270,7 +29315,7 @@ function precaricaAudioGuidaContestuale(chiave) {
   var ttsTesto = testo.length > 2500 ? testo.substring(0, 2500) : testo;
   var encoded = encodeURIComponent(ttsTesto);
   var isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
-  var url = (isLocal ? '/api/tts-umano' : 'https://careassist-r61q.onrender.com/api/tts-umano') + '?voice=elsa&text=' + encoded;
+  var url = (isLocal ? '/api/tts-umano' : 'https://careassist-suite-pmze.onrender.com/api/tts-umano') + '?voice=elsa&text=' + encoded;
 
   try {
     _testoAudioPrecaricato = testo;
@@ -29497,7 +29542,7 @@ function leggiGuidaSaperneDiPiuVocale() {
   impostaStato(true);
   if (typeof showToast === 'function') showToast('🗣️ Riproduzione con voce naturale Elsa Neural...');
 
-  var resetFn = function() {
+  var resetFn = function () {
     _isSaperneDiPiuVoceInCorso = false;
     impostaStato(false);
   };
@@ -32350,12 +32395,12 @@ function renderMobileNativeView(terapie, p) {
           '</div>' +
           '<div class="mobile-card-name" style="margin-top:6px; font-size:14.5px; font-weight:800; color:#0f172a; display:flex; align-items:center; justify-content:space-between;">' +
           '<div style="display:inline-flex; align-items:center; gap:5px; flex-wrap:wrap;">' +
-            '<span>' + t.farmaco + badgeSalvavita + '</span>' +
-            ((t.tipoSpecialita === 'generico' || (typeof deduciTipoSpecialitaDaNome === 'function' && deduciTipoSpecialitaDaNome(t.farmaco) === 'generico'))
-              ? '<span class="badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px;">🧬 Generico</span>'
-              : '<span class="badge" style="background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px;">⭐ Originale</span>') +
-            (t.fotoScatola ? ('<button type="button" onclick="event.stopPropagation(); apriFotoScatoloModal(\'' + (t.fotoScatola || '').replace(/'/g, "\\'") + '\', \'' + (t.farmaco || '').replace(/'/g, "\\'") + '\', \'Principio: ' + (t.principio || '--') + '\', \'' + (t.fotoPillola || '').replace(/'/g, "\\'") + '\')" style="background:#0284c7; color:#fff; border:none; padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:3px; box-shadow:0 1px 3px rgba(2,132,199,0.3);">📷 Scatola</button>') : '') +
-            '</div>' +
+          '<span>' + t.farmaco + badgeSalvavita + '</span>' +
+          ((t.tipoSpecialita === 'generico' || (typeof deduciTipoSpecialitaDaNome === 'function' && deduciTipoSpecialitaDaNome(t.farmaco) === 'generico'))
+            ? '<span class="badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px;">🧬 Generico</span>'
+            : '<span class="badge" style="background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd; font-weight:800; font-size:9.5px; padding:1px 6px; border-radius:6px;">⭐ Originale</span>') +
+          (t.fotoScatola ? ('<button type="button" onclick="event.stopPropagation(); apriFotoScatoloModal(\'' + (t.fotoScatola || '').replace(/'/g, "\\'") + '\', \'' + (t.farmaco || '').replace(/'/g, "\\'") + '\', \'Principio: ' + (t.principio || '--') + '\', \'' + (t.fotoPillola || '').replace(/'/g, "\\'") + '\')" style="background:#0284c7; color:#fff; border:none; padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:3px; box-shadow:0 1px 3px rgba(2,132,199,0.3);">📷 Scatola</button>') : '') +
+          '</div>' +
           '<span style="font-size:11px; color:#0284c7; font-weight:800;" title="Apri scheda intera">📱 Apri ↗</span>' +
           '</div>' +
           principioHtml +
@@ -32502,11 +32547,11 @@ function chiudiAmbulatorioSpecialisticoMobile() {
   if (cruscottoSmart) cruscottoSmart.style.setProperty('display', 'block', 'important');
   const anagraficaHero = document.querySelector('.anagrafica-hero');
   if (anagraficaHero) anagraficaHero.style.setProperty('display', '', '');
-  
+
   // Nascondi tab specialistica
   const tabEpatologia = document.getElementById('tab-epatologia');
   if (tabEpatologia) tabEpatologia.style.setProperty('display', 'none', 'important');
-  
+
   // Ripristina tab principale
   if (typeof initTabs === 'function') {
     var tabOggi = document.querySelector('[data-target="tab-dashboard"]');
@@ -33118,7 +33163,7 @@ window.vaiACartellaPatologie = vaiACartellaPatologie;
 
 function navigaAProgettoSalute() {
   if (typeof salvaRiferimentoCondiviso === 'function') salvaRiferimentoCondiviso();
-  var p = (typeof getActivePaziente === 'function') ? getActivePaziente() : (typeof AppData !== 'undefined' && AppData.pazienti ? AppData.pazienti.find(function(x){ return x.id === AppData.activePazienteId; }) : null);
+  var p = (typeof getActivePaziente === 'function') ? getActivePaziente() : (typeof AppData !== 'undefined' && AppData.pazienti ? AppData.pazienti.find(function (x) { return x.id === AppData.activePazienteId; }) : null);
   var nome = p ? encodeURIComponent(p.nome) : '';
   window.location.href = '/salute/?profile=' + nome;
 }
@@ -33126,7 +33171,7 @@ window.navigaAProgettoSalute = navigaAProgettoSalute;
 
 function navigaAdAmbulatorioApp() {
   if (typeof salvaRiferimentoCondiviso === 'function') salvaRiferimentoCondiviso();
-  var p = (typeof getActivePaziente === 'function') ? getActivePaziente() : (typeof AppData !== 'undefined' && AppData.pazienti ? AppData.pazienti.find(function(x){ return x.id === AppData.activePazienteId; }) : null);
+  var p = (typeof getActivePaziente === 'function') ? getActivePaziente() : (typeof AppData !== 'undefined' && AppData.pazienti ? AppData.pazienti.find(function (x) { return x.id === AppData.activePazienteId; }) : null);
   var nome = p ? encodeURIComponent(p.nome) : '';
   window.location.href = '/mednutri/?patient=' + nome;
 }
@@ -33347,11 +33392,11 @@ function leggiSintesiVocalePatologie() {
 
   if (patList.length > 0) {
     parti.push('Patologie e diagnosi attive in cura: ' + patList.join(', ') + '.');
-    patList.forEach(function(pt) {
+    patList.forEach(function (pt) {
       if (typeof getFarmaciPerPatologia === 'function') {
         var correlati = getFarmaciPerPatologia(p, pt);
         if (correlati && correlati.length > 0) {
-          var nomiF = correlati.map(function(f) { return f.farmaco; }).join(', ');
+          var nomiF = correlati.map(function (f) { return f.farmaco; }).join(', ');
           parti.push('Per la patologia ' + pt + ' assume: ' + nomiF + '.');
         }
       }
@@ -33361,7 +33406,7 @@ function leggiSintesiVocalePatologie() {
   }
 
   if (Array.isArray(p.ausili) && p.ausili.length > 0) {
-    var ausiliNomi = p.ausili.map(function(a) { return a.nome || a.tipo; }).filter(Boolean).join(', ');
+    var ausiliNomi = p.ausili.map(function (a) { return a.nome || a.tipo; }).filter(Boolean).join(', ');
     if (ausiliNomi) parti.push('Presidi sanitari e ausili in dotazione: ' + ausiliNomi + '.');
   }
 
@@ -33380,7 +33425,7 @@ function leggiSintesiVocalePatologie() {
   if (btn) btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
   if (typeof showToast === 'function') showToast('🗣️ Riproduzione quadro clinico con Voce Naturale...');
 
-  var resetBtn = function() {
+  var resetBtn = function () {
     if (ico) ico.textContent = '🔊';
     if (txt) txt.textContent = 'Ascolta Quadro Clinico';
     if (btn) btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
@@ -34763,7 +34808,7 @@ window.stampaFabbisognoA4 = function () {
       '✅ Tutte le scorte attuali risultano al momento regolari. Nessun rinnovo urgente pervenuto.' +
       '</td></tr>';
   } else {
-    righeFarmaciHtml = farmaci.map(function(f, idx) {
+    righeFarmaciHtml = farmaci.map(function (f, idx) {
       return '<tr style="border-bottom:1px solid #cbd5e1; background:' + (idx % 2 === 0 ? '#ffffff' : '#f8fafc') + ';">' +
         '<td style="padding:10px 12px; font-weight:900; color:#0f172a; font-size:10.5pt;">' +
         (idx + 1) + '. ' + f.farmaco +
@@ -34801,26 +34846,26 @@ window.stampaFabbisognoA4 = function () {
     '.brand-title { font-size: 16pt; font-weight: 900; color: #065f46; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }' +
     '.brand-sub { font-size: 9pt; color: #64748b; font-weight: 600; margin-top: 2px; }' +
     '.badge-doc { background: #ecfdf5; color: #047857; font-weight: 800; font-size: 8.5pt; padding: 4px 10px; border-radius: 6px; border: 1.5px solid #a7f3d0; text-transform:uppercase; }' +
-    
+
     '.box-grid { display: table; width: 100%; border-collapse: separate; border-spacing: 10px; margin-left: -10px; margin-right: -10px; margin-bottom: 14px; }' +
     '.box-card { display: table-cell; width: 50%; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; vertical-align: top; }' +
     '.box-title { font-size: 9pt; font-weight: 900; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }' +
-    
+
     '.table-farmaci { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 16px; font-size: 9.5pt; }' +
     '.table-farmaci th { background: #064e3b; color: #ffffff; text-align: left; padding: 8px 10px; font-weight: 800; border: 1px solid #064e3b; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.3px; }' +
     '.table-farmaci td { border: 1px solid #cbd5e1; }' +
-    
+
     '.note-box { background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #0284c7; border-radius: 8px; padding: 10px 14px; font-size: 9pt; margin-bottom: 20px; }' +
     '.firma-table { width: 100%; margin-top: 25px; border-collapse: collapse; }' +
     '.linea-firma { width: 85%; border-top: 1px solid #475569; margin-top: 40px; text-align: center; font-size: 8.5pt; color: #64748b; padding-top: 5px; }' +
-    
+
     '@media print {' +
     '  .no-print { display: none !important; }' +
     '}' +
     '</style>' +
     '</head>' +
     '<body>' +
-    
+
     '<!-- BARRA AZIONI ANTEPRIMA (NON STAMPABILE) -->' +
     '<div class="no-print" style="background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color:#ffffff; padding:12px 20px; margin-bottom:20px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 14px rgba(0,0,0,0.2);">' +
     '  <div style="font-weight:800; font-size:13px; display:flex; align-items:center; gap:8px;">' +
@@ -35167,19 +35212,19 @@ function salvaModificaDiarioItem() {
 window.salvaModificaDiarioItem = salvaModificaDiarioItem;
 
 // Inizializzazione rapida Cestino di Windows & supporto apertura diretta da launcher (?open=cestino o #cestino)
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function() {
+document.addEventListener('DOMContentLoaded', function () {
+  setTimeout(function () {
     if (typeof cestinoAggiornaBadge === 'function') cestinoAggiornaBadge();
-  if (typeof renderFamilyPortal === 'function') {
-    var tabFam = document.getElementById('tab-family-portal');
-    if (tabFam && tabFam.style.display !== 'none') renderFamilyPortal();
-  }
+    if (typeof renderFamilyPortal === 'function') {
+      var tabFam = document.getElementById('tab-family-portal');
+      if (tabFam && tabFam.style.display !== 'none') renderFamilyPortal();
+    }
     if (window.location.search.includes('open=cestino') || window.location.hash === '#cestino') {
       if (typeof apriModalCestino === 'function') apriModalCestino();
     }
   }, 350);
 });
-window.addEventListener('hashchange', function() {
+window.addEventListener('hashchange', function () {
   if (window.location.hash === '#cestino' || window.location.hash === '#modal-cestino') {
     if (typeof apriModalCestino === 'function') apriModalCestino();
   }
@@ -35210,7 +35255,7 @@ window.forceUpdateCareAssistApp = function () {
 // ==========================================
 // Gestione voce Elsa Neural per Istruzioni Inizio Turno Operatore
 var _isTurnoVoceInCorso = false;
-window.leggiIstruzioniTurnoVoceElsa = function() {
+window.leggiIstruzioniTurnoVoceElsa = function () {
   var btn = document.getElementById('btn-voce-turno-modal');
   var ico = document.getElementById('ico-voce-turno-modal');
   var txt = document.getElementById('txt-voce-turno-modal');
@@ -35244,13 +35289,13 @@ window.leggiIstruzioniTurnoVoceElsa = function() {
   impostaStato(true);
   if (typeof showToast === 'function') showToast('🗣️ Riproduzione vocale Elsa Neural in corso...');
 
-  riproduciVoceNaturaleHD(testo, function() {
+  riproduciVoceNaturaleHD(testo, function () {
     _isTurnoVoceInCorso = false;
     impostaStato(false);
   });
 };
 
-window.apriGuidaInizioTurnoOperatore = function() {
+window.apriGuidaInizioTurnoOperatore = function () {
   var modalId = 'modal-guida-turno-operatore';
   var exist = document.getElementById(modalId);
   if (exist) exist.remove();
@@ -35339,7 +35384,7 @@ window.apriGuidaInizioTurnoOperatore = function() {
 };
 
 
-window.nascondiBannerDosiPendenti = function() {
+window.nascondiBannerDosiPendenti = function () {
   var b = document.getElementById('banner-dosi-pendenti-recupero');
   if (b) b.style.display = 'none';
   var topBtn = document.getElementById('btn-top-recupero-dosi');
@@ -35354,7 +35399,7 @@ window.nascondiBannerDosiPendenti = function() {
 // ==============================================================================
 // Gestione voce Elsa Neural per maschera Autorizzazione Amministratore / Cestino
 var _isAdminPinVoceInCorso = false;
-window.leggiAutorizzazioneAdminVoceElsa = function(motivo) {
+window.leggiAutorizzazioneAdminVoceElsa = function (motivo) {
   var btn = document.getElementById('btn-voce-admin-modal');
   var ico = document.getElementById('ico-voce-admin-modal');
   var txt = document.getElementById('txt-voce-admin-modal');
@@ -35389,7 +35434,7 @@ window.leggiAutorizzazioneAdminVoceElsa = function(motivo) {
   impostaStato(true);
   if (typeof showToast === 'function') showToast('🗣️ Riproduzione vocale Elsa Neural in corso...');
 
-  riproduciVoceNaturaleHD(testo, function() {
+  riproduciVoceNaturaleHD(testo, function () {
     _isAdminPinVoceInCorso = false;
     impostaStato(false);
   });
@@ -35518,8 +35563,8 @@ window.richiediPinAdminPerCancellazione = function (motivoAzione) {
 // ==============================================================================
 // MODALE SCELTA ELIMINAZIONE: SPOSTA NEL CESTINO OPPURE ELIMINA DEFINITIVAMENTE (ADMIN PIN)
 // ==============================================================================
-window.chiediTipoEliminazioneDiario = function(conteggio, pazienteNome) {
-  return new Promise(function(resolve) {
+window.chiediTipoEliminazioneDiario = function (conteggio, pazienteNome) {
+  return new Promise(function (resolve) {
     var modalId = 'modal-scelta-eliminazione-diario';
     var exist = document.getElementById(modalId);
     if (exist) exist.remove();
@@ -35591,15 +35636,15 @@ window.chiediTipoEliminazioneDiario = function(conteggio, pazienteNome) {
 
     document.body.appendChild(m);
 
-    document.getElementById('scelta-del-close').onclick = function() { m.remove(); resolve(null); };
-    document.getElementById('btn-scelta-annulla').onclick = function() { m.remove(); resolve(null); };
+    document.getElementById('scelta-del-close').onclick = function () { m.remove(); resolve(null); };
+    document.getElementById('btn-scelta-annulla').onclick = function () { m.remove(); resolve(null); };
 
-    document.getElementById('btn-scelta-cestino').onclick = function() {
+    document.getElementById('btn-scelta-cestino').onclick = function () {
       m.remove();
       resolve('cestino');
     };
 
-    document.getElementById('btn-scelta-definitivo').onclick = async function() {
+    document.getElementById('btn-scelta-definitivo').onclick = async function () {
       m.remove();
       var auth = await window.richiediPinAdminPerCancellazione('Inserisci il PIN / Password Amministratore per eliminare definitivamente:');
       if (auth) {
@@ -35699,7 +35744,7 @@ function leggiSintesiVocalePortaleFamiglia() {
   impostaStato(true);
   if (typeof showToast === 'function') showToast('🗣️ Riproduzione Portale Famiglia con Elsa Neural...');
 
-  var resetFn = function() {
+  var resetFn = function () {
     _isPortaleFamigliaVoceInCorso = false;
     impostaStato(false);
   };
@@ -36052,8 +36097,8 @@ window.stampaReportFamigliaPDF = function () {
           </thead>
           <tbody>
             ${terapie.map(function (t) {
-              return '<tr><td><b>' + (t.ora || '--:--') + '</b></td><td><b>' + t.farmaco + '</b><br><span style="font-size:11px; color:#64748b;">' + (t.dosaggio || '') + '</span></td><td>' + (t.modo || '--') + '</td><td>' + (t.fattoOggi ? '✓ Somministrato' : 'Da somministrare') + '</td></tr>';
-            }).join('')}
+    return '<tr><td><b>' + (t.ora || '--:--') + '</b></td><td><b>' + t.farmaco + '</b><br><span style="font-size:11px; color:#64748b;">' + (t.dosaggio || '') + '</span></td><td>' + (t.modo || '--') + '</td><td>' + (t.fattoOggi ? '✓ Somministrato' : 'Da somministrare') + '</td></tr>';
+  }).join('')}
           </tbody>
         </table>
       </div>
@@ -37041,7 +37086,7 @@ window.stampaPassaportoEmergenza112 = function () {
             <span>CLINICA</span>
           </div>
           <div class="info" style="font-size:10px; line-height:1.4; width: 230px;">
-            ${salvavita.length > 0 ? salvavita.map(function(t){ return '• <b>' + t.farmaco + '</b> (' + (t.dosaggio || t.ora) + ')'; }).join('<br>') : 'Terapie orali continuative regolarmente monitorate.'}
+            ${salvavita.length > 0 ? salvavita.map(function (t) { return '• <b>' + t.farmaco + '</b> (' + (t.dosaggio || t.ora) + ')'; }).join('<br>') : 'Terapie orali continuative regolarmente monitorate.'}
             <div style="margin-top:6px; color:#b91c1c; font-weight:800;">
               ❌ ALLERGIE NOTE: Nessuna intolleranza segnalata
             </div>
@@ -37072,7 +37117,7 @@ window.stampaPassaportoEmergenza112 = function () {
 // ==========================================
 // BOLLARIO SCORTE FARMACI & SEMAFORO RIORDINO
 // ==========================================
-window.apriModalBollarioScorte = function() {
+window.apriModalBollarioScorte = function () {
   const modal = document.getElementById('modal-bollario-scorte');
   if (!modal) {
     console.error('Modal modal-bollario-scorte non trovato nel DOM');
@@ -37094,12 +37139,12 @@ window.apriModalBollarioScorte = function() {
   modal.style.display = 'flex';
 };
 
-window.chiudiModalBollarioScorte = function() {
+window.chiudiModalBollarioScorte = function () {
   const modal = document.getElementById('modal-bollario-scorte');
   if (modal) modal.style.display = 'none';
 };
 
-window.popolaBollarioScorte = function() {
+window.popolaBollarioScorte = function () {
   const tbody = document.getElementById('bollario-scorte-tbody');
   if (!tbody) return;
 
@@ -37156,8 +37201,8 @@ window.popolaBollarioScorte = function() {
     const tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid #f1f5f9';
     tr.style.transition = 'background 0.15s ease';
-    tr.onmouseenter = function() { tr.style.background = '#f8fafc'; };
-    tr.onmouseleave = function() { tr.style.background = 'transparent'; };
+    tr.onmouseenter = function () { tr.style.background = '#f8fafc'; };
+    tr.onmouseleave = function () { tr.style.background = 'transparent'; };
 
     const farmacoEscaped = (item.farmaco || '').replace(/'/g, "\\'");
 
@@ -37200,7 +37245,7 @@ window.popolaBollarioScorte = function() {
   if (elCrit) elCrit.textContent = countCritico + ' Farmaci';
 };
 
-window.apriRicaricaScortaDettaglio = function(nomeFarmaco) {
+window.apriRicaricaScortaDettaglio = function (nomeFarmaco) {
   const p = (typeof getActivePaziente === 'function') ? getActivePaziente() : (window.AppData && window.AppData.pazienti ? window.AppData.pazienti[0] : null);
   if (!p || !p.terapie) return;
   const t = p.terapie.find(x => x.farmaco === nomeFarmaco);
@@ -37219,13 +37264,13 @@ window.apriRicaricaScortaDettaglio = function(nomeFarmaco) {
   }
 };
 
-window.inviaRichiestaRiordinoSingoloWA = function(nomeFarmaco, scorta, giorni) {
+window.inviaRichiestaRiordinoSingoloWA = function (nomeFarmaco, scorta, giorni) {
   const p = (typeof getActivePaziente === 'function') ? getActivePaziente() : {};
   const msg = 'Gentile Dottore / Farmacia,%0A%0ASi richiede cortesemente il rinnovo ricetta / riordino per l\'assistito: ' + (p.nome || 'Paziente') + ' (CF: ' + (p.codiceFiscale || 'In cartella') + ').%0A%0A*Farmaco:* ' + encodeURIComponent(nomeFarmaco) + '%0A*Scorta residua:* ' + scorta + ' unità (Autonomia residua: circa ' + giorni + ' giorni).%0A%0AInviato tramite CareAssist Pro.';
   window.open('https://api.whatsapp.com/send?text=' + msg, '_blank');
 };
 
-window.inviaRichiestaRiordinoMultiploWA = function() {
+window.inviaRichiestaRiordinoMultiploWA = function () {
   const p = (typeof getActivePaziente === 'function') ? getActivePaziente() : null;
   if (!p || !p.terapie) return;
 
@@ -37251,7 +37296,7 @@ window.inviaRichiestaRiordinoMultiploWA = function() {
   window.open('https://api.whatsapp.com/send?text=' + msg, '_blank');
 };
 
-window.stampaBollarioScortePDF = function() {
+window.stampaBollarioScortePDF = function () {
   window.print();
 };
 
@@ -37291,7 +37336,7 @@ function ascoltaGuidaCestinoVocale() {
   if (txt) txt.textContent = 'Interrompi Voce';
   if (btn) btn.style.background = 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)';
 
-  const resetStato = function() {
+  const resetStato = function () {
     _isGuidaCestinoInRiproduzione = false;
     if (ico) ico.textContent = '🔊';
     if (txt) txt.textContent = 'Ascolta Elsa Neural';
@@ -37380,7 +37425,7 @@ function ascoltaScheda118Vocale() {
   if (txt) txt.textContent = 'Ferma';
   if (btn) { btn.style.background = '#0f172a'; btn.style.color = '#ffffff'; }
 
-  const resetStato = function() {
+  const resetStato = function () {
     _is118VoicePlaying = false;
     if (ico) ico.textContent = '🔊';
     if (txt) txt.textContent = 'Ascolta';

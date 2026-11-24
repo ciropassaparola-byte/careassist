@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -2135,9 +2135,9 @@
   <div id="modal-pin-admin" class="modal-backdrop">
     <div class="modal-box" style="max-width:400px; text-align:center;">
       <div style="font-size:38px; margin-bottom:8px;">👑</div>
-      <div style="font-size:18px; font-weight:900; margin-bottom:6px;">Accesso Coordinatore Admin</div>
+      <div style="font-size:18px; font-weight:900; margin-bottom:6px;">Accesso Profilo & Sblocco PIN</div>
       <div style="font-size:12.5px; color:var(--text-muted); margin-bottom:18px; line-height:1.45;">
-        Inserisci il PIN Master di sicurezza per sbloccare i privilegi di modifica e assegnazione turni:
+        Inserisci il tuo codice personale (es. <b>.002</b> per M.C. Stoppelli) oppure il PIN Master per accedere come Admin:
       </div>
 
       <div style="margin-bottom:20px;">
@@ -2278,7 +2278,7 @@
           </div>
           <div>
             <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">Operatore Smontante</label>
-            <input type="text" id="consegna-operatore" placeholder="Nome Operatore" value="M.C. Stoppelli" style="width:100%; background:#0b1324; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 10px; color:#fff; font-size:13px;">
+            <input type="text" id="consegna-operatore" placeholder="Nome Operatore" value="" style="width:100%; background:#0b1324; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:8px 10px; color:#fff; font-size:13px;">
           </div>
           <div>
             <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">Parametri Rilevati (PA / SpO2 / FC)</label>
@@ -2407,7 +2407,8 @@
     }
 
     function verificaRuoloAdmin() {
-      const isAdmin = window.isUtenteAdmin ? window.isUtenteAdmin() : true;
+      const profilo = window.getProfiloOperatoreCorrente ? window.getProfiloOperatoreCorrente() : { isAdmin: true, nome: 'Ciro Milella', ruoloDesc: 'Admin Coordinatore' };
+      const isAdmin = profilo.isAdmin;
       const roleCont = document.getElementById('user-role-container');
       const collBanner = document.getElementById('collaboratore-banner');
       const adminActions = document.getElementById('admin-actions-box');
@@ -2415,13 +2416,13 @@
 
       if (roleCont) {
         roleCont.innerHTML = isAdmin ? `
-          <div class="role-badge role-admin" style="display:inline-flex; align-items:center; gap:8px;">
-            <img src="/assets/img/cm_shield_badge.png" alt="Ciro Milella" style="width:20px; height:20px; border-radius:50%; object-fit:cover; border:1px solid #d4af37; box-shadow:0 0 6px rgba(212,175,55,0.4);" onerror="this.onerror=null; this.src='/careassist/assets/img/cm_shield_badge.png';">
-            <span>Admin Coordinatore (Ciro Milella)</span>
+          <div class="role-badge role-admin" style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;" onclick="apriModalPinAdmin()" title="Profilo Amministratore attivo - Clicca per cambiare profilo">
+            <img src="/assets/img/cm_shield_badge.png" alt="${profilo.nome}" style="width:20px; height:20px; border-radius:50%; object-fit:cover; border:1px solid #d4af37; box-shadow:0 0 6px rgba(212,175,55,0.4);" onerror="this.onerror=null; this.src='/careassist/assets/img/cm_shield_badge.png';">
+            <span>${profilo.ruoloDesc} (${profilo.nome})</span>
           </div>
         ` : `
-          <div class="role-badge role-collaboratore">
-            <span>🔒</span> <span>Collaboratore (Sola Lettura)</span>
+          <div class="role-badge role-collaboratore" style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;" onclick="apriModalPinAdmin()" title="Profilo Operatore attivo - Clicca per accedere con altro PIN o Admin">
+            <span>👩‍⚕️</span> <span>${profilo.nome} (${profilo.ruoloDesc})</span>
           </div>
         `;
       }
@@ -2431,8 +2432,9 @@
       if (hintEdit) {
         hintEdit.innerHTML = isAdmin 
           ? '💡 <b>Pannello Admin:</b> tocca qualsiasi cella per assegnare o modificare il turno'
-          : '🔒 <b>Sola Lettura:</b> i turni sono stabiliti e assegnati esclusivamente dall\'Admin Coordinatore';
+          : `🔒 <b>Accesso ${profilo.nome}:</b> consultazione turni e consegne cliniche personali. Privilegi di modifica riservati all'Admin Coordinatore`;
       }
+    }
     }
 
     function cambiaVista(mode) {
@@ -3156,23 +3158,68 @@
       if (modal) modal.style.display = 'none';
     }
 
-    function confermaSbloccoPinAdmin() {
+    async function confermaSbloccoPinAdmin() {
       const inp = document.getElementById('input-pin-master-admin');
       const pin = inp ? inp.value.trim() : '';
       if (!pin) {
-        mostraToast('Inserisci il PIN di Sicurezza', '⚠️');
+        mostraToast('Inserisci il Codice o PIN', '⚠️');
         return;
       }
-      if (window.sbloccaModalitaAdminManuale) {
-        const ok = window.sbloccaModalitaAdminManuale(pin);
-        if (ok) {
-          chiudiModalPinAdmin();
-          renderViste();
-          mostraToast('Modalità Admin Coordinatore Sbloccata!', '👑');
-        } else {
-          mostraToast('PIN Errato. Riprova', '❌');
-          if (inp) inp.select();
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codice: pin })
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          if (data.ruolo === 'admin') {
+            sessionStorage.setItem('turnario_admin_unlocked', 'true');
+            localStorage.setItem('milella_role', 'admin');
+            localStorage.setItem('milella_last_authenticated_role', 'admin');
+            localStorage.setItem('milella_user_nome', data.nome || 'Ciro Milella');
+            sessionStorage.setItem('milella_user_nome', data.nome || 'Ciro Milella');
+            chiudiModalPinAdmin();
+            renderViste();
+            mostraToast('Benvenuto ' + (data.nome || 'Admin') + '! Modalità Coordinatore attiva.', '👑');
+          } else {
+            sessionStorage.removeItem('turnario_admin_unlocked');
+            localStorage.setItem('milella_role', data.ruolo || 'operatore');
+            localStorage.setItem('milella_last_authenticated_role', data.ruolo || 'operatore');
+            localStorage.setItem('milella_user_nome', data.nome || 'Operatore');
+            sessionStorage.setItem('milella_user_nome', data.nome || 'Operatore');
+            chiudiModalPinAdmin();
+            renderViste();
+            mostraToast('Accesso effettuato: ' + (data.nome || 'Operatore'), '👩‍⚕️');
+          }
+          return;
         }
+      } catch(e) {
+        console.warn('Login locale fallito, provo verifica offline:', e);
+      }
+
+      // Fallback offline immediato
+      if (pin.toUpperCase() === 'SOS999') {
+        sessionStorage.setItem('turnario_admin_unlocked', 'true');
+        localStorage.setItem('milella_role', 'admin');
+        localStorage.setItem('milella_last_authenticated_role', 'admin');
+        localStorage.setItem('milella_user_nome', 'Ciro Milella (Admin)');
+        sessionStorage.setItem('milella_user_nome', 'Ciro Milella (Admin)');
+        chiudiModalPinAdmin();
+        renderViste();
+        mostraToast('Modalità Admin Coordinatore Sbloccata!', '👑');
+      } else if (pin === '.002' || pin.toLowerCase() === 'stoppelli') {
+        sessionStorage.removeItem('turnario_admin_unlocked');
+        localStorage.setItem('milella_role', 'operatore');
+        localStorage.setItem('milella_last_authenticated_role', 'operatore');
+        localStorage.setItem('milella_user_nome', 'M.C. Stoppelli');
+        sessionStorage.setItem('milella_user_nome', 'M.C. Stoppelli');
+        chiudiModalPinAdmin();
+        renderViste();
+        mostraToast('Accesso Operatore: M.C. Stoppelli', '👩‍⚕️');
+      } else {
+        mostraToast('Codice o PIN non riconosciuto', '❌');
+        if (inp) inp.select();
       }
     }
 
@@ -3304,6 +3351,11 @@
       const m = document.getElementById('modal-consegne-cliniche');
       if (!m) return;
       caricaStoricoConsegne();
+      const opInput = document.getElementById('consegna-operatore');
+      if (opInput && !opInput.value.trim()) {
+        const profilo = window.getProfiloOperatoreCorrente ? window.getProfiloOperatoreCorrente() : { nome: 'Ciro Milella' };
+        opInput.value = profilo.nome;
+      }
       m.style.display = 'flex';
     }
     function chiudiModalConsegneCliniche() {
@@ -3628,7 +3680,7 @@ const testoGuidaTurnarioCompleto = "A cosa serve il Roster Sanitario e Turnario 
 function precaricaAudioTurnario() {
   if (_preloadedAudioTurnario) return;
   try {
-    const cloudBase = 'https://careassist-r61q.onrender.com';
+    const cloudBase = 'https://careassist-suite-pmze.onrender.com';
     const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
     const url = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testoGuidaTurnarioCompleto);
     _preloadedAudioTurnario = new Audio();
@@ -3729,7 +3781,7 @@ function toggleVoceGuidaTurnario() {
     }
   }, 4000);
 
-  const cloudBase = 'https://careassist-r61q.onrender.com';
+  const cloudBase = 'https://careassist-suite-pmze.onrender.com';
   const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
   const apiUrl = (isLocal ? '' : cloudBase) + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
 
@@ -3873,7 +3925,7 @@ window.toggleVoceGuidaTurnario = toggleVoceGuidaTurnario;
       if (btn) btn.innerHTML = '<span>⏹️</span> <span>Interrompi</span>';
 
       // Use TTS Edge Elsa Neural if available via endpoint, else Web Speech API
-      var url = 'https://careassist-r61q.onrender.com/api/tts?text=' + encodeURIComponent(testo) + '&voice=it-IT-ElsaNeural';
+      var url = 'https://careassist-suite-pmze.onrender.com/api/tts?text=' + encodeURIComponent(testo) + '&voice=it-IT-ElsaNeural';
       var a = new Audio(url);
       _audioGuidaTurni = a;
       a.onended = function() {

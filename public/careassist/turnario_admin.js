@@ -190,12 +190,23 @@ let turnarioCorrente = null;
 // Verifica se l'utente corrente ha i privilegi di Admin
 function isUtenteAdmin() {
   const role = localStorage.getItem('milella_role') || localStorage.getItem('milella_last_authenticated_role');
-  if (role === 'collaboratore') {
+  if (role === 'collaboratore' || role === 'operatore') {
     if (sessionStorage.getItem('turnario_admin_unlocked') === 'true') return true;
     return false;
   }
-  // Default: Ciro Milella Coordinatore con pieni privilegi senza richiesta di PIN
   return true;
+}
+
+function getProfiloOperatoreCorrente() {
+  const role = localStorage.getItem('milella_role') || localStorage.getItem('milella_last_authenticated_role') || 'admin';
+  const nome = localStorage.getItem('milella_user_nome') || sessionStorage.getItem('milella_user_nome') || (role === 'admin' ? 'Ciro Milella' : 'M.C. Stoppelli');
+  const isAdmin = isUtenteAdmin();
+  return {
+    isAdmin: isAdmin,
+    role: role,
+    nome: nome,
+    ruoloDesc: isAdmin ? 'Admin Coordinatore' : (nome.includes('Stoppelli') ? 'OSS Referente' : 'Collaboratore Turnista')
+  };
 }
 
 // Sblocco manuale Admin tramite PIN Master
@@ -1261,6 +1272,7 @@ function aggiungiConsegnaClinica(consegna) {
 
 // Esporta globalmente
 window.isUtenteAdmin = isUtenteAdmin;
+window.getProfiloOperatoreCorrente = getProfiloOperatoreCorrente;
 window.sbloccaModalitaAdminManuale = sbloccaModalitaAdminManuale;
 window.apriModalTurnarioAdmin = apriModalTurnarioAdmin;
 window.chiudiModalTurnarioAdmin = chiudiModalTurnarioAdmin;
