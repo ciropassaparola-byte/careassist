@@ -1092,6 +1092,82 @@ body::-webkit-scrollbar,
 </style>
 
 </head>
+
+<script>
+    // FUNZIONI UNIVERSALI DI GESTIONE ESCI & SPEGNI (DISPONIBILI SEMPRE E OVUNQUE)
+    function eseguiUscitaSuiteSicura() {
+        try {
+            sessionStorage.clear();
+            sessionStorage.setItem('milella_app_locked', 'true');
+            localStorage.setItem('milella_app_locked', 'true');
+            sessionStorage.removeItem('milella_session_unlocked');
+            sessionStorage.removeItem('salute_session_unlocked');
+            sessionStorage.removeItem('isLogged');
+            localStorage.removeItem('milella_session_unlocked');
+            localStorage.removeItem('milella_session_unlocked_time');
+            localStorage.removeItem('milella_admin_pin');
+            localStorage.removeItem('milella_token');
+        } catch(e){}
+
+        document.documentElement.classList.remove('suite-already-unlocked');
+
+        // Chiudi tutti gli eventuali popup aperti
+        ['modalLoginOperatore', 'modalAdminLogin', 'modalGestioneOperatori', 
+         'elsaVoiceModal', 'kpiDirezionaleModal', 'cloudSwitcherModal',
+         'qrPromoModal', 'confirmModal', 'shutdownModal'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+
+        // Mostra direttamente il Gate di Blocco
+        const gate = document.getElementById('gateBloccoIngresso');
+        if (gate) {
+            gate.style.display = 'flex';
+            gate.style.opacity = '1';
+            const pinIn = document.getElementById('inputPinGate');
+            if (pinIn) {
+                pinIn.value = '';
+                try { pinIn.focus(); } catch(e){}
+            }
+            const err = document.getElementById('gateErrorMsg');
+            if (err) err.style.display = 'none';
+        }
+
+        // Mostra anche la modale arrivederci se presente
+        const arr = document.getElementById('modalArrivederciSuite');
+        if (arr) {
+            arr.style.display = 'flex';
+            if (typeof precaricaAudioArrivederci === 'function') {
+                try { precaricaAudioArrivederci(); } catch(e){}
+            }
+        }
+    }
+    window.eseguiUscitaSuiteSicura = eseguiUscitaSuiteSicura;
+    window.mostraMascheraArrivederci = eseguiUscitaSuiteSicura;
+    window.esciAdmin = eseguiUscitaSuiteSicura;
+
+    function eseguiSpegnimentoSuiteDiretto() {
+        // Se c'è la modale confirmModal, mostrala con massimo z-index
+        const arr = document.getElementById('modalArrivederciSuite');
+        if (arr) arr.style.display = 'none';
+
+        const cm = document.getElementById('confirmModal');
+        if (cm) {
+            cm.style.display = 'flex';
+            cm.style.zIndex = '999999999';
+            return;
+        }
+
+        // Se confirmModal non fosse reperibile, esegui chiusura/spegnimento
+        if (confirm("Confermi di voler spegnere la postazione e chiudere la sessione?")) {
+            eseguiUscitaSuiteSicura();
+            try { window.open('', '_self', ''); window.close(); } catch(e){}
+        }
+    }
+    window.eseguiSpegnimentoSuiteDiretto = eseguiSpegnimentoSuiteDiretto;
+    window.apriModalSpegnimentoCompleto = eseguiSpegnimentoSuiteDiretto;
+</script>
+
 <body>
 <script>
     (function(){
@@ -1505,7 +1581,7 @@ body::-webkit-scrollbar,
                         🔑 PIN
                     </button>
 
-                    <button id="btnLogoutRole" type="button" onclick="mostraMascheraArrivederci()" title="Blocca la Suite e richiedi il PIN" class="top-btn-logout" style="cursor:pointer;">
+                    <button id="btnLogoutRole" type="button" onclick="eseguiUscitaSuiteSicura()" title="Blocca la Suite e richiedi il PIN" class="top-btn-logout" style="cursor:pointer; display:inline-flex !important; align-items:center; gap:6px;">
                         <span>🔒</span> <span class="logout-label">Esci</span>
                     </button>
                 </div>
@@ -1735,7 +1811,7 @@ body::-webkit-scrollbar,
                         <span>🛡️</span> <span>SICUREZZA & BACKUP</span>
                     </button>
 
-                    <button id="btnShutdownSystem" type="button" class="dock-btn" onclick="apriModalSpegnimentoCompleto()" style="background:linear-gradient(135deg, rgba(239,68,68,0.3) 0%, rgba(185,28,28,0.3) 100%); border:1.5px solid #ef4444; color:#fecaca; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:900; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 12px rgba(239,68,68,0.35);">
+                    <button id="btnShutdownSystem" type="button" class="dock-btn" onclick="eseguiSpegnimentoSuiteDiretto()" style="cursor:pointer; display:inline-flex !important; align-items:center; gap:6px; background:linear-gradient(135deg, rgba(239,68,68,0.35) 0%, rgba(185,28,28,0.35) 100%); border:1.5px solid #ef4444; color:#fecaca; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:900; box-shadow:0 3px 12px rgba(239,68,68,0.35);">
                         <span>🛑</span> <span>SPEGNI</span>
                     </button>
                 </div>
@@ -2786,7 +2862,7 @@ body::-webkit-scrollbar,
                 <button type="button" id="btnCancelShutdown" onclick="document.getElementById('confirmModal').style.display='none';" style="flex:1; background:rgba(255,255,255,0.08); color:#e2e8f0; border:1.5px solid rgba(255,255,255,0.2); padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:700; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.16)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
                     Annulla
                 </button>
-                <button type="button" id="btnConfirmShutdown" style="flex:1.2; background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color:#ffffff; border:none; padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(239,68,68,0.45); transition:transform 0.15s, box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:8px;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                <button type="button" id="btnConfirmShutdown" onclick="procediSpegnimentoDefinitivo()" style="flex:1.2; background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color:#ffffff; border:none; padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(239,68,68,0.45); transition:transform 0.15s, box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:8px;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
                     <span>🛑</span> <span>Sì, Spegni Ora</span>
                 </button>
             </div>
