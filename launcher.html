@@ -2056,10 +2056,21 @@ body::-webkit-scrollbar,
             <div
                 style="font-size:13px; text-transform:uppercase; letter-spacing:2.5px; color:#f472b6; font-weight:900; margin-bottom:4px;">
                 ASSISTENTE VOCALE AZIENDALE</div>
-            <h2 style="font-size:2rem; color:#ffffff; margin:0 0 16px 0; font-weight:900; letter-spacing:0.5px;">
+            <h2 style="font-size:2rem; color:#ffffff; margin:0 0 12px 0; font-weight:900; letter-spacing:0.5px;">
                 Chiedi ad <span
                     style="background:linear-gradient(135deg, #fbcfe8, #ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Elsa</span>
             </h2>
+            <!-- PULSANTE UFFICIALE: A COSA SERVE QUESTA MASCHERA -->
+            <div style="margin-bottom:16px;">
+                <button type="button" id="btnVoceACosaServeElsa" onclick="toggleVoceACosaServeElsa()"
+                    style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); border:2px solid #34d399; color:#ffffff; padding:9px 20px; border-radius:14px; font-size:13px; font-weight:900; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 6px 18px rgba(16,185,129,0.35); transition:all 0.15s;"
+                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 8px 24px rgba(16,185,129,0.5)';"
+                    onmouseout="this.style.transform='none'; this.style.boxShadow='0 6px 18px rgba(16,185,129,0.35)';"
+                    title="Ascolta con voce umana a cosa serve questa schermata e la sua utilità">
+                    <span id="icoVoceACosaServeElsa" style="font-size:16px;">🔊</span>
+                    <span id="txtVoceACosaServeElsa">💡 A cosa serve questa maschera (Elsa)</span>
+                </button>
+            </div>
 
             <!-- MAXI MICROFONO CENTRALE (FACILISSIMO DA CENTRARE E TOCCARE) -->
             <div style="margin:0 auto 16px auto; display:flex; flex-direction:column; align-items:center;">
@@ -3558,6 +3569,247 @@ body::-webkit-scrollbar,
                 if (box) box.innerHTML = '<span style="color:#4ade80;">🔊 Elsa:</span> <strong>' + risposta + '</strong>';
                 pronunciaRispostaElsa(risposta);
             }, 300);
+        }
+
+        // ==============================================================================
+        // GESTIONE VOCALE COMPLETA & AUDIO ULTRA-AFFIDABILE ASSISTENTE ELSA
+        // ==============================================================================
+        let _ultimoTestoRispostaElsa = "Per Aldo Zamparino: Tutte le terapie della mattina (antipertensivo e neuroprotettore) sono state somministrate regolarmente. Prossimo scarico posturale ore 14:00, gocce serali previste alle 20:00.";
+        let _ultimoAudioIdElsa = "terapie_aldo";
+        let _isVoceACosaServeElsaInCorso = false;
+        let _audioACosaServeElsa = null;
+
+        const TESTO_A_COSA_SERVE_MASCHERA_ELSA = "A cosa serve questa maschera dell'Assistente Vocale Elsa. " +
+            "Questa schermata è il copilota intelligente della Suite Gestionale Ciro Milella, progettato per permettere a collaboratori, sanitari e personale di turno di consultare immediatamente la situazione clinica e aziendale senza perdere tempo a cercare tra decine di menu. " +
+            "Puoi toccare il maxi microfono centrale o scrivere direttamente per chiedere a voce le terapie di un paziente, lo stato del quadro clinico, oppure informazioni sulla flotta dei veicoli e sullo spazio cloud. " +
+            "Grazie al selettore assistiti e al campo di ricerca istantaneo, puoi gestire oltre cento pazienti in tempo reale con aderenza terapeutica e sicurezza garantita sia su PC che da cellulare.";
+
+        function fermaVoceACosaServeElsa() {
+            if (_audioACosaServeElsa) {
+                try { _audioACosaServeElsa.pause(); _audioACosaServeElsa.currentTime = 0; } catch(e){}
+                _audioACosaServeElsa = null;
+            }
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+            }
+            _isVoceACosaServeElsaInCorso = false;
+            aggiornaStatoBtnVoceACosaServeElsa(false);
+        }
+
+        function aggiornaStatoBtnVoceACosaServeElsa(inCorso) {
+            const btn = document.getElementById('btnVoceACosaServeElsa');
+            const ico = document.getElementById('icoVoceACosaServeElsa');
+            const txt = document.getElementById('txtVoceACosaServeElsa');
+            if (!btn) return;
+            if (inCorso) {
+                if (ico) ico.textContent = '⏹️';
+                if (txt) txt.textContent = 'Interrompi Guida';
+                btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)';
+                btn.style.borderColor = '#f87171';
+            } else {
+                if (ico) ico.textContent = '🔊';
+                if (txt) txt.textContent = '💡 A cosa serve questa maschera (Elsa)';
+                btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                btn.style.borderColor = '#34d399';
+            }
+        }
+
+        function toggleVoceACosaServeElsa() {
+            if (_isVoceACosaServeElsaInCorso) {
+                fermaVoceACosaServeElsa();
+                return;
+            }
+            fermaVoceACosaServeElsa();
+            if (_audioRispostaElsa) {
+                try { _audioRispostaElsa.pause(); } catch(e){}
+                _audioRispostaElsa = null;
+            }
+
+            _isVoceACosaServeElsaInCorso = true;
+            aggiornaStatoBtnVoceACosaServeElsa(true);
+
+            riproduciAudioElsaUniversaleConFallback(
+                TESTO_A_COSA_SERVE_MASCHERA_ELSA,
+                null,
+                function onEnd() {
+                    _isVoceACosaServeElsaInCorso = false;
+                    aggiornaStatoBtnVoceACosaServeElsa(false);
+                },
+                function onStart(aud) {
+                    _audioACosaServeElsa = aud;
+                }
+            );
+        }
+
+        function riascoltaUltimaRispostaElsa() {
+            if (!_ultimoTestoRispostaElsa) {
+                _ultimoTestoRispostaElsa = "Per Aldo Zamparino: Tutte le terapie della mattina sono state somministrate regolarmente.";
+            }
+            pronunciaRispostaElsa(_ultimoTestoRispostaElsa, _ultimoAudioIdElsa);
+        }
+
+        function pronunciaRispostaElsa(testo, audioId) {
+            if (!testo) return;
+            if (_isVoceACosaServeElsaInCorso) {
+                fermaVoceACosaServeElsa();
+            }
+            if (_audioRispostaElsa) {
+                try { _audioRispostaElsa.pause(); _audioRispostaElsa.currentTime = 0; } catch(e){}
+                _audioRispostaElsa = null;
+            }
+
+            riproduciAudioElsaUniversaleConFallback(
+                testo,
+                audioId,
+                function onEnd() {
+                    _audioRispostaElsa = null;
+                },
+                function onStart(aud) {
+                    _audioRispostaElsa = aud;
+                }
+            );
+        }
+
+        function riproduciAudioElsaUniversaleConFallback(testo, audioId, onEnd, onStart) {
+            if ('speechSynthesis' in window) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+            }
+
+            let riprodotto = false;
+
+            // 1. Se abbiamo un file mp3 pre-registrato in /assets/audio_elsa/ (ad es. terapie_aldo, quadro_aldo, flotta, cloud)
+            if (audioId) {
+                const staticAudioUrl = '/assets/audio_elsa/' + audioId + '.mp3';
+                const audioStatic = new Audio(staticAudioUrl);
+                audioStatic.onplaying = function() {
+                    riprodotto = true;
+                    if (typeof onStart === 'function') onStart(audioStatic);
+                };
+                audioStatic.onended = function() {
+                    if (typeof onEnd === 'function') onEnd();
+                };
+                audioStatic.onerror = function() {
+                    fallbackTtsServer();
+                };
+                audioStatic.play().catch(function() {
+                    fallbackTtsServer();
+                });
+                return;
+            }
+
+            // 2. Altrimenti usa l'endpoint neurale TTS umano (/api/tts-umano) con fallback Cloud Render e WebSpeech
+            fallbackTtsServer();
+
+            function fallbackTtsServer() {
+                if (riprodotto) return;
+                const cloudBase = 'https://careassist-suite-pmze.onrender.com';
+                const isLocal = (window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+                const localUrl = '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+                const cloudUrl = cloudBase + '/api/tts-umano?voice=elsa&text=' + encodeURIComponent(testo);
+
+                const audioTts = new Audio(isLocal ? localUrl : cloudUrl);
+                audioTts.onplaying = function() {
+                    riprodotto = true;
+                    if (typeof onStart === 'function') onStart(audioTts);
+                };
+                audioTts.onended = function() {
+                    if (typeof onEnd === 'function') onEnd();
+                };
+                audioTts.onerror = function() {
+                    if (!riprodotto && isLocal) {
+                        const audioCloud = new Audio(cloudUrl);
+                        audioCloud.onplaying = function() {
+                            riprodotto = true;
+                            if (typeof onStart === 'function') onStart(audioCloud);
+                        };
+                        audioCloud.onended = function() {
+                            if (typeof onEnd === 'function') onEnd();
+                        };
+                        audioCloud.onerror = function() {
+                            fallbackWebSpeechBrowser();
+                        };
+                        audioCloud.play().catch(function() {
+                            fallbackWebSpeechBrowser();
+                        });
+                    } else {
+                        fallbackWebSpeechBrowser();
+                    }
+                };
+
+                audioTts.play().catch(function() {
+                    if (!riprodotto && isLocal) {
+                        const audioCloud = new Audio(cloudUrl);
+                        audioCloud.onplaying = function() {
+                            riprodotto = true;
+                            if (typeof onStart === 'function') onStart(audioCloud);
+                        };
+                        audioCloud.onended = function() {
+                            if (typeof onEnd === 'function') onEnd();
+                        };
+                        audioCloud.onerror = function() {
+                            fallbackWebSpeechBrowser();
+                        };
+                        audioCloud.play().catch(function() {
+                            fallbackWebSpeechBrowser();
+                        });
+                    } else {
+                        fallbackWebSpeechBrowser();
+                    }
+                });
+            }
+
+            function fallbackWebSpeechBrowser() {
+                if (riprodotto) return;
+                if (!('speechSynthesis' in window)) {
+                    if (typeof onEnd === 'function') onEnd();
+                    return;
+                }
+                try {
+                    window.speechSynthesis.cancel();
+                    const utter = new SpeechSynthesisUtterance(testo);
+                    utter.lang = 'it-IT';
+                    utter.rate = 1.05;
+                    const voices = window.speechSynthesis.getVoices();
+                    const vIt = voices.find(v => v.lang && v.lang.startsWith('it') && (v.name.includes('Elsa') || v.name.includes('Natural') || v.name.includes('Cosimo') || v.name.includes('Google') || v.name.includes('Federica')));
+                    if (vIt) utter.voice = vIt;
+                    utter.onstart = function() {
+                        riprodotto = true;
+                        if (typeof onStart === 'function') onStart(null);
+                    };
+                    utter.onend = function() {
+                        if (typeof onEnd === 'function') onEnd();
+                    };
+                    utter.onerror = function() {
+                        if (typeof onEnd === 'function') onEnd();
+                    };
+                    window.speechSynthesis.speak(utter);
+                } catch(e) {
+                    if (typeof onEnd === 'function') onEnd();
+                }
+            }
+        }
+
+        function avviaRiconoscimentoVocaleMicrofono() {
+            const box = document.getElementById('boxStatoAscoltoElsa');
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                if (box) box.innerHTML = '<span style="color:#fbbf24;">⚠️ Riconoscimento microfono non supportato in questo browser. Seleziona una delle domande rapide qui sotto.</span>';
+                return;
+            }
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const rec = new SpeechRec();
+            rec.lang = 'it-IT';
+            rec.continuous = false;
+            rec.interimResults = false;
+
+            if (box) box.innerHTML = '🎙️ <span style="color:#38bdf8;">Ti ascolto, parla pure...</span>';
+            rec.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                chiediAElsa(transcript);
+            };
+            rec.onerror = function(err) {
+                if (box) box.innerHTML = 'Non ho compreso bene, tocca una delle domande rapide qui sotto.';
+            };
+            try { rec.start(); } catch(e){}
         }
 
     // ==============================================================================
