@@ -3357,24 +3357,14 @@ body::-webkit-scrollbar,
     // ASSISTENTE VOCALE BIDIREZIONALE: CHIEDI AD ELSA
     // ==============================================================================
     let _audioRispostaElsa = null;
-                precaricaAudioKpiDirezione();
-            const m = document.getElementById('kpiDirezionaleModal');
-            if (m) m.style.display = 'flex';
-        }
-        function chiudiKpiDirezionaleModal() {
-            const m = document.getElementById('kpiDirezionaleModal');
-            if (m) m.style.display = 'none';
-        // ==============================================================================
-        // ASSISTENTE VOCALE BIDIREZIONALE: CHIEDI AD ELSA
-        // ==============================================================================
-        let _audioRispostaElsa = null;
-        function toggleAssistenteElsaDialogo() {
+    function toggleAssistenteElsaDialogo() {
             const m = document.getElementById('elsaVoiceModal');
             if (m) {
                 if (m.style.display === 'flex') {
                     chiudiAssistenteElsaDialogo();
                 } else {
                     m.style.display = 'flex';
+                }
             }
         }
         function chiudiAssistenteElsaDialogo() {
@@ -3387,6 +3377,8 @@ body::-webkit-scrollbar,
             if ('speechSynthesis' in window) {
                 try { window.speechSynthesis.cancel(); } catch (e) { }
             }
+        }
+
         const _dbPazientiElsa = {
             'aldo': {
                 nome: 'Aldo Zamparino',
@@ -3415,6 +3407,7 @@ body::-webkit-scrollbar,
                 quadro: 'Tre assistiti monitorati in tempo reale (Aldo Zamparino, Angela Mazzicone, Rosa Annunziata Cavalcante).',
                 terapie: 'Aderenza terapeutica complessiva al 99.2%. Somministrazioni mattutine completate per tutti gli assistiti senza ritardi.',
                 allerte: 'Nessuna emergenza clinica in corso. Cartelle sanitarie digitali sincronizzate sia in locale sia in Cloud.'
+            }
         };
         // FUNZIONI GESTIONE RICERCA SCALABILE 100+ PAZIENTI PER ELSA
         function pulisciRicercaPazienteElsa() {
@@ -3471,6 +3464,7 @@ body::-webkit-scrollbar,
             }
             const dd = document.getElementById('dropdownPazientiElsa');
             if (dd) dd.style.display = 'none';
+        }
         function aggiornaPazienteSelezionatoElsa() {
             const sel = document.getElementById('selPazienteElsa');
             const key = sel ? sel.value : 'aldo';
@@ -3482,6 +3476,7 @@ body::-webkit-scrollbar,
 
             const box = document.getElementById('boxStatoAscoltoElsa');
             if (box) box.innerHTML = '<span style="color:#fbcfe8;">👤 Selezionato:</span> <strong>' + pz.nome + '</strong>. Puoi chiedere terapie, quadro clinico o parlare liberamente!';
+        }
         function inviaDomandaLiberaElsa() {
             const inp = document.getElementById('txtDomandaLiberaElsa');
             if (!inp || !inp.value.trim()) return;
@@ -3563,6 +3558,7 @@ body::-webkit-scrollbar,
                 if (box) box.innerHTML = '<span style="color:#4ade80;">🔊 Elsa:</span> <strong>' + risposta + '</strong>';
                 pronunciaRispostaElsa(risposta);
             }, 300);
+        }
 
     // ==============================================================================
     const CLOUD_PROFILO_1 = 'https://careassist-suite-pmze.onrender.com';
