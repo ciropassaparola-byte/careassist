@@ -1505,7 +1505,7 @@ body::-webkit-scrollbar,
                         🔑 PIN
                     </button>
 
-                    <button id="btnLogoutRole" onclick="mostraMascheraArrivederci()" title="Blocca la Suite e richiedi il PIN" class="top-btn-logout">
+                    <button id="btnLogoutRole" type="button" onclick="mostraMascheraArrivederci()" title="Blocca la Suite e richiedi il PIN" class="top-btn-logout" style="cursor:pointer;">
                         <span>🔒</span> <span class="logout-label">Esci</span>
                     </button>
                 </div>
@@ -1735,7 +1735,7 @@ body::-webkit-scrollbar,
                         <span>🛡️</span> <span>SICUREZZA & BACKUP</span>
                     </button>
 
-                    <button id="btnShutdownSystem" type="button" class="dock-btn admin-only-btn" onclick="document.getElementById('confirmModal').style.display='flex';" style="display:none; background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#fca5a5; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                    <button id="btnShutdownSystem" type="button" class="dock-btn" onclick="apriModalSpegnimentoCompleto()" style="background:linear-gradient(135deg, rgba(239,68,68,0.3) 0%, rgba(185,28,28,0.3) 100%); border:1.5px solid #ef4444; color:#fecaca; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:900; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 12px rgba(239,68,68,0.35);">
                         <span>🛑</span> <span>SPEGNI</span>
                     </button>
                 </div>
@@ -8002,7 +8002,7 @@ body::-webkit-scrollbar,
         </button>
 
         <!-- Pulsante Spegnimento / Chiusura Completa -->
-        <button type="button" onclick="document.getElementById('modalArrivederciSuite').style.display='none'; document.getElementById('confirmModal').style.display='flex';" style="width:100%; background:rgba(239,68,68,0.12); border:1.5px solid rgba(239,68,68,0.35); color:#fca5a5; font-weight:800; font-size:13px; padding:11px 16px; border-radius:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.22)'" onmouseout="this.style.background='rgba(239,68,68,0.12)'">
+        <button type="button" onclick="apriModalSpegnimentoCompleto();" style="width:100%; background:rgba(239,68,68,0.12); border:1.5px solid rgba(239,68,68,0.35); color:#fca5a5; font-weight:800; font-size:13px; padding:11px 16px; border-radius:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.22)'" onmouseout="this.style.background='rgba(239,68,68,0.12)'">
             <span>🛑</span> <span>Spegni Postazione / Esci Definitivamente</span>
         </button>
 
@@ -8187,23 +8187,48 @@ body::-webkit-scrollbar,
         localStorage.removeItem('milella_session_unlocked_time');
         localStorage.removeItem('milella_admin_pin');
         localStorage.removeItem('milella_token');
-        currentAdminPin = '';
-        currentAppAbilitate = [];
+        try { currentAdminPin = ''; } catch(e){}
+        try { currentAppAbilitate = []; } catch(e){}
+        try { currentRole = 'operatore'; } catch(e){}
         document.documentElement.classList.remove('suite-already-unlocked');
 
-        // Chiudi altri modali aperti
-        const modLogin = document.getElementById('modalLoginOperatore'); if (modLogin) modLogin.style.display = 'none';
-        const modAdmin = document.getElementById('modalAdminLogin'); if (modAdmin) modAdmin.style.display = 'none';
-        const modOps = document.getElementById('modalGestioneOperatori'); if (modOps) modOps.style.display = 'none';
-        const gate = document.getElementById('gateBloccoIngresso'); if (gate) gate.style.display = 'none';
+        // Chiudi tutti i modali aperti
+        const modaliDaChiudere = [
+            'modalLoginOperatore', 'modalAdminLogin', 'modalGestioneOperatori', 
+            'elsaVoiceModal', 'kpiDirezionaleModal', 'cloudSwitcherModal',
+            'qrPromoModal', 'confirmModal', 'shutdownModal'
+        ];
+        modaliDaChiudere.forEach(id => {
+            const m = document.getElementById(id);
+            if (m) m.style.display = 'none';
+        });
 
-        // Mostra la maschera elegante di arrivederci
+        // Mostra la maschera elegante di arrivederci (o direttamente il Gate di blocco)
         const arrivederci = document.getElementById('modalArrivederciSuite');
         if (arrivederci) {
             arrivederci.style.display = 'flex';
-            precaricaAudioArrivederci();
+            try { precaricaAudioArrivederci(); } catch(e){}
+        } else {
+            const gate = document.getElementById('gateBloccoIngresso');
+            if (gate) {
+                gate.style.display = 'flex';
+                gate.style.opacity = '1';
+            }
         }
     }
+    window.mostraMascheraArrivederci = mostraMascheraArrivederci;
+    // FUNZIONE GLOBALE CONFERMA & SPEGNIMENTO ROBUSTA SU TUTTI I DISPOSITIVI
+    function apriModalSpegnimentoCompleto() {
+        const arr = document.getElementById('modalArrivederciSuite');
+        if (arr) arr.style.display = 'none';
+        const cm = document.getElementById('confirmModal');
+        if (cm) {
+            cm.style.display = 'flex';
+            cm.style.zIndex = '99999999';
+        }
+    }
+    window.apriModalSpegnimentoCompleto = apriModalSpegnimentoCompleto;
+    
 
     function riapriAccessoSuite() {
         const arrivederci = document.getElementById('modalArrivederciSuite');
